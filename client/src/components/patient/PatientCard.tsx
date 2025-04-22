@@ -31,7 +31,9 @@ function formatDate(date: Date | string | null | undefined): string {
  * Generate initials from a name (first letter of first and last name)
  */
 function getInitials(name: string): string {
-  const parts = name.split(' ');
+  if (!name || typeof name !== 'string') return 'UU';
+  const parts = name.trim().split(' ').filter(Boolean);
+  if (parts.length === 0) return 'UU';
   if (parts.length === 1) {
     return parts[0].charAt(0).toUpperCase();
   }
@@ -94,9 +96,11 @@ export default function PatientCard() {
   }
   
   // Format patient info for display
-  const patientName = `${patient.firstName} ${patient.lastName}`;
+  const firstName = patient.firstName || 'Unknown';
+  const lastName = patient.lastName || 'Patient';
+  const patientName = `${firstName} ${lastName}`;
   const dobDisplay = patient.dateOfBirth ? `${age} years (${formatDate(patient.dateOfBirth)})` : 'No DOB';
-  const chartDisplay = `Chart #${patient.chartNumber}`;
+  const chartDisplay = patient.chartNumber ? `Chart #${patient.chartNumber}` : 'No Chart #';
   const initials = getInitials(patientName);
   
   return (
@@ -113,7 +117,7 @@ export default function PatientCard() {
             <h1 className="text-xl font-bold text-gray-700 mb-1">{patientName}</h1>
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
               <span>{dobDisplay}</span>
-              <span>{patient.gender}</span>
+              <span>{patient.gender || 'Unknown'}</span>
               <span>{chartDisplay}</span>
             </div>
           </div>

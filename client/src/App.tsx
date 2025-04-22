@@ -14,15 +14,15 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/dashboard" component={DashboardPage} />
-      <Route path="/schedule" component={Home} />
-      <Route path="/schedule/:subpage" component={Home} />
-      <Route path="/patients" component={Home} />
-      <Route path="/patients/profile/:id" component={PatientProfilePage} />
-      <Route path="/patients/:subpage" component={Home} />
-      <Route path="/billing" component={Home} />
-      <Route path="/billing/:subpage" component={Home} />
-      <Route path="/reports" component={Home} />
-      <Route path="/reports/:subpage" component={Home} />
+      <Route path="/schedule" component={DashboardPage} />
+      <Route path="/schedule/:subpage" component={DashboardPage} />
+      <Route path="/patients" component={DashboardPage} />
+      <Route path="/patients/:id(\d+)" component={PatientProfilePage} />
+      <Route path="/patients/:subpage" component={DashboardPage} />
+      <Route path="/billing" component={DashboardPage} />
+      <Route path="/billing/:subpage" component={DashboardPage} />
+      <Route path="/reports" component={DashboardPage} />
+      <Route path="/reports/:subpage" component={DashboardPage} />
       <Route path="/settings" component={SettingsPage} />
       <Route path="/settings/:subpage" component={SettingsPage} />
       <Route component={NotFound} />
