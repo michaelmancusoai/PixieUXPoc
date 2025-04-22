@@ -1,226 +1,213 @@
 import React, { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button"; 
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Avatar } from "@/components/ui/avatar";
+
+import { Badge } from "@/components/ui/badge";
 import { 
-  Plus, FileText, MessageCircle, Banknote, 
-  Calendar, CheckCircle, Clock, Info, Search
+  Calendar, MessageSquare, Stethoscope, FileText, 
+  DollarSign, Phone, Gavel, Eye, Edit, Plus
 } from "lucide-react";
-import { 
-  usePatientAppointments, 
-  usePatientNotes, 
-  usePatientMessages, 
-  usePatientPayments,
-  usePatientActivityLog
-} from "@/hooks/usePatientDetails";
-import { formatDistanceToNow } from "date-fns";
-import { Skeleton } from "@/components/ui/skeleton";
 
-interface ActivityHubProps {
-  patientId: number;
-}
+type ActivityFilter = "all" | "clinical" | "financial" | "communications" | "admin";
 
-export default function ActivityHub({ patientId }: ActivityHubProps) {
-  const [activeTab, setActiveTab] = useState("all");
-  
-  // Fetch data for different activity types
-  const { data: activityLog, isLoading: isLoadingActivity } = usePatientActivityLog(patientId);
-  const { data: appointments, isLoading: isLoadingAppointments } = usePatientAppointments(patientId);
-  const { data: notes, isLoading: isLoadingNotes } = usePatientNotes(patientId);
-  const { data: messages, isLoading: isLoadingMessages } = usePatientMessages(patientId);
-  const { data: payments, isLoading: isLoadingPayments } = usePatientPayments(patientId);
-  
-  // Filter activity items based on the active tab
-  const getFilteredItems = () => {
-    if (activeTab === "all" && activityLog) return activityLog;
-    if (activeTab === "appointments" && appointments) return appointments.map(formatAppointmentActivity);
-    if (activeTab === "notes" && notes) return notes.map(formatNoteActivity);
-    if (activeTab === "messages" && messages) return messages.map(formatMessageActivity);
-    if (activeTab === "financial" && payments) return payments.map(formatPaymentActivity);
-    return [];
-  };
-  
-  const isLoading = 
-    isLoadingActivity || 
-    isLoadingAppointments || 
-    isLoadingNotes || 
-    isLoadingMessages || 
-    isLoadingPayments;
+type ActivityItem = {
+  id: string;
+  type: "appointment" | "message" | "clinical" | "claim" | "payment" | "voicemail" | "admin";
+  title: string;
+  date: string;
+  user: string;
+  description?: string;
+  icon: React.ReactNode;
+  color: string;
+};
 
+// Sample activity items
+const activityItems: ActivityItem[] = [
+  {
+    id: "1",
+    type: "appointment",
+    title: "Upcoming · Prophylaxis (45 min)",
+    date: "Tomorrow, 9:00 AM",
+    user: "Operatory 3 · Dr. Nguyen",
+    icon: <Calendar className="h-4 w-4" />,
+    color: "bg-primary"
+  },
+  {
+    id: "2",
+    type: "message",
+    title: "Secure Message sent: Post op instructions",
+    date: "Apr 16, 2025 · 2:30 PM",
+    user: "Dental Assistant",
+    description: "Sending follow-up instructions for the crown placement. Patient confirmed receipt through the portal.",
+    icon: <MessageSquare className="h-4 w-4" />,
+    color: "bg-blue-400"
+  },
+  {
+    id: "3",
+    type: "clinical",
+    title: "Completed · D2740 Crown #30 ($1,180)",
+    date: "Apr 13, 2025 · 10:15 AM",
+    user: "Dr. Nguyen",
+    description: "Patient tolerated procedure well; no complications. Final adjustments made for occlusion. Patient given post-op instructions.",
+    icon: <Stethoscope className="h-4 w-4" />,
+    color: "bg-primary"
+  },
+  {
+    id: "4",
+    type: "claim",
+    title: "Claim #A927 submitted to Delta Dental ($1,180)",
+    date: "Apr 13, 2025 · 4:30 PM",
+    user: "Front Office",
+    icon: <FileText className="h-4 w-4" />,
+    color: "bg-green-500"
+  },
+  {
+    id: "5",
+    type: "payment",
+    title: "EOB posted • Patient owes $220",
+    date: "Apr 14, 2025 · 10:00 AM",
+    user: "System",
+    description: "Insurance paid $960 (81.4%). Patient responsibility: $220 (18.6%).",
+    icon: <DollarSign className="h-4 w-4" />,
+    color: "bg-green-500"
+  },
+  {
+    id: "6",
+    type: "voicemail",
+    title: "Voicemail left requesting payment",
+    date: "Apr 15, 2025 · 2:15 PM",
+    user: "Billing Coordinator",
+    description: "Left voicemail regarding outstanding balance of $220 for recent crown procedure. Requested callback to arrange payment.",
+    icon: <Phone className="h-4 w-4" />,
+    color: "bg-blue-400"
+  },
+  {
+    id: "7",
+    type: "admin",
+    title: "HIPAA consent e-signed via portal",
+    date: "Apr 18, 2025 · 9:45 AM",
+    user: "Patient",
+    icon: <Gavel className="h-4 w-4" />,
+    color: "bg-purple-500"
+  }
+];
+
+export default function ActivityHub() {
+  const [filter, setFilter] = useState<ActivityFilter>("all");
+  
+  const filteredActivities = filter === "all" 
+    ? activityItems 
+    : activityItems.filter(item => {
+        if (filter === "clinical") return item.type === "clinical";
+        if (filter === "financial") return ["claim", "payment"].includes(item.type);
+        if (filter === "communications") return ["message", "voicemail"].includes(item.type);
+        if (filter === "admin") return item.type === "admin";
+        return true;
+      });
+  
   return (
-    <Card className="h-full">
-      <CardHeader className="border-b p-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle className="text-xl font-semibold">Activity Hub</CardTitle>
-            <CardDescription>Track patient interactions and history</CardDescription>
-          </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="text-xs h-8">
-              <Search className="h-3 w-3 mr-1" />
-              Search
-            </Button>
-            <Button size="sm" className="text-xs h-8">
-              <Plus className="h-3 w-3 mr-1" />
-              Add Activity
-            </Button>
-          </div>
+    <Card>
+      <CardHeader className="px-4 py-3 flex flex-row items-center justify-between">
+        <CardTitle className="text-lg font-medium">Activity Hub</CardTitle>
+        
+        <div className="flex flex-wrap gap-2">
+          <FilterButton 
+            active={filter === "all"} 
+            onClick={() => setFilter("all")}
+          >
+            All
+          </FilterButton>
+          <FilterButton 
+            active={filter === "clinical"} 
+            onClick={() => setFilter("clinical")}
+          >
+            Clinical
+          </FilterButton>
+          <FilterButton 
+            active={filter === "financial"} 
+            onClick={() => setFilter("financial")}
+          >
+            Financial
+          </FilterButton>
+          <FilterButton 
+            active={filter === "communications"} 
+            onClick={() => setFilter("communications")}
+          >
+            Communications
+          </FilterButton>
+          <FilterButton 
+            active={filter === "admin"} 
+            onClick={() => setFilter("admin")}
+          >
+            Admin
+          </FilterButton>
         </div>
-
-        <Tabs defaultValue="all" className="mt-4" onValueChange={setActiveTab}>
-          <TabsList className="grid grid-cols-5 h-8">
-            <TabsTrigger value="all" className="text-xs">All</TabsTrigger>
-            <TabsTrigger value="appointments" className="text-xs">Appointments</TabsTrigger>
-            <TabsTrigger value="notes" className="text-xs">Notes</TabsTrigger>
-            <TabsTrigger value="messages" className="text-xs">Messages</TabsTrigger>
-            <TabsTrigger value="financial" className="text-xs">Financial</TabsTrigger>
-          </TabsList>
-        </Tabs>
       </CardHeader>
       
-      <CardContent className="p-0">
-        <ScrollArea className="h-[500px] px-4">
-          {isLoading ? (
-            <div className="space-y-4 py-4">
-              {[1, 2, 3, 4, 5].map((i) => (
-                <div key={i} className="flex gap-3">
-                  <Skeleton className="h-10 w-10 rounded-full" />
-                  <div className="flex-1 space-y-2">
-                    <Skeleton className="h-4 w-1/3" />
-                    <Skeleton className="h-3 w-3/4" />
-                    <Skeleton className="h-3 w-1/2" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <ActivityItems items={getFilteredItems()} />
-          )}
-        </ScrollArea>
-      </CardContent>
+      <div className="divide-y max-h-fit">
+        {filteredActivities.map((activity) => (
+          <ActivityCard key={activity.id} activity={activity} />
+        ))}
+      </div>
+      
+      <CardFooter className="px-4 py-3 border-t flex justify-end items-center">
+        <div className="text-sm text-muted-foreground">
+          Showing {filteredActivities.length} of {activityItems.length} activities
+          <Button variant="link" className="ml-2 text-primary p-0 h-auto">
+            View All
+          </Button>
+        </div>
+      </CardFooter>
     </Card>
   );
 }
 
-function ActivityItems({ items = [] }: { items: any[] }) {
-  if (items.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center h-48 text-muted-foreground px-4 py-6">
-        <Info className="h-12 w-12 mb-2 opacity-20" />
-        <p className="text-center">No activity found for this criteria.</p>
-        <p className="text-center text-sm">Try selecting a different filter or add a new activity.</p>
-      </div>
-    );
-  }
-
+function FilterButton({ 
+  children, 
+  active, 
+  onClick 
+}: { 
+  children: React.ReactNode; 
+  active: boolean; 
+  onClick: () => void; 
+}) {
   return (
-    <div className="space-y-4 pt-4 pb-6">
-      {items.map((item, index) => (
-        <ActivityItem key={index} item={item} />
-      ))}
-    </div>
+    <Button 
+      variant={active ? "default" : "outline"}
+      className={`px-2.5 py-1 h-auto text-sm ${active ? 'bg-primary text-white' : ''}`}
+      onClick={onClick}
+    >
+      {children}
+    </Button>
   );
 }
 
-function ActivityItem({ item }: { item: any }) {
-  const getIcon = () => {
-    switch (item.type) {
-      case 'appointment':
-        return <Calendar className="h-4 w-4 text-blue-500" />;
-      case 'note':
-        return <FileText className="h-4 w-4 text-purple-500" />;
-      case 'message':
-        return <MessageCircle className="h-4 w-4 text-green-500" />;
-      case 'payment':
-        return <Banknote className="h-4 w-4 text-amber-500" />;
-      case 'completed':
-        return <CheckCircle className="h-4 w-4 text-emerald-500" />;
-      case 'scheduled':
-        return <Clock className="h-4 w-4 text-sky-500" />;
-      default:
-        return <Info className="h-4 w-4 text-gray-500" />;
-    }
-  };
-
-  const relativeTime = item.timestamp ? 
-    formatDistanceToNow(new Date(item.timestamp), { addSuffix: true }) :
-    "";
-
+function ActivityCard({ activity }: { activity: ActivityItem }) {
   return (
-    <div className="flex items-start gap-3 border-b border-gray-100 pb-4">
-      <Avatar className="h-9 w-9 rounded-full">
-        <div className="h-full w-full bg-gray-100 rounded-full flex items-center justify-center">
-          {getIcon()}
+    <div className="relative p-4 pl-14 hover:bg-gray-50 group">
+      <div className={`absolute left-4 top-4 w-6 h-6 rounded flex items-center justify-center ${activity.color} text-white`}>
+        {activity.icon}
+      </div>
+      <div className="flex justify-between items-start">
+        <div>
+          <h3 className="font-medium">{activity.title}</h3>
+          <p className="text-sm text-muted-foreground">{activity.date} · {activity.user}</p>
+          {activity.description && (
+            <p className="text-sm mt-1 text-muted-foreground">{activity.description}</p>
+          )}
         </div>
-      </Avatar>
-      
-      <div className="flex-1">
-        <div className="flex items-center justify-between">
-          <h4 className="text-sm font-medium">{item.title}</h4>
-          <span className="text-xs text-gray-500">{relativeTime}</span>
+        <div className="flex opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="View details">
+            <Eye className="h-4 w-4" />
+          </Button>
+          {activity.type !== "claim" && activity.type !== "payment" && activity.type !== "admin" && (
+            <Button variant="ghost" size="icon" className="h-8 w-8" aria-label="Edit">
+              <Edit className="h-4 w-4" />
+            </Button>
+          )}
         </div>
-        <p className="text-sm text-gray-600 mt-1">{item.description}</p>
-        {item.details && (
-          <p className="text-xs text-gray-500 mt-1">{item.details}</p>
-        )}
       </div>
     </div>
   );
-}
-
-// Helper functions to format different types of activities
-function formatAppointmentActivity(appointment: any) {
-  const date = new Date(appointment.startTime);
-  const formattedDate = date.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  });
-  const formattedTime = date.toLocaleTimeString('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
-  });
-
-  return {
-    type: 'appointment',
-    title: `${appointment.appointmentType} Appointment`,
-    description: `Scheduled for ${formattedDate} at ${formattedTime}`,
-    details: appointment.notes,
-    timestamp: appointment.createdAt || appointment.updatedAt,
-    status: appointment.status
-  };
-}
-
-function formatNoteActivity(note: any) {
-  return {
-    type: 'note',
-    title: `Patient Note: ${note.noteType || 'General'}`,
-    description: note.content,
-    timestamp: note.createdAt || note.updatedAt,
-    status: note.status
-  };
-}
-
-function formatMessageActivity(message: any) {
-  return {
-    type: 'message',
-    title: `Message: ${message.messageType || 'General'}`,
-    description: message.content,
-    timestamp: message.sentAt || message.createdAt,
-    status: message.isRead ? 'Read' : 'Unread'
-  };
-}
-
-function formatPaymentActivity(payment: any) {
-  return {
-    type: 'payment',
-    title: `Payment: $${payment.amount}`,
-    description: `${payment.paymentMethod} payment received`,
-    details: payment.description,
-    timestamp: payment.paymentDate || payment.createdAt,
-    status: 'Completed'
-  };
 }
