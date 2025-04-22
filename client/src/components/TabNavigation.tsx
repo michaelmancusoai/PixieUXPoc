@@ -1,11 +1,31 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { navigationData, activeSection, activeSubSection } from "@/lib/navigation-data";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 
 export function TabNavigation() {
+  const [location] = useLocation();
   const [activeNav, setActiveNav] = useState(activeSection.href);
   const [activeSubNav, setActiveSubNav] = useState(activeSubSection?.href || "");
+
+  // Update active navigation based on the current location
+  useEffect(() => {
+    const currentNavSection = navigationData.find(item => location === item.href || location.startsWith(item.href + "/"));
+    if (currentNavSection) {
+      setActiveNav(currentNavSection.href);
+      
+      // If the current section has subnav and it's enabled, set the first subnav item as active
+      if (currentNavSection.items.length > 0 && currentNavSection.showSubNav !== false) {
+        // Find if we're on a specific subpage
+        const subItem = currentNavSection.items.find(item => location === item.href);
+        if (subItem) {
+          setActiveSubNav(subItem.href);
+        } else {
+          setActiveSubNav(currentNavSection.items[0].href);
+        }
+      }
+    }
+  }, [location]);
 
   const handleNavClick = (href: string) => {
     setActiveNav(href);
