@@ -1,24 +1,31 @@
 import React from "react";
+import { cn } from "@/lib/utils";
 
 interface CircleActionButtonProps {
   icon: React.ReactNode;
   label: string;
   onClick?: () => void;
+  className?: string;
 }
 
 /**
- * CircleActionButton - A reusable circular action button with an icon and label
+ * CircleActionButton - Reusable circular action button with icon and label
  */
-export default function CircleActionButton({ icon, label, onClick }: CircleActionButtonProps) {
+export default function CircleActionButton({
+  icon,
+  label,
+  onClick,
+  className,
+}: CircleActionButtonProps) {
   return (
-    <div className="flex flex-col items-center">
-      <div 
-        className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mb-1 hover:bg-gray-200 transition-colors cursor-pointer"
-        onClick={onClick}
-      >
-        <div className="text-gray-600">{icon}</div>
+    <button
+      onClick={onClick}
+      className={cn("flex flex-col items-center gap-1", className)}
+    >
+      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition-colors">
+        {icon}
       </div>
-      <span className="text-[10px] font-medium text-gray-700">{label}</span>
-    </div>
+      <span className="text-xs text-muted-foreground">{label}</span>
+    </button>
   );
 }
