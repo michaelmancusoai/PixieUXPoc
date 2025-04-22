@@ -57,6 +57,15 @@ export default function BillingPage() {
           </Card>
         </div>
         
+        <div className="relative py-4 my-2">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-gray-300"></span>
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-[#F5F7FA] px-4 text-sm font-semibold text-gray-500">Billing Functions</span>
+          </div>
+        </div>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <Card>
             <CardHeader className="pb-2">
