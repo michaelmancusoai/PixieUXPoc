@@ -26,7 +26,7 @@ export function NavigationWrapper({ children }: NavigationWrapperProps) {
       <Header />
 
       {/* Page content area */}
-      <div className="flex-1 overflow-y-auto p-6 bg-[#F5F7FA]">
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#F5F7FA]">
         <div className="mx-auto max-w-7xl">
           {/* If we have children (from Dashboard or Settings), show them */}
           {children}

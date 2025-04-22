@@ -5,13 +5,13 @@ import { Building, Shield, Calendar, Activity, Receipt, MessageSquare, Package, 
 export default function SettingsPage() {
   return (
     <NavigationWrapper>
-      <div className="space-y-8">
+      <div className="space-y-6">
         <h1 className="text-2xl font-bold">Settings</h1>
         
         {/* Practice Settings */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <h2 className="text-xl font-semibold border-b pb-2">Practice</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <SettingsCard 
               title="Practice Profile" 
               description="Manage your practice information, locations, and contact details" 
@@ -36,9 +36,9 @@ export default function SettingsPage() {
         </div>
         
         {/* Users & Security Settings */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <h2 className="text-xl font-semibold border-b pb-2">Users & Security</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <SettingsCard 
               title="Team Members" 
               description="Manage staff accounts, roles, and permissions" 
@@ -65,7 +65,7 @@ export default function SettingsPage() {
         {/* Clinical Settings */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold border-b pb-2">Clinical</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <SettingsCard 
               title="Clinical Templates" 
               description="Configure clinical notes, forms, and treatment plan templates" 
@@ -87,7 +87,7 @@ export default function SettingsPage() {
         {/* Billing Settings */}
         <div className="space-y-4">
           <h2 className="text-xl font-semibold border-b pb-2">Billing</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <SettingsCard 
               title="Billing & Payments" 
               description="Configure payment methods, processing, and auto-billing" 
@@ -109,7 +109,7 @@ export default function SettingsPage() {
         {/* Integrations Settings */}
         <div className="space-y-4 mb-8">
           <h2 className="text-xl font-semibold border-b pb-2">Integrations</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <SettingsCard 
               title="External Services" 
               description="Connect with external services, labs, and referral networks" 
@@ -141,17 +141,17 @@ interface SettingsCardProps {
 function SettingsCard({ title, description, icon: Icon }: SettingsCardProps) {
   return (
     <Card className="hover:border-primary/50 transition-colors cursor-pointer">
-      <CardHeader className="flex flex-row items-center gap-4">
-        <div className="bg-primary/10 p-2 rounded-md">
-          <Icon className="h-5 w-5 text-primary" />
+      <CardHeader className="flex flex-row items-center gap-3 p-3 pb-2">
+        <div className="bg-primary/10 p-1.5 rounded-md flex-shrink-0">
+          <Icon className="h-4 w-4 text-primary" />
         </div>
         <div>
-          <CardTitle className="text-lg">{title}</CardTitle>
-          <CardDescription>{description}</CardDescription>
+          <CardTitle className="text-base">{title}</CardTitle>
+          <CardDescription className="text-xs leading-tight mt-0.5">{description}</CardDescription>
         </div>
       </CardHeader>
-      <CardContent>
-        <div className="text-sm text-right text-muted-foreground">
+      <CardContent className="pt-0 pb-2 px-3">
+        <div className="text-xs text-right text-muted-foreground">
           Configure →
         </div>
       </CardContent>
