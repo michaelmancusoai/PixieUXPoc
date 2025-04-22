@@ -13,6 +13,7 @@ import {
   activityLog,
   users
 } from './shared/schema';
+import { pool } from './server/db';
 
 async function seed() {
   console.log('Seeding database...');
@@ -36,10 +37,7 @@ async function seed() {
   const [drsmith] = await db.insert(users).values([
     { 
       username: 'drsmith', 
-      password: 'password', 
-      name: 'Dr. Sarah Smith', 
-      email: 'sarah.smith@pixiedental.com',
-      role: 'dentist'
+      password: 'password'
     }
   ]).returning();
   
@@ -244,7 +242,7 @@ async function seed() {
       patientId: emily.id,
       amount: '200.00',
       paymentMethod: 'Insurance',
-      paymentDate: yesterday.toISOString(),
+      paymentDate: yesterday,
       reference: 'INS-5678',
       createdBy: drsmith.id,
       description: 'Insurance payment for cleaning'
@@ -253,7 +251,7 @@ async function seed() {
       patientId: michael.id,
       amount: '50.00',
       paymentMethod: 'Debit Card',
-      paymentDate: yesterday.toISOString(),
+      paymentDate: yesterday,
       reference: 'PAY-9101',
       createdBy: drsmith.id,
       description: 'Co-pay for consultation'
@@ -266,26 +264,26 @@ async function seed() {
     {
       patientId: john.id,
       claimNumber: 'CL-001-2025',
-      dateOfService: threeDaysAgo.toISOString(),
+      dateOfService: threeDaysAgo,
       amount: '300.00',
       status: 'paid',
-      submittedDate: threeDaysAgo.toISOString(),
+      submittedDate: threeDaysAgo,
       paidAmount: '270.00',
       description: 'Checkup visit and x-rays'
     },
     {
       patientId: emily.id,
       claimNumber: 'CL-002-2025',
-      dateOfService: yesterday.toISOString(),
+      dateOfService: yesterday,
       amount: '250.00',
       status: 'submitted',
-      submittedDate: yesterday.toISOString(),
+      submittedDate: yesterday,
       description: 'Cleaning and fluoride treatment'
     },
     {
       patientId: michael.id,
       claimNumber: 'CL-003-2025',
-      dateOfService: yesterday.toISOString(),
+      dateOfService: yesterday,
       amount: '800.00',
       status: 'pending',
       description: 'Root canal consultation and x-rays'
@@ -304,21 +302,21 @@ async function seed() {
     {
       patientId: john.id,
       type: 'Checkup',
-      dueDate: sixMonthsLater.toISOString(),
+      dueDate: sixMonthsLater,
       status: 'scheduled',
       notes: 'Regular 6-month checkup'
     },
     {
       patientId: emily.id,
       type: 'Cleaning',
-      dueDate: sixMonthsLater.toISOString(),
+      dueDate: sixMonthsLater,
       status: 'scheduled',
       notes: 'Regular 6-month cleaning'
     },
     {
       patientId: michael.id,
       type: 'X-Ray',
-      dueDate: oneYearLater.toISOString(),
+      dueDate: oneYearLater,
       status: 'scheduled',
       notes: 'Annual X-rays'
     }
@@ -329,7 +327,7 @@ async function seed() {
   await db.insert(treatments).values([
     {
       patientId: john.id,
-      treatmentDate: threeDaysAgo.toISOString(),
+      treatmentDate: threeDaysAgo,
       procedure: 'X-Ray',
       toothNumber: null,
       fee: '100.00',
@@ -339,7 +337,7 @@ async function seed() {
     },
     {
       patientId: emily.id,
-      treatmentDate: yesterday.toISOString(),
+      treatmentDate: yesterday,
       procedure: 'Cleaning',
       toothNumber: null,
       fee: '150.00',
@@ -349,7 +347,7 @@ async function seed() {
     },
     {
       patientId: john.id,
-      treatmentDate: tomorrow.toISOString(),
+      treatmentDate: tomorrow,
       procedure: 'Filling',
       toothNumber: 30,
       fee: '250.00',
@@ -359,7 +357,7 @@ async function seed() {
     },
     {
       patientId: michael.id,
-      treatmentDate: nextWeek.toISOString(),
+      treatmentDate: nextWeek,
       procedure: 'Root Canal',
       toothNumber: 9,
       fee: '1000.00',
@@ -376,7 +374,7 @@ async function seed() {
       patientId: john.id,
       content: 'Hi John, this is a reminder about your filling appointment tomorrow. Please arrive 15 minutes early.',
       senderId: drsmith.id,
-      sentAt: now.toISOString(),
+      sentAt: now,
       isRead: false,
       messageType: 'reminder'
     },
@@ -384,7 +382,7 @@ async function seed() {
       patientId: emily.id,
       content: 'Hello Emily, thank you for coming in yesterday. Don\'t forget to follow the post-cleaning instructions provided.',
       senderId: drsmith.id,
-      sentAt: yesterday.toISOString(),
+      sentAt: yesterday,
       isRead: true,
       messageType: 'follow-up'
     },
@@ -392,7 +390,7 @@ async function seed() {
       patientId: michael.id,
       content: 'Michael, we\'ve scheduled your root canal procedure for next week. Please review the preparation instructions.',
       senderId: drsmith.id,
-      sentAt: yesterday.toISOString(),
+      sentAt: yesterday,
       isRead: true,
       messageType: 'appointment'
     }
@@ -447,6 +445,6 @@ seed()
     process.exit(1);
   })
   .finally(async () => {
-    await db.end();
+    await pool.end();
     console.log('Done.');
   });
