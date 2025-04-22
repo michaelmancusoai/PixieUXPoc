@@ -1,4 +1,4 @@
-import { Bell, Cog, HelpCircle, Search, LayoutDashboard } from "lucide-react";
+import { Bell, Cog, HelpCircle, Search } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,39 +13,11 @@ import { Input } from "@/components/ui/input";
 import { Link } from "wouter";
 
 /**
- * Navigation style types - must match NavigationWrapper.ts
- */
-export enum NavStyle {
-  Horizontal = 1,
-  Vertical = 2,
-  Combined = 3,
-  Tabs = 4
-}
-
-/**
- * Navigation style options for the dropdown
- */
-const NAV_STYLE_OPTIONS = [
-  { id: NavStyle.Horizontal, label: "Horizontal Navigation" },
-  { id: NavStyle.Vertical, label: "Vertical Sidebar" },
-  { id: NavStyle.Combined, label: "Combined Navigation" },
-  { id: NavStyle.Tabs, label: "Tab-based Navigation" },
-];
-
-interface HeaderProps {
-  currentNavStyle: NavStyle;
-  onChangeNavStyle: (style: NavStyle) => void;
-}
-
-/**
  * Header Component
  * 
- * Main application header with logo, search, navigation style switcher and user menu
- * 
- * @param currentNavStyle - Current navigation style enum value
- * @param onChangeNavStyle - Callback to change navigation style
+ * Main application header with logo, search, and user menu
  */
-export function Header({ currentNavStyle, onChangeNavStyle }: HeaderProps) {
+export function Header() {
   return (
     <header className="bg-white border-b border-neutral-border py-3 px-4 flex items-center justify-between">
       {/* Logo and Brand Name */}
@@ -74,33 +46,6 @@ export function Header({ currentNavStyle, onChangeNavStyle }: HeaderProps) {
 
       {/* Action buttons and user menu */}
       <div className="flex items-center">
-        {/* Navigation Style Selector */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant="outline"
-              className="hidden md:flex items-center mr-2"
-              size="sm"
-            >
-              <LayoutDashboard className="h-4 w-4 text-gray-600 mr-2" />
-              <span>Navigation Style</span>
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Select Navigation</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            {NAV_STYLE_OPTIONS.map((style) => (
-              <DropdownMenuItem
-                key={style.id}
-                className={currentNavStyle === style.id ? "bg-primary/5" : ""}
-                onClick={() => onChangeNavStyle(style.id)}
-              >
-                {style.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
-
         {/* Notification Bell */}
         <Button
           variant="ghost"
