@@ -71,11 +71,9 @@ export function PatientCard() {
         {/* Alert badges */}
         <div className="flex flex-wrap gap-2 mb-4">
           <Badge variant="destructive" className="flex items-center">
-            <span className="mr-1 text-xs">⚠️</span>
             Latex Allergy
           </Badge>
           <Badge variant="outline" className="flex items-center bg-amber-500 text-white hover:bg-amber-600">
-            <span className="mr-1 text-xs">💰</span>
             Outstanding Balance
           </Badge>
         </div>

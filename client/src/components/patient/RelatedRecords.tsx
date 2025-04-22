@@ -14,7 +14,7 @@ import {
   FileClock, FileText, CalendarDays, Stethoscope, 
   Folder, Users, ImagePlus, FlaskRound, CreditCard, File,
   Plus, Upload, UserPlus, Eye, DownloadCloud, Calendar,
-  ChevronDown, Map
+  ChevronDown, Map, DollarSign, Landmark
 } from "lucide-react";
 
 export default function RelatedRecords() {
@@ -394,6 +394,37 @@ export default function RelatedRecords() {
               <Button variant="default" size="sm" className="h-8">
                 <Plus className="h-4 w-4 mr-1" />
                 New Lab Case
+              </Button>
+              <Button variant="ghost" size="sm" className="h-8">
+                View All
+              </Button>
+            </div>
+          </AccordionSection>
+          
+          <AccordionSection 
+            id="financing" 
+            icon={<Landmark className="h-4 w-4" />} 
+            title="Patient Financing" 
+            count={2}
+          >
+            <div className="border rounded divide-y">
+              <RecordItem
+                title="CareCredit Loan #CC21587"
+                subtitle="Crown treatment plan"
+                value="$1,420.00"
+                status={<Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">Active</Badge>}
+              />
+              <RecordItem
+                title="In-House Payment Plan #PP103"
+                subtitle="3 monthly payments"
+                value="$614.00"
+                status={<Badge variant="outline" className="bg-green-100 text-green-700 border-green-200">Active</Badge>}
+              />
+            </div>
+            <div className="flex justify-between mt-2">
+              <Button variant="default" size="sm" className="h-8">
+                <DollarSign className="h-4 w-4 mr-1" />
+                New Financing
               </Button>
               <Button variant="ghost" size="sm" className="h-8">
                 View All
