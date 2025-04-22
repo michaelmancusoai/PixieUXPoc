@@ -6,6 +6,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import DashboardPage from "@/pages/DashboardPage";
+import TodayPage from "@/pages/dashboard/TodayPage";
+import DailyHuddlePage from "@/pages/dashboard/DailyHuddlePage";
+import MissionControlPage from "@/pages/dashboard/MissionControlPage";
 import SchedulePage from "@/pages/SchedulePage";
 import PatientsPage from "@/pages/PatientsPage";
 import BillingPage from "@/pages/BillingPage";
@@ -18,6 +21,9 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/dashboard" component={DashboardPage} />
+      <Route path="/dashboard/today" component={TodayPage} />
+      <Route path="/dashboard/daily-huddle" component={DailyHuddlePage} />
+      <Route path="/dashboard/mission-control" component={MissionControlPage} />
       <Route path="/schedule" component={SchedulePage} />
       <Route path="/schedule/:subpage" component={SchedulePage} />
       <Route path="/patients" component={PatientsPage} />
