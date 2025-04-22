@@ -12,13 +12,19 @@ import { cn } from "@/lib/utils";
 /**
  * Format a date to a human-readable string
  */
-function formatDate(date: Date | string): string {
-  const d = typeof date === 'string' ? new Date(date) : date;
-  return d.toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
+function formatDate(date: Date | string | null | undefined): string {
+  if (!date) return 'N/A';
+  try {
+    const d = typeof date === 'string' ? new Date(date) : date;
+    return d.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
+    });
+  } catch (error) {
+    console.error('Error formatting date:', error);
+    return 'Invalid date';
+  }
 }
 
 /**
@@ -75,14 +81,21 @@ export default function PatientCard() {
   }
   
   // Calculate age
-  const birthDate = new Date(patient.dateOfBirth);
-  const ageDiff = Date.now() - birthDate.getTime();
-  const ageDate = new Date(ageDiff);
-  const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+  let age = 0;
+  try {
+    if (patient.dateOfBirth) {
+      const birthDate = new Date(patient.dateOfBirth);
+      const ageDiff = Date.now() - birthDate.getTime();
+      const ageDate = new Date(ageDiff);
+      age = Math.abs(ageDate.getUTCFullYear() - 1970);
+    }
+  } catch (error) {
+    console.error('Error calculating age:', error);
+  }
   
   // Format patient info for display
   const patientName = `${patient.firstName} ${patient.lastName}`;
-  const dobDisplay = `${age} years (${formatDate(patient.dateOfBirth)})`;
+  const dobDisplay = patient.dateOfBirth ? `${age} years (${formatDate(patient.dateOfBirth)})` : 'No DOB';
   const chartDisplay = `Chart #${patient.chartNumber}`;
   const initials = getInitials(patientName);
   
