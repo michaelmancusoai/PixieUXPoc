@@ -16,6 +16,7 @@ import {
   Plus, Upload, UserPlus, Eye, DownloadCloud, Calendar,
   ChevronDown, Map
 } from "lucide-react";
+import { RecordStatus } from "./data";
 
 export default function RelatedRecords() {
   return (
@@ -193,7 +194,7 @@ interface RecordItemProps {
   title: string;
   date: string;
   status?: string;
-  statusVariant?: "success" | "warning" | "error" | "info" | "secondary";
+  statusVariant?: RecordStatus;
   description?: string;
   actionIcon?: React.ReactNode;
 }
