@@ -8,21 +8,21 @@ import Home from "@/pages/Home";
 import DashboardPage from "@/pages/DashboardPage";
 import SettingsPage from "@/pages/SettingsPage";
 import PatientProfilePage from "@/pages/PatientProfilePage";
-import PatientListPage from "@/pages/PatientListPage";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/dashboard" component={DashboardPage} />
-      <Route path="/schedule" component={DashboardPage} />
-      <Route path="/schedule/:subpage" component={DashboardPage} />
-      <Route path="/patients" component={PatientListPage} />
-      <Route path="/patients/:id" component={PatientProfilePage} />
-      <Route path="/billing" component={DashboardPage} />
-      <Route path="/billing/:subpage" component={DashboardPage} />
-      <Route path="/reports" component={DashboardPage} />
-      <Route path="/reports/:subpage" component={DashboardPage} />
+      <Route path="/schedule" component={Home} />
+      <Route path="/schedule/:subpage" component={Home} />
+      <Route path="/patients" component={Home} />
+      <Route path="/patients/profile/:id" component={PatientProfilePage} />
+      <Route path="/patients/:subpage" component={Home} />
+      <Route path="/billing" component={Home} />
+      <Route path="/billing/:subpage" component={Home} />
+      <Route path="/reports" component={Home} />
+      <Route path="/reports/:subpage" component={Home} />
       <Route path="/settings" component={SettingsPage} />
       <Route path="/settings/:subpage" component={SettingsPage} />
       <Route component={NotFound} />
