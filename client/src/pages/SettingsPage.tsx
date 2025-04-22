@@ -1,49 +1,17 @@
 import { NavigationWrapper } from "@/components/NavigationWrapper";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building, Shield, Calendar, Activity, Receipt, MessageSquare, Package, Wallet, RefreshCcw, Cog, CreditCard, FileBarChart, Users } from "lucide-react";
+import { Building, Shield, Calendar, Activity, Receipt, MessageSquare, Package, Wallet, RefreshCcw, Cog, CreditCard, FileBarChart, Users, LockKeyhole } from "lucide-react";
 
 export default function SettingsPage() {
   return (
     <NavigationWrapper>
-      <h1 className="text-2xl font-bold mb-6">Settings</h1>
-      
-      <Tabs defaultValue="practice" className="w-full">
-        <TabsList className="mb-6 border-b w-full justify-start rounded-none h-auto p-0 bg-transparent">
-          <TabsTrigger 
-            value="practice" 
-            className="py-3 px-5 rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-          >
-            Practice
-          </TabsTrigger>
-          <TabsTrigger 
-            value="users" 
-            className="py-3 px-5 rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-          >
-            Users & Security
-          </TabsTrigger>
-          <TabsTrigger 
-            value="clinical" 
-            className="py-3 px-5 rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-          >
-            Clinical
-          </TabsTrigger>
-          <TabsTrigger 
-            value="billing" 
-            className="py-3 px-5 rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-          >
-            Billing
-          </TabsTrigger>
-          <TabsTrigger 
-            value="integrations" 
-            className="py-3 px-5 rounded-none data-[state=active]:bg-transparent data-[state=active]:shadow-none data-[state=active]:border-b-2 data-[state=active]:border-primary"
-          >
-            Integrations
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="practice" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="space-y-8">
+        <h1 className="text-2xl font-bold">Settings</h1>
+        
+        {/* Practice Settings */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold border-b pb-2">Practice</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <SettingsCard 
               title="Practice Profile" 
               description="Manage your practice information, locations, and contact details" 
@@ -65,10 +33,12 @@ export default function SettingsPage() {
               icon={Wallet} 
             />
           </div>
-        </TabsContent>
-
-        <TabsContent value="users" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        </div>
+        
+        {/* Users & Security Settings */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold border-b pb-2">Users & Security</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <SettingsCard 
               title="Team Members" 
               description="Manage staff accounts, roles, and permissions" 
@@ -84,11 +54,18 @@ export default function SettingsPage() {
               description="View system access history and security events" 
               icon={FileBarChart} 
             />
+            <SettingsCard 
+              title="User Permissions" 
+              description="Set granular access controls for different user roles" 
+              icon={LockKeyhole} 
+            />
           </div>
-        </TabsContent>
-
-        <TabsContent value="clinical" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        </div>
+        
+        {/* Clinical Settings */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold border-b pb-2">Clinical</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <SettingsCard 
               title="Clinical Templates" 
               description="Configure clinical notes, forms, and treatment plan templates" 
@@ -105,10 +82,12 @@ export default function SettingsPage() {
               icon={RefreshCcw} 
             />
           </div>
-        </TabsContent>
-
-        <TabsContent value="billing" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        </div>
+        
+        {/* Billing Settings */}
+        <div className="space-y-4">
+          <h2 className="text-xl font-semibold border-b pb-2">Billing</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <SettingsCard 
               title="Billing & Payments" 
               description="Configure payment methods, processing, and auto-billing" 
@@ -125,12 +104,14 @@ export default function SettingsPage() {
               icon={CreditCard} 
             />
           </div>
-        </TabsContent>
-
-        <TabsContent value="integrations" className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        </div>
+        
+        {/* Integrations Settings */}
+        <div className="space-y-4 mb-8">
+          <h2 className="text-xl font-semibold border-b pb-2">Integrations</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <SettingsCard 
-              title="Integrations" 
+              title="External Services" 
               description="Connect with external services, labs, and referral networks" 
               icon={Cog} 
             />
@@ -145,8 +126,8 @@ export default function SettingsPage() {
               icon={Users} 
             />
           </div>
-        </TabsContent>
-      </Tabs>
+        </div>
+      </div>
     </NavigationWrapper>
   );
 }
