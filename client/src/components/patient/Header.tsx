@@ -23,7 +23,7 @@ const patientData = {
 
 export default function Header() {
   return (
-    <header className="bg-white sticky top-0 z-50 shadow-sm" role="banner">
+    <header className="bg-white z-10 shadow-sm" role="banner">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between py-3">
           <div className="flex items-center gap-1">
