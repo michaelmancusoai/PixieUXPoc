@@ -231,78 +231,7 @@ export const navigationData: NavSection[] = [
       },
     ],
   },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
-    items: [
-      {
-        title: "Practice Profile",
-        href: "/settings/practice-profile",
-        icon: Building,
-      },
-      {
-        title: "Team & Security",
-        href: "/settings/team-security",
-        icon: Shield,
-      },
-      {
-        title: "Scheduling",
-        href: "/settings/scheduling",
-        icon: Calendar,
-      },
-      {
-        title: "Clinical",
-        href: "/settings/clinical",
-        icon: Activity,
-      },
-      {
-        title: "Billing & Payments",
-        href: "/settings/billing-payments",
-        icon: Receipt,
-      },
-      {
-        title: "Communications",
-        href: "/settings/communications",
-        icon: MessageSquare,
-      },
-      {
-        title: "Inventory",
-        href: "/settings/inventory",
-        icon: Package,
-      },
-      {
-        title: "Practice Finances",
-        href: "/settings/practice-finances",
-        icon: Wallet,
-      },
-      {
-        title: "AI Automation Agents",
-        href: "/settings/ai-automation",
-        icon: RefreshCcw,
-      },
-      {
-        title: "Integrations",
-        href: "/settings/integrations",
-        icon: Cog,
-      },
-      {
-        title: "Subscription",
-        href: "/settings/subscription",
-        icon: CreditCard,
-      },
-      {
-        title: "Data & Logs",
-        href: "/settings/data-logs",
-        icon: FileBarChart,
-      },
-      {
-        title: "Referral Management",
-        href: "/settings/referral-management",
-        icon: Users,
-      },
-    ],
-  },
+
 ];
 
 export const activeSection = navigationData[1]; // Schedule section
