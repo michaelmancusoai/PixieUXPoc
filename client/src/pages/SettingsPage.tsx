@@ -63,7 +63,7 @@ export default function SettingsPage() {
         </div>
         
         {/* Clinical Settings */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <h2 className="text-xl font-semibold border-b pb-2">Clinical</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <SettingsCard 
@@ -85,7 +85,7 @@ export default function SettingsPage() {
         </div>
         
         {/* Billing Settings */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <h2 className="text-xl font-semibold border-b pb-2">Billing</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <SettingsCard 
@@ -107,7 +107,7 @@ export default function SettingsPage() {
         </div>
         
         {/* Integrations Settings */}
-        <div className="space-y-4 mb-8">
+        <div className="space-y-3 mb-6">
           <h2 className="text-xl font-semibold border-b pb-2">Integrations</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
             <SettingsCard 
