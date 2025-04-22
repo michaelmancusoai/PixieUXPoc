@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  Accordion, 
-  AccordionItem, 
-  AccordionTrigger, 
-  AccordionContent 
-} from "@/components/ui/accordion";
+import { Accordion } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import ToothDiagram from "./ToothDiagram";
+import AccordionSection from "@/components/shared/ui/AccordionSection";
+import RecordItem from "@/components/shared/ui/RecordItem";
 import {
   FileClock, FileText, CalendarDays, Stethoscope, 
   Folder, Users, ImagePlus, FlaskRound, CreditCard, File,
@@ -437,64 +434,3 @@ export default function RelatedRecords() {
   );
 }
 
-function AccordionSection({ 
-  id, 
-  icon, 
-  title, 
-  count, 
-  children 
-}: { 
-  id: string; 
-  icon: React.ReactNode; 
-  title: string; 
-  count: number; 
-  children: React.ReactNode; 
-}) {
-  return (
-    <AccordionItem value={id} className="border-b">
-      <AccordionTrigger className="px-4 py-3 hover:bg-gray-50">
-        <div className="flex items-center">
-          <span className="text-muted-foreground mr-2">{icon}</span>
-          <h3 className="font-medium">{title}</h3>
-          <Badge variant="secondary" className="ml-2 px-2 py-0.5 rounded-full text-xs bg-gray-100 text-muted-foreground">
-            {count}
-          </Badge>
-        </div>
-      </AccordionTrigger>
-      <AccordionContent className="px-4 pb-3">
-        {children}
-      </AccordionContent>
-    </AccordionItem>
-  );
-}
-
-function RecordItem({ 
-  title, 
-  subtitle, 
-  meta, 
-  value, 
-  status, 
-  action 
-}: { 
-  title: string; 
-  subtitle: string; 
-  meta?: string; 
-  value?: string; 
-  status?: React.ReactNode; 
-  action?: React.ReactNode; 
-}) {
-  return (
-    <div className="p-2 hover:bg-gray-50 flex justify-between items-center">
-      <div>
-        <div className="font-medium">{title}</div>
-        <div className="text-xs text-muted-foreground">{subtitle}</div>
-        {meta && <div className="text-xs text-muted-foreground">{meta}</div>}
-      </div>
-      <div className="text-right">
-        {value && <div className="font-medium">{value}</div>}
-        {status && status}
-        {action && action}
-      </div>
-    </div>
-  );
-}
