@@ -1,6 +1,6 @@
 import { NavigationWrapper } from "@/components/NavigationWrapper";
 import { usePatients } from "@/hooks/usePatients";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,11 +11,6 @@ import { useState } from "react";
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
   const { data: patients, isLoading } = usePatients();
-  const [_, navigate] = useLocation();
-
-  const handleOpenPatient = (id: number) => {
-    navigate(`/patients/profile/${id}`);
-  };
 
   // Filter patients based on search query
   const filteredPatients = searchQuery.length > 0 && patients
@@ -65,8 +60,7 @@ export default function Home() {
                 {filteredPatients.map((patient) => (
                   <div
                     key={patient.id}
-                    className="border p-4 rounded-md hover:bg-gray-50 cursor-pointer transition-colors flex justify-between items-center"
-                    onClick={() => handleOpenPatient(patient.id)}
+                    className="border p-4 rounded-md hover:bg-gray-50 transition-colors flex justify-between items-center"
                   >
                     <div className="flex items-center">
                       <div className="bg-blue-100 rounded-full p-2 mr-3">
@@ -80,9 +74,11 @@ export default function Home() {
                         </div>
                       </div>
                     </div>
-                    <Button variant="ghost" size="sm">
-                      View Profile
-                    </Button>
+                    <Link href={`/patients/profile/${patient.id}`}>
+                      <Button variant="ghost" size="sm">
+                        View Profile
+                      </Button>
+                    </Link>
                   </div>
                 ))}
               </div>
