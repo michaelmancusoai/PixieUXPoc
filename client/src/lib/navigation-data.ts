@@ -26,7 +26,8 @@ import {
   LockKeyhole,
   User,
   FileEdit,
-  Clipboard
+  Clipboard,
+  LayoutDashboard
 } from "lucide-react";
 
 export interface NavItem {
@@ -40,9 +41,17 @@ export interface NavSection {
   href: string;
   icon: React.ElementType;
   items: NavItem[];
+  showSubNav?: boolean;
 }
 
 export const navigationData: NavSection[] = [
+  {
+    title: "Dashboard",
+    href: "/dashboard",
+    icon: LayoutDashboard,
+    items: [],
+    showSubNav: false
+  },
   {
     title: "Schedule",
     href: "/schedule",
@@ -79,6 +88,7 @@ export const navigationData: NavSection[] = [
     title: "Patients",
     href: "/patients",
     icon: Users,
+    showSubNav: false,
     items: [
       {
         title: "Patient Profile",
@@ -295,5 +305,5 @@ export const navigationData: NavSection[] = [
   },
 ];
 
-export const activeSection = navigationData[0]; // Schedule
+export const activeSection = navigationData[1]; // Schedule section
 export const activeSubSection = activeSection.items[0]; // Calendar

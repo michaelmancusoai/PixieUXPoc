@@ -5,16 +5,19 @@ import { navigationData, activeSection, activeSubSection } from "@/lib/navigatio
 
 export function CombinedNavigation() {
   const [activeNav, setActiveNav] = useState(activeSection.href);
-  const [activeSubNav, setActiveSubNav] = useState(activeSubSection.href);
+  const [activeSubNav, setActiveSubNav] = useState(activeSubSection?.href || "");
 
   const handleNavClick = (href: string) => {
     setActiveNav(href);
     // Set first subnav item as active when changing main nav
     const section = navigationData.find(item => item.href === href);
-    if (section && section.items.length > 0) {
+    if (section && section.items.length > 0 && section.showSubNav !== false) {
       setActiveSubNav(section.items[0].href);
     }
   };
+
+  const currentSection = navigationData.find((item) => item.href === activeNav);
+  const showSubNav = currentSection && currentSection.items.length > 0 && currentSection.showSubNav !== false;
 
   return (
     <div className="flex flex-col h-full">
@@ -36,17 +39,16 @@ export function CombinedNavigation() {
         ))}
       </nav>
       
-      {/* Left sidebar for secondary navigation */}
-      <div className="w-56 bg-white border-r border-neutral-border h-full overflow-y-auto">
-        <div className="p-4 border-b border-neutral-border">
-          <h3 className="font-semibold text-gray-800">
-            {navigationData.find((item) => item.href === activeNav)?.title}
-          </h3>
-        </div>
-        <nav className="pt-2">
-          {navigationData
-            .find((item) => item.href === activeNav)
-            ?.items.map((subItem) => (
+      {/* Left sidebar for secondary navigation - only show if the section has subnav items */}
+      {showSubNav ? (
+        <div className="w-56 bg-white border-r border-neutral-border h-full overflow-y-auto">
+          <div className="p-4 border-b border-neutral-border">
+            <h3 className="font-semibold text-gray-800">
+              {currentSection.title}
+            </h3>
+          </div>
+          <nav className="pt-2">
+            {currentSection.items.map((subItem) => (
               <Link
                 key={subItem.href}
                 href={subItem.href}
@@ -60,8 +62,12 @@ export function CombinedNavigation() {
                 <span>{subItem.title}</span>
               </Link>
             ))}
-        </nav>
-      </div>
+          </nav>
+        </div>
+      ) : (
+        // No sub navigation, display a spacer
+        <div className="w-2 bg-white border-r border-neutral-border h-full"></div>
+      )}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Bell, HelpCircle, Search, Settings } from "lucide-react";
+import { Bell, Cog, HelpCircle, Search, LayoutDashboard } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { Link } from "wouter";
 
 interface HeaderProps {
   currentNavStyle: number;
@@ -46,7 +47,7 @@ export function Header({ currentNavStyle, onChangeNavStyle }: HeaderProps) {
               className="hidden md:flex items-center mr-2"
               size="sm"
             >
-              <Settings className="h-4 w-4 text-gray-600 mr-2" />
+              <LayoutDashboard className="h-4 w-4 text-gray-600 mr-2" />
               <span>Navigation Style</span>
             </Button>
           </DropdownMenuTrigger>
@@ -97,6 +98,17 @@ export function Header({ currentNavStyle, onChangeNavStyle }: HeaderProps) {
         >
           <HelpCircle className="h-5 w-5 text-gray-600" />
         </Button>
+
+        <Link href="/settings">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="ml-1 rounded-full"
+            aria-label="Settings"
+          >
+            <Cog className="h-5 w-5 text-gray-600" />
+          </Button>
+        </Link>
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

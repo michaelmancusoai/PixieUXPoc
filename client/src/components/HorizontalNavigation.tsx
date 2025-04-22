@@ -6,16 +6,19 @@ import { navigationData, activeSection, activeSubSection } from "@/lib/navigatio
 
 export function HorizontalNavigation() {
   const [activeNav, setActiveNav] = useState(activeSection.href);
-  const [activeSubNav, setActiveSubNav] = useState(activeSubSection.href);
+  const [activeSubNav, setActiveSubNav] = useState(activeSubSection?.href || "");
 
   const handleNavClick = (href: string) => {
     setActiveNav(href);
     // Set first subnav item as active when changing main nav
     const section = navigationData.find(item => item.href === href);
-    if (section && section.items.length > 0) {
+    if (section && section.items.length > 0 && section.showSubNav !== false) {
       setActiveSubNav(section.items[0].href);
     }
   };
+
+  const currentSection = navigationData.find((item) => item.href === activeNav);
+  const showSubNav = currentSection && currentSection.items.length > 0 && currentSection.showSubNav !== false;
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -39,11 +42,10 @@ export function HorizontalNavigation() {
         </nav>
       </div>
 
-      {/* Secondary Navigation */}
-      <div className="secondary-nav bg-white border-b border-neutral-border flex p-2 overflow-x-auto">
-        {navigationData
-          .find((item) => item.href === activeNav)
-          ?.items.map((subItem) => (
+      {/* Secondary Navigation - only show if the current section has subnav items */}
+      {showSubNav && (
+        <div className="secondary-nav bg-white border-b border-neutral-border flex p-2 overflow-x-auto">
+          {currentSection.items.map((subItem) => (
             <Link
               key={subItem.href}
               href={subItem.href}
@@ -57,7 +59,8 @@ export function HorizontalNavigation() {
               <span>{subItem.title}</span>
             </Link>
           ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
