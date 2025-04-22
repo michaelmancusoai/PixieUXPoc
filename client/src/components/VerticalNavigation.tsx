@@ -1,63 +1,19 @@
-import { useState, useEffect } from "react";
-import { Link, useLocation } from "wouter";
+import { Link } from "wouter";
 import { ChevronDown, ChevronRight, Search } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { navigationData, activeSection, activeSubSection } from "@/lib/navigation-data";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
+import { useNavigation } from "@/hooks/useNavigation";
 
 export function VerticalNavigation() {
-  const [location] = useLocation();
-  const [activeNav, setActiveNav] = useState(activeSection.href);
-  const [activeSubNav, setActiveSubNav] = useState(activeSubSection?.href || "");
-  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    [activeSection.href]: true,
-  });
-
-  // Update active navigation based on the current location
-  useEffect(() => {
-    const currentNavSection = navigationData.find(item => location === item.href || location.startsWith(item.href + "/"));
-    if (currentNavSection) {
-      setActiveNav(currentNavSection.href);
-      
-      // Expand current section if it has subnav and it's enabled
-      if (currentNavSection.items.length > 0 && currentNavSection.showSubNav !== false) {
-        setExpandedSections(prev => ({
-          ...prev,
-          [currentNavSection.href]: true
-        }));
-        
-        // Find if we're on a specific subpage
-        const subItem = currentNavSection.items.find(item => location === item.href);
-        if (subItem) {
-          setActiveSubNav(subItem.href);
-        } else {
-          setActiveSubNav(currentNavSection.items[0].href);
-        }
-      } else {
-        // Close all sections except the active one
-        const newExpandedSections: Record<string, boolean> = {};
-        navigationData.forEach(item => {
-          newExpandedSections[item.href] = item.href === currentNavSection.href && 
-                                          item.items.length > 0 && 
-                                          item.showSubNav !== false;
-        });
-        setExpandedSections(newExpandedSections);
-      }
-    }
-  }, [location]);
-
-  const toggleSection = (href: string) => {
-    const section = navigationData.find(item => item.href === href);
-    // Only toggle if there are items and section allows subnavigation
-    if (section && section.items.length > 0 && section.showSubNav !== false) {
-      setExpandedSections((prev) => ({
-        ...prev,
-        [href]: !prev[href],
-      }));
-    }
-    setActiveNav(href);
-  };
+  const {
+    navigationData,
+    activeNav,
+    activeSubNav,
+    expandedSections,
+    setActiveSubNav,
+    toggleSection
+  } = useNavigation();
 
   return (
     <div className="w-64 bg-white border-r border-neutral-border flex-shrink-0 h-full overflow-y-auto">

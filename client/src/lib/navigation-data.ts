@@ -30,12 +30,30 @@ import {
   LayoutDashboard
 } from "lucide-react";
 
+/**
+ * Navigation Item Interface
+ * Represents an individual navigation item (sub-navigation)
+ * 
+ * @property title - Display text for the navigation item
+ * @property href - The URL path for the navigation item
+ * @property icon - The icon component to display (from lucide-react)
+ */
 export interface NavItem {
   title: string;
   href: string;
   icon: React.ElementType;
 }
 
+/**
+ * Navigation Section Interface
+ * Represents a main navigation section, which can contain sub-items
+ * 
+ * @property title - Display text for the navigation section
+ * @property href - The URL path for the navigation section
+ * @property icon - The icon component to display (from lucide-react)
+ * @property items - Array of sub-navigation items
+ * @property showSubNav - Whether to show sub-navigation items (defaults to true if not specified)
+ */
 export interface NavSection {
   title: string;
   href: string;
@@ -44,7 +62,12 @@ export interface NavSection {
   showSubNav?: boolean;
 }
 
+/**
+ * Main Navigation Data
+ * Defines the application's navigation structure including all sections and their sub-items
+ */
 export const navigationData: NavSection[] = [
+  // Dashboard has no sub-navigation
   {
     title: "Dashboard",
     href: "/dashboard",
@@ -52,6 +75,7 @@ export const navigationData: NavSection[] = [
     items: [],
     showSubNav: false
   },
+  // Schedule section with appointments and calendar management
   {
     title: "Schedule",
     href: "/schedule",
@@ -84,6 +108,8 @@ export const navigationData: NavSection[] = [
       },
     ],
   },
+  // Patients section with patient management features
+  // showSubNav is false since this navigation would be contextual
   {
     title: "Patients",
     href: "/patients",
@@ -162,6 +188,7 @@ export const navigationData: NavSection[] = [
       },
     ],
   },
+  // Billing section with financial management
   {
     title: "Billing",
     href: "/billing",
@@ -194,6 +221,7 @@ export const navigationData: NavSection[] = [
       },
     ],
   },
+  // Reports section with analytics and reporting
   {
     title: "Reports",
     href: "/reports",
@@ -231,8 +259,8 @@ export const navigationData: NavSection[] = [
       },
     ],
   },
-
 ];
 
-export const activeSection = navigationData[1]; // Schedule section
+// Default active section and sub-section for initial rendering
+export const activeSection = navigationData[1]; // Schedule section 
 export const activeSubSection = activeSection.items[0]; // Calendar
