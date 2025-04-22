@@ -1,15 +1,13 @@
-import { useQuery } from '@tanstack/react-query';
-import type { Patient } from '@shared/schema';
+import { useQuery } from "@tanstack/react-query";
+import { Patient } from "@shared/schema";
 
 /**
- * Hook to fetch a single patient's details
- * 
- * @param patientId - The ID of the patient to fetch
- * @returns Query object with patient data
+ * Hook to fetch patient details
  */
 export function usePatientDetails(patientId: number) {
   return useQuery<Patient>({
     queryKey: ['/api/patients', patientId],
-    enabled: !!patientId,
+    enabled: !!patientId, // Only run if we have a patientId
+    staleTime: 5 * 60 * 1000, // 5 minutes
   });
 }

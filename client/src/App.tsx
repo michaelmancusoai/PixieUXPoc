@@ -8,6 +8,7 @@ import Home from "@/pages/Home";
 import DashboardPage from "@/pages/DashboardPage";
 import SettingsPage from "@/pages/SettingsPage";
 import PatientProfilePage from "@/pages/PatientProfilePage";
+import PatientListPage from "@/pages/PatientListPage";
 
 function Router() {
   return (
@@ -16,7 +17,7 @@ function Router() {
       <Route path="/dashboard" component={DashboardPage} />
       <Route path="/schedule" component={DashboardPage} />
       <Route path="/schedule/:subpage" component={DashboardPage} />
-      <Route path="/patients" component={DashboardPage} />
+      <Route path="/patients" component={PatientListPage} />
       <Route path="/patients/:id(\d+)" component={PatientProfilePage} />
       <Route path="/patients/:subpage" component={DashboardPage} />
       <Route path="/billing" component={DashboardPage} />
