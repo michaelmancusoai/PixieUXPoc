@@ -18,8 +18,7 @@ function Router() {
       <Route path="/schedule" component={DashboardPage} />
       <Route path="/schedule/:subpage" component={DashboardPage} />
       <Route path="/patients" component={PatientListPage} />
-      <Route path="/patients/:id(\d+)" component={PatientProfilePage} />
-      <Route path="/patients/:subpage" component={DashboardPage} />
+      <Route path="/patients/:id" component={PatientProfilePage} />
       <Route path="/billing" component={DashboardPage} />
       <Route path="/billing/:subpage" component={DashboardPage} />
       <Route path="/reports" component={DashboardPage} />
