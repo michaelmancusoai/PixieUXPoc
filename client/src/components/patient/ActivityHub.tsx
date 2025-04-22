@@ -7,19 +7,7 @@ import {
   Calendar, MessageSquare, Stethoscope, FileText, 
   DollarSign, Phone, Gavel, Eye, Edit, Plus
 } from "lucide-react";
-
-type ActivityFilter = "all" | "clinical" | "financial" | "communications" | "admin";
-
-type ActivityItem = {
-  id: string;
-  type: "appointment" | "message" | "clinical" | "claim" | "payment" | "voicemail" | "admin";
-  title: string;
-  date: string;
-  user: string;
-  description?: string;
-  icon: React.ReactNode;
-  color: string;
-};
+import { ActivityFilter, ActivityItem } from "./data";
 
 // Sample activity items
 const activityItems: ActivityItem[] = [

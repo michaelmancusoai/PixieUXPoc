@@ -8,6 +8,7 @@ import {
   CreditCard, User, Clock, ChevronRight, Edit,
   Shield, DollarSign
 } from "lucide-react";
+import { patientData } from "./data";
 
 export default function SnapshotCards() {
   return (
@@ -22,6 +23,8 @@ export default function SnapshotCards() {
 }
 
 function NextVisitCard() {
+  const { nextAppointment } = patientData;
+  
   return (
     <Card className="transition-all hover:shadow-md">
       <CardContent className="p-4">
@@ -36,9 +39,9 @@ function NextVisitCard() {
         </div>
         
         <div className="mb-2">
-          <p className="font-semibold text-xl">June 15, 2025</p>
-          <p className="text-sm text-muted-foreground">10:30 AM · Cleaning</p>
-          <p className="text-sm text-muted-foreground">Dr. Johnson</p>
+          <p className="font-semibold text-xl">{nextAppointment.date}</p>
+          <p className="text-sm text-muted-foreground">{nextAppointment.time} · {nextAppointment.type}</p>
+          <p className="text-sm text-muted-foreground">{nextAppointment.provider}</p>
         </div>
 
         <div className="flex justify-end mt-3">
@@ -53,6 +56,8 @@ function NextVisitCard() {
 }
 
 function BalanceCard() {
+  const { balance } = patientData;
+  
   return (
     <Card className="mt-4 transition-all hover:shadow-md">
       <CardContent className="p-4">
@@ -67,8 +72,8 @@ function BalanceCard() {
         </div>
         
         <div className="mb-2">
-          <p className="font-semibold text-xl">$325.75</p>
-          <p className="text-sm text-muted-foreground">Last Payment: April 10, 2025</p>
+          <p className="font-semibold text-xl">${balance.amount.toFixed(2)}</p>
+          <p className="text-sm text-muted-foreground">Last Payment: {balance.lastPayment}</p>
         </div>
         
         <div className="flex justify-end mt-3">
@@ -83,6 +88,8 @@ function BalanceCard() {
 }
 
 function InsuranceCard() {
+  const { insuranceDetails } = patientData;
+  
   return (
     <Card className="mt-4 transition-all hover:shadow-md">
       <CardContent className="p-4">
@@ -97,12 +104,14 @@ function InsuranceCard() {
         </div>
         
         <div className="mb-2">
-          <p className="font-semibold">Blue Cross Blue Shield</p>
+          <p className="font-semibold">{insuranceDetails.provider}</p>
           <div className="flex items-center justify-between text-sm mt-1">
-            <p className="text-muted-foreground">Policy #: BCBS12345678</p>
-            <Badge variant="outline" className="text-xs bg-blue-50 border-blue-200 text-blue-700">Active</Badge>
+            <p className="text-muted-foreground">Policy #: {insuranceDetails.policyNumber}</p>
+            <Badge variant="outline" className="text-xs bg-blue-50 border-blue-200 text-blue-700">
+              {insuranceDetails.status}
+            </Badge>
           </div>
-          <p className="text-sm text-muted-foreground mt-1">Next Verification: July 2025</p>
+          <p className="text-sm text-muted-foreground mt-1">Next Verification: {insuranceDetails.nextVerification}</p>
         </div>
         
         <div className="flex justify-end mt-3">
@@ -117,6 +126,8 @@ function InsuranceCard() {
 }
 
 function RecallsCard() {
+  const { recalls } = patientData;
+  
   return (
     <Card className="mt-4 transition-all hover:shadow-md">
       <CardContent className="p-4">
@@ -131,14 +142,14 @@ function RecallsCard() {
         </div>
         
         <div className="space-y-2 mb-2">
-          <div className="flex justify-between items-center text-sm">
-            <span>Annual Check-up</span>
-            <Badge variant="outline" className="text-xs bg-purple-50 border-purple-200 text-purple-700">Aug 2025</Badge>
-          </div>
-          <div className="flex justify-between items-center text-sm">
-            <span>X-Rays</span>
-            <Badge variant="outline" className="text-xs bg-purple-50 border-purple-200 text-purple-700">Dec 2025</Badge>
-          </div>
+          {recalls.map((recall, index) => (
+            <div key={index} className="flex justify-between items-center text-sm">
+              <span>{recall.type}</span>
+              <Badge variant="outline" className="text-xs bg-purple-50 border-purple-200 text-purple-700">
+                {recall.dueDate}
+              </Badge>
+            </div>
+          ))}
         </div>
         
         <div className="flex justify-end mt-3">
@@ -153,6 +164,8 @@ function RecallsCard() {
 }
 
 function RiskAlertsCard() {
+  const { medicalAlerts } = patientData;
+  
   return (
     <Card className="mt-4 transition-all hover:shadow-md">
       <CardContent className="p-4">
@@ -167,15 +180,17 @@ function RiskAlertsCard() {
         </div>
         
         <div className="space-y-2 mb-2">
-          <div className="flex items-start gap-2">
-            <Badge variant="destructive" className="mt-0.5">Allergy</Badge>
-            <span className="text-sm">Penicillin - Severe reaction</span>
-          </div>
-          
-          <div className="flex items-start gap-2">
-            <Badge variant="outline" className="mt-0.5">Medical</Badge>
-            <span className="text-sm">Asthma - Uses inhaler as needed</span>
-          </div>
+          {medicalAlerts.map((alert, index) => (
+            <div key={index} className="flex items-start gap-2">
+              <Badge 
+                variant={alert.type === "Allergy" ? "destructive" : "outline"} 
+                className="mt-0.5"
+              >
+                {alert.type}
+              </Badge>
+              <span className="text-sm">{alert.description}</span>
+            </div>
+          ))}
         </div>
         
         <div className="flex justify-end mt-3">

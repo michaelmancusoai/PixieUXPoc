@@ -9,17 +9,7 @@ import {
   Paperclip, MoreHorizontal, ArrowLeft
 } from "lucide-react";
 import { Link } from "wouter";
-
-const patientData = {
-  name: "Sarah Johnson",
-  dob: "28 Aug 1986 · 38 yrs",
-  gender: "Female",
-  chart: "Chart #12345",
-  alerts: [
-    { id: 1, type: "error", icon: "error", label: "Latex Allergy" },
-    { id: 2, type: "warning", icon: "attach_money", label: "Outstanding Balance" }
-  ]
-};
+import { patientData } from "./data";
 
 export default function Header() {
   return (
@@ -48,13 +38,21 @@ export default function Header() {
 }
 
 export function PatientCard() {
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(part => part.charAt(0))
+      .join('')
+      .toUpperCase();
+  };
+
   return (
     <Card className="h-full">
       <CardContent className="p-4">
         <div className="flex items-start mb-4">
           <Avatar className="h-14 w-14 mr-4 bg-[#F56A46]">
             <div className="w-full h-full rounded-full flex items-center justify-center">
-              <span className="text-xl font-semibold text-white">SJ</span>
+              <span className="text-xl font-semibold text-white">{getInitials(patientData.name)}</span>
             </div>
           </Avatar>
           
@@ -78,6 +76,22 @@ export function PatientCard() {
             <span className="mr-1 text-xs">💰</span>
             Outstanding Balance
           </Badge>
+        </div>
+        
+        {/* Patient details */}
+        <div className="space-y-2 mb-4 text-sm">
+          <div className="flex items-start gap-2">
+            <Phone className="h-4 w-4 mt-0.5 text-muted-foreground" />
+            <div>
+              <p className="text-muted-foreground">{patientData.phone}</p>
+            </div>
+          </div>
+          <div className="flex items-start gap-2">
+            <MessageSquare className="h-4 w-4 mt-0.5 text-muted-foreground" />
+            <div>
+              <p className="text-muted-foreground">{patientData.email}</p>
+            </div>
+          </div>
         </div>
         
         {/* Action buttons */}
