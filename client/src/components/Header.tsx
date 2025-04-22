@@ -12,21 +12,54 @@ import {
 import { Input } from "@/components/ui/input";
 import { Link } from "wouter";
 
-interface HeaderProps {
-  currentNavStyle: number;
-  onChangeNavStyle: (style: number) => void;
+/**
+ * Navigation style types - must match NavigationWrapper.ts
+ */
+export enum NavStyle {
+  Horizontal = 1,
+  Vertical = 2,
+  Combined = 3,
+  Tabs = 4
 }
 
+/**
+ * Navigation style options for the dropdown
+ */
+const NAV_STYLE_OPTIONS = [
+  { id: NavStyle.Horizontal, label: "Horizontal Navigation" },
+  { id: NavStyle.Vertical, label: "Vertical Sidebar" },
+  { id: NavStyle.Combined, label: "Combined Navigation" },
+  { id: NavStyle.Tabs, label: "Tab-based Navigation" },
+];
+
+interface HeaderProps {
+  currentNavStyle: NavStyle;
+  onChangeNavStyle: (style: NavStyle) => void;
+}
+
+/**
+ * Header Component
+ * 
+ * Main application header with logo, search, navigation style switcher and user menu
+ * 
+ * @param currentNavStyle - Current navigation style enum value
+ * @param onChangeNavStyle - Callback to change navigation style
+ */
 export function Header({ currentNavStyle, onChangeNavStyle }: HeaderProps) {
   return (
     <header className="bg-white border-b border-neutral-border py-3 px-4 flex items-center justify-between">
+      {/* Logo and Brand Name */}
       <div className="flex items-center">
-        <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white font-bold text-xl">
-          PD
-        </div>
-        <h1 className="text-lg md:text-xl font-semibold ml-3 text-gray-800">
-          Pixie Dental
-        </h1>
+        <Link href="/">
+          <div className="flex items-center">
+            <div className="h-10 w-10 rounded bg-primary flex items-center justify-center text-white font-bold text-xl">
+              PD
+            </div>
+            <h1 className="text-lg md:text-xl font-semibold ml-3 text-gray-800">
+              Pixie Dental
+            </h1>
+          </div>
+        </Link>
       </div>
 
       {/* Search on larger screens */}
@@ -39,7 +72,9 @@ export function Header({ currentNavStyle, onChangeNavStyle }: HeaderProps) {
         />
       </div>
 
+      {/* Action buttons and user menu */}
       <div className="flex items-center">
+        {/* Navigation Style Selector */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
@@ -54,33 +89,19 @@ export function Header({ currentNavStyle, onChangeNavStyle }: HeaderProps) {
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Select Navigation</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem
-              className={currentNavStyle === 1 ? "bg-primary/5" : ""}
-              onClick={() => onChangeNavStyle(1)}
-            >
-              Horizontal Navigation
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className={currentNavStyle === 2 ? "bg-primary/5" : ""}
-              onClick={() => onChangeNavStyle(2)}
-            >
-              Vertical Sidebar
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className={currentNavStyle === 3 ? "bg-primary/5" : ""}
-              onClick={() => onChangeNavStyle(3)}
-            >
-              Combined Navigation
-            </DropdownMenuItem>
-            <DropdownMenuItem
-              className={currentNavStyle === 4 ? "bg-primary/5" : ""}
-              onClick={() => onChangeNavStyle(4)}
-            >
-              Tab-based Navigation
-            </DropdownMenuItem>
+            {NAV_STYLE_OPTIONS.map((style) => (
+              <DropdownMenuItem
+                key={style.id}
+                className={currentNavStyle === style.id ? "bg-primary/5" : ""}
+                onClick={() => onChangeNavStyle(style.id)}
+              >
+                {style.label}
+              </DropdownMenuItem>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
 
+        {/* Notification Bell */}
         <Button
           variant="ghost"
           size="icon"
@@ -90,6 +111,7 @@ export function Header({ currentNavStyle, onChangeNavStyle }: HeaderProps) {
           <Bell className="h-5 w-5 text-gray-600" />
         </Button>
 
+        {/* Help Button */}
         <Button
           variant="ghost"
           size="icon"
@@ -99,6 +121,7 @@ export function Header({ currentNavStyle, onChangeNavStyle }: HeaderProps) {
           <HelpCircle className="h-5 w-5 text-gray-600" />
         </Button>
 
+        {/* Settings Button */}
         <Link href="/settings">
           <Button
             variant="ghost"
@@ -110,6 +133,7 @@ export function Header({ currentNavStyle, onChangeNavStyle }: HeaderProps) {
           </Button>
         </Link>
 
+        {/* User Profile Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button

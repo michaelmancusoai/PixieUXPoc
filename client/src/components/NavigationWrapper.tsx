@@ -1,5 +1,5 @@
 import { useState, ReactNode } from "react";
-import { Header } from "./Header";
+import { Header, NavStyle } from "./Header";
 import { HorizontalNavigation } from "./HorizontalNavigation";
 import { VerticalNavigation } from "./VerticalNavigation";
 import { CombinedNavigation } from "./CombinedNavigation";
@@ -8,16 +8,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "./Calendar";
 import { useLocation } from "wouter";
-
-/**
- * Navigation style types
- */
-export enum NavStyle {
-  Horizontal = 1,
-  Vertical = 2,
-  Combined = 3,
-  Tabs = 4
-}
 
 /**
  * Navigation demo options for style switcher
