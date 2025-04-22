@@ -6,6 +6,10 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import DashboardPage from "@/pages/DashboardPage";
+import SchedulePage from "@/pages/SchedulePage";
+import PatientsPage from "@/pages/PatientsPage";
+import BillingPage from "@/pages/BillingPage";
+import ReportsPage from "@/pages/ReportsPage";
 import SettingsPage from "@/pages/SettingsPage";
 import PatientProfilePage from "@/pages/PatientProfilePage";
 
@@ -14,15 +18,15 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/dashboard" component={DashboardPage} />
-      <Route path="/schedule" component={Home} />
-      <Route path="/schedule/:subpage" component={Home} />
-      <Route path="/patients" component={Home} />
+      <Route path="/schedule" component={SchedulePage} />
+      <Route path="/schedule/:subpage" component={SchedulePage} />
+      <Route path="/patients" component={PatientsPage} />
       <Route path="/patients/profile/:id" component={PatientProfilePage} />
-      <Route path="/patients/:subpage" component={Home} />
-      <Route path="/billing" component={Home} />
-      <Route path="/billing/:subpage" component={Home} />
-      <Route path="/reports" component={Home} />
-      <Route path="/reports/:subpage" component={Home} />
+      <Route path="/patients/:subpage" component={PatientsPage} />
+      <Route path="/billing" component={BillingPage} />
+      <Route path="/billing/:subpage" component={BillingPage} />
+      <Route path="/reports" component={ReportsPage} />
+      <Route path="/reports/:subpage" component={ReportsPage} />
       <Route path="/settings" component={SettingsPage} />
       <Route path="/settings/:subpage" component={SettingsPage} />
       <Route component={NotFound} />
