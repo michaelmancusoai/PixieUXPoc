@@ -1,293 +1,346 @@
 import { NavigationWrapper } from "@/components/NavigationWrapper";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Activity, AlertCircle, ArrowUpRight, BarChart3, Calendar, Clock, FileText, Users } from "lucide-react";
+import { 
+  Activity, 
+  AlertCircle, 
+  ArrowUpRight, 
+  Bell, 
+  Check, 
+  ClipboardCheck, 
+  CreditCard, 
+  FileCheck, 
+  FileText, 
+  Stethoscope, 
+  SmilePlus,
+  ChevronDown,
+  Clock,
+  X,
+} from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { cn } from "@/lib/utils";
+
+// Mock patient data for the flow board
+const patientData = [
+  { id: 1, name: "Thompson, S", firstName: "Sandra", lastName: "Thompson", appointmentType: "Root Canal", operatory: "Op 1", provider: "Dr. Carter", timeInStatus: 423, hasAlert: true, dob: "05/12/1968", balance: 220 },
+  { id: 2, name: "Garcia, R", firstName: "Robert", lastName: "Garcia", appointmentType: "Crown Cementation", operatory: "Op 2", provider: "Dr. Carter", timeInStatus: 187, hasAlert: false, dob: "09/22/1985", balance: 0 },
+  { id: 3, name: "Chen, E", firstName: "Emily", lastName: "Chen", appointmentType: "New Patient Exam", operatory: "Op 3", provider: "Dr. Smith", timeInStatus: 89, hasAlert: false, dob: "02/14/1992", balance: 0 },
+  { id: 4, name: "Johnson, M", firstName: "Mark", lastName: "Johnson", appointmentType: "Filling", operatory: "Op 4", provider: "Dr. Smith", timeInStatus: 312, hasAlert: true, dob: "11/30/1973", balance: 150 },
+  { id: 5, name: "Williams, J", firstName: "James", lastName: "Williams", appointmentType: "Cleaning", operatory: "Hyg 1", provider: "Lisa R.", timeInStatus: 275, hasAlert: false, dob: "07/05/1990", balance: 0 },
+  { id: 6, name: "Lopez, A", firstName: "Ana", lastName: "Lopez", appointmentType: "Extraction", operatory: "Op 5", provider: "Dr. Carter", timeInStatus: 164, hasAlert: false, dob: "03/18/1982", balance: 75 },
+];
+
+// Mock exception data
+const exceptionData = {
+  late: [
+    { id: 101, name: "Miller, K", firstName: "Kevin", lastName: "Miller", appointmentType: "Cleaning", timeInStatus: 725, appointmentTime: "9:30 AM" },
+    { id: 102, name: "Davis, L", firstName: "Lisa", lastName: "Davis", appointmentType: "Filling", timeInStatus: 1247, appointmentTime: "10:45 AM" }
+  ],
+  noShow: [
+    { id: 201, name: "Adams, J", firstName: "John", lastName: "Adams", appointmentType: "Consultation", appointmentTime: "8:15 AM" }
+  ],
+  cancelled: [
+    { id: 301, name: "Brown, T", firstName: "Thomas", lastName: "Brown", appointmentType: "Checkup", appointmentTime: "2:30 PM" },
+    { id: 302, name: "Wilson, S", firstName: "Sarah", lastName: "Wilson", appointmentType: "Cleaning", appointmentTime: "3:45 PM" }
+  ],
+  walkOut: [
+    { id: 401, name: "Rodriguez, C", firstName: "Carlos", lastName: "Rodriguez", appointmentType: "Emergency", balance: 185 }
+  ]
+};
+
+// Flow status definitions
+const flowColumns = [
+  { id: "checked-in", title: "Checked-In", icon: ClipboardCheck, color: "bg-blue-500", wipLimit: 5, role: "Front Desk" },
+  { id: "seated", title: "Seated", icon: Activity, color: "bg-teal-500", wipLimit: 8, role: "Assistant" },
+  { id: "pre-clinical", title: "Pre-Clinical", icon: Stethoscope, color: "bg-indigo-500", wipLimit: 6, role: "Assistant" },
+  { id: "doctor-ready", title: "Doctor Ready", icon: Bell, color: "bg-violet-500", wipLimit: 3, role: "Assistant" },
+  { id: "in-treatment", title: "In Treatment", icon: SmilePlus, color: "bg-purple-500", wipLimit: 8, role: "Dentist" },
+  { id: "wrap-up", title: "Clinical Wrap-Up", icon: FileCheck, color: "bg-pink-500", wipLimit: 5, role: "Dentist" },
+  { id: "checkout-ready", title: "Ready for Checkout", icon: CreditCard, color: "bg-orange-500", wipLimit: 3, role: "Assistant" },
+  { id: "checked-out", title: "Checked-Out", icon: Check, color: "bg-green-500", wipLimit: 999, role: "Front Desk" },
+];
+
+// Initial patient distribution
+const initialFlowDistribution = {
+  "checked-in": [patientData[4], patientData[5]],
+  "seated": [patientData[3]],
+  "pre-clinical": [],
+  "doctor-ready": [patientData[2]],
+  "in-treatment": [patientData[0], patientData[1]],
+  "wrap-up": [],
+  "checkout-ready": [],
+  "checked-out": [],
+};
+
+// Format elapsed time (mm:ss)
+const formatTime = (seconds) => {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+};
+
+// Patient card component
+function PatientCard({ patient, columnColor }) {
+  const formattedTime = formatTime(patient.timeInStatus);
+  const isTimerWarning = patient.timeInStatus > 300; // Warning after 5 minutes
+  
+  return (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Card className={cn(
+            "w-full cursor-pointer transition-all",
+            `border-${columnColor.replace('bg-', 'border-')}`,
+            { "border-amber-500 animate-pulse": isTimerWarning }
+          )}>
+            <CardContent className="p-3 relative">
+              <div className="flex justify-between items-center">
+                <div>
+                  <p className="font-medium text-sm">{patient.name}</p>
+                  <p className="text-xs text-muted-foreground">{patient.appointmentType}</p>
+                </div>
+                <div className="flex items-center">
+                  {patient.hasAlert && (
+                    <AlertCircle className="h-4 w-4 text-amber-500 mr-1" />
+                  )}
+                  <Badge 
+                    variant="outline" 
+                    className={cn(
+                      "ml-1 text-xs font-medium", 
+                      isTimerWarning ? "text-amber-500" : "text-muted-foreground"
+                    )}
+                  >
+                    {formattedTime}
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TooltipTrigger>
+        <TooltipContent className="p-2 w-60">
+          <div className="space-y-1">
+            <p className="font-medium">{patient.firstName} {patient.lastName}</p>
+            <p className="text-xs">DOB: {patient.dob}</p>
+            <p className="text-xs">Provider: {patient.provider}</p>
+            <p className="text-xs">Operatory: {patient.operatory}</p>
+            {patient.balance > 0 && (
+              <p className="text-xs font-medium text-amber-500">Balance: ${patient.balance}</p>
+            )}
+          </div>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  );
+}
+
+// FlowColumn component
+function FlowColumn({ column, patients }) {
+  const isOverWipLimit = patients.length > column.wipLimit;
+  const Icon = column.icon;
+  
+  return (
+    <div className="min-w-[180px] flex flex-col h-full">
+      <div className={cn(
+        "text-white px-3 py-2 rounded-t-md flex justify-between items-center",
+        column.color
+      )}>
+        <div className="flex items-center">
+          <Icon className="h-4 w-4 mr-1" />
+          <h3 className="text-sm font-medium">{column.title}</h3>
+        </div>
+        <Badge 
+          variant="outline" 
+          className={cn(
+            "bg-white/20 hover:bg-white/20 text-white border-none",
+            isOverWipLimit && "bg-red-300/30 hover:bg-red-300/30"
+          )}
+        >
+          {patients.length}/{column.wipLimit}
+        </Badge>
+      </div>
+      
+      <div className="bg-white border border-t-0 border-muted rounded-b-md p-2 space-y-2 flex-grow">
+        {patients.length === 0 ? (
+          <div className="h-20 flex items-center justify-center text-muted-foreground text-xs">
+            No patients
+          </div>
+        ) : (
+          patients.map((patient) => (
+            <PatientCard 
+              key={patient.id} 
+              patient={patient} 
+              columnColor={column.color} 
+            />
+          ))
+        )}
+      </div>
+      
+      {isOverWipLimit && (
+        <div className="h-1 bg-red-500 mt-1 rounded animate-pulse" />
+      )}
+    </div>
+  );
+}
+
+// Exception Card Component
+function ExceptionCard({ patient, type }) {
+  const getTypeStyles = () => {
+    switch (type) {
+      case 'late':
+        return { bg: 'bg-amber-50', border: 'border-amber-200', text: 'text-amber-700' };
+      case 'noShow':
+        return { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700' };
+      case 'cancelled':
+        return { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-700' };
+      case 'walkOut':
+        return { bg: 'bg-amber-50', border: 'border-red-200', text: 'text-amber-700' };
+      default:
+        return { bg: 'bg-gray-50', border: 'border-gray-200', text: 'text-gray-700' };
+    }
+  };
+  
+  const styles = getTypeStyles();
+  
+  return (
+    <Card className={cn("w-full", styles.bg, styles.border, "border")}>
+      <CardContent className="p-2">
+        <div className="flex justify-between items-center">
+          <p className={cn("font-medium text-xs", styles.text)}>{patient.name}</p>
+          {type === 'late' && (
+            <Badge variant="outline" className={styles.text}>
+              {formatTime(patient.timeInStatus)}
+            </Badge>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground">{patient.appointmentType || 'Appointment'}</p>
+        {patient.appointmentTime && (
+          <p className="text-xs text-muted-foreground mt-1">{patient.appointmentTime}</p>
+        )}
+        {patient.balance && (
+          <div className="flex justify-between items-center mt-1">
+            <p className="text-xs text-red-600">${patient.balance}</p>
+            <Button variant="ghost" size="xs" className="h-5 text-xs px-2">
+              Send Statement
+            </Button>
+          </div>
+        )}
+      </CardContent>
+    </Card>
+  );
+}
 
 export default function MissionControlPage() {
+  const [flowState, setFlowState] = useState(initialFlowDistribution);
+
   return (
     <NavigationWrapper>
-      <div className="space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold">Mission Control</h1>
-            <p className="text-muted-foreground">Practice performance metrics and operational overview</p>
+      <div className="space-y-4">
+        {/* Header with KPIs */}
+        <div className="sticky top-0 z-10 bg-white pb-4">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
+            <div>
+              <h1 className="text-2xl font-bold">Mission Control</h1>
+              <p className="text-muted-foreground">"If a dashboard tells you what happened, Mission Control tells you what to do next."</p>
+            </div>
           </div>
-          <div className="flex flex-col md:flex-row gap-2">
-            <Button variant="outline">
-              <FileText className="mr-2 h-4 w-4" />
-              Generate Report
-            </Button>
-            <Button>
+          
+          {/* KPI Header Row */}
+          <div className="flex flex-wrap gap-2 items-center">
+            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 py-1 px-3">
+              <span className="font-normal mr-1">Today:</span> April 22, 2025
+            </Badge>
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 py-1 px-3">
+              <span className="font-normal mr-1">Wait-to-Seat:</span> 4.2 min
+            </Badge>
+            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 py-1 px-3">
+              <span className="font-normal mr-1">Seat-to-Doctor:</span> 7.5 min
+            </Badge>
+            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 py-1 px-3">
+              <span className="font-normal mr-1">Throughput:</span> 14/24
+            </Badge>
+            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 py-1 px-3">
+              <span className="font-normal mr-1">Utilization:</span> 87%
+            </Badge>
+            <div className="flex-grow"></div>
+            <Button className="ml-auto" size="sm">
               <AlertCircle className="mr-2 h-4 w-4" />
               Action Items
             </Button>
           </div>
+          
+          <Separator className="my-4" />
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-2xl font-bold">87%</CardTitle>
-              <CardDescription>Chair Utilization</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-2">
-                <Progress value={87} className="h-2" />
-                <div className="text-xs text-green-600 font-medium flex items-center">
-                  <ArrowUpRight className="h-3 w-3 mr-1" />
-                  <span>+3.2% from last month</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Main Flow Board */}
+        <div className="flex">
+          {/* Flow Columns */}
+          <div className="flex overflow-x-auto pb-4 gap-3 flex-grow" style={{ minHeight: "calc(100vh - 300px)" }}>
+            {flowColumns.map((column) => (
+              <FlowColumn 
+                key={column.id} 
+                column={column} 
+                patients={flowState[column.id] || []} 
+              />
+            ))}
+          </div>
           
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-2xl font-bold">92%</CardTitle>
-              <CardDescription>Appointment Confirmation</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-2">
-                <Progress value={92} className="h-2" />
-                <div className="text-xs text-muted-foreground">8 pending confirmations</div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-2xl font-bold">5.3%</CardTitle>
-              <CardDescription>No-Show Rate</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-2">
-                <Progress value={5.3} className="h-2" />
-                <div className="text-xs text-green-600 font-medium flex items-center">
-                  <ArrowUpRight className="h-3 w-3 mr-1 rotate-180" />
-                  <span>-1.8% from last month</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-2xl font-bold">94%</CardTitle>
-              <CardDescription>Patient Satisfaction</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="space-y-2">
-                <Progress value={94} className="h-2" />
-                <div className="text-xs text-green-600 font-medium flex items-center">
-                  <ArrowUpRight className="h-3 w-3 mr-1" />
-                  <span>+1.5% from last month</span>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg font-medium flex items-center">
-                <Activity className="mr-2 h-5 w-5 text-primary" />
-                Critical Action Items
-              </CardTitle>
-              <CardDescription>Time-sensitive tasks requiring attention</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="flex items-start justify-between p-3 bg-red-50 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
-                    <div>
-                      <p className="font-medium">Insurance Verification Required</p>
-                      <p className="text-sm text-muted-foreground">5 patients scheduled tomorrow need verification</p>
-                    </div>
-                  </div>
-                  <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Urgent</Badge>
-                </div>
-                
-                <div className="flex items-start justify-between p-3 bg-amber-50 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
-                    <div>
-                      <p className="font-medium">Lab Case Delayed</p>
-                      <p className="text-sm text-muted-foreground">Crown for patient #PT-0024 delayed by lab</p>
-                    </div>
-                  </div>
-                  <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">Action Needed</Badge>
-                </div>
-                
-                <div className="flex items-start justify-between p-3 bg-amber-50 rounded-md">
-                  <div className="flex items-start gap-3">
-                    <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
-                    <div>
-                      <p className="font-medium">Unscheduled Treatment Plans</p>
-                      <p className="text-sm text-muted-foreground">12 patients with accepted but unscheduled treatment</p>
-                    </div>
-                  </div>
-                  <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">Follow Up</Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg font-medium flex items-center">
-                <BarChart3 className="mr-2 h-5 w-5 text-primary" />
-                Key Performance Indicators
-              </CardTitle>
-              <CardDescription>Monthly practice metrics overview</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
+          {/* Exception Rail */}
+          <div className="w-60 ml-4 hidden lg:block">
+            <div className="bg-gray-50 rounded-md p-3 space-y-4 h-full">
+              <div>
+                <h3 className="text-sm font-semibold flex items-center text-amber-700 mb-2">
+                  <Clock className="h-4 w-4 mr-1" />
+                  Late ({exceptionData.late.length})
+                </h3>
                 <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <p className="text-sm font-medium">Production Goal</p>
-                    <p className="text-sm font-medium">$118,500 / $125,000</p>
-                  </div>
-                  <Progress value={95} className="h-2" />
-                  <p className="text-xs text-muted-foreground">95% of monthly goal achieved</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <p className="text-sm font-medium">New Patient Goal</p>
-                    <p className="text-sm font-medium">28 / 30</p>
-                  </div>
-                  <Progress value={93} className="h-2" />
-                  <p className="text-xs text-muted-foreground">93% of monthly goal achieved</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <p className="text-sm font-medium">Hygiene Reappointment</p>
-                    <p className="text-sm font-medium">82%</p>
-                  </div>
-                  <Progress value={82} className="h-2" />
-                  <p className="text-xs text-muted-foreground">2% below target of 84%</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <p className="text-sm font-medium">Treatment Plan Acceptance</p>
-                    <p className="text-sm font-medium">76%</p>
-                  </div>
-                  <Progress value={76} className="h-2" />
-                  <p className="text-xs text-green-600 font-medium">4% above target of 72%</p>
+                  {exceptionData.late.map(patient => (
+                    <ExceptionCard key={patient.id} patient={patient} type="late" />
+                  ))}
                 </div>
               </div>
-            </CardContent>
-          </Card>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium flex items-center">
-                <Calendar className="mr-2 h-5 w-5 text-primary" />
-                Upcoming Events
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="bg-muted/50 p-3 rounded-md">
-                  <p className="text-sm font-medium">Staff Meeting</p>
-                  <p className="text-xs text-muted-foreground mt-1">Tomorrow, 8:00 AM</p>
-                </div>
-                
-                <div className="bg-muted/50 p-3 rounded-md">
-                  <p className="text-sm font-medium">Equipment Maintenance</p>
-                  <p className="text-xs text-muted-foreground mt-1">April 25, 2025</p>
-                </div>
-                
-                <div className="bg-muted/50 p-3 rounded-md">
-                  <p className="text-sm font-medium">CE Workshop: Implant Techniques</p>
-                  <p className="text-xs text-muted-foreground mt-1">April 30, 2025</p>
+              
+              <div>
+                <h3 className="text-sm font-semibold flex items-center text-red-700 mb-2">
+                  <X className="h-4 w-4 mr-1" />
+                  No-Show ({exceptionData.noShow.length})
+                </h3>
+                <div className="space-y-2">
+                  {exceptionData.noShow.map(patient => (
+                    <ExceptionCard key={patient.id} patient={patient} type="noShow" />
+                  ))}
                 </div>
               </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium flex items-center">
-                <Clock className="mr-2 h-5 w-5 text-primary" />
-                Schedule Availability
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Dr. Julie Carter</p>
-                    <p className="text-xs text-muted-foreground">Next available: Tomorrow, 2:30 PM</p>
-                  </div>
-                  <Badge className="bg-green-100 text-green-800 hover:bg-green-100">4 slots</Badge>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Dr. Michael Smith</p>
-                    <p className="text-xs text-muted-foreground">Next available: Today, 4:00 PM</p>
-                  </div>
-                  <Badge className="bg-amber-100 text-amber-800 hover:bg-amber-100">1 slot</Badge>
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm font-medium">Hygiene</p>
-                    <p className="text-xs text-muted-foreground">Next available: April 24, 9:00 AM</p>
-                  </div>
-                  <Badge className="bg-red-100 text-red-800 hover:bg-red-100">Fully Booked</Badge>
+              
+              <div>
+                <h3 className="text-sm font-semibold flex items-center text-gray-700 mb-2">
+                  <FileText className="h-4 w-4 mr-1" />
+                  Cancelled ({exceptionData.cancelled.length})
+                </h3>
+                <div className="space-y-2">
+                  {exceptionData.cancelled.map(patient => (
+                    <ExceptionCard key={patient.id} patient={patient} type="cancelled" />
+                  ))}
                 </div>
               </div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg font-medium flex items-center">
-                <Users className="mr-2 h-5 w-5 text-primary" />
-                Team Performance
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-3">
+              
+              <div>
+                <h3 className="text-sm font-semibold flex items-center text-amber-800 mb-2">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  Walk-Out ({exceptionData.walkOut.length})
+                </h3>
                 <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm font-medium">Dr. Carter</p>
-                    <p className="text-xs font-medium">$42,850</p>
-                  </div>
-                  <Progress value={92} className="h-1.5" />
-                  <p className="text-xs text-green-600">114% of goal</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm font-medium">Dr. Smith</p>
-                    <p className="text-xs font-medium">$38,600</p>
-                  </div>
-                  <Progress value={85} className="h-1.5" />
-                  <p className="text-xs text-green-600">103% of goal</p>
-                </div>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center">
-                    <p className="text-sm font-medium">Hygiene Team</p>
-                    <p className="text-xs font-medium">$37,050</p>
-                  </div>
-                  <Progress value={78} className="h-1.5" />
-                  <p className="text-xs text-amber-600">98% of goal</p>
+                  {exceptionData.walkOut.map(patient => (
+                    <ExceptionCard key={patient.id} patient={patient} type="walkOut" />
+                  ))}
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </NavigationWrapper>

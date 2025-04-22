@@ -1,0 +1,329 @@
+“Mission Control” Patient‑Flow Screen – Draft 1 (US‑Localised)
+
+“If a dashboard tells you what happened, Mission Control tells you what to do next.” — Rory Sutherland
+
+This specification converts the eight core statuses (plus four exception states) into a real‑time, Kanban‑style patient‑flow board that distils Lean Six Sigma wisdom into a glanceable, psychologically potent, Material‑UI (MUI v5) interface.
+
+0. Flow Philosophy
+
+Lean Aim
+
+UI Strategy
+
+Behavioural Lever
+
+Reduce waiting waste
+
+Visual WIP limits & timer badges
+
+Goal Gradient – people speed up as they see progress
+
+Reveal bottlenecks
+
+Column “shadow” grows with queue length
+
+Salience
+
+Single‑piece flow
+
+Only one status advance button visible per role
+
+Choice architecture
+
+Continuous improvement
+
+Cycle‑time heat‑map trend under header
+
+Gamification / Progress
+
+1. Global Layout Grid (12 cols)
+
+Zone
+
+Span
+
+Purpose
+
+MUI Skeleton
+
+Sticky Header
+
+12
+
+Today · Location · Utilisation KPIs
+
+<AppBar> + <Toolbar>
+
+Flow Board
+
+10
+
+Kanban columns (Checked‑In → Checked‑Out)
+
+CSS Grid + DnD
+
+Exception Rail
+
+2
+
+Late / No‑Show / Cancelled / Walk‑Out buckets
+
+Vertical <Stack>
+
+CSS grid: grid-template-columns: repeat(8, 1fr) 220px; gap: 16px; overflow-x: auto; (columns scroll if many operatories).
+
+2. Column Anatomy (Core Statuses)
+
+Each status = <Paper elevation={1}> containing:
+
+Header Bar – Status label, WIP counter badge, average cycle‑time chip.
+
+Card Stack – draggable patient cards (ordered FIFO).
+
+WIP Limit Stripe – subtle red bar appears when count > pre‑set limit.
+
+Column
+
+Icon
+
+Default WIP Limit
+
+Ownership
+
+Checked‑In
+
+📝 (clipboard)
+
+5
+
+Front Desk
+
+Seated
+
+🪑 (chair)
+
+equal to ops
+
+Assistant / Hygienist
+
+Pre‑Clinical Prep
+
+🩺 (stethoscope)
+
+–
+
+Assistant / Hygienist
+
+Doctor Ready
+
+📣 (bell)
+
+–
+
+Assistant
+
+In Treatment
+
+🦷 (tooth)
+
+provider count
+
+Dentist
+
+Clinical Wrap‑Up
+
+📄 (file‑done)
+
+–
+
+Dentist / Assistant
+
+Ready for Checkout
+
+💳 (card)
+
+3
+
+Assistant
+
+Checked‑Out
+
+✅ (tick)
+
+∞
+
+Front Desk
+
+Icons act as parallel cues to colour, satisfying colour‑blind safe design.
+
+3. Patient Card Anatomy
+
+<Card variant="outlined"> 160 × 80 px
+
+Layer
+
+Content
+
+Behavioural Note
+
+Visible
+
+Line 1: LastName, FI  — right icon = alert flag
+
+Line 2: Appt Type / CDT
+
+Timer badge (mm:ss) since entry to column
+
+Timer creates time pressure and exposes bottlenecks
+
+Colour
+
+Fill inherits column colour @ 20 % opacity; border solid column colour
+
+Reinforces stage
+
+Hover
+
+Tooltip: Full name, DOB, balance due, provider, operatory
+
+Information scent
+
+Drag
+
+Entire card draggable; illegal targets greyed
+
+State‑machine guard
+
+Context Menu
+
+“Mark Late”, “Cancel”, “Add Note”
+
+reduces UI travel
+
+Timers implemented via setInterval but throttled with requestAnimationFrame for perf.
+
+4. Sticky Header KPIs
+
+Inline chips updating every 30 s:
+
+Wait‑to‑Seat: avg mins (goal < 5)
+
+Seat‑to‑Doctor: avg (goal < 8)
+
+Throughput Today: patients completed vs capacity
+
+Utilisation: chair busy % (live)
+
+Chips turn amber/red when above control limits; hover shows control‑chart sparkline.
+
+5. Exception Rail
+
+Vertical <Paper> with four collapsible accordions:
+
+Late (timer badge) – auto‑adds from scheduler at T+5 min; clicking row opens patient card to reschedule.
+
+No‑Show – auto after grace; lists will auto‑enqueue outreach tasks.
+
+Cancelled – freed slots; CTA “Fill with Waitlist”.
+
+Walk‑Out – unpaid balances; red border; CTA “Send Statement”.
+
+Colour semantics: Late orange, No‑Show red, Cancelled grey, Walk‑Out amber.
+
+6. Behavioural Nudges & Lean Signals
+
+Trigger
+
+Nudge
+
+Purpose
+
+Column exceeds WIP limit
+
+Header pulses light red every 5 s
+
+Draws team attention to constraint
+
+Timer hits 80 % of SLA
+
+Card border animates amber
+
+Encourages swift progression
+
+Moving to “Ready for Checkout”
+
+Snackbar suggests “Collect balance $220?”
+
+Friction reduction
+
+Checked‑Out with survey pending
+
+Toast “Send NPS link now?”
+
+Capture feedback while fresh
+
+7. MUI & React Implementation Cheatsheet
+
+Element
+
+Component
+
+Key Props / Libs
+
+Kanban Grid
+
+<Box display="grid">
+
+dynamic gridTemplateColumns
+
+Column
+
+<Paper>
+
+sx={{ minWidth: 220 }}
+
+Card Stack
+
+<Stack spacing={1}>
+
+uses react-window if > 50 cards
+
+Drag & Drop
+
+@dnd-kit/core
+
+collisionDetection=closestCorners
+
+Timer Badge
+
+<Chip size="small">
+
+updates via useElapsedTime hook
+
+WIP Counter
+
+<Badge>
+
+colour changes based on limit
+
+KPI Chip
+
+<Chip>
+
+gradient from success → error
+
+Sparkline
+
+<LineChart>
+
+mini control chart
+
+8. Compliance & Accessibility
+
+Icons paired with aria-label (“Checked‑In column”).
+
+Live regions announce when card enters “Late” bucket.
+
+Drag targets have high‑contrast focus ring.
+
+End of Mission Control Draft 1 – awaiting your critique & iteration
