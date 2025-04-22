@@ -1,185 +1,226 @@
 import React, { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button"; 
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { 
-  Calendar, MessageSquare, Stethoscope, FileText, 
-  DollarSign, Phone, Gavel, Eye, Edit, Plus
+  Plus, FileText, MessageCircle, Banknote, 
+  Calendar, CheckCircle, Clock, Info, Search
 } from "lucide-react";
-import { ActivityFilter, ActivityItem } from "./data";
+import { 
+  usePatientAppointments, 
+  usePatientNotes, 
+  usePatientMessages, 
+  usePatientPayments,
+  usePatientActivityLog
+} from "@/hooks/usePatientDetails";
+import { formatDistanceToNow } from "date-fns";
+import { Skeleton } from "@/components/ui/skeleton";
 
-// Sample activity items
-const activityItems: ActivityItem[] = [
-  {
-    id: "1",
-    type: "appointment",
-    title: "Upcoming · Prophylaxis (45 min)",
-    date: "Jun 15, 2025 · 10:30 AM",
-    user: "Dr. Johnson",
-    description: "Regular cleaning appointment scheduled",
-    icon: <Calendar className="h-5 w-5" />,
-    color: "bg-blue-100 text-blue-600",
-  },
-  {
-    id: "2",
-    type: "message",
-    title: "Sent Message · Appointment Confirmation",
-    date: "May 05, 2025 · 2:14 PM",
-    user: "Jenny Wilson",
-    description: "Confirmed upcoming appointment for June 15",
-    icon: <MessageSquare className="h-5 w-5" />,
-    color: "bg-purple-100 text-purple-600",
-  },
-  {
-    id: "3",
-    type: "clinical",
-    title: "Completed · Annual Check-up",
-    date: "Apr 02, 2025 · 9:00 AM",
-    user: "Dr. Johnson",
-    description: "No significant issues found. Regular cleaning performed.",
-    icon: <Stethoscope className="h-5 w-5" />,
-    color: "bg-emerald-100 text-emerald-600", 
-  },
-  {
-    id: "4",
-    type: "claim",
-    title: "Insurance Claim · Submitted",
-    date: "Apr 02, 2025 · 11:32 AM",
-    user: "System",
-    description: "Claim #1234567 submitted to Blue Cross Blue Shield",
-    icon: <FileText className="h-5 w-5" />,
-    color: "bg-amber-100 text-amber-600",
-  },
-  {
-    id: "5",
-    type: "payment",
-    title: "Payment · Processed",
-    date: "Apr 10, 2025 · 3:45 PM",
-    user: "System",
-    description: "Payment of $75.00 processed via credit card",
-    icon: <DollarSign className="h-5 w-5" />,
-    color: "bg-green-100 text-green-600",
-  },
-  {
-    id: "6",
-    type: "clinical",
-    title: "Completed · Follow-up",
-    date: "Feb 15, 2025 · 2:30 PM",
-    user: "Dr. Martinez",
-    description: "Follow-up to previous treatment. Healing well.",
-    icon: <Stethoscope className="h-5 w-5" />,
-    color: "bg-emerald-100 text-emerald-600",
-  }
-];
+interface ActivityHubProps {
+  patientId: number;
+}
 
-export default function ActivityHub() {
-  const [filter, setFilter] = useState<ActivityFilter>("all");
+export default function ActivityHub({ patientId }: ActivityHubProps) {
+  const [activeTab, setActiveTab] = useState("all");
   
-  const filteredActivities = activityItems.filter(item => {
-    if (filter === "all") return true;
-    if (filter === "clinical") return ["clinical"].includes(item.type);
-    if (filter === "financial") return ["payment", "claim"].includes(item.type);
-    if (filter === "communications") return ["message", "voicemail"].includes(item.type);
-    if (filter === "admin") return ["admin", "appointment"].includes(item.type);
-    return true;
-  });
+  // Fetch data for different activity types
+  const { data: activityLog, isLoading: isLoadingActivity } = usePatientActivityLog(patientId);
+  const { data: appointments, isLoading: isLoadingAppointments } = usePatientAppointments(patientId);
+  const { data: notes, isLoading: isLoadingNotes } = usePatientNotes(patientId);
+  const { data: messages, isLoading: isLoadingMessages } = usePatientMessages(patientId);
+  const { data: payments, isLoading: isLoadingPayments } = usePatientPayments(patientId);
   
+  // Filter activity items based on the active tab
+  const getFilteredItems = () => {
+    if (activeTab === "all" && activityLog) return activityLog;
+    if (activeTab === "appointments" && appointments) return appointments.map(formatAppointmentActivity);
+    if (activeTab === "notes" && notes) return notes.map(formatNoteActivity);
+    if (activeTab === "messages" && messages) return messages.map(formatMessageActivity);
+    if (activeTab === "financial" && payments) return payments.map(formatPaymentActivity);
+    return [];
+  };
+  
+  const isLoading = 
+    isLoadingActivity || 
+    isLoadingAppointments || 
+    isLoadingNotes || 
+    isLoadingMessages || 
+    isLoadingPayments;
+
   return (
     <Card className="h-full">
-      <CardHeader className="px-4 py-3 flex flex-row items-center justify-between">
-        <CardTitle className="text-lg font-medium">Activity & Timeline</CardTitle>
-        <Button size="sm">
-          <Plus className="h-4 w-4 mr-1" />
-          Add Note
-        </Button>
+      <CardHeader className="border-b p-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <CardTitle className="text-xl font-semibold">Activity Hub</CardTitle>
+            <CardDescription>Track patient interactions and history</CardDescription>
+          </div>
+          <div className="flex gap-2">
+            <Button variant="outline" size="sm" className="text-xs h-8">
+              <Search className="h-3 w-3 mr-1" />
+              Search
+            </Button>
+            <Button size="sm" className="text-xs h-8">
+              <Plus className="h-3 w-3 mr-1" />
+              Add Activity
+            </Button>
+          </div>
+        </div>
+
+        <Tabs defaultValue="all" className="mt-4" onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-5 h-8">
+            <TabsTrigger value="all" className="text-xs">All</TabsTrigger>
+            <TabsTrigger value="appointments" className="text-xs">Appointments</TabsTrigger>
+            <TabsTrigger value="notes" className="text-xs">Notes</TabsTrigger>
+            <TabsTrigger value="messages" className="text-xs">Messages</TabsTrigger>
+            <TabsTrigger value="financial" className="text-xs">Financial</TabsTrigger>
+          </TabsList>
+        </Tabs>
       </CardHeader>
       
-      <CardContent className="px-4 py-0 pb-4">
-        {/* Filter options */}
-        <div className="flex gap-2 mb-4 overflow-x-auto pb-1">
-          <FilterButton 
-            active={filter === "all"} 
-            onClick={() => setFilter("all")}
-            label="All"
-          />
-          <FilterButton 
-            active={filter === "clinical"} 
-            onClick={() => setFilter("clinical")}
-            label="Clinical"
-          />
-          <FilterButton 
-            active={filter === "financial"} 
-            onClick={() => setFilter("financial")}
-            label="Financial"
-          />
-          <FilterButton 
-            active={filter === "communications"} 
-            onClick={() => setFilter("communications")}
-            label="Communications"
-          />
-          <FilterButton 
-            active={filter === "admin"} 
-            onClick={() => setFilter("admin")}
-            label="Admin"
-          />
-        </div>
-        
-        {/* Activity items */}
-        <div className="space-y-4">
-          {filteredActivities.map((activity) => (
-            <ActivityCard key={activity.id} activity={activity} />
-          ))}
-        </div>
+      <CardContent className="p-0">
+        <ScrollArea className="h-[500px] px-4">
+          {isLoading ? (
+            <div className="space-y-4 py-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <div key={i} className="flex gap-3">
+                  <Skeleton className="h-10 w-10 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-4 w-1/3" />
+                    <Skeleton className="h-3 w-3/4" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <ActivityItems items={getFilteredItems()} />
+          )}
+        </ScrollArea>
       </CardContent>
     </Card>
   );
 }
 
-function FilterButton({ 
-  active, 
-  onClick, 
-  label 
-}: { 
-  active: boolean; 
-  onClick: () => void;
-  label: string;
-}) {
+function ActivityItems({ items = [] }: { items: any[] }) {
+  if (items.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-48 text-muted-foreground px-4 py-6">
+        <Info className="h-12 w-12 mb-2 opacity-20" />
+        <p className="text-center">No activity found for this criteria.</p>
+        <p className="text-center text-sm">Try selecting a different filter or add a new activity.</p>
+      </div>
+    );
+  }
+
   return (
-    <button
-      onClick={onClick}
-      className={`px-3 py-1 text-sm rounded-full whitespace-nowrap transition-colors ${
-        active 
-          ? "bg-primary text-primary-foreground font-medium" 
-          : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-      }`}
-    >
-      {label}
-    </button>
+    <div className="space-y-4 pt-4 pb-6">
+      {items.map((item, index) => (
+        <ActivityItem key={index} item={item} />
+      ))}
+    </div>
   );
 }
 
-function ActivityCard({ activity }: { activity: ActivityItem }) {
+function ActivityItem({ item }: { item: any }) {
+  const getIcon = () => {
+    switch (item.type) {
+      case 'appointment':
+        return <Calendar className="h-4 w-4 text-blue-500" />;
+      case 'note':
+        return <FileText className="h-4 w-4 text-purple-500" />;
+      case 'message':
+        return <MessageCircle className="h-4 w-4 text-green-500" />;
+      case 'payment':
+        return <Banknote className="h-4 w-4 text-amber-500" />;
+      case 'completed':
+        return <CheckCircle className="h-4 w-4 text-emerald-500" />;
+      case 'scheduled':
+        return <Clock className="h-4 w-4 text-sky-500" />;
+      default:
+        return <Info className="h-4 w-4 text-gray-500" />;
+    }
+  };
+
+  const relativeTime = item.timestamp ? 
+    formatDistanceToNow(new Date(item.timestamp), { addSuffix: true }) :
+    "";
+
   return (
-    <div className="flex gap-3 pb-4">
-      <div className={`flex-shrink-0 w-10 h-10 rounded-full ${activity.color} flex items-center justify-center`}>
-        {activity.icon}
-      </div>
-      
-      <div className="flex-1 min-w-0">
-        <div className="flex items-start justify-between mb-1">
-          <h4 className="font-medium text-gray-900 truncate">{activity.title}</h4>
-          <Button variant="ghost" size="icon" className="h-6 w-6 text-gray-500 -mt-1 -mr-2">
-            <Eye className="h-3.5 w-3.5" />
-          </Button>
+    <div className="flex items-start gap-3 border-b border-gray-100 pb-4">
+      <Avatar className="h-9 w-9 rounded-full">
+        <div className="h-full w-full bg-gray-100 rounded-full flex items-center justify-center">
+          {getIcon()}
         </div>
-        
-        <p className="text-sm text-muted-foreground mb-1">{activity.date} · {activity.user}</p>
-        
-        {activity.description && (
-          <p className="text-sm text-gray-700">{activity.description}</p>
+      </Avatar>
+      
+      <div className="flex-1">
+        <div className="flex items-center justify-between">
+          <h4 className="text-sm font-medium">{item.title}</h4>
+          <span className="text-xs text-gray-500">{relativeTime}</span>
+        </div>
+        <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+        {item.details && (
+          <p className="text-xs text-gray-500 mt-1">{item.details}</p>
         )}
       </div>
     </div>
   );
+}
+
+// Helper functions to format different types of activities
+function formatAppointmentActivity(appointment: any) {
+  const date = new Date(appointment.startTime);
+  const formattedDate = date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  });
+  const formattedTime = date.toLocaleTimeString('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+
+  return {
+    type: 'appointment',
+    title: `${appointment.appointmentType} Appointment`,
+    description: `Scheduled for ${formattedDate} at ${formattedTime}`,
+    details: appointment.notes,
+    timestamp: appointment.createdAt || appointment.updatedAt,
+    status: appointment.status
+  };
+}
+
+function formatNoteActivity(note: any) {
+  return {
+    type: 'note',
+    title: `Patient Note: ${note.noteType || 'General'}`,
+    description: note.content,
+    timestamp: note.createdAt || note.updatedAt,
+    status: note.status
+  };
+}
+
+function formatMessageActivity(message: any) {
+  return {
+    type: 'message',
+    title: `Message: ${message.messageType || 'General'}`,
+    description: message.content,
+    timestamp: message.sentAt || message.createdAt,
+    status: message.isRead ? 'Read' : 'Unread'
+  };
+}
+
+function formatPaymentActivity(payment: any) {
+  return {
+    type: 'payment',
+    title: `Payment: $${payment.amount}`,
+    description: `${payment.paymentMethod} payment received`,
+    details: payment.description,
+    timestamp: payment.paymentDate || payment.createdAt,
+    status: 'Completed'
+  };
 }

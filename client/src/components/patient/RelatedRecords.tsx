@@ -1,243 +1,187 @@
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { 
-  Accordion, 
-  AccordionItem, 
-  AccordionTrigger, 
-  AccordionContent 
-} from "@/components/ui/accordion";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import ToothDiagram from "./ToothDiagram";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
-  FileClock, FileText, CalendarDays, Stethoscope, 
-  Folder, Users, ImagePlus, FlaskRound, CreditCard, File,
-  Plus, Upload, UserPlus, Eye, DownloadCloud, Calendar,
-  ChevronDown, Map
+  File, Clock, Stethoscope, PlusCircle, 
+  ArrowUpRight, X, FileText
 } from "lucide-react";
-import { RecordStatus } from "./data";
+import {
+  usePatientDocuments,
+  usePatientTreatments,
+} from "@/hooks/usePatientDetails";
 
-export default function RelatedRecords() {
+interface RelatedRecordsProps {
+  patientId: number;
+}
+
+export default function RelatedRecords({ patientId }: RelatedRecordsProps) {
+  const { data: documents, isLoading: isLoadingDocuments } = usePatientDocuments(patientId);
+  const { data: treatments, isLoading: isLoadingTreatments } = usePatientTreatments(patientId);
+  
+  const isLoading = isLoadingDocuments || isLoadingTreatments;
+  
   return (
-    <Card>
-      <CardHeader className="px-4 py-3">
-        <CardTitle className="text-lg font-medium">Related Records</CardTitle>
+    <Card className="h-full">
+      <CardHeader className="border-b p-4">
+        <div className="flex items-center justify-between">
+          <CardTitle className="text-xl font-semibold">Related Records</CardTitle>
+          <Button variant="ghost" size="icon" className="h-8 w-8">
+            <PlusCircle className="h-4 w-4" />
+          </Button>
+        </div>
       </CardHeader>
       
       <CardContent className="p-0">
-        <Accordion type="multiple" className="w-full">
-          <AccordionSection 
-            id="claims" 
-            title="Insurance Claims" 
-            icon={<FileClock className="h-4 w-4" />}
-            count={2}
-          >
-            <div className="space-y-2">
-              <RecordItem 
-                title="Annual Check-up Claim" 
-                date="Apr 02, 2025"
-                status="Approved"
-                statusVariant="success"
-              />
-              <RecordItem 
-                title="Follow-up Visit Claim" 
-                date="Feb 15, 2025"
-                status="Approved"
-                statusVariant="success"
-              />
-            </div>
-          </AccordionSection>
-          
-          <AccordionSection 
-            id="treatment" 
-            title="Treatment Plans" 
-            icon={<Stethoscope className="h-4 w-4" />}
-            count={1}
-          >
-            <div className="space-y-2">
-              <RecordItem 
-                title="Comprehensive Dental Care" 
-                date="Apr 02, 2025"
-                status="Active"
-                statusVariant="info"
-                description="Regular cleanings, cavity treatment, and orthodontic evaluation."
-              />
-            </div>
-          </AccordionSection>
-          
-          <AccordionSection 
-            id="family" 
-            title="Family Members" 
-            icon={<Users className="h-4 w-4" />}
-            count={2}
-          >
-            <div className="space-y-2">
-              <RecordItem 
-                title="John Johnson" 
-                date="Spouse"
-                status="Patient"
-                statusVariant="secondary"
-              />
-              <RecordItem 
-                title="Emma Johnson" 
-                date="Child"
-                status="Patient"
-                statusVariant="secondary"
-              />
-            </div>
-            <Button variant="outline" size="sm" className="w-full mt-2 text-xs">
-              <UserPlus className="h-3 w-3 mr-1" />
-              Add Family Member
-            </Button>
-          </AccordionSection>
-          
-          <AccordionSection 
-            id="documents" 
-            title="Documents" 
-            icon={<FileText className="h-4 w-4" />}
-            count={3}
-          >
-            <div className="space-y-2">
-              <RecordItem 
-                title="Insurance Card" 
-                date="Jan 15, 2025"
-                status="PDF"
-                statusVariant="secondary"
-                actionIcon={<DownloadCloud className="h-3.5 w-3.5" />}
-              />
-              <RecordItem 
-                title="Medical History Form" 
-                date="Jan 15, 2025"
-                status="PDF"
-                statusVariant="secondary"
-                actionIcon={<DownloadCloud className="h-3.5 w-3.5" />}
-              />
-              <RecordItem 
-                title="HIPAA Consent" 
-                date="Jan 15, 2025"
-                status="PDF"
-                statusVariant="secondary"
-                actionIcon={<DownloadCloud className="h-3.5 w-3.5" />}
-              />
-            </div>
-            <Button variant="outline" size="sm" className="w-full mt-2 text-xs">
-              <Upload className="h-3 w-3 mr-1" />
-              Upload Document
-            </Button>
-          </AccordionSection>
-          
-          <AccordionSection 
-            id="imaging" 
-            title="Imaging & X-Rays" 
-            icon={<ImagePlus className="h-4 w-4" />}
-            count={1}
-          >
-            <div className="text-center py-2">
-              <ToothDiagram highlightedTooth={14} />
-              <p className="text-xs text-muted-foreground mt-2">
-                Tooth #14 - Crown placement (Apr 02, 2025)
-              </p>
-            </div>
-          </AccordionSection>
-          
-          <AccordionSection 
-            id="labs" 
-            title="Lab Work" 
-            icon={<FlaskRound className="h-4 w-4" />}
-            count={0}
-          >
-            <div className="py-8 text-center">
-              <p className="text-sm text-muted-foreground">No lab records found</p>
-              <Button variant="outline" size="sm" className="mt-2 text-xs">
-                <Plus className="h-3 w-3 mr-1" />
-                Request Lab Work
-              </Button>
-            </div>
-          </AccordionSection>
-        </Accordion>
+        <ScrollArea className="h-[620px]">
+          <div className="p-4">
+            <h3 className="font-medium text-sm mb-2 flex items-center">
+              <FileText className="h-4 w-4 mr-1 text-blue-600" />
+              Documents & Files
+            </h3>
+            
+            {isLoadingDocuments ? (
+              <div className="space-y-2 mb-6">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} className="h-12 w-full rounded-md" />
+                ))}
+              </div>
+            ) : documents && documents.length > 0 ? (
+              <div className="space-y-2 mb-6">
+                {documents.map((doc) => (
+                  <DocumentItem key={doc.id} document={doc} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-sm text-center p-4 text-muted-foreground mb-6">
+                No documents found
+              </div>
+            )}
+            
+            <h3 className="font-medium text-sm mb-2 flex items-center">
+              <Stethoscope className="h-4 w-4 mr-1 text-emerald-600" />
+              Treatments & Procedures
+            </h3>
+            
+            {isLoadingTreatments ? (
+              <div className="space-y-2">
+                {[1, 2, 3].map((i) => (
+                  <Skeleton key={i} className="h-12 w-full rounded-md" />
+                ))}
+              </div>
+            ) : treatments && treatments.length > 0 ? (
+              <div className="space-y-2">
+                {treatments.map((treatment) => (
+                  <TreatmentItem key={treatment.id} treatment={treatment} />
+                ))}
+              </div>
+            ) : (
+              <div className="text-sm text-center p-4 text-muted-foreground">
+                No treatments found
+              </div>
+            )}
+          </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
 }
 
-interface AccordionSectionProps {
-  id: string;
-  title: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-  count: number;
-}
-
-function AccordionSection({ id, title, icon, children, count }: AccordionSectionProps) {
+function DocumentItem({ document }: { document: any }) {
+  // Get file icon based on document type
+  const getFileIcon = (type: string) => {
+    switch (type.toLowerCase()) {
+      case 'image':
+        return <File className="h-4 w-4 text-blue-500" />;
+      case 'pdf':
+        return <File className="h-4 w-4 text-red-500" />;
+      case 'report':
+        return <FileText className="h-4 w-4 text-purple-500" />;
+      default:
+        return <File className="h-4 w-4 text-gray-500" />;
+    }
+  };
+  
+  // Format upload date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+  
   return (
-    <AccordionItem value={id} className="border-b">
-      <AccordionTrigger className="py-3 px-4 hover:no-underline hover:bg-muted/30">
-        <div className="flex items-center">
-          <span className="mr-2 text-muted-foreground">{icon}</span>
-          <span>{title}</span>
-          {count > 0 && (
-            <Badge variant="secondary" className="ml-2 bg-muted text-muted-foreground">
-              {count}
-            </Badge>
-          )}
+    <div className="border rounded-md p-2.5 hover:bg-gray-50 flex justify-between items-center transition-colors">
+      <div className="flex items-center">
+        <div className="bg-gray-100 p-1.5 rounded mr-2">
+          {getFileIcon(document.documentType)}
         </div>
-      </AccordionTrigger>
-      <AccordionContent className="px-4 py-2">
-        {children}
-      </AccordionContent>
-    </AccordionItem>
+        <div>
+          <p className="text-sm font-medium">{document.title}</p>
+          <p className="text-xs text-muted-foreground">Uploaded {formatDate(document.uploadedAt || document.createdAt)}</p>
+        </div>
+      </div>
+      <Button variant="ghost" size="icon" className="h-7 w-7">
+        <ArrowUpRight className="h-3.5 w-3.5" />
+      </Button>
+    </div>
   );
 }
 
-interface RecordItemProps {
-  title: string;
-  date: string;
-  status?: string;
-  statusVariant?: RecordStatus;
-  description?: string;
-  actionIcon?: React.ReactNode;
-}
-
-function RecordItem({ 
-  title, 
-  date, 
-  status, 
-  statusVariant = "secondary",
-  description,
-  actionIcon
-}: RecordItemProps) {
-  const getVariantClass = () => {
-    switch(statusVariant) {
-      case "success": return "bg-green-100 text-green-800 border-green-200";
-      case "warning": return "bg-amber-100 text-amber-800 border-amber-200";
-      case "error": return "bg-red-100 text-red-800 border-red-200";
-      case "info": return "bg-blue-100 text-blue-800 border-blue-200";
-      default: return "bg-gray-100 text-gray-800 border-gray-200";
+function TreatmentItem({ treatment }: { treatment: any }) {
+  // Format treatment date
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  };
+  
+  // Get badge color based on status
+  const getBadgeVariant = (status: string) => {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return <Badge variant="outline" className="ml-2 bg-green-50 text-green-700 border-green-200">Completed</Badge>;
+      case 'scheduled':
+        return <Badge variant="outline" className="ml-2 bg-blue-50 text-blue-700 border-blue-200">Scheduled</Badge>;
+      case 'pending':
+        return <Badge variant="outline" className="ml-2 bg-amber-50 text-amber-700 border-amber-200">Pending</Badge>;
+      case 'cancelled':
+        return <Badge variant="outline" className="ml-2 bg-red-50 text-red-700 border-red-200">Cancelled</Badge>;
+      default:
+        return <Badge variant="outline" className="ml-2">{status}</Badge>;
     }
   };
   
   return (
-    <div className="flex items-start justify-between py-1.5 hover:bg-muted/20 px-1 rounded">
-      <div className="min-w-0 flex-1">
-        <p className="font-medium text-sm text-gray-900 truncate">{title}</p>
-        <p className="text-xs text-muted-foreground">{date}</p>
-        {description && (
-          <p className="text-xs text-gray-700 mt-1">{description}</p>
-        )}
+    <div className="border rounded-md p-2.5 hover:bg-gray-50 flex justify-between items-center transition-colors">
+      <div className="flex items-center">
+        <div className="bg-gray-100 p-1.5 rounded mr-2">
+          <Stethoscope className="h-4 w-4 text-emerald-600" />
+        </div>
+        <div>
+          <div className="flex items-center">
+            <p className="text-sm font-medium">{treatment.procedure}</p>
+            {getBadgeVariant(treatment.status)}
+          </div>
+          <div className="flex items-center text-xs text-muted-foreground">
+            <Clock className="h-3 w-3 mr-1" />
+            {formatDate(treatment.treatmentDate)}
+            {treatment.toothNumber && (
+              <span className="ml-2">Tooth #{treatment.toothNumber}</span>
+            )}
+          </div>
+        </div>
       </div>
-      <div className="flex items-center ml-2">
-        {status && (
-          <Badge variant="outline" className={`mr-1 text-xs ${getVariantClass()}`}>
-            {status}
-          </Badge>
-        )}
-        {actionIcon && (
-          <Button variant="ghost" size="icon" className="h-6 w-6">
-            {actionIcon}
-          </Button>
-        )}
-      </div>
+      <Button variant="ghost" size="icon" className="h-7 w-7">
+        <ArrowUpRight className="h-3.5 w-3.5" />
+      </Button>
     </div>
   );
 }
