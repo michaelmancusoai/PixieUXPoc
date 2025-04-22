@@ -67,13 +67,28 @@ export interface NavSection {
  * Defines the application's navigation structure including all sections and their sub-items
  */
 export const navigationData: NavSection[] = [
-  // Dashboard has no sub-navigation
+  // Dashboard with sub-navigation
   {
     title: "Dashboard",
     href: "/dashboard",
     icon: LayoutDashboard,
-    items: [],
-    showSubNav: false
+    items: [
+      {
+        title: "Today",
+        href: "/dashboard/today",
+        icon: CalendarDays,
+      },
+      {
+        title: "Daily Huddle",
+        href: "/dashboard/daily-huddle",
+        icon: Users,
+      },
+      {
+        title: "Mission-Control",
+        href: "/dashboard/mission-control",
+        icon: Activity,
+      },
+    ],
   },
   // Schedule section with appointments and calendar management
   {
