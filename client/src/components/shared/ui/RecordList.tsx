@@ -1,63 +1,56 @@
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import RecordItem from "./RecordItem";
+import { Skeleton } from "@/components/ui/skeleton";
 
-interface RecordListProps {
-  items: Array<{
-    title: string;
-    subtitle: string;
-    meta?: string;
-    value?: string;
-    status?: React.ReactNode;
-    action?: React.ReactNode;
-  }>;
-  primaryAction?: {
-    icon: React.ReactNode;
-    label: string;
-    onClick?: () => void;
-  };
-  secondaryAction?: {
-    label: string;
-    onClick?: () => void;
-  };
+interface RecordListProps<T> {
+  data?: T[];
+  isLoading?: boolean;
+  emptyMessage?: string;
+  renderItem: (item: T, index: number) => React.ReactNode;
+  keyExtractor: (item: T) => string | number;
+  className?: string;
+  skeletonCount?: number;
 }
 
 /**
- * RecordList - A reusable component for displaying a list of records with consistent styling
+ * RecordList - A generic component for rendering lists of records
+ * Works with any data type and handles loading/empty states
  */
-export default function RecordList({ items, primaryAction, secondaryAction }: RecordListProps) {
-  return (
-    <>
-      <div className="border rounded divide-y">
-        {items.map((item, index) => (
-          <RecordItem
-            key={index}
-            title={item.title}
-            subtitle={item.subtitle}
-            meta={item.meta}
-            value={item.value}
-            status={item.status}
-            action={item.action}
-          />
+export default function RecordList<T>({
+  data,
+  isLoading = false,
+  emptyMessage = "No records found",
+  renderItem,
+  keyExtractor,
+  className,
+  skeletonCount = 3,
+}: RecordListProps<T>) {
+  if (isLoading) {
+    return (
+      <div className={cn("space-y-2", className)}>
+        {Array.from({ length: skeletonCount }).map((_, i) => (
+          <Skeleton key={i} className="h-16 w-full" />
         ))}
       </div>
-      
-      {(primaryAction || secondaryAction) && (
-        <div className="flex justify-between mt-2">
-          {primaryAction && (
-            <Button variant="default" size="sm" className="h-8" onClick={primaryAction.onClick}>
-              {primaryAction.icon}
-              {primaryAction.label}
-            </Button>
-          )}
-          
-          {secondaryAction && (
-            <Button variant="ghost" size="sm" className="h-8" onClick={secondaryAction.onClick}>
-              {secondaryAction.label}
-            </Button>
-          )}
-        </div>
-      )}
-    </>
+    );
+  }
+
+  if (!data || data.length === 0) {
+    return (
+      <div className={cn("text-center py-4", className)}>
+        <p className="text-sm text-muted-foreground">{emptyMessage}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn("space-y-2", className)}>
+      {data.map((item, index) => (
+        <React.Fragment key={keyExtractor(item)}>
+          {renderItem(item, index)}
+        </React.Fragment>
+      ))}
+    </div>
   );
 }

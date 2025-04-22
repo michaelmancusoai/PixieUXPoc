@@ -1,39 +1,68 @@
 import React from "react";
-import { AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
 
-interface AccordionSectionProps { 
-  id: string; 
-  icon: React.ReactNode; 
-  title: string; 
-  count: number; 
-  children: React.ReactNode; 
+interface AccordionSectionProps {
+  title: string;
+  icon?: React.ReactNode;
+  defaultOpen?: boolean;
+  className?: string;
+  children: React.ReactNode;
+  onAddClick?: () => void;
 }
 
 /**
- * AccordionSection - A reusable component for displaying collapsible sections with consistent styling
+ * AccordionSection - A standardized accordion section with title, icon, and optional add button
+ * Used primarily in the RelatedRecords component
  */
-export default function AccordionSection({ 
-  id, 
-  icon, 
-  title, 
-  count, 
-  children 
+export default function AccordionSection({
+  title,
+  icon,
+  defaultOpen = false,
+  className,
+  children,
+  onAddClick,
 }: AccordionSectionProps) {
+  const value = defaultOpen ? "item-1" : undefined;
+
   return (
-    <AccordionItem value={id} className="border-b">
-      <AccordionTrigger className="px-4 py-3 hover:bg-gray-50">
-        <div className="flex items-center">
-          <span className="text-muted-foreground mr-2">{icon}</span>
-          <h3 className="font-medium">{title}</h3>
-          <Badge variant="secondary" className="ml-2 px-2 py-0.5 rounded-full text-xs bg-gray-100 text-muted-foreground">
-            {count}
-          </Badge>
+    <Accordion type="single" collapsible className={className} defaultValue={value}>
+      <AccordionItem value="item-1" className="border-b-0">
+        <div className="flex items-center justify-between">
+          <AccordionTrigger className="py-2 hover:no-underline">
+            <div className="flex items-center gap-2">
+              {icon && <span className="text-muted-foreground">{icon}</span>}
+              <span className="font-medium text-sm">{title}</span>
+            </div>
+          </AccordionTrigger>
+          
+          {onAddClick && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="h-7 w-7" 
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddClick();
+              }}
+            >
+              <Plus className="h-4 w-4" />
+              <span className="sr-only">Add {title}</span>
+            </Button>
+          )}
         </div>
-      </AccordionTrigger>
-      <AccordionContent className="px-4 pb-3">
-        {children}
-      </AccordionContent>
-    </AccordionItem>
+        
+        <AccordionContent className={cn("pt-1 pb-3", !children && "text-center")}>
+          {children || <span className="text-xs text-muted-foreground">No records found</span>}
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   );
 }

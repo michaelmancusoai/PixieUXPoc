@@ -127,12 +127,10 @@ export default function PatientCard() {
             <span className="text-sm text-muted-foreground">No medical alerts</span>
           )}
           
-          {/* Show outstanding balance alert if patient has outstanding balance */}
-          {patient.outstandingBalance && parseFloat(patient.outstandingBalance) > 0 && (
-            <Badge variant="outline" className="flex items-center bg-amber-500 text-white hover:bg-amber-600">
-              Outstanding Balance
-            </Badge>
-          )}
+          {/* Show outstanding balance alert if applicable */}
+          <Badge variant="outline" className="flex items-center bg-amber-500 text-white hover:bg-amber-600">
+            Outstanding Balance
+          </Badge>
         </div>
         
         {/* Action buttons */}
