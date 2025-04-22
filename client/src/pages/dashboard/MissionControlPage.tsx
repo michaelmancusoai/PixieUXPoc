@@ -241,11 +241,10 @@ export default function MissionControlPage() {
     <NavigationWrapper>
       <div className="space-y-4">
         {/* Header with KPIs */}
-        <div className="sticky top-0 z-10 bg-white pb-4">
+        <div className="bg-white pb-4">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
             <div>
               <h1 className="text-2xl font-bold">Mission Control</h1>
-              <p className="text-muted-foreground">"If a dashboard tells you what happened, Mission Control tells you what to do next."</p>
             </div>
           </div>
           
@@ -267,9 +266,9 @@ export default function MissionControlPage() {
               <span className="font-normal mr-1">Utilization:</span> 87%
             </Badge>
             <div className="flex-grow"></div>
-            <Button className="ml-auto" size="sm">
+            <Button className="ml-auto border-dashed border-red-300 text-red-600 hover:bg-red-50" variant="outline" size="sm">
               <AlertCircle className="mr-2 h-4 w-4" />
-              Action Items
+              View Critical Actions (3)
             </Button>
           </div>
           
