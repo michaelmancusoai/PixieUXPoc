@@ -7,6 +7,7 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import DashboardPage from "@/pages/DashboardPage";
 import SettingsPage from "@/pages/SettingsPage";
+import PatientProfilePage from "@/pages/PatientProfilePage";
 
 function Router() {
   return (
@@ -15,7 +16,8 @@ function Router() {
       <Route path="/dashboard" component={DashboardPage} />
       <Route path="/schedule" component={Home} />
       <Route path="/schedule/:subpage" component={Home} />
-      <Route path="/patients" component={Home} />
+      <Route path="/patients" component={PatientProfilePage} />
+      <Route path="/patients/profile" component={PatientProfilePage} />
       <Route path="/patients/:subpage" component={Home} />
       <Route path="/billing" component={Home} />
       <Route path="/billing/:subpage" component={Home} />
