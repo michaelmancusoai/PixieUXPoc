@@ -591,25 +591,25 @@ export default function PaymentsPage() {
                 </div>
 
                 {/* Filter chips */}
-                {(filters.paymentMethod !== "All" || filters.paymentStatus !== "All" || filters.paymentType !== "All" || dateRange?.from) && (
+                {(filters.paymentMethod !== "All Methods" || filters.paymentStatus !== "All Statuses" || filters.paymentType !== "All Types" || dateRange?.from) && (
                   <div className="flex items-center gap-2 px-6 py-2 bg-card border-b text-sm">
                     <span className="text-muted-foreground">Filtered results: {filteredPayments.length}</span>
                     
-                    {filters.paymentMethod !== "All" && (
+                    {filters.paymentMethod !== "All Methods" && (
                       <Badge variant="outline" className="bg-primary/10 text-primary">
-                        {filters.paymentMethod} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, paymentMethod: "All" })} />
+                        {filters.paymentMethod} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, paymentMethod: "All Methods" })} />
                       </Badge>
                     )}
                     
-                    {filters.paymentStatus !== "All" && (
+                    {filters.paymentStatus !== "All Statuses" && (
                       <Badge variant="outline" className="bg-primary/10 text-primary">
-                        {filters.paymentStatus} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, paymentStatus: "All" })} />
+                        {filters.paymentStatus} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, paymentStatus: "All Statuses" })} />
                       </Badge>
                     )}
                     
-                    {filters.paymentType !== "All" && (
+                    {filters.paymentType !== "All Types" && (
                       <Badge variant="outline" className="bg-primary/10 text-primary">
-                        {filters.paymentType} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, paymentType: "All" })} />
+                        {filters.paymentType} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, paymentType: "All Types" })} />
                       </Badge>
                     )}
                     
@@ -629,9 +629,9 @@ export default function PaymentsPage() {
                     
                     <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => {
                       setFilters({
-                        paymentMethod: "All",
-                        paymentStatus: "All",
-                        paymentType: "All"
+                        paymentMethod: "All Methods",
+                        paymentStatus: "All Statuses",
+                        paymentType: "All Types"
                       });
                       setDateRange(undefined);
                     }}>

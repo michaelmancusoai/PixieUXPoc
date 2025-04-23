@@ -1039,7 +1039,7 @@ export default function ClaimsPage() {
                                   setFilters({
                                     insuranceCarrier: "All Carriers",
                                     provider: "All Providers",
-                                    insuranceOrder: "All",
+                                    insuranceOrder: "All Orders",
                                     claimStatus: "All Statuses"
                                   });
                                 }}
