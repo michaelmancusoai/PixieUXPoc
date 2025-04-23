@@ -760,7 +760,9 @@ export default function ClaimsPage() {
                         <>
                           {filteredClaims.map((claim) => (
                             <React.Fragment key={claim.id}>
-                              <TableRow className={selectedClaims.includes(claim.id) ? "bg-muted/50" : ""}>
+                              <TableRow 
+                                className={selectedClaims.includes(claim.id) ? "bg-muted/50" : ""}
+                              >
                                 <TableCell>
                                   <Checkbox 
                                     checked={selectedClaims.includes(claim.id)} 
@@ -809,49 +811,60 @@ export default function ClaimsPage() {
 
                               {/* Expanded claim details */}
                               {expandedClaimId === claim.id && claim.procedures && (
-                                <TableRow className="bg-muted/30">
+                                <TableRow className="bg-gray-50">
                                   <TableCell colSpan={12} className="p-0">
-                                    <div className="px-4 py-3">
-                                      <h4 className="font-semibold mb-2">Procedure Details</h4>
-                                      <Table>
-                                        <TableHeader>
-                                          <TableRow>
-                                            <TableHead className="w-[100px]">CDT Code</TableHead>
-                                            <TableHead className="w-[80px]">Tooth/Surf</TableHead>
-                                            <TableHead>Description</TableHead>
-                                            <TableHead className="text-right">Fees</TableHead>
-                                            <TableHead className="text-right">Negotiated</TableHead>
-                                            <TableHead className="text-right">Deductible</TableHead>
-                                            <TableHead className="text-right">Coverage</TableHead>
-                                            <TableHead className="text-right">Pt Est</TableHead>
-                                            <TableHead className="text-right">Ins Est</TableHead>
-                                          </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
+                                    <div className="p-0">
+                                      <table className="w-full border-collapse">
+                                        <thead>
+                                          <tr className="border-y bg-gray-100">
+                                            <th className="py-2 px-3 text-xs font-semibold text-left border-r w-[100px]">CDT Code</th>
+                                            <th className="py-2 px-3 text-xs font-semibold text-left border-r w-[80px]">Tth/ Surf</th>
+                                            <th className="py-2 px-3 text-xs font-semibold text-left border-r">Description</th>
+                                            <th className="py-2 px-3 text-xs font-semibold text-right border-r">Fees</th>
+                                            <th className="py-2 px-3 text-xs font-semibold text-right border-r">Negotiated</th>
+                                            <th className="py-2 px-3 text-xs font-semibold text-right border-r">Deductible</th>
+                                            <th className="py-2 px-3 text-xs font-semibold text-right border-r">Coverage</th>
+                                            <th className="py-2 px-3 text-xs font-semibold text-right border-r">Pt Est</th>
+                                            <th className="py-2 px-3 text-xs font-semibold text-right">Ins Est</th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
                                           {claim.procedures.map((procedure, index) => (
-                                            <TableRow key={index}>
-                                              <TableCell>{procedure.cdtCode}</TableCell>
-                                              <TableCell>{procedure.toothNumber}/{procedure.toothSurface}</TableCell>
-                                              <TableCell>{procedure.description}</TableCell>
-                                              <TableCell className="text-right">${procedure.fee.toFixed(2)}</TableCell>
-                                              <TableCell className="text-right">${procedure.negotiated.toFixed(2)}</TableCell>
-                                              <TableCell className="text-right">${procedure.deductible.toFixed(2)}</TableCell>
-                                              <TableCell className="text-right">{procedure.coverage}%</TableCell>
-                                              <TableCell className="text-right">${procedure.patientEstimate.toFixed(2)}</TableCell>
-                                              <TableCell className="text-right">${procedure.insuranceEstimate.toFixed(2)}</TableCell>
-                                            </TableRow>
+                                            <tr key={index} className="border-b hover:bg-gray-50">
+                                              <td className="py-2 px-3 text-sm border-r">{procedure.cdtCode}</td>
+                                              <td className="py-2 px-3 text-sm border-r">
+                                                {procedure.toothNumber}{procedure.toothSurface ? '/' + procedure.toothSurface : ''}
+                                              </td>
+                                              <td className="py-2 px-3 text-sm border-r">{procedure.description}</td>
+                                              <td className="py-2 px-3 text-sm border-r text-right">${procedure.fee.toFixed(2)}</td>
+                                              <td className="py-2 px-3 text-sm border-r text-right">${procedure.negotiated.toFixed(2)}</td>
+                                              <td className="py-2 px-3 text-sm border-r text-right">${procedure.deductible.toFixed(2)}</td>
+                                              <td className="py-2 px-3 text-sm border-r text-right">{procedure.coverage}%</td>
+                                              <td className="py-2 px-3 text-sm border-r text-right">${procedure.patientEstimate.toFixed(2)}</td>
+                                              <td className="py-2 px-3 text-sm text-right">${procedure.insuranceEstimate.toFixed(2)}</td>
+                                            </tr>
                                           ))}
-                                          <TableRow>
-                                            <TableCell colSpan={3} className="font-semibold">Total</TableCell>
-                                            <TableCell className="text-right font-semibold">$17,500.50</TableCell>
-                                            <TableCell className="text-right font-semibold">$290.00</TableCell>
-                                            <TableCell className="text-right font-semibold">$50.00</TableCell>
-                                            <TableCell className="text-right font-semibold">-</TableCell>
-                                            <TableCell className="text-right font-semibold">$558.00</TableCell>
-                                            <TableCell className="text-right font-semibold">$192.00</TableCell>
-                                          </TableRow>
-                                        </TableBody>
-                                      </Table>
+                                          <tr className="bg-gray-50">
+                                            <td colSpan={3} className="py-2 px-3 text-sm font-semibold border-r">Total</td>
+                                            <td className="py-2 px-3 text-sm font-semibold border-r text-right">
+                                              ${claim.procedures.reduce((sum, p) => sum + p.fee, 0).toFixed(2)}
+                                            </td>
+                                            <td className="py-2 px-3 text-sm font-semibold border-r text-right">
+                                              ${claim.procedures.reduce((sum, p) => sum + p.negotiated, 0).toFixed(2)}
+                                            </td>
+                                            <td className="py-2 px-3 text-sm font-semibold border-r text-right">
+                                              ${claim.procedures.reduce((sum, p) => sum + p.deductible, 0).toFixed(2)}
+                                            </td>
+                                            <td className="py-2 px-3 text-sm font-semibold border-r text-right">-</td>
+                                            <td className="py-2 px-3 text-sm font-semibold border-r text-right">
+                                              ${claim.procedures.reduce((sum, p) => sum + p.patientEstimate, 0).toFixed(2)}
+                                            </td>
+                                            <td className="py-2 px-3 text-sm font-semibold text-right">
+                                              ${claim.procedures.reduce((sum, p) => sum + p.insuranceEstimate, 0).toFixed(2)}
+                                            </td>
+                                          </tr>
+                                        </tbody>
+                                      </table>
                                     </div>
                                   </TableCell>
                                 </TableRow>
