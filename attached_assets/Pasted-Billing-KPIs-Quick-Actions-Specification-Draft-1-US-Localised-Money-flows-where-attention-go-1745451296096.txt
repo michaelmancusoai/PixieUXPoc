@@ -1,0 +1,491 @@
+Billing KPIs & Quick‑Actions Specification – Draft 1 (US‑Localised)
+
+“Money flows where attention goes. Your billing UI must spotlight the dollars that can still be rescued.” — Rory Sutherland
+
+This document enumerates the high‑impact KPIs, micro‑visuals, and quick‑actions for each billing sub‑module—Claims, Payments, Statements, Collections, Fee Schedules—so designers and engineers can surface the right signals at both page and row level.
+
+Index of Tables
+
+Core KPI Cards (per module)
+
+Page‑Level Quick‑Actions
+
+List Columns & Row‑Level Actions
+
+1 · Core KPI Cards
+
+Module
+
+KPI Card
+
+Formula
+
+Target
+
+Behavioural Cue
+
+Claims
+
+Claims Pending
+
+Count status ∈ {Submitted, Pending Info}
+
+↓
+
+Badge count pulses if ↑7 d
+
+
+
+Average Days in AR
+
+mean days since DOS for unpaid claims
+
+< 15 d
+
+Colour gradient green→red
+
+
+
+Denial Rate
+
+Denied ÷ Total submitted (30 d)
+
+< 8 %
+
+Amber if 8−12 %, Red >12 %
+
+Payments
+
+Unposted ERAs
+
+ERAs received − posted
+
+=0
+
+Snackbar “Post All”
+
+
+
+Auto‑Post Success
+
+Posted auto ÷ total ERAs
+
+> 90 %
+
+Tooltip trend sparkline
+
+Statements
+
+Outstanding Patient AR
+
+Σ patient balances > 0
+
+–
+
+Click chip → AR aging report
+
+
+
+eStatement Open Rate
+
+Opened ÷ Sent (7 d)
+
+> 50 %
+
+progress bar
+
+Collections
+
+Accounts in Collections
+
+Count balances in > 90 d pipeline
+
+↓
+
+Red badge + dollar sum
+
+
+
+Collected This Month
+
+$_Int payments from collections agency
+
+ ↑
+
+Green arrow delta vs last month
+
+Fee Schedules
+
+Plans Needing Update
+
+Fee schedules > 18 mo old
+
+↓
+
+Amber chip w/ count
+
+KPI cards live in a sticky horizontal strip at the top of each module page.
+
+2 · Page‑Level Quick‑Actions
+
+Module
+
+Primary CTA
+
+Secondary CTA
+
+Rationale
+
+Claims
+
+Submit Batch (opens X12 837 export)
+
+“Export Denials CSV”
+
+Batch submission is daily ritual; CSV aids appeals.
+
+Payments
+
+Auto‑Post ERAs
+
+“Create Manual Payment”
+
+One‑click zero friction.
+
+Statements
+
+Send eStatements
+
+“Print & Mail Batch”
+
+Action at day’s end.
+
+Collections
+
+Send Final Notice
+
+“Create Payment Plan”
+
+Ultimatum or option.
+
+Fee Schedules
+
+Import UCR CSV
+
+“Copy From Existing”
+
+Speed schedule updates.
+
+Quick‑actions locate top‑right of table header; greyed until selection/context makes sense.
+
+3 · List View Columns & Row‑Level Actions
+
+3.1 Claims List
+
+Column
+
+Default Sort?
+
+Tooltip
+
+Row Action Icons
+
+Claim #
+
+–
+
+Payer claim number
+
+–
+
+DOS
+
+✜
+
+Date of service
+
+–
+
+Payer
+
+–
+
+“Delta Dental CA”
+
+–
+
+Amount
+
+–
+
+billed amount
+
+–
+
+Status
+
+✓
+
+Submitted / Pending / Denied / Paid
+
+Edit, Re‑submit, Appeal
+
+Days in AR
+
+–
+
+auto‑calc
+
+–
+
+3.2 Payments (ERA) List
+
+Column
+
+Sort
+
+Row Actions
+
+ERA #
+
+–
+
+Post, Split, Reject
+
+Payer
+
+–
+
+–
+
+Received Date
+
+✜
+
+–
+
+Claims Count
+
+–
+
+–
+
+Auto‑Post Status
+
+–
+
+icon success / failed
+
+–
+
+3.3 Statements List
+
+Column
+
+Sort
+
+Row Actions
+
+Statement ID
+
+–
+
+Send, Print
+
+Patient
+
+–
+
+–
+
+Balance
+
+✜
+
+–
+
+Sent Date
+
+–
+
+–
+
+Status
+
+–
+
+Paid / Partial / Unpaid
+
+–
+
+3.4 Collections List
+
+Column
+
+Sort
+
+Row Actions
+
+Patient
+
+–
+
+Call Log, Email, Payment Plan
+
+Balance
+
+✜
+
+–
+
+Last Contact
+
+–
+
+–
+
+Days in AR
+
+–
+
+–
+
+Status
+
+–
+
+Pre‑Collect / Agency / Payment Plan
+
+–
+
+3.5 Fee Schedule List
+
+Column
+
+Sort
+
+Row Actions
+
+Schedule Name
+
+–
+
+Edit, Duplicate
+
+Plan Count
+
+–
+
+–
+
+Last Updated
+
+✜
+
+–
+
+% Above UCR
+
+–
+
+colour gradient
+
+–
+
+4 · Visuals & Charts
+
+Module
+
+Visual
+
+Placement
+
+Insight
+
+Claims
+
+Funnel Chart (Submitted → Paid)
+
+Right sidebar
+
+Identify denial leakage.
+
+Payments
+
+Stacked Bar (Auto vs Manual Posting)
+
+beneath KPIs
+
+Trend automation efficiency.
+
+Statements
+
+Heatmap of send vs paid days
+
+modal
+
+Optimal statement timing.
+
+Collections
+
+Aging Waterfall (0‑30, 31‑60…)
+
+top
+
+Visualises AR decay.
+
+Fee Schedules
+
+Box Plot of fees vs region UCR
+
+side panel
+
+Pricing gaps.
+
+Charts triggered by “Show Insights” toggle to preserve initial load speed.
+
+5 · Behavioural Nudges
+
+Scenario
+
+Nudge
+
+Implementation
+
+Claim at 14 d without update
+
+Row border flashes amber every 15 s
+
+CSS animation
+
+High denial rate week‑over‑week
+
+KPI card banner “Denials up 6 % – start appeal batch?”
+
+one‑click filter
+
+Statement unpaid at 21 d
+
+Auto‑queue into Collections list with red badge
+
+background job
+
+Fee schedule 18 mo old
+
+Amber chip “Review fees”
+
+opens diff modal
+
+6 · Accessibility & Compliance
+
+All KPIs include aria‑label announcing value, target, and status (“Denial rate 11 percent, above target”).
+
+Financial charts use textures + labels, not colour alone.
+
+Click actions log userId + timestamp (HIPAA, PCI for payments).
+
+7 · Deliverables Checklist
+
+
+
+End of Billing KPIs & Quick‑Actions Draft 1 – ready for stakeholder validation

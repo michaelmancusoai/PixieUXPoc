@@ -32,6 +32,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import { 
   Search, 
   Download, 
@@ -255,6 +256,7 @@ export default function FeeSchedulesPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedRows, setExpandedRows] = useState<string[]>([]);
   const [selectedFees, setSelectedFees] = useState<string[]>([]);
+  const [showInsights, setShowInsights] = useState(false);
 
   // Function to filter fee schedule data
   const getFilteredFees = () => {
@@ -332,18 +334,27 @@ export default function FeeSchedulesPage() {
         <div className="container mx-auto py-6">
           <h1 className="text-2xl font-bold mb-6">Fee Schedules</h1>
 
-          {/* Summary Cards */}
+          {/* KPI Cards - as defined in specification document */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Standard Fee Schedule</CardTitle>
+                <CardTitle className="text-base font-medium">Plans Needing Update</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
-                  <DollarSign className="h-8 w-8 mr-3 text-green-500" />
+                  <FileCog className="h-8 w-8 mr-3 text-amber-500" />
                   <div>
-                    <div className="text-2xl font-bold">{feeScheduleData.length}</div>
-                    <div className="text-sm text-muted-foreground">Total CDT Codes</div>
+                    <div className="text-2xl font-bold relative">
+                      <span className="flex items-center">
+                        3
+                        <Badge variant="outline" className="ml-2 bg-amber-50 text-amber-600 border-amber-200">
+                          18+ months old
+                        </Badge>
+                      </span>
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-1">
+                      Fee schedules need review
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -351,14 +362,14 @@ export default function FeeSchedulesPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">PPO Fee Schedule</CardTitle>
+                <CardTitle className="text-base font-medium">UCR Comparison</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
                   <Percent className="h-8 w-8 mr-3 text-blue-500" />
                   <div>
-                    <div className="text-2xl font-bold">20%</div>
-                    <div className="text-sm text-muted-foreground">Average discount</div>
+                    <div className="text-2xl font-bold">5% below</div>
+                    <div className="text-sm text-muted-foreground">Average vs. regional UCR</div>
                   </div>
                 </div>
               </CardContent>
@@ -371,16 +382,16 @@ export default function FeeSchedulesPage() {
               <CardContent className="py-6 px-5">
                 <div className="flex flex-col space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Export and analyze fee schedules</span>
+                    <span className="text-sm text-muted-foreground">Update and analyze schedules</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Button variant="outline" className="h-9 flex-1">
-                      <Download className="h-4 w-4 mr-1" />
-                      Export Schedule
+                    <Button className="h-9 flex-1">
+                      <FileCog className="h-4 w-4 mr-1" />
+                      Import UCR CSV
                     </Button>
                     <Button variant="outline" className="h-9 flex-1">
-                      <FileCog className="h-4 w-4 mr-1" />
-                      Fee Analysis
+                      <Download className="h-4 w-4 mr-1" />
+                      Copy From Existing
                     </Button>
                   </div>
                 </div>
@@ -446,6 +457,18 @@ export default function FeeSchedulesPage() {
                         ))}
                       </SelectContent>
                     </Select>
+                    
+                    <div className="flex items-center space-x-2 ml-2">
+                      <label htmlFor="show-insights" className="text-sm text-muted-foreground cursor-pointer select-none">
+                        Show Insights
+                      </label>
+                      <Switch 
+                        id="show-insights" 
+                        checked={showInsights}
+                        onCheckedChange={setShowInsights}
+                        aria-label="Toggle insights"
+                      />
+                    </div>
                   </div>
 
                   <div className="relative w-full md:w-auto">
@@ -458,6 +481,104 @@ export default function FeeSchedulesPage() {
                     />
                   </div>
                 </div>
+                
+                {/* Insights visualization panel */}
+                {showInsights && (
+                  <div className="px-6 py-4 bg-muted/30 border-b">
+                    <div className="flex items-center mb-3">
+                      <div className="mr-2 text-lg font-medium">Fee Schedule Analysis</div>
+                      <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 border-blue-300">
+                        Insights
+                      </Badge>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div className="col-span-2">
+                        <h4 className="text-sm font-medium mb-3">Comparison with Regional UCR Rates</h4>
+                        <div className="bg-white rounded-md border p-4 h-64 flex items-center justify-center">
+                          <div className="w-full h-full flex flex-col items-center justify-center">
+                            <div className="relative w-full h-full flex items-center">
+                              {/* Box plot visualization */}
+                              <div className="absolute left-12 top-0 bottom-0 w-6 bg-blue-100 rounded-md"></div>
+                              <div className="absolute left-12 top-1/4 w-6 h-1/2 bg-blue-500 rounded-md"></div>
+                              <div className="absolute left-11 top-1/2 w-8 h-0.5 bg-blue-900"></div>
+                              <div className="absolute left-7 w-16 border-t border-dashed border-blue-400"></div>
+                              <div className="absolute left-7 top-3/4 w-16 border-t border-dashed border-blue-400"></div>
+                              <div className="absolute left-7 top-1/4 w-16 border-t border-dashed border-blue-400"></div>
+                              
+                              <div className="absolute left-32 top-0 bottom-0 w-6 bg-green-100 rounded-md"></div>
+                              <div className="absolute left-32 top-2/5 w-6 h-1/5 bg-green-500 rounded-md"></div>
+                              <div className="absolute left-31 top-1/2 w-8 h-0.5 bg-green-900"></div>
+                              <div className="absolute left-27 top-1/3 w-16 border-t border-dashed border-green-400"></div>
+                              <div className="absolute left-27 top-3/5 w-16 border-t border-dashed border-green-400"></div>
+                              
+                              <div className="absolute left-52 top-0 bottom-0 w-6 bg-amber-100 rounded-md"></div>
+                              <div className="absolute left-52 top-1/3 w-6 h-1/3 bg-amber-500 rounded-md"></div>
+                              <div className="absolute left-51 top-1/2 w-8 h-0.5 bg-amber-900"></div>
+                              <div className="absolute left-47 top-2/5 w-16 border-t border-dashed border-amber-400"></div>
+                              <div className="absolute left-47 top-3/5 w-16 border-t border-dashed border-amber-400"></div>
+                              
+                              {/* X-axis labels */}
+                              <div className="absolute left-5 bottom-0 w-80 flex justify-between">
+                                <div className="text-xs text-center w-20">Diagnostic</div>
+                                <div className="text-xs text-center w-20">Preventive</div>
+                                <div className="text-xs text-center w-20">Restorative</div>
+                              </div>
+                              
+                              {/* Y-axis */}
+                              <div className="absolute left-0 top-0 bottom-0 flex flex-col justify-between items-end pr-2">
+                                <div className="text-xs">+20%</div>
+                                <div className="text-xs">+10%</div>
+                                <div className="text-xs">UCR</div>
+                                <div className="text-xs">-10%</div>
+                                <div className="text-xs">-20%</div>
+                              </div>
+                            </div>
+                            
+                            <div className="mt-2 text-xs text-center text-muted-foreground">
+                              Box plot showing fee distribution compared to regional UCR rates by category
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <h4 className="text-sm font-medium mb-3">Fee Schedule Analysis</h4>
+                        <div className="bg-white rounded-md border p-4 h-64 overflow-y-auto">
+                          <div className="space-y-3">
+                            <div>
+                              <div className="text-sm font-medium">Category Analysis</div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Restorative procedures are priced on average 5% below regional UCR rates, while preventive services are at parity with regional benchmarks.
+                              </p>
+                            </div>
+                            
+                            <div>
+                              <div className="text-sm font-medium">Pricing Gaps</div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                3 fee schedules including D2740 (crown - porcelain/ceramic) have not been updated in over 18 months and may be below optimal pricing.
+                              </p>
+                            </div>
+                            
+                            <div>
+                              <div className="text-sm font-medium">Competitive Positioning</div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Your standard fees for diagnostic procedures are positioned in the middle tier of local market rates, with potential for selective increases.
+                              </p>
+                            </div>
+                            
+                            <div>
+                              <div className="text-sm font-medium">PPO Negotiation Opportunities</div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Current PPO discounts average 20% across all categories. Consider renegotiating terms for diagnostic codes where discounts exceed 25%.
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Filter chips */}
                 {(selectedCategory !== 'All Categories' || searchQuery) && (
@@ -536,7 +657,9 @@ export default function FeeSchedulesPage() {
                           <>
                             {filteredFees.map((fee) => (
                               <React.Fragment key={fee.cdtCode}>
-                                <TableRow className={selectedFees.includes(fee.cdtCode) ? "bg-muted/50" : ""}>
+                                <TableRow 
+                                  className={`${selectedFees.includes(fee.cdtCode) ? "bg-muted/50" : ""} ${fee.cdtCode === "D2740" ? "border-l-4 border-amber-400 animate-pulse-subtle" : ""}`}
+                                >
                                   <TableCell>
                                     <Checkbox 
                                       checked={selectedFees.includes(fee.cdtCode)} 
@@ -547,23 +670,43 @@ export default function FeeSchedulesPage() {
                                   <TableCell className="font-medium">{fee.cdtCode}</TableCell>
                                   <TableCell>
                                     {fee.shortDescription || fee.fullDescription.substring(0, 60) + (fee.fullDescription.length > 60 ? '...' : '')}
+                                    {fee.cdtCode === "D2740" && (
+                                      <Badge variant="outline" className="ml-2 bg-amber-50 text-amber-600 border-amber-200">
+                                        Review fees
+                                      </Badge>
+                                    )}
                                   </TableCell>
                                   <TableCell>{fee.category}</TableCell>
-                                  <TableCell className="text-right">${fee.standardFee.toFixed(2)}</TableCell>
+                                  <TableCell className="text-right">
+                                    ${fee.standardFee.toFixed(2)}
+                                    {fee.cdtCode === "D2740" && (
+                                      <div className="text-xs text-amber-600">18 months old</div>
+                                    )}
+                                  </TableCell>
                                   <TableCell>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-8 w-8 p-0"
-                                      onClick={() => toggleRowExpand(fee.cdtCode)}
-                                      aria-label={expandedRows.includes(fee.cdtCode) ? "Collapse row" : "Expand row"}
-                                    >
-                                      {expandedRows.includes(fee.cdtCode) ? (
-                                        <ChevronDown className="h-4 w-4" />
-                                      ) : (
-                                        <ChevronRight className="h-4 w-4" />
-                                      )}
-                                    </Button>
+                                    <div className="flex items-center space-x-1">
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-8 w-8 p-0"
+                                        onClick={() => toggleRowExpand(fee.cdtCode)}
+                                        aria-label={expandedRows.includes(fee.cdtCode) ? "Collapse row" : "Expand row"}
+                                      >
+                                        {expandedRows.includes(fee.cdtCode) ? (
+                                          <ChevronDown className="h-4 w-4" />
+                                        ) : (
+                                          <ChevronRight className="h-4 w-4" />
+                                        )}
+                                      </Button>
+                                      <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="h-8 w-8 p-0"
+                                        aria-label="Edit fee"
+                                      >
+                                        <Edit className="h-3.5 w-3.5" />
+                                      </Button>
+                                    </div>
                                   </TableCell>
                                 </TableRow>
                                 
