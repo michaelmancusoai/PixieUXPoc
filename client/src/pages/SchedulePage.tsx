@@ -236,9 +236,39 @@ export default function SchedulePage() {
           />
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-          {/* Left Side - Calendar */}
-          <div className="lg:col-span-3">
+        <div className="grid grid-cols-12 gap-4">
+          {/* Left Side - Available Gaps and Waitlist */}
+          <div className="col-span-12 lg:col-span-3 space-y-4">
+            {/* Available Gaps */}
+            <Card>
+              <CardHeader className="px-4 py-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Clock8 className="h-4 w-4 text-blue-600" />
+                    <CardTitle className="text-base">Available Gaps</CardTitle>
+                  </div>
+                  <Badge variant="outline">{availableGaps.length}</Badge>
+                </div>
+              </CardHeader>
+              <CardContent className="px-4 py-3">
+                {availableGaps.length === 0 ? (
+                  <div className="text-center text-gray-500 py-3">
+                    <p>No available gaps</p>
+                  </div>
+                ) : (
+                  availableGaps.map(gap => (
+                    <AvailableGap key={gap.id} gap={gap} />
+                  ))
+                )}
+              </CardContent>
+            </Card>
+            
+            {/* Waitlist */}
+            <WaitlistManager />
+          </div>
+          
+          {/* Middle - Calendar */}
+          <div className="col-span-12 lg:col-span-6">
             <Card className="mb-4">
               <CardHeader className="pb-2">
                 <div className="flex justify-between items-center">
@@ -294,35 +324,8 @@ export default function SchedulePage() {
             </Card>
           </div>
           
-          {/* Right Side - Sidebar */}
-          <div className="lg:col-span-1 space-y-4">
-            {/* Waitlist */}
-            <WaitlistManager />
-            
-            {/* Available Gaps */}
-            <Card>
-              <CardHeader className="px-4 py-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <Clock8 className="h-4 w-4 text-blue-600" />
-                    <CardTitle className="text-base">Available Gaps</CardTitle>
-                  </div>
-                  <Badge variant="outline">{availableGaps.length}</Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="px-4 py-3">
-                {availableGaps.length === 0 ? (
-                  <div className="text-center text-gray-500 py-3">
-                    <p>No available gaps</p>
-                  </div>
-                ) : (
-                  availableGaps.map(gap => (
-                    <AvailableGap key={gap.id} gap={gap} />
-                  ))
-                )}
-              </CardContent>
-            </Card>
-            
+          {/* Right Side - Patient flow*/}
+          <div className="col-span-12 lg:col-span-3 space-y-4">
             {/* Patients Ready for Check-In */}
             <Card>
               <CardHeader className="px-4 py-3">
