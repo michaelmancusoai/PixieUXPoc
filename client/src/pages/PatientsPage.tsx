@@ -385,9 +385,9 @@ export default function PatientsPage() {
 
   return (
     <NavigationWrapper>
-      <div className="flex flex-col h-[calc(100vh-64px)] overflow-hidden">
+      <div className="flex flex-col space-y-4">
         {/* Header with title, segments and actions */}
-        <div className="sticky top-0 z-10 bg-white border-b border-gray-200 px-6 py-4">
+        <div className="bg-white border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center">
               <h1 className="text-xl font-semibold">Patients</h1>
@@ -402,7 +402,7 @@ export default function PatientsPage() {
                       className={`px-3 py-1 text-xs rounded-full cursor-pointer ${
                         activeSegment === segment.id
                           ? 'bg-blue-100 text-blue-700 border border-blue-300'
-                          : 'bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200'
+                          : 'bg-gray-50 text-gray-700 border border-gray-200 hover:bg-gray-100'
                       }`}
                     >
                       {segment.name}
@@ -553,8 +553,8 @@ export default function PatientsPage() {
                   <TooltipContent side="bottom">
                     <div className="text-xs">
                       <p>Keyboard shortcuts:</p>
-                      <p className="mt-1"><kbd className="px-1 py-0.5 bg-gray-100 border rounded text-xs">F</kbd> - Toggle filters</p>
-                      <p><kbd className="px-1 py-0.5 bg-gray-100 border rounded text-xs">Ctrl</kbd>+<kbd className="px-1 py-0.5 bg-gray-100 border rounded text-xs">K</kbd> - Focus search</p>
+                      <p className="mt-1"><kbd className="px-1 py-0.5 bg-gray-50 border rounded text-xs">F</kbd> - Toggle filters</p>
+                      <p><kbd className="px-1 py-0.5 bg-gray-50 border rounded text-xs">Ctrl</kbd>+<kbd className="px-1 py-0.5 bg-gray-50 border rounded text-xs">K</kbd> - Focus search</p>
                     </div>
                   </TooltipContent>
                 </Tooltip>
@@ -605,10 +605,10 @@ export default function PatientsPage() {
         </div>
 
         {/* Main content with patient list and optional filter sidebar */}
-        <div className="flex flex-1 overflow-hidden">
+        <div className="flex px-6">
           {/* Filters drawer */}
           {filterDrawerOpen && (
-            <div className="w-64 border-r border-gray-200 p-4 overflow-y-auto">
+            <div className="w-64 border-r border-gray-200 p-4">
               <div className="flex justify-between items-center mb-3">
                 <h3 className="font-medium">Filters</h3>
                 <Button variant="ghost" size="sm" className="h-7 px-2 text-gray-500" onClick={() => setFilterDrawerOpen(false)}>
@@ -725,7 +725,7 @@ export default function PatientsPage() {
           )}
           
           {/* Patient list table */}
-          <div className="flex-1 overflow-auto">
+          <div className={`${filterDrawerOpen ? 'flex-1' : 'w-full'}`}>
             {loading ? (
               <div className="flex justify-center items-center h-64">
                 <div className="text-center">
@@ -734,7 +734,7 @@ export default function PatientsPage() {
                 </div>
               </div>
             ) : (
-              <div className="rounded-md">
+              <div className="border rounded-md">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -807,11 +807,13 @@ export default function PatientsPage() {
                           {columnVisibility.balance && (
                             <TableCell>
                               {patient.balance > 0 ? (
-                                <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                                <Badge variant="outline" className="bg-rose-50 text-rose-700 border-rose-200">
                                   ${patient.balance.toFixed(2)}
                                 </Badge>
                               ) : (
-                                <span className="text-green-600">${patient.balance.toFixed(2)}</span>
+                                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                                  ${patient.balance.toFixed(2)}
+                                </Badge>
                               )}
                             </TableCell>
                           )}
@@ -860,7 +862,7 @@ export default function PatientsPage() {
         </div>
         
         {/* Summary footer */}
-        <div className="border-t border-gray-200 p-3 bg-gray-50 text-sm text-gray-500">
+        <div className="mx-6 border-t border-gray-200 p-3 bg-white text-sm text-gray-500 rounded-b-md">
           {filteredPatients.length} patients • avg recall overdue 14 days
         </div>
       </div>
