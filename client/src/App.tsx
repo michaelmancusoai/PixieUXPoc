@@ -16,6 +16,7 @@ import BillingPage from "@/pages/BillingPage";
 import ClaimsPage from "@/pages/ClaimsPage";
 import PaymentsPage from "@/pages/PaymentsPage";
 import StatementsPage from "@/pages/StatementsPage";
+import CollectionsPage from "@/pages/CollectionsPage";
 import ReportsPage from "@/pages/ReportsPage";
 import SettingsPage from "@/pages/SettingsPage";
 import PatientProfilePage from "@/pages/PatientProfilePage";
@@ -41,6 +42,8 @@ function Router() {
       <Route path="/payments" component={PaymentsPage} />
       <Route path="/billing/statements" component={StatementsPage} />
       <Route path="/statements" component={StatementsPage} />
+      <Route path="/billing/collections" component={CollectionsPage} />
+      <Route path="/collections" component={CollectionsPage} />
       <Route path="/billing/:subpage" component={BillingPage} />
       <Route path="/reports" component={ReportsPage} />
       <Route path="/reports/:subpage" component={ReportsPage} />

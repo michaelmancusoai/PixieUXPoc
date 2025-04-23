@@ -232,6 +232,7 @@ export const navigationData: NavSection[] = [
         title: "Collections",
         href: "/billing/collections",
         icon: Wallet,
+        directPath: "/collections", // Direct route mapping
       },
       {
         title: "Fee Schedules",
