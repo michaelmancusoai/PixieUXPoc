@@ -18,9 +18,9 @@ export function NavigationWrapper({ children }: NavigationWrapperProps) {
       {/* Combined App Header with Navigation */}
       <Header />
 
-      {/* Page content area - maximized for better space utilization */}
-      <div className="flex-1 overflow-y-auto p-3 sm:p-4 bg-[#F5F7FA]">
-        <div className="mx-auto w-full max-w-[96%] 2xl:max-w-[99%]">
+      {/* Page content area */}
+      <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-[#F5F7FA]">
+        <div className="mx-auto w-full max-w-[95%] 2xl:max-w-[98%]">
           {/* Render page content */}
           {children}
         </div>
