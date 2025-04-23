@@ -656,6 +656,10 @@ export default function ClaimsPage() {
       filtered = filtered.filter(claim => claim.claimStatus === "Sent" || claim.claimStatus === "Resent");
     } else if (selectedTab === "in-progress") {
       filtered = filtered.filter(claim => claim.claimStatus === "Pending");
+    } else if (selectedTab === "completed") {
+      // For completed tab, we'll show all claims but prioritize those that are not in other tabs
+      // This allows us to see procedures in all claims when in the completed tab
+      filtered = [...mockClaims]; // Show all claims in completed tab
     }
 
     // Apply search query
