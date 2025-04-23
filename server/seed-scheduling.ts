@@ -23,38 +23,23 @@ async function seedSchedulingData() {
     console.log('🧑‍⚕️ Creating providers...');
     await db.insert(providers).values([
       {
-        firstName: 'Jennifer',
-        lastName: 'Smith',
+        name: 'Dr. Jennifer Smith',
         role: 'DENTIST',
-        title: 'DDS',
-        email: 'jsmith@pixiedental.com',
-        phone: '555-123-4567',
         color: '#4f46e5',
-        isActive: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        firstName: 'Michael',
-        lastName: 'Johnson',
+        name: 'Dr. Michael Johnson',
         role: 'DENTIST',
-        title: 'DMD',
-        email: 'mjohnson@pixiedental.com',
-        phone: '555-234-5678',
         color: '#10b981',
-        isActive: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
-        firstName: 'Sarah',
-        lastName: 'Williams',
+        name: 'Sarah Williams, RDH',
         role: 'HYGIENIST',
-        title: 'RDH',
-        email: 'swilliams@pixiedental.com',
-        phone: '555-345-6789',
         color: '#f59e0b',
-        isActive: true,
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -69,46 +54,31 @@ async function seedSchedulingData() {
     await db.insert(operatories).values([
       {
         name: 'Room 1',
-        description: 'General dentistry',
-        location: 'Main Floor',
         color: '#2563eb',
-        isActive: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         name: 'Room 2',
-        description: 'Hygiene',
-        location: 'Main Floor',
         color: '#059669',
-        isActive: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         name: 'Room 3',
-        description: 'Orthodontics',
-        location: 'Main Floor',
         color: '#9333ea',
-        isActive: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         name: 'Room 4',
-        description: 'Oral Surgery',
-        location: 'Second Floor',
         color: '#d97706',
-        isActive: true,
         createdAt: new Date(),
         updatedAt: new Date()
       },
       {
         name: 'Room 5',
-        description: 'Pediatric',
-        location: 'Second Floor',
         color: '#dc2626',
-        isActive: true,
         createdAt: new Date(),
         updatedAt: new Date()
       }
@@ -158,12 +128,14 @@ async function seedSchedulingData() {
         patientId,
         providerId,
         operatoryId,
-        title,
-        description: `Sample appointment for ${title}`,
-        date: format(date, 'yyyy-MM-dd'),
-        startTime: startTime.toISOString(),
-        endTime: endTime.toISOString(),
+        appointmentType: title, // Using title as appointmentType
+        procedure: `${title} procedure`,
+        date: date,
+        startTime: startTime,
+        endTime: endTime,
         status,
+        duration: durationMinutes,
+        notes: `Sample appointment for ${title}`,
         createdAt: new Date(),
         updatedAt: new Date()
       };
