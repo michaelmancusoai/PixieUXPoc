@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, timestamp, date, decimal, json, varchar, time } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, timestamp, date, decimal, json, varchar } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 import { relations } from "drizzle-orm";
@@ -79,27 +79,11 @@ export const appointments = pgTable("appointments", {
   id: serial("id").primaryKey(),
   patientId: integer("patient_id").notNull().references(() => patients.id),
   providerId: integer("provider_id").references(() => users.id),
-  operatoryId: integer("operatory_id"),
   startTime: timestamp("start_time").notNull(),
   endTime: timestamp("end_time").notNull(),
   appointmentType: text("appointment_type").notNull(),
   status: text("status").notNull(),
   notes: text("notes"),
-  date: date("date").notNull().default(new Date()),
-  duration: integer("duration").notNull().default(30), // Duration in minutes
-  cdtCode: text("cdt_code"), // Dental procedure code
-  procedure: text("procedure"), // Human-readable procedure name
-  confirmedAt: timestamp("confirmed_at"),
-  arrivedAt: timestamp("arrived_at"),
-  seatedAt: timestamp("seated_at"),
-  preClinicalAt: timestamp("pre_clinical_at"),
-  doctorReadyAt: timestamp("doctor_ready_at"),
-  chairStartedAt: timestamp("chair_started_at"),
-  wrapUpAt: timestamp("wrap_up_at"),
-  readyCheckoutAt: timestamp("ready_checkout_at"),
-  completedAt: timestamp("completed_at"),
-  statusUpdatedAt: timestamp("status_updated_at"), // Last time status was updated
-  isVerified: boolean("is_verified").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -112,10 +96,6 @@ export const appointmentsRelations = relations(appointments, ({ one }) => ({
   provider: one(users, {
     fields: [appointments.providerId],
     references: [users.id],
-  }),
-  operatory: one(operatories, {
-    fields: [appointments.operatoryId],
-    references: [operatories.id],
   }),
 }));
 
@@ -305,51 +285,6 @@ export const activityLogRelations = relations(activityLog, ({ one }) => ({
   }),
 }));
 
-// Scheduling-specific schemas
-export const providers = pgTable("providers", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  role: text("role").notNull(), // "DENTIST", "HYGIENIST", etc.
-  color: text("color"), // Color for the provider's appointments
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
-export const providersRelations = relations(providers, ({ many }) => ({
-  appointments: many(appointments),
-}));
-
-export const operatories = pgTable("operatories", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(), // "Op 1", "Op 2", etc.
-  color: text("color"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
-export const operatoriesRelations = relations(operatories, ({ many }) => ({
-  appointments: many(appointments),
-}));
-
-// Waitlist for scheduling
-export const waitlist = pgTable("waitlist", {
-  id: serial("id").primaryKey(),
-  patientId: integer("patient_id").notNull().references(() => patients.id),
-  requestedProcedure: text("requested_procedure"),
-  propensityScore: integer("propensity_score"), // 0-100 match score
-  requestDate: timestamp("request_date").notNull().defaultNow(),
-  notes: text("notes"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
-export const waitlistRelations = relations(waitlist, ({ one }) => ({
-  patient: one(patients, {
-    fields: [waitlist.patientId],
-    references: [patients.id],
-  }),
-}));
-
 // Create schemas
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -408,60 +343,6 @@ export const insertRecallSchema = createInsertSchema(recalls).omit({
   updatedAt: true,
 });
 
-export const insertProviderSchema = createInsertSchema(providers).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const insertOperatorySchema = createInsertSchema(operatories).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-export const insertWaitlistSchema = createInsertSchema(waitlist).omit({
-  id: true,
-  createdAt: true,
-  updatedAt: true,
-});
-
-// Scheduling specific enums
-export const AppointmentStatus = {
-  SCHEDULED: "SCHEDULED",
-  CONFIRMED: "CONFIRMED",
-  CHECKED_IN: "CHECKED_IN",
-  SEATED: "SEATED",
-  PRE_CLINICAL: "PRE_CLINICAL",
-  DOCTOR_READY: "DOCTOR_READY",
-  IN_CHAIR: "IN_CHAIR",
-  WRAP_UP: "WRAP_UP",
-  READY_CHECKOUT: "READY_CHECKOUT",
-  COMPLETED: "COMPLETED",
-  LATE: "LATE",
-  NO_SHOW: "NO_SHOW",
-  CANCELLED: "CANCELLED",
-} as const;
-
-export type AppointmentStatusType = keyof typeof AppointmentStatus;
-
-export const ProviderRole = {
-  DENTIST: "DENTIST",
-  HYGIENIST: "HYGIENIST",
-  ASSISTANT: "ASSISTANT",
-} as const;
-
-export type ProviderRoleType = keyof typeof ProviderRole;
-
-export const ViewMode = {
-  DAY: "DAY",
-  WEEK: "WEEK",
-  OPERATORY: "OPERATORY",
-  PROVIDER: "PROVIDER",
-} as const;
-
-export type ViewModeType = keyof typeof ViewMode;
-
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -489,22 +370,6 @@ export type Message = typeof messages.$inferSelect;
 
 export type InsertRecall = z.infer<typeof insertRecallSchema>;
 export type Recall = typeof recalls.$inferSelect;
-
-export type InsertProvider = z.infer<typeof insertProviderSchema>;
-export type Provider = typeof providers.$inferSelect;
-
-export type InsertOperatory = z.infer<typeof insertOperatorySchema>;
-export type Operatory = typeof operatories.$inferSelect;
-
-export type InsertWaitlist = z.infer<typeof insertWaitlistSchema>;
-export type Waitlist = typeof waitlist.$inferSelect;
-
-// Combined types for frontend use
-export type AppointmentWithDetails = Appointment & {
-  patient: Patient;
-  provider?: User;
-  operatory?: Operatory;
-};
 
 export const insertTreatmentSchema = createInsertSchema(treatments).omit({
   id: true,
