@@ -18,7 +18,7 @@ import {
 export default function AccordionSnapshotCards() {
   return (
     <Card>
-      <CardHeader className="px-4 py-3">
+      <CardHeader className="px-4 py-3 border-b">
         <CardTitle className="text-lg font-medium">Patient Snapshot</CardTitle>
       </CardHeader>
       

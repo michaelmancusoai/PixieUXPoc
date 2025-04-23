@@ -36,19 +36,19 @@ export default function PatientProfilePage() {
         <main className="w-full py-5">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 xl:gap-6">
             {/* Column A: Snapshot Cards - consistent width with Column C */}
-            <section className="col-span-1 lg:col-span-3 xl:col-span-3 space-y-4">
+            <section className="col-span-1 lg:col-span-3 xl:col-span-3 flex flex-col gap-4">
               <h2 className="sr-only">Patient Snapshot</h2>
               <PatientCard />
               <AccordionSnapshotCards />
             </section>
             
             {/* Column B: Activity Hub */}
-            <section className="col-span-1 lg:col-span-6 xl:col-span-6">
+            <section className="col-span-1 lg:col-span-6 xl:col-span-6 flex flex-col">
               <EnhancedActivityHub />
             </section>
             
             {/* Column C: Related Records - same width as Column A */}
-            <section className="col-span-1 lg:col-span-3 xl:col-span-3">
+            <section className="col-span-1 lg:col-span-3 xl:col-span-3 flex flex-col">
               <RelatedRecords />
             </section>
           </div>

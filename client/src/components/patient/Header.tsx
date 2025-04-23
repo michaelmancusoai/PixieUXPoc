@@ -50,7 +50,7 @@ export default function Header() {
 export function PatientCard() {
   return (
     <Card>
-      <CardContent className="p-5">
+      <CardContent className="p-4">
         <div className="flex items-start mb-4">
           <Avatar className="h-14 w-14 mr-4 bg-[#F56A46] flex-shrink-0">
             <div className="w-full h-full rounded-full flex items-center justify-center">
