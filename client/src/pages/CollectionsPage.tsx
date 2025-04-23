@@ -35,6 +35,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import {
   Search,
   Filter,
@@ -403,6 +404,7 @@ export default function CollectionsPage() {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [showInsights, setShowInsights] = useState(false);
   const [filters, setFilters] = useState({
     status: "All Statuses",
     priority: "All Priorities",
@@ -717,9 +719,26 @@ export default function CollectionsPage() {
 
           <Card className="shadow-sm">
             <CardHeader className="px-6 py-4 border-b">
-              <div className="flex justify-between items-center">
-                <CardTitle>Collection Accounts</CardTitle>
-                <div className="flex space-x-2">
+              <div className="flex flex-wrap justify-between items-center">
+                <div className="flex items-center">
+                  <CardTitle>Collection Accounts</CardTitle>
+                  <div className="ml-4 flex items-center">
+                    <span className="text-sm text-muted-foreground mr-2">
+                      Show Insights
+                    </span>
+                    <Switch 
+                      id="show-insights" 
+                      className="data-[state=checked]:bg-blue-500" 
+                      checked={showInsights}
+                      onCheckedChange={setShowInsights}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2 sm:mt-0">
+                  <Button variant="outline" size="sm" className="h-9">
+                    <Activity className="h-4 w-4 mr-1" />
+                    Collection Report
+                  </Button>
                   <Button 
                     variant="default" 
                     size="sm" 
@@ -741,6 +760,115 @@ export default function CollectionsPage() {
                 </div>
               </div>
             </CardHeader>
+            
+            {/* Insights Panel - Toggled by the switch */}
+            {showInsights && (
+              <div className="p-6 border-b bg-blue-50/50">
+                <div className="mb-4">
+                  <h3 className="text-md font-medium mb-2">Collection Insights</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    13 accounts representing $9,640 have had no contact in the last 30 days. This constitutes 62% of your outstanding collections.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Success Rate by Contact Method</h4>
+                      <div className="flex justify-between items-end">
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-xs text-muted-foreground">Phone calls</span>
+                            <span className="text-xs font-medium">68%</span>
+                          </div>
+                          <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-green-500 rounded-full" style={{ width: '68%' }}></div>
+                          </div>
+                        </div>
+                        <Phone className="h-5 w-5 text-green-500 ml-2" />
+                      </div>
+                      <div className="flex justify-between items-end mt-3">
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-xs text-muted-foreground">Email</span>
+                            <span className="text-xs font-medium">42%</span>
+                          </div>
+                          <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-500 rounded-full" style={{ width: '42%' }}></div>
+                          </div>
+                        </div>
+                        <Mail className="h-5 w-5 text-blue-500 ml-2" />
+                      </div>
+                      <div className="flex justify-between items-end mt-3">
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-xs text-muted-foreground">Letters</span>
+                            <span className="text-xs font-medium">21%</span>
+                          </div>
+                          <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-amber-500 rounded-full" style={{ width: '21%' }}></div>
+                          </div>
+                        </div>
+                        <FileText className="h-5 w-5 text-amber-500 ml-2" />
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Payment Plans Performance</h4>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <div className="text-2xl font-bold">82%</div>
+                          <div className="text-xs text-muted-foreground">adherence rate</div>
+                        </div>
+                        <div className="h-16 w-16 rounded-full border-4 border-green-500 flex items-center justify-center">
+                          <CheckCircle className="h-8 w-8 text-green-500" />
+                        </div>
+                      </div>
+                      <div className="mt-2 text-xs text-muted-foreground">
+                        <div className="flex justify-between mb-1">
+                          <span>Active plans:</span>
+                          <span className="font-medium">14</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Monthly collected:</span>
+                          <span className="font-medium">$2,350</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Recommended Actions</h4>
+                      <ul className="text-xs space-y-2">
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-red-100 flex items-center justify-center mr-2 mt-0.5">
+                            <PhoneCall className="h-3 w-3 text-red-500" />
+                          </div>
+                          <div>
+                            <span className="font-medium block">Call accounts {'>'} 90 days</span>
+                            <span className="text-muted-foreground">7 accounts, $5,120 total</span>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-amber-100 flex items-center justify-center mr-2 mt-0.5">
+                            <Mail className="h-3 w-3 text-amber-500" />
+                          </div>
+                          <div>
+                            <span className="font-medium block">Email payment reminders</span>
+                            <span className="text-muted-foreground">12 accounts due this week</span>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center mr-2 mt-0.5">
+                            <PiggyBank className="h-3 w-3 text-blue-500" />
+                          </div>
+                          <div>
+                            <span className="font-medium block">Offer payment plans</span>
+                            <span className="text-muted-foreground">5 accounts {'>'} $800</span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <CardContent className="p-0">
               <Tabs defaultValue="all" className="w-full" onValueChange={setSelectedTab}>
