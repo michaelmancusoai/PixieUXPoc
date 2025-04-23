@@ -530,26 +530,7 @@ export default function PatientsPage() {
                 </Tooltip>
               </TooltipProvider>
 
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button 
-                      variant="outline"
-                      size="sm"
-                      className="p-2 h-8 w-8"
-                    >
-                      <Keyboard className="h-4 w-4" />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom">
-                    <div className="text-xs">
-                      <p>Keyboard shortcuts:</p>
-                      <p className="mt-1"><kbd className="px-1 py-0.5 bg-gray-50 border rounded text-xs">F</kbd> - Toggle filters</p>
-                      <p><kbd className="px-1 py-0.5 bg-gray-50 border rounded text-xs">Ctrl</kbd>+<kbd className="px-1 py-0.5 bg-gray-50 border rounded text-xs">K</kbd> - Focus search</p>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+
 
               <div className="h-6 mx-1 border-l border-gray-300"></div>
 
@@ -581,9 +562,12 @@ export default function PatientsPage() {
 
         {/* Main content with patient list and optional filter sidebar */}
         <div className="flex px-6 bg-white mt-0 border-b-0 border-t-0 pt-0">
-          {/* Filters drawer */}
+          {/* Patient list table */}
+          <div className={`${filterDrawerOpen ? 'flex-1' : 'w-full'}`}>
+          
+          {/* Filters drawer - positioned on the right side */}
           {filterDrawerOpen && (
-            <div className="w-64 border-r border-gray-200 p-4">
+            <div className="w-64 border-l border-gray-200 p-4 absolute right-6 top-[157px] bottom-0 bg-white z-10">
               <div className="flex justify-between items-center mb-3">
                 <h3 className="font-medium">Filters</h3>
                 <Button variant="ghost" size="sm" className="h-7 px-2 text-gray-500" onClick={() => setFilterDrawerOpen(false)}>
@@ -698,9 +682,6 @@ export default function PatientsPage() {
               </div>
             </div>
           )}
-          
-          {/* Patient list table */}
-          <div className={`${filterDrawerOpen ? 'flex-1' : 'w-full'}`}>
             {loading ? (
               <div className="flex justify-center items-center h-64">
                 <div className="text-center">
