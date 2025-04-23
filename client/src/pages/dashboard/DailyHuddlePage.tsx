@@ -839,13 +839,17 @@ export default function DailyHuddlePage() {
                                       
                                       {/* Status threshold tick marks */}
                                       <div className="absolute top-0 h-full w-full">
-                                        {/* Red zone (0-80%) */}
-                                        <div className="absolute left-[80%] top-0 h-full w-0.5 bg-gray-400 z-10" />
-                                        <div className="absolute left-[80%] top-0 text-[9px] text-gray-500 mt-3.5 ml-1">80%</div>
+                                        {/* Tick for 80% threshold (red/yellow boundary) */}
+                                        <div className="absolute left-[80%] top-0 h-full w-0.5 bg-red-400 z-10" />
+                                        <div className="absolute left-[80%] top-0 text-[9px] text-red-500 mt-3.5 ml-1">80%</div>
                                         
-                                        {/* Yellow zone (80-95%) */}
-                                        <div className="absolute left-[95%] top-0 h-full w-0.5 bg-gray-400 z-10" />
-                                        <div className="absolute left-[95%] top-0 text-[9px] text-gray-500 mt-3.5 ml-1">95%</div>
+                                        {/* Tick for 95% threshold (yellow/green boundary) */}
+                                        <div className="absolute left-[95%] top-0 h-full w-0.5 bg-amber-400 z-10" />
+                                        <div className="absolute left-[95%] top-0 text-[9px] text-amber-500 mt-3.5 ml-1">95%</div>
+                                        
+                                        {/* Tick for 100% (green goal) */}
+                                        <div className="absolute right-0 top-0 h-full w-0.5 bg-green-400 z-10" />
+                                        <div className="absolute right-0 top-0 text-[9px] text-green-500 mt-3.5 mr-5">100%</div>
                                       </div>
                                       
                                       {/* Target marker */}
@@ -905,7 +909,6 @@ export default function DailyHuddlePage() {
                         <div className="mt-6">
                           <div className="mb-4">
                             <h4 className="font-medium text-gray-900 mb-1">Discussion Items:</h4>
-                            <p className="text-sm text-gray-500">System-generated and custom items for this section.</p>
                           </div>
                           
                           <div className="space-y-2">
