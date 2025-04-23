@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import { NavigationWrapper } from "@/components/NavigationWrapper";
 import { useQuery } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
@@ -939,7 +939,7 @@ export default function ClaimsPage() {
                       ) : (
                         <>
                           {filteredClaims.map((claim) => (
-                            <React.Fragment key={claim.id}>
+                            <div key={claim.id}>
                               <TableRow 
                                 className={selectedClaims.includes(claim.id) ? "bg-muted/50" : ""}
                               >
@@ -1049,7 +1049,7 @@ export default function ClaimsPage() {
                                   </TableCell>
                                 </TableRow>
                               )}
-                            </React.Fragment>
+                            </div>
                           ))}
                         </>
                       )}
