@@ -1,0 +1,139 @@
+Scheduling Screen · Mission Control Status Integration Addendum
+
+“A calendar should not merely show what is booked; it should betray what is really happening.” — Rory Sutherland
+
+This short addendum contains only the new design/development requirements needed to surface the Mission Control flow statuses on the Scheduling Screen. All previously approved scheduler layouts, interactions, and styles remain unchanged.
+
+❶  Status‑to‑Chip Mapping
+
+Flow Status (Mission Control)
+
+Calendar Decoration
+
+Trigger Source
+
+Essential MUI Styles / Props
+
+Checked‑In
+
+2 px left border success.light + 🕑 icon
+
+Front Desk / Kiosk
+
+borderLeft:'2px solid', borderColor:'success.light', icon:<AccessTime fontSize='small'/>
+
+Seated
+
+Border colour switches to info.main + 🪑 chair icon
+
+Assistant click / DnD
+
+borderColor:'info.main', icon:<Chair fontSize='small'/>
+
+Pre‑Clinical Prep
+
+Stethoscope mini‑icon appears on right edge
+
+Vitals / X‑ray start
+
+deleteIcon:<MedicalInformation fontSize='small'/>
+
+Doctor Ready
+
+Chip background pulses info.light for 3 s
+
+Assistant marks ready
+
+CSS @keyframes pulse then revert
+
+In Treatment
+
+Fill switches to primary.dark + 🦷 icon
+
+Dentist begins treatment
+
+sx={{ bgcolor:'primary.dark', icon:<Science/> }}
+
+Clinical Wrap‑Up
+
+Grey diagonal stripe overlay
+
+Provider finishes notes
+
+pseudo‑element ::after diagonal pattern
+
+Ready for Checkout
+
+Green arrow badge on right
+
+Assistant escort action
+
+<Badge anchorOrigin={{top:'0',right:'0'}}>
+
+Checked‑Out
+
+Chip fades to 40 % opacity + ✓ icon
+
+Front Desk payment
+
+opacity:0.4, icon:<CheckCircle/>
+
+Late
+
+Amber border + “L” tag
+
+Auto at T+5 min
+
+borderColor:'warning.main', label:'L'
+
+No‑Show
+
+Dashed red outline + “NS”
+
+Auto after grace
+
+border:'2px dashed', borderColor:'error.main', label:'NS'
+
+Cancelled / Walk‑Out
+
+Greyed chip with line‑through text
+
+Manual / Auto
+
+textDecoration:'line-through', color:'text.disabled'
+
+❷  Interaction Contract
+
+Single Source of Truth – Scheduler chip receives a status prop from the same state machine powering Mission Control. No local enums.
+
+Legal Transitions Only – Dragging or action buttons may only advance to the next valid status for the current user role; illegal attempts snap back.
+
+Timer Continuity – Elapsed‑time badge (mm:ss) continues on chip, fed by a central timer store.
+
+Role‑Based Quick‑Actions – Tooltip shows only the state‑advance action permitted to the signed‑in role.
+
+❸  Helper Utility (DRY Theme)
+
+export function getStatusStyles(status: FlowStatus) {
+  switch (status) {
+    case 'CheckedIn':
+      return { borderLeft: '2px solid', borderColor: theme.palette.success.light, icon: <AccessTime fontSize="small"/> };
+    case 'Seated':
+      return { borderLeft: '2px solid', borderColor: theme.palette.info.main, icon: <Chair fontSize="small"/> };
+    // …continue for all statuses…
+  }
+}
+
+Both Mission Control and Scheduler import this utility to guarantee visual parity.
+
+❹  Accessibility & Colour‑Blind Support
+
+Each visual cue (border, fill) is paired with an icon and, where space allows, a two‑letter prefix (e.g., CI, IT) inside the chip.
+
+Live‑region announcements: “Patient Smith now Seated” fires when status changes for screen‑reader users.
+
+❺  Deliverables Checklist
+
+
+
+End of Addendum – these are the only new tasks
