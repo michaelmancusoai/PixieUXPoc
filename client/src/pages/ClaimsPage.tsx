@@ -734,6 +734,7 @@ export default function ClaimsPage() {
   const [selectedClaims, setSelectedClaims] = useState<number[]>([]);
   const [expandedClaimId, setExpandedClaimId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showInsights, setShowInsights] = useState(false);
   const [filters, setFilters] = useState({
     insuranceCarrier: "All Carriers",
     provider: "All Providers",
@@ -820,8 +821,8 @@ export default function ClaimsPage() {
     </Badge>
   );
 
-  // Calculate total values for KPIs
-  const calculateTotals = () => {
+  // Calculate metrics and total values for KPIs and insights
+  const calculateMetrics = () => {
     const totalPending = filteredClaims
       .filter(claim => claim.claimStatus === "Pending")
       .reduce((sum, claim) => sum + claim.claimAmount, 0);
@@ -832,11 +833,126 @@ export default function ClaimsPage() {
     
     const totalInsuranceEstimate = filteredClaims
       .reduce((sum, claim) => sum + claim.insuranceEstimate, 0);
+      
+    const totalPatientEstimate = filteredClaims
+      .reduce((sum, claim) => sum + claim.patientEstimate, 0);
+      
+    // Calculate claim counts by status
+    const notSentCount = filteredClaims.filter(claim => claim.claimStatus === "Not Sent").length;
+    const sentCount = filteredClaims.filter(claim => claim.claimStatus === "Sent").length;
+    const resentCount = filteredClaims.filter(claim => claim.claimStatus === "Resent").length;
+    const pendingCount = filteredClaims.filter(claim => claim.claimStatus === "Pending").length;
+    const completedCount = filteredClaims.filter(claim => claim.claimStatus === "Completed").length;
     
-    return { totalPending, totalNotSent, totalInsuranceEstimate };
+    // Calculate carrier statistics
+    const carrierStats = filteredClaims.reduce((acc, claim) => {
+      const carrier = claim.insuranceCarrier;
+      if (!acc[carrier]) {
+        acc[carrier] = {
+          count: 0,
+          totalAmount: 0,
+          totalInsuranceEstimate: 0
+        };
+      }
+      acc[carrier].count += 1;
+      acc[carrier].totalAmount += claim.claimAmount;
+      acc[carrier].totalInsuranceEstimate += claim.insuranceEstimate;
+      return acc;
+    }, {} as Record<string, { count: number; totalAmount: number; totalInsuranceEstimate: number; }>);
+    
+    // Find top carriers by claim value
+    const topCarriers = Object.entries(carrierStats)
+      .sort(([, a], [, b]) => b.totalAmount - a.totalAmount)
+      .slice(0, 3)
+      .map(([name, stats]) => ({
+        name,
+        claimCount: stats.count,
+        totalAmount: stats.totalAmount,
+        percentOfTotal: (stats.totalAmount / filteredClaims.reduce((sum, claim) => sum + claim.claimAmount, 0)) * 100
+      }));
+      
+    // Calculate primary vs secondary claim stats
+    const primaryClaims = filteredClaims.filter(claim => claim.insuranceOrder === "Primary");
+    const secondaryClaims = filteredClaims.filter(claim => claim.insuranceOrder === "Secondary");
+    
+    const primaryTotal = primaryClaims.reduce((sum, claim) => sum + claim.claimAmount, 0);
+    const secondaryTotal = secondaryClaims.reduce((sum, claim) => sum + claim.claimAmount, 0);
+    
+    const primaryInsuranceEstimate = primaryClaims.reduce((sum, claim) => sum + claim.insuranceEstimate, 0);
+    const secondaryInsuranceEstimate = secondaryClaims.reduce((sum, claim) => sum + claim.insuranceEstimate, 0);
+    
+    // Calculate aging for claims
+    // Will be based on submissionDate if available
+    const today = new Date();
+    
+    const agingBuckets = {
+      under30: 0,
+      days30to60: 0,
+      days60to90: 0,
+      over90: 0
+    };
+    
+    filteredClaims.forEach(claim => {
+      if (claim.submissionDate) {
+        const submissionDate = new Date(claim.submissionDate);
+        const daysSinceSubmission = Math.floor((today.getTime() - submissionDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (daysSinceSubmission < 30) {
+          agingBuckets.under30 += claim.claimAmount;
+        } else if (daysSinceSubmission < 60) {
+          agingBuckets.days30to60 += claim.claimAmount;
+        } else if (daysSinceSubmission < 90) {
+          agingBuckets.days60to90 += claim.claimAmount;
+        } else {
+          agingBuckets.over90 += claim.claimAmount;
+        }
+      }
+    });
+    
+    // Calculate total claim amount and average claim value
+    const totalClaimAmount = filteredClaims.reduce((sum, claim) => sum + claim.claimAmount, 0);
+    const avgClaimValue = totalClaimAmount / (filteredClaims.length || 1);
+    
+    return { 
+      totalPending, 
+      totalNotSent, 
+      totalInsuranceEstimate,
+      totalPatientEstimate,
+      notSentCount,
+      sentCount,
+      resentCount,
+      pendingCount,
+      completedCount,
+      topCarriers,
+      primaryTotal,
+      secondaryTotal,
+      primaryInsuranceEstimate,
+      secondaryInsuranceEstimate,
+      agingBuckets,
+      totalClaimAmount,
+      avgClaimValue
+    };
   };
 
-  const { totalPending, totalNotSent, totalInsuranceEstimate } = calculateTotals();
+  const { 
+    totalPending, 
+    totalNotSent, 
+    totalInsuranceEstimate,
+    totalPatientEstimate,
+    notSentCount,
+    sentCount,
+    resentCount,
+    pendingCount,
+    completedCount,
+    topCarriers,
+    primaryTotal,
+    secondaryTotal,
+    primaryInsuranceEstimate,
+    secondaryInsuranceEstimate,
+    agingBuckets,
+    totalClaimAmount,
+    avgClaimValue
+  } = calculateMetrics();
 
   return (
     <NavigationWrapper>
@@ -848,14 +964,30 @@ export default function ClaimsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Insurance Estimates</CardTitle>
+                <CardTitle className="text-base font-medium">Claims Summary</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
                   <CreditCard className="h-8 w-8 mr-3 text-blue-500" />
                   <div>
-                    <div className="text-2xl font-bold">${totalInsuranceEstimate.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">Current selection</div>
+                    <div className="text-2xl font-bold">${totalClaimAmount.toFixed(2)}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {filteredClaims.length} claims
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t flex justify-between items-center">
+                  <div>
+                    <div className="text-sm font-medium">${avgClaimValue.toFixed(0)}</div>
+                    <div className="text-xs text-muted-foreground">Avg. claim</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">${totalInsuranceEstimate.toFixed(0)}</div>
+                    <div className="text-xs text-muted-foreground">Insurance est.</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">${totalPatientEstimate.toFixed(0)}</div>
+                    <div className="text-xs text-muted-foreground">Patient est.</div>
                   </div>
                 </div>
               </CardContent>
@@ -863,14 +995,30 @@ export default function ClaimsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Pending Claims</CardTitle>
+                <CardTitle className="text-base font-medium">Claim Status</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
                   <Clock className="h-8 w-8 mr-3 text-amber-500" />
                   <div>
                     <div className="text-2xl font-bold">${totalPending.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">Awaiting processing</div>
+                    <div className="text-sm text-muted-foreground">
+                      {pendingCount} pending claims
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t grid grid-cols-3 gap-2">
+                  <div>
+                    <div className="text-sm font-medium">{notSentCount}</div>
+                    <div className="text-xs text-muted-foreground">Not Sent</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">{sentCount + resentCount}</div>
+                    <div className="text-xs text-muted-foreground">Submitted</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">{completedCount}</div>
+                    <div className="text-xs text-muted-foreground">Completed</div>
                   </div>
                 </div>
               </CardContent>
@@ -882,13 +1030,22 @@ export default function ClaimsPage() {
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex flex-col space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Process and manage insurance claims</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Button variant="outline" className="h-9 flex-1">
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button className="h-9 w-full">
+                      <Send className="h-4 w-4 mr-1" />
+                      Submit Claims
+                    </Button>
+                    <Button variant="outline" className="h-9 w-full">
+                      <FileText className="h-4 w-4 mr-1" />
+                      Batch EOBs
+                    </Button>
+                    <Button variant="outline" className="h-9 w-full">
                       <Download className="h-4 w-4 mr-1" />
                       Export Report
+                    </Button>
+                    <Button variant="outline" className="h-9 w-full">
+                      <Printer className="h-4 w-4 mr-1" />
+                      Print Claims
                     </Button>
                   </div>
                 </div>
