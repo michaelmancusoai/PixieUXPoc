@@ -387,6 +387,18 @@ export default function StatementsPage() {
       }
     });
   };
+  
+  // Toggle row expansion
+  const toggleRowExpand = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedRows(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(rowId => rowId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
+  };
 
   // Render count badge for tabs
   const renderTabBadge = (count: number) => (
@@ -636,41 +648,65 @@ export default function StatementsPage() {
                     
                     {filters.status !== "All Statuses" && (
                       <Badge variant="outline" className="bg-primary/10 text-primary">
-                        Status: {filters.status} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, status: "All Statuses" })} />
+                        {filters.status} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, status: "All Statuses" })} />
                       </Badge>
                     )}
                     
                     {filters.deliveryMethod !== "All Methods" && (
                       <Badge variant="outline" className="bg-primary/10 text-primary">
-                        Method: {filters.deliveryMethod} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, deliveryMethod: "All Methods" })} />
+                        {filters.deliveryMethod} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, deliveryMethod: "All Methods" })} />
                       </Badge>
                     )}
                     
                     {dateRange?.from && (
                       <Badge variant="outline" className="bg-primary/10 text-primary">
-                        Date: {format(dateRange.from, "MMM d")} {dateRange.to && `- ${format(dateRange.to, "MMM d")}`}
-                        <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setDateRange(undefined)} />
+                        {format(dateRange.from, "MMM d, yyyy")} 
+                        {dateRange?.to && <> - {format(dateRange.to, "MMM d, yyyy")}</>}
+                        <X 
+                          className="ml-1 h-3 w-3 cursor-pointer" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDateRange(undefined);
+                          }} 
+                        />
                       </Badge>
                     )}
+                    
+                    <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => {
+                      setFilters({
+                        status: "All Statuses",
+                        deliveryMethod: "All Methods"
+                      });
+                      setDateRange(undefined);
+                    }}>
+                      Clear all
+                    </Button>
                   </div>
                 )}
 
-                <div className="overflow-x-auto">
+                {/* Selected statements count */}
+                {selectedStatements.length > 0 && (
+                  <div className="px-6 py-2 bg-card border-b text-sm">
+                    <span>{selectedStatements.length} out of {filteredStatements.length} selected</span>
+                  </div>
+                )}
+
+                {/* Statements table */}
+                <div className="w-full overflow-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[50px]">
-                          <Checkbox
-                            checked={selectedStatements.length === filteredStatements.length && filteredStatements.length > 0}
+                          <Checkbox 
+                            checked={filteredStatements.length > 0 && selectedStatements.length === filteredStatements.length} 
                             onCheckedChange={handleSelectAll}
                             aria-label="Select all statements"
-                            className={filteredStatements.length === 0 ? "invisible" : ""}
                           />
                         </TableHead>
-                        <TableHead>Date</TableHead>
+                        <TableHead className="w-[110px]">Date</TableHead>
                         <TableHead>Account</TableHead>
-                        <TableHead>Patient</TableHead>
-                        <TableHead>Method</TableHead>
+                        <TableHead>Patient Name</TableHead>
+                        <TableHead>Delivery</TableHead>
                         <TableHead className="text-right">Balance</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead className="w-[100px] text-right">Actions</TableHead>
@@ -685,191 +721,190 @@ export default function StatementsPage() {
                         </TableRow>
                       ) : (
                         filteredStatements.map((statement) => (
-                          <React.Fragment key={statement.id}>
-                            <TableRow 
-                              className={selectedStatements.includes(statement.id) ? "bg-muted/50" : ""}
-                            >
-                              <TableCell>
-                                <Checkbox 
-                                  checked={selectedStatements.includes(statement.id)} 
-                                  onCheckedChange={() => handleRowSelect(statement.id)}
-                                  aria-label={`Select statement for ${statement.patientName}`}
-                                />
-                              </TableCell>
-                              <TableCell>
-                                {format(new Date(statement.statementDate), "MMM d, yyyy")}
-                              </TableCell>
-                              <TableCell>
-                                {statement.accountNumber}
-                              </TableCell>
-                              <TableCell className="font-medium">{statement.patientName}</TableCell>
-                              <TableCell>
-                                <div className="flex items-center">
-                                  {renderDeliveryMethodIcon(statement.deliveryMethod)}
-                                  <span className="ml-2">{statement.deliveryMethod}</span>
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-right font-medium">
-                                ${statement.balance.toFixed(2)}
-                              </TableCell>
-                              <TableCell>
-                                {renderStatusBadge(statement.status)}
-                              </TableCell>
-                              <TableCell className="text-right">
-                                <div className="flex items-center justify-end space-x-1">
-                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                    <Printer className="h-4 w-4" />
-                                    <span className="sr-only">Print statement</span>
-                                  </Button>
-                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                    <Eye className="h-4 w-4" />
-                                    <span className="sr-only">View statement details</span>
-                                  </Button>
-                                  <Button 
-                                    variant="outline" 
-                                    size="sm" 
-                                    className="h-8 w-8 p-0 ml-2"
-                                    onClick={(e) => toggleRowExpand(statement.id, e)}
-                                  >
-                                    {expandedRows.includes(statement.id) ? (
-                                      <ChevronDown className="h-4 w-4" />
-                                    ) : (
-                                      <ChevronRight className="h-4 w-4" />
-                                    )}
-                                    <span className="sr-only">Expand details</span>
-                                  </Button>
+                          <TableRow 
+                            key={statement.id}
+                            className={selectedStatements.includes(statement.id) ? "bg-muted/50" : ""}
+                          >
+                            <TableCell>
+                              <Checkbox 
+                                checked={selectedStatements.includes(statement.id)} 
+                                onCheckedChange={() => handleRowSelect(statement.id)}
+                                aria-label={`Select statement for ${statement.patientName}`}
+                              />
+                            </TableCell>
+                            <TableCell>
+                              {format(new Date(statement.statementDate), "MMM d, yyyy")}
+                            </TableCell>
+                            <TableCell>
+                              {statement.accountNumber}
+                            </TableCell>
+                            <TableCell className="font-medium">{statement.patientName}</TableCell>
+                            <TableCell>
+                              <div className="flex items-center">
+                                {renderDeliveryMethodIcon(statement.deliveryMethod)}
+                                <span className="ml-2">{statement.deliveryMethod}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell className="text-right font-medium">
+                              ${statement.balance.toFixed(2)}
+                            </TableCell>
+                            <TableCell>
+                              {renderStatusBadge(statement.status)}
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex items-center justify-end space-x-1">
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                  <Printer className="h-4 w-4" />
+                                  <span className="sr-only">Print statement</span>
+                                </Button>
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                  <Eye className="h-4 w-4" />
+                                  <span className="sr-only">View statement details</span>
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="h-8 w-8 p-0 ml-2"
+                                  onClick={(e) => toggleRowExpand(statement.id, e)}
+                                >
+                                  {expandedRows.includes(statement.id) ? (
+                                    <ChevronDown className="h-4 w-4" />
+                                  ) : (
+                                    <ChevronRight className="h-4 w-4" />
+                                  )}
+                                  <span className="sr-only">Expand details</span>
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                          
+                          {expandedRows.includes(statement.id) && (
+                            <TableRow className="bg-muted/30 border-t-0">
+                              <TableCell colSpan={8} className="p-0">
+                                <div className="p-4">
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                    {/* Basic Information */}
+                                    <Card className="shadow-sm">
+                                      <CardHeader className="py-3 px-4 border-b">
+                                        <CardTitle className="text-sm font-medium">Statement Information</CardTitle>
+                                      </CardHeader>
+                                      <CardContent className="py-3 px-4 text-sm">
+                                        <div className="space-y-2">
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Account:</div>
+                                            <div className="col-span-2">{statement.accountNumber}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Date:</div>
+                                            <div className="col-span-2">{format(new Date(statement.statementDate), "MMM d, yyyy")}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Due Date:</div>
+                                            <div className="col-span-2">{format(new Date(statement.dueDate), "MMM d, yyyy")}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Status:</div>
+                                            <div className="col-span-2">{renderStatusBadge(statement.status)}</div>
+                                          </div>
+                                          {statement.lastSentDate && (
+                                            <div className="grid grid-cols-3 gap-1">
+                                              <div className="text-muted-foreground">Last Sent:</div>
+                                              <div className="col-span-2">{format(new Date(statement.lastSentDate), "MMM d, yyyy")}</div>
+                                            </div>
+                                          )}
+                                          {statement.remindersSent !== undefined && (
+                                            <div className="grid grid-cols-3 gap-1">
+                                              <div className="text-muted-foreground">Reminders:</div>
+                                              <div className="col-span-2">{statement.remindersSent}</div>
+                                            </div>
+                                          )}
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                    
+                                    {/* Financial Summary */}
+                                    <Card className="shadow-sm">
+                                      <CardHeader className="py-3 px-4 border-b">
+                                        <CardTitle className="text-sm font-medium">Financial Summary</CardTitle>
+                                      </CardHeader>
+                                      <CardContent className="py-3 px-4 text-sm">
+                                        <div className="space-y-2">
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Previous Balance:</div>
+                                            <div className="col-span-2">${statement.previousBalance.toFixed(2)}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">New Charges:</div>
+                                            <div className="col-span-2">${statement.newCharges.toFixed(2)}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Payments:</div>
+                                            <div className="col-span-2">${statement.payments.toFixed(2)}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Adjustments:</div>
+                                            <div className="col-span-2">${statement.adjustments.toFixed(2)}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1 pt-2 border-t font-medium">
+                                            <div className="text-muted-foreground">Current Balance:</div>
+                                            <div className="col-span-2">${statement.balance.toFixed(2)}</div>
+                                          </div>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                    
+                                    {/* Delivery Information */}
+                                    <Card className="shadow-sm">
+                                      <CardHeader className="py-3 px-4 border-b">
+                                        <CardTitle className="text-sm font-medium">Delivery Information</CardTitle>
+                                      </CardHeader>
+                                      <CardContent className="py-3 px-4 text-sm">
+                                        <div className="space-y-2">
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Patient:</div>
+                                            <div className="col-span-2">{statement.patientName}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Method:</div>
+                                            <div className="col-span-2 flex items-center">
+                                              {renderDeliveryMethodIcon(statement.deliveryMethod)}
+                                              <span className="ml-2">{statement.deliveryMethod}</span>
+                                            </div>
+                                          </div>
+                                          {statement.emailAddress && (
+                                            <div className="grid grid-cols-3 gap-1">
+                                              <div className="text-muted-foreground">Email:</div>
+                                              <div className="col-span-2">{statement.emailAddress}</div>
+                                            </div>
+                                          )}
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Electronic:</div>
+                                            <div className="col-span-2">{statement.isElectronic ? "Yes" : "No"}</div>
+                                          </div>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                  </div>
+                                  
+                                  {/* Action buttons */}
+                                  <div className="flex justify-end space-x-2 mt-4">
+                                    <Button variant="outline" size="sm">
+                                      <Mail className="h-4 w-4 mr-2" />
+                                      Resend Statement
+                                    </Button>
+                                    <Button variant="outline" size="sm">
+                                      <Printer className="h-4 w-4 mr-2" />
+                                      Print Statement
+                                    </Button>
+                                    <Button variant="default" size="sm">
+                                      <Eye className="h-4 w-4 mr-2" />
+                                      View Full Statement
+                                    </Button>
+                                  </div>
                                 </div>
                               </TableCell>
                             </TableRow>
-                            
-                            {expandedRows.includes(statement.id) && (
-                              <TableRow className="bg-muted/30 border-t-0">
-                                <TableCell colSpan={8} className="p-0">
-                                  <div className="p-4">
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                      {/* Basic Information */}
-                                      <Card className="shadow-sm">
-                                        <CardHeader className="py-3 px-4 border-b">
-                                          <CardTitle className="text-sm font-medium">Statement Information</CardTitle>
-                                        </CardHeader>
-                                        <CardContent className="py-3 px-4 text-sm">
-                                          <div className="space-y-2">
-                                            <div className="grid grid-cols-3 gap-1">
-                                              <div className="text-muted-foreground">Account:</div>
-                                              <div className="col-span-2">{statement.accountNumber}</div>
-                                            </div>
-                                            <div className="grid grid-cols-3 gap-1">
-                                              <div className="text-muted-foreground">Date:</div>
-                                              <div className="col-span-2">{format(new Date(statement.statementDate), "MMM d, yyyy")}</div>
-                                            </div>
-                                            <div className="grid grid-cols-3 gap-1">
-                                              <div className="text-muted-foreground">Due Date:</div>
-                                              <div className="col-span-2">{format(new Date(statement.dueDate), "MMM d, yyyy")}</div>
-                                            </div>
-                                            <div className="grid grid-cols-3 gap-1">
-                                              <div className="text-muted-foreground">Status:</div>
-                                              <div className="col-span-2">{renderStatusBadge(statement.status)}</div>
-                                            </div>
-                                            {statement.lastSentDate && (
-                                              <div className="grid grid-cols-3 gap-1">
-                                                <div className="text-muted-foreground">Last Sent:</div>
-                                                <div className="col-span-2">{format(new Date(statement.lastSentDate), "MMM d, yyyy")}</div>
-                                              </div>
-                                            )}
-                                            {statement.remindersSent !== undefined && (
-                                              <div className="grid grid-cols-3 gap-1">
-                                                <div className="text-muted-foreground">Reminders:</div>
-                                                <div className="col-span-2">{statement.remindersSent}</div>
-                                              </div>
-                                            )}
-                                          </div>
-                                        </CardContent>
-                                      </Card>
-                                      
-                                      {/* Financial Summary */}
-                                      <Card className="shadow-sm">
-                                        <CardHeader className="py-3 px-4 border-b">
-                                          <CardTitle className="text-sm font-medium">Financial Summary</CardTitle>
-                                        </CardHeader>
-                                        <CardContent className="py-3 px-4 text-sm">
-                                          <div className="space-y-2">
-                                            <div className="grid grid-cols-3 gap-1">
-                                              <div className="text-muted-foreground">Previous Balance:</div>
-                                              <div className="col-span-2">${statement.previousBalance.toFixed(2)}</div>
-                                            </div>
-                                            <div className="grid grid-cols-3 gap-1">
-                                              <div className="text-muted-foreground">New Charges:</div>
-                                              <div className="col-span-2">${statement.newCharges.toFixed(2)}</div>
-                                            </div>
-                                            <div className="grid grid-cols-3 gap-1">
-                                              <div className="text-muted-foreground">Payments:</div>
-                                              <div className="col-span-2">${statement.payments.toFixed(2)}</div>
-                                            </div>
-                                            <div className="grid grid-cols-3 gap-1">
-                                              <div className="text-muted-foreground">Adjustments:</div>
-                                              <div className="col-span-2">${statement.adjustments.toFixed(2)}</div>
-                                            </div>
-                                            <div className="grid grid-cols-3 gap-1 pt-2 border-t font-medium">
-                                              <div className="text-muted-foreground">Current Balance:</div>
-                                              <div className="col-span-2">${statement.balance.toFixed(2)}</div>
-                                            </div>
-                                          </div>
-                                        </CardContent>
-                                      </Card>
-                                      
-                                      {/* Delivery Information */}
-                                      <Card className="shadow-sm">
-                                        <CardHeader className="py-3 px-4 border-b">
-                                          <CardTitle className="text-sm font-medium">Delivery Information</CardTitle>
-                                        </CardHeader>
-                                        <CardContent className="py-3 px-4 text-sm">
-                                          <div className="space-y-2">
-                                            <div className="grid grid-cols-3 gap-1">
-                                              <div className="text-muted-foreground">Patient:</div>
-                                              <div className="col-span-2">{statement.patientName}</div>
-                                            </div>
-                                            <div className="grid grid-cols-3 gap-1">
-                                              <div className="text-muted-foreground">Method:</div>
-                                              <div className="col-span-2 flex items-center">
-                                                {renderDeliveryMethodIcon(statement.deliveryMethod)}
-                                                <span className="ml-2">{statement.deliveryMethod}</span>
-                                              </div>
-                                            </div>
-                                            {statement.emailAddress && (
-                                              <div className="grid grid-cols-3 gap-1">
-                                                <div className="text-muted-foreground">Email:</div>
-                                                <div className="col-span-2">{statement.emailAddress}</div>
-                                              </div>
-                                            )}
-                                            <div className="grid grid-cols-3 gap-1">
-                                              <div className="text-muted-foreground">Electronic:</div>
-                                              <div className="col-span-2">{statement.isElectronic ? "Yes" : "No"}</div>
-                                            </div>
-                                          </div>
-                                        </CardContent>
-                                      </Card>
-                                    </div>
-                                    
-                                    {/* Action buttons */}
-                                    <div className="flex justify-end space-x-2 mt-4">
-                                      <Button variant="outline" size="sm">
-                                        <Mail className="h-4 w-4 mr-2" />
-                                        Resend Statement
-                                      </Button>
-                                      <Button variant="outline" size="sm">
-                                        <Printer className="h-4 w-4 mr-2" />
-                                        Print Statement
-                                      </Button>
-                                      <Button variant="default" size="sm">
-                                        <Eye className="h-4 w-4 mr-2" />
-                                        View Full Statement
-                                      </Button>
-                                    </div>
-                                  </div>
-                                </TableCell>
-                              </TableRow>
-                            )}
-                          </React.Fragment>
+                          )}
                         ))
                       )}
                     </TableBody>
