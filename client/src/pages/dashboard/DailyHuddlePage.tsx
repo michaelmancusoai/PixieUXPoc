@@ -20,7 +20,9 @@ import {
   UserMinus,
   MessageSquare,
   Stethoscope,
-  TrendingUp
+  TrendingUp,
+  X,
+  Edit
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -252,6 +254,14 @@ export default function DailyHuddlePage() {
     'Action Items': []
   });
   const [newItemText, setNewItemText] = useState('');
+  const [editingItem, setEditingItem] = useState<{
+    type: 'system' | 'custom';
+    sectionTitle: string;
+    index: number;
+    text: string;
+  } | null>(null);
+  
+  const [editText, setEditText] = useState('');
   
   // Start the huddle
   const startHuddle = () => {
@@ -288,6 +298,40 @@ export default function DailyHuddlePage() {
       ...prev,
       [sectionTitle]: prev[sectionTitle].filter((_, i) => i !== index)
     }));
+  };
+  
+  // Start editing an item
+  const startEditingItem = (type: 'system' | 'custom', sectionTitle: string, index: number, text: string) => {
+    setEditingItem({ type, sectionTitle, index, text });
+    setEditText(text);
+  };
+  
+  // Save edited item
+  const saveEditedItem = () => {
+    if (!editingItem || editText.trim() === '') return;
+    
+    if (editingItem.type === 'custom') {
+      setCustomItems(prev => {
+        const newItems = [...prev[editingItem.sectionTitle]];
+        newItems[editingItem.index] = editText.trim();
+        return {
+          ...prev,
+          [editingItem.sectionTitle]: newItems
+        };
+      });
+    }
+    // For system items, we would need a way to modify the system data
+    // This is a mock implementation, for a real app you'd save to the database
+    
+    // Clear editing state
+    setEditingItem(null);
+    setEditText('');
+  };
+  
+  // Cancel editing
+  const cancelEditing = () => {
+    setEditingItem(null);
+    setEditText('');
   };
   
   // Reset timer
@@ -587,78 +631,140 @@ export default function DailyHuddlePage() {
                           ))}
                         </div>
                         
-                        {/* System Highlights/Issues */}
+                        {/* Discussion Items Section */}
                         <div className="mt-6">
-                          <div className="mb-3">
-                            <h4 className="font-medium text-gray-900">System Generated Items:</h4>
-                          </div>
-                          <div className="space-y-2">
-                            {stepData.highlights.map((highlight, idx) => (
-                              <div 
-                                key={idx} 
-                                className={cn(
-                                  "p-3 rounded-md border text-sm",
-                                  getHighlightColor(highlight.type)
-                                )}
+                          <div className="mb-4 flex justify-between items-center">
+                            <h4 className="font-medium text-gray-900">Discussion Items:</h4>
+                            
+                            {/* Add Item Form */}
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="text"
+                                placeholder="Add custom item to discuss..."
+                                value={newItemText}
+                                onChange={(e) => setNewItemText(e.target.value)}
+                                className="w-64 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-2"
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    addCustomItem(step.title);
+                                  }
+                                }}
+                              />
+                              <Button 
+                                onClick={() => addCustomItem(step.title)}
+                                variant="outline"
+                                size="sm"
+                                className="border-primary text-primary hover:bg-primary/5"
                               >
-                                {highlight.text}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                        
-                        {/* Custom Items Section */}
-                        <div className="mt-8 border-t pt-6">
-                          <div className="mb-3">
-                            <h4 className="font-medium text-gray-900">Custom Items:</h4>
+                                <Plus className="h-4 w-4 mr-1" />
+                                Add
+                              </Button>
+                            </div>
                           </div>
                           
-                          {/* Add Item Form */}
-                          <div className="flex items-center mb-4 gap-2">
-                            <input
-                              type="text"
-                              placeholder="Add custom item to discuss..."
-                              value={newItemText}
-                              onChange={(e) => setNewItemText(e.target.value)}
-                              className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-2"
-                              onKeyDown={(e) => {
-                                if (e.key === 'Enter') {
-                                  addCustomItem(step.title);
-                                }
-                              }}
-                            />
-                            <Button 
-                              onClick={() => addCustomItem(step.title)}
-                              variant="outline"
-                              className="border-primary text-primary hover:bg-primary/5"
-                            >
-                              <Plus className="h-4 w-4 mr-1" />
-                              Add Item
-                            </Button>
-                          </div>
-                          
-                          {/* List of Custom Items */}
                           <div className="space-y-2">
-                            {customItems[step.title]?.length ? (
-                              customItems[step.title].map((item, idx) => (
-                                <div 
-                                  key={idx} 
-                                  className="p-3 rounded-md border border-blue-200 bg-blue-50 text-blue-800 text-sm flex items-center justify-between"
-                                >
-                                  <span>{item}</span>
+                            {/* Edit Form (Shown when editing an item) */}
+                            {editingItem && (
+                              <div className="mb-4 p-4 border border-primary/20 bg-primary/5 rounded-md">
+                                <div className="flex justify-between items-center mb-2">
+                                  <h4 className="font-medium text-primary">
+                                    Edit {editingItem.type === 'system' ? 'System' : 'Custom'} Item
+                                  </h4>
                                   <Button
                                     variant="ghost"
                                     size="sm"
-                                    className="h-6 w-6 p-0 text-blue-700 hover:text-blue-900 hover:bg-blue-100/50"
-                                    onClick={() => removeCustomItem(step.title, idx)}
+                                    className="h-6 w-6 p-0 text-gray-500"
+                                    onClick={cancelEditing}
                                   >
-                                    <Trash2 className="h-4 w-4" />
+                                    <X className="h-4 w-4" />
                                   </Button>
                                 </div>
-                              ))
-                            ) : (
-                              <p className="text-sm text-gray-500 italic">No custom items added yet. Add items above to discuss during the huddle.</p>
+                                <div className="flex gap-2">
+                                  <input
+                                    type="text"
+                                    value={editText}
+                                    onChange={(e) => setEditText(e.target.value)}
+                                    className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-2"
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') {
+                                        saveEditedItem();
+                                      }
+                                    }}
+                                  />
+                                  <Button 
+                                    onClick={saveEditedItem}
+                                    variant="default"
+                                    size="sm"
+                                    className="bg-primary hover:bg-primary/90"
+                                  >
+                                    Save
+                                  </Button>
+                                </div>
+                              </div>
                             )}
+                            
+                            {/* System Generated Items */}
+                            {stepData.highlights.map((highlight, idx) => (
+                              <div 
+                                key={`system-${idx}`} 
+                                className={cn(
+                                  "p-3 rounded-md border text-sm flex items-center justify-between",
+                                  getHighlightColor(highlight.type)
+                                )}
+                              >
+                                <span>{highlight.text}</span>
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0 text-gray-500 hover:text-gray-700 hover:bg-gray-100/50"
+                                    onClick={() => startEditingItem('system', step.title, idx, highlight.text)}
+                                  >
+                                    <Edit className="h-3.5 w-3.5" />
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0 text-gray-500 hover:text-red-700 hover:bg-red-100/50"
+                                    onClick={() => {/* System items can be edited but not removed */}}
+                                  >
+                                    <X className="h-3.5 w-3.5" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                            
+                            {/* Custom Items */}
+                            {customItems[step.title]?.length ? (
+                              customItems[step.title].map((item, idx) => (
+                                <div 
+                                  key={`custom-${idx}`} 
+                                  className="p-3 rounded-md border border-blue-200 bg-blue-50 text-blue-800 text-sm flex items-center justify-between"
+                                >
+                                  <span>{item}</span>
+                                  <div className="flex items-center gap-1">
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-6 w-6 p-0 text-blue-700 hover:text-blue-900 hover:bg-blue-100/50"
+                                      onClick={() => startEditingItem('custom', step.title, idx, item)}
+                                    >
+                                      <Edit className="h-3.5 w-3.5" />
+                                    </Button>
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-6 w-6 p-0 text-blue-700 hover:text-red-700 hover:bg-red-100/50"
+                                      onClick={() => removeCustomItem(step.title, idx)}
+                                    >
+                                      <Trash2 className="h-3.5 w-3.5" />
+                                    </Button>
+                                  </div>
+                                </div>
+                              ))
+                            ) : customItems[step.title]?.length === 0 && stepData.highlights.length === 0 ? (
+                              <p className="text-sm text-gray-500 italic">No discussion items yet. Add custom items above to discuss during the huddle.</p>
+                            ) : null}
                           </div>
                         </div>
                       </>
