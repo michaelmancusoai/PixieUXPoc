@@ -84,8 +84,7 @@ const getStatusStyles = (status: string): CSSProperties => {
       return { 
         backgroundColor: 'white', // Consistent white background
         border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #059669', // Green
-        animation: 'pulse-glow 2s infinite'
+        borderLeft: '3px solid #059669' // Green
       };
     case AppointmentStatus.IN_CHAIR:
       return { 
@@ -355,6 +354,7 @@ export default function AppointmentChip({
               "flex flex-col p-1.5 rounded-sm text-xs select-none",
               "shadow-sm hover:shadow transition-all",
               "h-full",
+              statusText === AppointmentStatus.DOCTOR_READY ? "doctor-ready-pulse" : "",
               isDraggable ? "cursor-grab active:cursor-grabbing" : "cursor-default"
             )}
             style={{

@@ -95,7 +95,7 @@ async function seedSimpleAppointments() {
               patientId: patient.id,
               providerId: provider.id,
               operatoryId: operatory.id,
-              date: startTime,
+              date: format(startTime, 'yyyy-MM-dd'), // Convert to string format expected by the database
               startTime,
               endTime,
               appointmentType: procedure.name,
