@@ -229,6 +229,7 @@ export default function PaymentsPage() {
   // State
   const [selectedTab, setSelectedTab] = useState("all");
   const [selectedPayments, setSelectedPayments] = useState<number[]>([]);
+  const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [filters, setFilters] = useState({
@@ -333,6 +334,18 @@ export default function PaymentsPage() {
     } else {
       setSelectedPayments(filteredPayments.map(payment => payment.id));
     }
+  };
+  
+  // Toggle row expansion
+  const toggleRowExpand = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedRows(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(rowId => rowId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
 
   // Render count badge for tabs
