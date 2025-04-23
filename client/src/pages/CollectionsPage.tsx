@@ -644,18 +644,27 @@ export default function CollectionsPage() {
         <div className="container mx-auto py-6">
           <h1 className="text-2xl font-bold mb-6">Collections Management</h1>
 
-          {/* Summary Cards */}
+          {/* KPI Cards - based on specification */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Total Outstanding</CardTitle>
+                <CardTitle className="text-base font-medium">Accounts in Collections</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
-                  <DollarSign className="h-8 w-8 mr-3 text-blue-500" />
+                  <PiggyBank className="h-8 w-8 mr-3 text-red-500" />
                   <div>
-                    <div className="text-2xl font-bold">${totalDue.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">Current selection</div>
+                    <div className="flex flex-col">
+                      <div className="text-2xl font-bold">
+                        <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200 mr-2">
+                          {mockCollectionAccounts.filter(a => a.agingBucket === "91-120" || a.agingBucket === "120+").length}
+                        </Badge>
+                        <span className="text-red-500">${totalDue.toFixed(2)}</span>
+                      </div>
+                      <div className="text-sm text-muted-foreground mt-1">
+                        Balances {'>'}  90 days
+                      </div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -663,16 +672,20 @@ export default function CollectionsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Action Items</CardTitle>
+                <CardTitle className="text-base font-medium">Collected This Month</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
-                  <BellRing className="h-8 w-8 mr-3 text-amber-500" />
+                  <DollarSign className="h-8 w-8 mr-3 text-green-500" />
                   <div>
-                    <div className="flex flex-col">
-                      <div className="text-lg font-medium">{todaysActions} due today</div>
-                      <div className="text-md text-red-500 font-medium">{overDueActions} overdue</div>
+                    <div className="text-2xl font-bold flex items-center">
+                      $1,250.00
+                      <span className="text-green-500 flex items-center ml-2 text-sm">
+                        <ChevronDown className="h-4 w-4 rotate-180" />
+                        8.5%
+                      </span>
                     </div>
+                    <div className="text-sm text-muted-foreground">vs. last month</div>
                   </div>
                 </div>
               </CardContent>
@@ -685,16 +698,16 @@ export default function CollectionsPage() {
               <CardContent className="py-6 px-5">
                 <div className="flex flex-col space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Manage collection accounts</span>
+                    <span className="text-sm text-muted-foreground">Ultimate action or option</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Button variant="outline" className="h-9 flex-1">
-                      <PhoneCall className="h-4 w-4 mr-1" />
-                      Call List
+                    <Button className="h-9 flex-1">
+                      <Send className="h-4 w-4 mr-1" />
+                      Send Final Notice
                     </Button>
                     <Button variant="outline" className="h-9 flex-1">
-                      <Download className="h-4 w-4 mr-1" />
-                      Export Report
+                      <PiggyBank className="h-4 w-4 mr-1" />
+                      Create Payment Plan
                     </Button>
                   </div>
                 </div>
