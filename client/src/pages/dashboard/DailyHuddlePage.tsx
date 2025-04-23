@@ -2,26 +2,31 @@ import React, { useState, useEffect, Fragment } from "react";
 import { NavigationWrapper } from "@/components/NavigationWrapper";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
-  AlertCircle, 
+  AlertCircle,
   Calendar, 
   CheckCircle,
+  ChevronDown,
+  ChevronRight,
   Clock, 
   CreditCard, 
-  FileText, 
-  MoreHorizontal, 
+  FileText,
+  MoreHorizontal,
   Package, 
   Pause,
   Phone, 
   Play,
   PlayCircle,
+  Plus,
   RefreshCw,
-  Sun, 
+  Sun,
+  Trash2, 
   UserMinus,
   User,
   MessageSquare,
   Stethoscope,
   Wallet,
-  TrendingUp
+  TrendingUp,
+  X
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -237,9 +242,18 @@ const agendaItemData = {
 
 export default function DailyHuddlePage() {
   const [currentStep, setCurrentStep] = useState<number | null>(null);
+  const [expandedSection, setExpandedSection] = useState<number | null>(null);
   const [huddleActive, setHuddleActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [timerActive, setTimerActive] = useState(false);
+  const [customItems, setCustomItems] = useState<{[key: string]: string[]}>({
+    'Celebrate Wins': [],
+    'Schedule Status': [],
+    'Clinical Priorities': [],
+    'Resource Needs': [],
+    'Action Items': []
+  });
+  const [newItemText, setNewItemText] = useState('');
   
   // Start the huddle
   const startHuddle = () => {
@@ -248,13 +262,42 @@ export default function DailyHuddlePage() {
     resetTimer();
   };
   
-  // Select a specific agenda item
+  // Select a specific agenda item during huddle
   const selectStep = (index: number) => {
     // Only allow selection if huddle is active
     if (huddleActive) {
       setCurrentStep(index);
       resetTimer();
     }
+  };
+  
+  // Toggle a section's expanded state
+  const toggleSection = (index: number) => {
+    if (expandedSection === index) {
+      setExpandedSection(null);
+    } else {
+      setExpandedSection(index);
+    }
+  };
+  
+  // Add custom item to a section
+  const addCustomItem = (sectionTitle: string) => {
+    if (newItemText.trim() === '') return;
+    
+    setCustomItems(prev => ({
+      ...prev,
+      [sectionTitle]: [...(prev[sectionTitle] || []), newItemText.trim()]
+    }));
+    
+    setNewItemText('');
+  };
+  
+  // Remove custom item from a section
+  const removeCustomItem = (sectionTitle: string, index: number) => {
+    setCustomItems(prev => ({
+      ...prev,
+      [sectionTitle]: prev[sectionTitle].filter((_, i) => i !== index)
+    }));
   };
   
   // Reset timer
@@ -508,7 +551,7 @@ export default function DailyHuddlePage() {
           
           {/* Agenda Content */}
           <div className="p-4 bg-white">
-            <div className="space-y-6">
+            <div className="space-y-4">
               {/* Current Selection Indicator */}
               {huddleActive && currentStep !== null && (
                 <div className="bg-primary/10 p-3 rounded-md border border-primary/20">
@@ -519,24 +562,26 @@ export default function DailyHuddlePage() {
                 </div>
               )}
               
-              {/* Not Started Message */}
+              {/* Huddle Preview Message */}
               {!huddleActive && (
                 <div className="mb-6 bg-gray-50 p-4 rounded-md border border-gray-200 flex items-center gap-4">
                   <PlayCircle className="h-8 w-8 text-primary/60" />
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">Daily Huddle Preview</h3>
                     <p className="text-sm text-gray-500">
-                      Review the agenda items below. Click "Start Huddle" when the team is ready to begin.
+                      Click on each section below to expand and view details. Add custom items to discuss and then start the huddle.
                     </p>
                   </div>
                 </div>
               )}
               
-              {/* All Agenda Items */}
+              {/* Accordion-style Agenda Items */}
               {agendaSteps.map((step, stepIndex) => {
                 const stepData = agendaItemData[step.title];
                 const StepIcon = step.icon;
                 const isActive = huddleActive && stepIndex === currentStep;
+                const isExpanded = expandedSection === stepIndex;
+                const hasCustomItems = customItems[step.title] && customItems[step.title].length > 0;
                 
                 return (
                   <div 
@@ -544,108 +589,149 @@ export default function DailyHuddlePage() {
                     className={cn(
                       "border rounded-md overflow-hidden transition-all",
                       isActive ? "ring-2 ring-primary ring-offset-2" : "",
-                      stepIndex === currentStep ? "" : "border-gray-200"
+                      isExpanded ? "shadow-md" : ""
                     )}
                   >
-                    {/* Header */}
+                    {/* Header Bar */}
                     <div 
                       className={cn(
-                        "p-3 flex items-center gap-3",
-                        isActive ? "bg-primary text-white" : "bg-gray-50",
-                        huddleActive && "cursor-pointer"
+                        "p-3 flex items-center justify-between cursor-pointer",
+                        isActive ? "bg-primary text-white" : "bg-gray-50"
                       )}
-                      onClick={huddleActive ? () => selectStep(stepIndex) : undefined}
+                      onClick={() => huddleActive ? selectStep(stepIndex) : toggleSection(stepIndex)}
                     >
-                      <div className={cn(
-                        "p-2 rounded-full",
-                        isActive ? "bg-white/20" : "bg-primary/10"
-                      )}>
-                        <StepIcon className={cn(
-                          "h-5 w-5", 
-                          isActive ? "text-white" : "text-primary"
-                        )} />
+                      <div className="flex items-center gap-3">
+                        <div className={cn(
+                          "p-2 rounded-full",
+                          isActive ? "bg-white/20" : "bg-primary/10"
+                        )}>
+                          <StepIcon className={cn(
+                            "h-5 w-5", 
+                            isActive ? "text-white" : "text-primary"
+                          )} />
+                        </div>
+                        <div>
+                          <h3 className={cn(
+                            "font-medium",
+                            isActive ? "text-white" : "text-gray-900"
+                          )}>{step.title}</h3>
+                          <p className={cn(
+                            "text-sm",
+                            isActive ? "text-white/80" : "text-gray-500"
+                          )}>{step.focus}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className={cn(
-                          "font-medium",
-                          isActive ? "text-white" : "text-gray-900"
-                        )}>{step.title}</h3>
-                        <p className={cn(
-                          "text-sm",
-                          isActive ? "text-white/80" : "text-gray-500"
-                        )}>{step.focus}</p>
-                      </div>
+                      
+                      {/* Expand/Collapse Indicator (only in preview mode) */}
+                      {!huddleActive && (
+                        <div className="flex items-center gap-2">
+                          {hasCustomItems && (
+                            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
+                              {customItems[step.title].length} custom {customItems[step.title].length === 1 ? 'item' : 'items'}
+                            </Badge>
+                          )}
+                          {isExpanded ? (
+                            <ChevronDown className="h-5 w-5 text-gray-500" />
+                          ) : (
+                            <ChevronRight className="h-5 w-5 text-gray-500" />
+                          )}
+                        </div>
+                      )}
                     </div>
                     
-                    {/* Content */}
-                    <div className={cn(
-                      "transition-all",
-                      isActive ? "p-4 border-t" : "px-4 py-3"
-                    )}>
-                      {/* Metrics Row */}
-                      <div className={cn(
-                        "grid gap-3",
-                        isActive ? "grid-cols-3" : "grid-cols-1 md:grid-cols-3"
-                      )}>
-                        {stepData.metrics.map((metric, idx) => (
-                          <div 
-                            key={idx} 
-                            className={cn(
-                              "bg-gray-50 p-3 rounded-md border border-gray-200 flex items-center",
-                              isActive ? "" : "py-2"
-                            )}
-                          >
-                            <div className="flex-1">
+                    {/* Content (only shown when expanded or active) */}
+                    {(isExpanded || isActive) && (
+                      <div className="p-4 border-t">
+                        {/* Metrics Row */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          {stepData.metrics.map((metric, idx) => (
+                            <div 
+                              key={idx} 
+                              className="bg-gray-50 p-3 rounded-md border border-gray-200"
+                            >
                               <p className="text-sm text-gray-500">{metric.label}</p>
                               <div className="flex items-end gap-2 mt-1">
-                                <span className={cn(
-                                  "font-bold",
-                                  isActive ? "text-xl" : "text-lg"
-                                )}>{metric.value}</span>
+                                <span className="text-xl font-bold">{metric.value}</span>
                                 <span className={cn("text-sm", getStatusColor(metric.status))}>
                                   (Target: {metric.target})
                                 </span>
                               </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                      
-                      {/* Highlights/Issues */}
-                      <div className={cn(isActive ? "mt-4" : "mt-3")}>
-                        <h4 className="font-medium mb-2 text-sm">
-                          {isActive ? "Key Points:" : "Key Issues:"}
-                        </h4>
-                        <div className={cn(
-                          "space-y-2",
-                          !isActive && "text-xs"
-                        )}>
-                          {/* Show all highlights when active, otherwise only show warnings/negatives */}
-                          {stepData.highlights
-                            .filter(h => isActive || h.type === 'warning' || h.type === 'negative' || h.type === 'action')
-                            .slice(0, isActive ? undefined : 2)
-                            .map((highlight, idx) => (
+                          ))}
+                        </div>
+                        
+                        {/* System Highlights/Issues */}
+                        <div className="mt-4">
+                          <h4 className="font-medium mb-2">System Generated Items:</h4>
+                          <div className="space-y-2">
+                            {stepData.highlights.map((highlight, idx) => (
                               <div 
                                 key={idx} 
                                 className={cn(
-                                  "p-3 rounded-md border",
-                                  isActive ? "text-sm" : "text-xs p-2",
+                                  "p-3 rounded-md border text-sm",
                                   getHighlightColor(highlight.type)
                                 )}
                               >
                                 {highlight.text}
                               </div>
                             ))}
-                          
-                          {/* Show "See more" if there are additional issues */}
-                          {!isActive && stepData.highlights.length > 2 && (
-                            <div className="text-xs text-primary font-medium">
-                              + {stepData.highlights.length - 2} more items...
+                          </div>
+                        </div>
+                        
+                        {/* Custom Items */}
+                        <div className="mt-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <h4 className="font-medium">Custom Items:</h4>
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="text"
+                                placeholder="Add custom item to discuss..."
+                                value={newItemText}
+                                onChange={(e) => setNewItemText(e.target.value)}
+                                className="text-sm rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-1.5"
+                                onKeyPress={(e) => {
+                                  if (e.key === 'Enter') {
+                                    addCustomItem(step.title);
+                                  }
+                                }}
+                              />
+                              <Button 
+                                size="sm"
+                                onClick={() => addCustomItem(step.title)}
+                                variant="outline"
+                                className="h-8 aspect-square p-0"
+                              >
+                                <Plus className="h-4 w-4" />
+                              </Button>
                             </div>
-                          )}
+                          </div>
+                          
+                          {/* List of Custom Items */}
+                          <div className="space-y-2">
+                            {customItems[step.title]?.length ? (
+                              customItems[step.title].map((item, idx) => (
+                                <div 
+                                  key={idx} 
+                                  className="p-3 rounded-md border border-blue-200 bg-blue-50 text-blue-800 text-sm flex items-center justify-between"
+                                >
+                                  <span>{item}</span>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0 text-blue-700 hover:text-blue-900 hover:bg-blue-100/50"
+                                    onClick={() => removeCustomItem(step.title, idx)}
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
+                              ))
+                            ) : (
+                              <p className="text-sm text-gray-500 italic">No custom items added yet</p>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 );
               })}
