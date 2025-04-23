@@ -31,22 +31,22 @@ export default function PatientProfilePage() {
       <div className="min-h-screen bg-background">
         <Header />
         
-        <main className="w-full px-2 sm:px-3 py-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 xl:gap-5">
-            {/* Column A: Snapshot Cards - narrower */}
-            <section className="col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-1 flex flex-col gap-4">
+        <main className="w-full py-5">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 xl:gap-6">
+            {/* Column A: Snapshot Cards - consistent width with Column C */}
+            <section className="col-span-1 lg:col-span-3 xl:col-span-3 flex flex-col gap-4">
               <h2 className="sr-only">Patient Snapshot</h2>
               <PatientCard />
               <SnapshotCards />
             </section>
             
             {/* Column B: Activity Hub */}
-            <section className="col-span-1 lg:col-span-6 xl:col-span-6 2xl:col-span-7">
+            <section className="col-span-1 lg:col-span-6 xl:col-span-6">
               <ActivityHub />
             </section>
             
-            {/* Column C: Related Records - wider */}
-            <section className="col-span-1 lg:col-span-4 xl:col-span-4 2xl:col-span-4">
+            {/* Column C: Related Records - same width as Column A */}
+            <section className="col-span-1 lg:col-span-3 xl:col-span-3">
               <RelatedRecords />
             </section>
           </div>

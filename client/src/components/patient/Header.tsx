@@ -50,20 +50,20 @@ export default function Header() {
 export function PatientCard() {
   return (
     <Card className="h-full">
-      <CardContent className="p-4">
+      <CardContent className="p-5">
         <div className="flex items-start mb-4">
-          <Avatar className="h-14 w-14 mr-4 bg-[#F56A46]">
+          <Avatar className="h-14 w-14 mr-4 bg-[#F56A46] flex-shrink-0">
             <div className="w-full h-full rounded-full flex items-center justify-center">
               <span className="text-xl font-semibold text-white">SJ</span>
             </div>
           </Avatar>
           
-          <div>
-            <h1 className="text-xl font-bold text-gray-700 mb-1">{patientData.name}</h1>
+          <div className="min-w-0 flex-1">
+            <h1 className="text-xl font-bold text-gray-700 mb-1 truncate">{patientData.name}</h1>
             <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-muted-foreground">
               <span>{patientData.dob}</span>
               <span>{patientData.gender}</span>
-              <span>{patientData.chart}</span>
+              <span className="truncate">{patientData.chart}</span>
             </div>
           </div>
         </div>
@@ -79,7 +79,7 @@ export function PatientCard() {
         </div>
         
         {/* Action buttons */}
-        <div className="flex justify-between mt-3 mb-2 px-1">
+        <div className="flex justify-between mt-4 mb-2 space-x-1">
           <CircleActionButton icon={<Calendar className="h-4 w-4" />} label="Schedule" />
           <CircleActionButton icon={<MessageSquare className="h-4 w-4" />} label="Message" />  
           <CircleActionButton icon={<Phone className="h-4 w-4" />} label="Call" />
@@ -94,10 +94,10 @@ export function PatientCard() {
 function CircleActionButton({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
     <div className="flex flex-col items-center">
-      <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center mb-1 hover:bg-gray-200 transition-colors cursor-pointer">
+      <div className="w-11 h-11 rounded-full bg-gray-100 flex items-center justify-center mb-1.5 hover:bg-gray-200 transition-colors cursor-pointer">
         <div className="text-gray-600">{icon}</div>
       </div>
-      <span className="text-[10px] font-medium text-gray-700">{label}</span>
+      <span className="text-xs font-medium text-gray-700 whitespace-nowrap">{label}</span>
     </div>
   );
 }
