@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { format, addMinutes, isEqual, isSameDay, parseISO } from "date-fns";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useDndMonitor, useDraggable, useDroppable } from "@dnd-kit/core";
-import AppointmentChip from "./AppointmentChip";
+import AppointmentChip from "./FixedAppointmentChip";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
