@@ -17,6 +17,7 @@ import ClaimsPage from "@/pages/ClaimsPage";
 import PaymentsPage from "@/pages/PaymentsPage";
 import StatementsPage from "@/pages/StatementsPage";
 import CollectionsPage from "@/pages/CollectionsPage";
+import FeeSchedulesPage from "@/pages/FeeSchedulesPage";
 import ReportsPage from "@/pages/ReportsPage";
 import SettingsPage from "@/pages/SettingsPage";
 import PatientProfilePage from "@/pages/PatientProfilePage";
@@ -44,6 +45,8 @@ function Router() {
       <Route path="/statements" component={StatementsPage} />
       <Route path="/billing/collections" component={CollectionsPage} />
       <Route path="/collections" component={CollectionsPage} />
+      <Route path="/billing/fee-schedules" component={FeeSchedulesPage} />
+      <Route path="/fee-schedules" component={FeeSchedulesPage} />
       <Route path="/billing/:subpage" component={BillingPage} />
       <Route path="/reports" component={ReportsPage} />
       <Route path="/reports/:subpage" component={ReportsPage} />

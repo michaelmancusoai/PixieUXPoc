@@ -1,0 +1,759 @@
+CDT Code,Full Description,Short Description,Category,Standard Fee ($),PPO Fee ($)
+D0120,periodic oral evaluation - established patient,Periodic Oral Eval - Est Patient,Diag / Img,65.0,52.0
+D0140,limited oral evaluation - problem focused,Limited Oral Eval - Problem,Diag / Img,90.0,72.0
+D0145,oral evaluation for a patient under three years of age and counseling with primary caregiver,,Diag / Img,90.0,72.0
+D0150,comprehensive oral evaluation - new or established patient,Comprehensive Oral Eval,Diag / Img,105.0,84.0
+D0160,"detailed and extensive oral evaluation - problem focused, by report",,Diag / Img,90.0,72.0
+D0170,"re-evaluation - limited, problem focused (established patient; not post-operative visit)",,Diag / Img,90.0,72.0
+D0171,re-evaluation – post-operative office visit,,Diag / Img,90.0,72.0
+D0180,comprehensive periodontal evaluation - new or established patient,,Diag / Img,105.0,84.0
+D0190,screening of a patient,,Diag / Img,100.0,80.0
+D0191,assessment of a patient,,Diag / Img,100.0,80.0
+D0210,intraoral - complete series of radiographic images,FMX,Diag / Img,140.0,112.0
+D0220,intraoral - periapical first radiographic image,PA - First Film,Diag / Img,35.0,28.0
+D0230,intraoral - periapical each additional radiographic image,,Diag / Img,35.0,28.0
+D0240,intraoral - occlusal radiographic image,,Diag / Img,35.0,28.0
+D0250,"extra-oral – 2D projection radiographic image created using a stationary radiation source, and detector",,Diag / Img,35.0,28.0
+D0251,extra-oral posterior dental radiographic image,,Diag / Img,35.0,28.0
+D0270,bitewing - single radiographic image,,Diag / Img,30.0,24.0
+D0272,bitewings - two radiographic images,BW - 2 Films,Diag / Img,40.0,32.0
+D0273,bitewings - three radiographic images,,Diag / Img,55.0,44.0
+D0274,bitewings - four radiographic images,BW - 4 Films,Diag / Img,55.0,44.0
+D0277,vertical bitewings - 7 to 8 radiographic images,,Diag / Img,55.0,44.0
+D0310,sialography,,Diag / Img,100.0,80.0
+D0320,"temporomandibular joint arthrogram, including injection",,Diag / Img,100.0,80.0
+D0321,"other temporomandibular joint radiographic images, by report",,Diag / Img,35.0,28.0
+D0322,tomographic survey,,Diag / Img,100.0,80.0
+D0330,panoramic radiographic image,Panoramic,Diag / Img,130.0,104.0
+D0340,"2D cephalometric radiographic image – acquisition, measurement and analysis",,Diag / Img,35.0,28.0
+D0350,2D oral/facial photographic image obtained intra-orally or extra-orally,,Diag / Img,35.0,28.0
+D0351,3D photographic image,,Diag / Img,35.0,28.0
+D0364,cone beam CT capture and interpretation with limited field of view – less than one whole jaw,CBCT Single Site,Diag / Img,225.0,180.0
+D0365,cone beam CT capture and interpretation with field of view of one full dental arch – mandible,,Diag / Img,100.0,80.0
+D0366,"cone beam CT capture and interpretation with field of view of one full dental arch – maxilla, with or without cranium",,Diag / Img,100.0,80.0
+D0367,cone beam CT capture and interpretation with field of view of both jaws; with or without cranium,,Diag / Img,100.0,80.0
+D0368,cone beam CT capture and interpretation for TMJ series including two or more exposures,,Diag / Img,100.0,80.0
+D0369,maxillofacial MRI capture and interpretation,,Diag / Img,100.0,80.0
+D0370,maxillofacial ultrasound capture and interpretation,,Diag / Img,100.0,80.0
+D0371,sialoendoscopy capture and interpretation,,Diag / Img,100.0,80.0
+D0380,cone beam CT image capture with limited field of view – less than one whole jaw,,Diag / Img,250.0,200.0
+D0381,cone beam CT image capture with field of view of one full dental arch – mandible,,Diag / Img,250.0,200.0
+D0382,"cone beam CT image capture with field of view of one full dental arch – maxilla, with or without cranium",,Diag / Img,250.0,200.0
+D0383,cone beam CT image capture with field of view of both jaws; with or without cranium,,Diag / Img,140.0,112.0
+D0384,cone beam CT image capture for TMJ series including two or more exposures,,Diag / Img,140.0,112.0
+D0385,maxillofacial MRI image capture,,Diag / Img,35.0,28.0
+D0386,maxillofacial ultrasound image capture,,Diag / Img,35.0,28.0
+D0391,"interpretation of diagnostic image by a practitioner not associated with capture of the image, including report",,Diag / Img,35.0,28.0
+D0393,treatment simulation using 3D image volume,,Diag / Img,35.0,28.0
+D0394,digital subtraction of two or more images or image volumes of the same modality,,Diag / Img,35.0,28.0
+D0395,fusion of two or more 3D image volumes of one or more modalities,,Diag / Img,35.0,28.0
+D0411,HbA1c in-office point of service testing,,Diag / Img,100.0,80.0
+D0412,blood glucose level test – in-office using a glucose meter,,Diag / Img,100.0,80.0
+D0414,"laboratory processing of microbial specimen to include culture and sensitivity studies, preparation and transmission of written report",,Diag / Img,100.0,80.0
+D0415,collection of microorganisms for culture and sensitivity,,Diag / Img,100.0,80.0
+D0416,viral culture,,Diag / Img,100.0,80.0
+D0417,collection and preparation of saliva sample for laboratory diagnostic testing,,Diag / Img,100.0,80.0
+D0418,analysis of saliva sample,,Diag / Img,100.0,80.0
+D0419,assessment of salivary flow by measurement,,Diag / Img,100.0,80.0
+D0422,collection and preparation of genetic sample material for laboratory analysis and report,,Diag / Img,100.0,80.0
+D0423,genetic test for susceptibility to diseases – specimen analysis,,Diag / Img,100.0,80.0
+D0425,caries susceptibility tests,,Diag / Img,100.0,80.0
+D0431,"adjunctive pre-diagnostic test that aids in detection of mucosal abnormalities including premalignant and malignant lesions, not to include cytology or biopsy procedures",,Diag / Img,100.0,80.0
+D0460,pulp vitality tests,,Diag / Img,100.0,80.0
+D0470,diagnostic casts,,Diag / Img,100.0,80.0
+D0472,"accession of tissue, gross examination, preparation and transmission of written report",,Diag / Img,100.0,80.0
+D0473,"accession of tissue, gross and microscopic examination, preparation and transmission of written report",,Diag / Img,100.0,80.0
+D0474,"accession of tissue, gross and microscopic examination, including assessment of surgical margins for presence of disease, preparation and transmission of written report",,Diag / Img,100.0,80.0
+D0475,decalcification procedure,,Diag / Img,100.0,80.0
+D0476,special stains for microorganisms,,Diag / Img,100.0,80.0
+D0477,"special stains, not for microorganisms",,Diag / Img,100.0,80.0
+D0478,immunohistochemical stains,,Diag / Img,100.0,80.0
+D0479,"tissue in-situ hybridization, including interpretation",,Diag / Img,100.0,80.0
+D0480,"accession of exfoliative cytologic smears, microscopic examination, preparation and transmission of written report",,Diag / Img,100.0,80.0
+D0481,electron microscopy,,Diag / Img,100.0,80.0
+D0482,direct immunofluorescence,,Diag / Img,100.0,80.0
+D0483,indirect immunofluorescence,,Diag / Img,100.0,80.0
+D0484,consultation on slides prepared elsewhere,,Diag / Img,100.0,80.0
+D0485,"consultation, including preparation of slides from biopsy material supplied by referring source",,Diag / Img,100.0,80.0
+D0486,"laboratory accession of transepithelial cytologic sample, microscopic examination, preparation and transmission of written report",,Diag / Img,100.0,80.0
+D0502,"other oral pathology procedures, by report",,Diag / Img,100.0,80.0
+D0600,"non-ionizing diagnostic procedure capable of quantifying,  monitoring, and recording changes in structure of enamel, dentin, and cementum",,Diag / Img,100.0,80.0
+D0601,"caries risk assessment and documentation, with a finding of low risk",,Diag / Img,100.0,80.0
+D0602,"caries risk assessment and documentation, with a finding of moderate risk",,Diag / Img,100.0,80.0
+D0603,"caries risk assessment and documentation, with a finding of high risk",,Diag / Img,100.0,80.0
+D0604,"antigen testing for a public health related pathogen, including coronavirus",,Diag / Img,100.0,80.0
+D0605,"antibody testing for a public health related pathogen, including coronavirus",,Diag / Img,100.0,80.0
+D0701,panoramic radiographic image – image capture only,,Diag / Img,100.0,80.0
+D0702,2-D cephalometric radiographic image – image capture only,,Diag / Img,100.0,80.0
+D0703,2-D oral/facial photographic image obtained intra-orally or extra-orally – image capture only,,Diag / Img,100.0,80.0
+D0704,3-D photographic image – image capture only,,Diag / Img,100.0,80.0
+D0705,extra-oral posterior dental radiographic image – image capture only,,Diag / Img,100.0,80.0
+D0706,intraoral – occlusal radiographic image – image capture only,,Diag / Img,100.0,80.0
+D0707,intraoral – periapical radiographic image – image capture only,,Diag / Img,100.0,80.0
+D0708,intraoral – bitewing radiographic image – image capture only,,Diag / Img,100.0,80.0
+D0709,intraoral – complete series of radiographic images – image capture only,,Diag / Img,100.0,80.0
+D0999,"unspecified diagnostic procedure, by report",,Diag / Img,100.0,80.0
+D1110,prophylaxis - adult,Adult Prophy,Prev,115.0,92.0
+D1120,prophylaxis - child,Child Prophy,Prev,90.0,72.0
+D1206,topical application of fluoride varnish,Fluoride Varnish,Prev,45.0,36.0
+D1208,topical application of fluoride – excluding varnish,,Prev,45.0,36.0
+D1310,nutritional counseling for control of dental disease,,Prev,100.0,80.0
+D1320,tobacco counseling for the control and prevention of oral disease,,Prev,100.0,80.0
+D1321,"counseling for the control and prevention of adverse oral, behavioral, and systemic health effects associated with high-risk substance use",,Prev,100.0,80.0
+D1330,oral hygiene instructions,,Prev,100.0,80.0
+D1351,sealant - per tooth,Sealant Per Tooth,Prev,60.0,48.0
+D1352,preventive resin restoration in a moderate to high caries risk patient – permanent tooth,,Prev,100.0,80.0
+D1353,sealant repair – per tooth,,Prev,60.0,48.0
+D1354,interim caries arresting medicament application – per tooth,,Prev,100.0,80.0
+D1355,caries preventive medicament application – per tooth,,Prev,100.0,80.0
+D1510,"space maintainer - fixed, unilateral – per quadrant",,Prev,100.0,80.0
+D1516,"space maintainer - fixed - bilateral, maxillary",,Prev,100.0,80.0
+D1517,"space maintainer - fixed - bilateral, mandibular",,Prev,100.0,80.0
+D1520,"space maintainer - removable, unilateral - per quadrant",,Prev,100.0,80.0
+D1526,"space maintainer - removable - bilateral, maxillary",,Prev,100.0,80.0
+D1527,"space maintainer - removable - bilateral, mandibular",,Prev,100.0,80.0
+D1551,re-cement or re-bond bilateral space maintainer - maxillary,,Prev,100.0,80.0
+D1552,re-cement or re-bond bilateral space maintainer - mandibular,,Prev,100.0,80.0
+D1553,re-cement or re-bond unilateral space maintainer - per quadrant,,Prev,100.0,80.0
+D1556,removal of fixed unilateral space maintainer - per quadrant,,Prev,100.0,80.0
+D1557,removal of fixed bilateral space maintainer - maxillary,,Prev,100.0,80.0
+D1558,removal of fixed bilateral space maintainer - mandibular,,Prev,100.0,80.0
+D1575,"distal shoe space maintainer - fixed, unilateral - per quadrant",,Prev,100.0,80.0
+D1999,"unspecified preventive procedure, by report",,Prev,100.0,80.0
+D2140,"amalgam - one surface, primary or permanent",,Rest / Prosth • Direct,250.0,200.0
+D2150,"amalgam - two surfaces, primary or permanent",,Rest / Prosth • Direct,250.0,200.0
+D2160,"amalgam - three surfaces, primary or permanent",,Rest / Prosth • Direct,250.0,200.0
+D2161,"amalgam - four or more surfaces, primary or permanent",,Rest / Prosth • Direct,250.0,200.0
+D2330,"resin-based composite - one surface, anterior",Composite Ant 1S,Rest / Prosth • Direct,180.0,144.0
+D2331,"resin-based composite - two surfaces, anterior",Composite Ant 2S,Rest / Prosth • Direct,215.0,172.0
+D2332,"resin-based composite - three surfaces, anterior",,Rest / Prosth • Direct,285.0,228.0
+D2335,resin-based composite - four or more surfaces or involving incisal angle (anterior),,Rest / Prosth • Direct,325.0,260.0
+D2390,"resin-based composite crown, anterior",,Rest / Prosth • Direct,1100.0,880.0
+D2391,"resin-based composite - one surface, posterior",Composite Post 1S,Rest / Prosth • Direct,185.0,148.0
+D2392,"resin-based composite - two surfaces, posterior",Composite Post 2S,Rest / Prosth • Direct,235.0,188.0
+D2393,"resin-based composite - three surfaces, posterior",,Rest / Prosth • Direct,285.0,228.0
+D2394,"resin-based composite - four or more surfaces, posterior",,Rest / Prosth • Direct,325.0,260.0
+D2410,gold foil - one surface,,Rest / Prosth • Direct,250.0,200.0
+D2420,gold foil - two surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2430,gold foil - three surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2510,inlay - metallic - one surface,,Rest / Prosth • Direct,250.0,200.0
+D2520,inlay - metallic - two surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2530,inlay - metallic - three or more surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2542,onlay - metallic - two surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2543,onlay - metallic - three surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2544,onlay - metallic - four or more surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2610,inlay - porcelain/ceramic - one surface,,Rest / Prosth • Direct,250.0,200.0
+D2620,inlay - porcelain/ceramic - two surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2630,inlay - porcelain/ceramic - three or more surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2642,onlay - porcelain/ceramic - two surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2643,onlay - porcelain/ceramic - three surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2644,onlay - porcelain/ceramic - four or more surfaces,,Rest / Prosth • Direct,250.0,200.0
+D2650,inlay - resin-based composite - one surface,,Rest / Prosth • Direct,185.0,148.0
+D2651,inlay - resin-based composite - two surfaces,,Rest / Prosth • Direct,235.0,188.0
+D2652,inlay - resin-based composite - three or more surfaces,,Rest / Prosth • Direct,285.0,228.0
+D2662,onlay - resin-based composite - two surfaces,,Rest / Prosth • Direct,235.0,188.0
+D2663,onlay - resin-based composite - three surfaces,,Rest / Prosth • Direct,285.0,228.0
+D2664,onlay - resin-based composite - four or more surfaces,,Rest / Prosth • Direct,325.0,260.0
+D2710,crown - resin-based composite (indirect),,Rest / Prosth • Direct,1100.0,880.0
+D2712,crown - ¾ resin-based composite (indirect),,Rest / Prosth • Direct,1100.0,880.0
+D2720,crown - resin with high noble metal,,Rest / Prosth • Direct,1100.0,880.0
+D2721,crown - resin with predominantly base metal,,Rest / Prosth • Direct,1100.0,880.0
+D2722,crown - resin with noble metal,,Rest / Prosth • Direct,1100.0,880.0
+D2740,crown - porcelain/ceramic,Crown Zirconia,Rest / Prosth • Fixed,1250.0,1000.0
+D2750,crown - porcelain fused to high noble metal,,Rest / Prosth • Direct,1250.0,1000.0
+D2751,crown - porcelain fused to predominantly base metal,,Rest / Prosth • Direct,1250.0,1000.0
+D2752,crown - porcelain fused to noble metal,Crown PFM Noble,Rest / Prosth • Fixed,1200.0,960.0
+D2753,crown - porcelain fused to titanium and titanium alloys,,Rest / Prosth • Direct,1250.0,1000.0
+D2780,crown - 3/4 cast high noble metal,,Rest / Prosth • Direct,1100.0,880.0
+D2781,crown - 3/4 cast predominantly base metal,,Rest / Prosth • Direct,1100.0,880.0
+D2782,crown - 3/4 cast noble metal,,Rest / Prosth • Direct,1100.0,880.0
+D2783,crown - 3/4 porcelain/ceramic,,Rest / Prosth • Direct,1250.0,1000.0
+D2790,crown - full cast high noble metal,,Rest / Prosth • Direct,1100.0,880.0
+D2791,crown - full cast predominantly base metal,,Rest / Prosth • Direct,1100.0,880.0
+D2792,crown - full cast noble metal,,Rest / Prosth • Direct,1100.0,880.0
+D2794,crown - titanium and titanium alloys,,Rest / Prosth • Direct,1100.0,880.0
+D2799,provisional crown– further treatment or completion of diagnosis necessary prior to final impression,,Rest / Prosth • Direct,1100.0,880.0
+D2910,"re-cement or re-bond inlay, onlay, veneer or partial coverage restoration",,Rest / Prosth • Direct,250.0,200.0
+D2915,re-cement or re-bond indirectly fabricated or prefabricated post and core,,Rest / Prosth • Direct,250.0,200.0
+D2920,re-cement or re-bond crown,,Rest / Prosth • Direct,1100.0,880.0
+D2921,"reattachment of tooth fragment, incisal edge or cusp",,Rest / Prosth • Direct,250.0,200.0
+D2928,prefabricated porcelain/ceramic crown – permanent tooth,,Rest / Prosth • Direct,1250.0,1000.0
+D2929,prefabricated porcelain/ceramic crown – primary tooth,,Rest / Prosth • Direct,1250.0,1000.0
+D2930,prefabricated stainless steel crown - primary tooth,,Rest / Prosth • Direct,300.0,240.0
+D2931,prefabricated stainless steel crown - permanent tooth,,Rest / Prosth • Direct,300.0,240.0
+D2932,prefabricated resin crown,,Rest / Prosth • Direct,1100.0,880.0
+D2933,prefabricated stainless steel crown with resin window,,Rest / Prosth • Direct,300.0,240.0
+D2934,prefabricated esthetic coated stainless steel crown - primary tooth,,Rest / Prosth • Direct,300.0,240.0
+D2940,protective restoration,,Rest / Prosth • Direct,250.0,200.0
+D2941,interim therapeutic restoration – primary dentition,,Rest / Prosth • Direct,250.0,200.0
+D2949,restorative foundation for an indirect restoration,,Rest / Prosth • Direct,250.0,200.0
+D2950,"core buildup, including any pins when required",Core Build Up,Rest / Prosth • Fixed,285.0,228.0
+D2951,"pin retention - per tooth, in addition to restoration",,Rest / Prosth • Direct,250.0,200.0
+D2952,"post and core in addition to crown, indirectly fabricated",,Rest / Prosth • Direct,1100.0,880.0
+D2953,each additional indirectly fabricated post - same tooth,,Rest / Prosth • Direct,250.0,200.0
+D2954,prefabricated post and core in addition to crown,,Rest / Prosth • Direct,1100.0,880.0
+D2955,post removal,,Rest / Prosth • Direct,250.0,200.0
+D2957,each additional prefabricated post - same tooth,,Rest / Prosth • Direct,250.0,200.0
+D2960,labial veneer (resin laminate) - direct,,Rest / Prosth • Direct,250.0,200.0
+D2961,labial veneer (resin laminate) - indirect,,Rest / Prosth • Direct,250.0,200.0
+D2962,labial veneer (porcelain laminate) - indirect,,Rest / Prosth • Direct,250.0,200.0
+D2971,additional procedures to construct new crown under existing partial denture framework,,Rest / Prosth • Direct,1100.0,880.0
+D2975,coping,,Rest / Prosth • Direct,250.0,200.0
+D2980,crown repair necessitated by restorative material failure,,Rest / Prosth • Direct,1100.0,880.0
+D2981,inlay repair necessitated by restorative material failure,,Rest / Prosth • Direct,250.0,200.0
+D2982,onlay repair necessitated by restorative material failure,,Rest / Prosth • Direct,250.0,200.0
+D2983,veneer repair necessitated by restorative material failure,,Rest / Prosth • Direct,250.0,200.0
+D2990,resin infiltration of incipient smooth surface lesions,,Rest / Prosth • Direct,250.0,200.0
+D2999,"unspecified restorative procedure, by report",,Rest / Prosth • Direct,250.0,200.0
+D3110,pulp cap - direct (excluding final restoration),,Endo,800.0,640.0
+D3120,pulp cap - indirect (excluding final restoration),,Endo,800.0,640.0
+D3220,therapeutic pulpotomy (excluding final restoration) - removal of pulp coronal to the dentinocemental junction and application of medicament,,Endo,800.0,640.0
+D3221,"pulpal debridement, primary and permanent teeth",,Endo,800.0,640.0
+D3222,partial pulpotomy for apexogenesis - permanent tooth with incomplete root development,,Endo,800.0,640.0
+D3230,"pulpal therapy (resorbable filling) - anterior, primary tooth (excluding final restoration)",,Endo,775.0,620.0
+D3240,"pulpal therapy (resorbable filling) - posterior, primary tooth (excluding final restoration)",,Endo,850.0,680.0
+D3310,"endodontic therapy, anterior tooth (excluding final restoration)",RCT Anterior,Endo,775.0,620.0
+D3320,"endodontic therapy, premolar tooth (excluding final restoration)",RCT Premolar,Endo,875.0,700.0
+D3330,"endodontic therapy, molar tooth (excluding final restoration)",RCT Molar,Endo,975.0,780.0
+D3331,treatment of root canal obstruction; non-surgical access,,Endo,800.0,640.0
+D3332,"incomplete endodontic therapy; inoperable, unrestorable or fractured tooth",,Endo,850.0,680.0
+D3333,internal root repair of perforation defects,,Endo,800.0,640.0
+D3346,retreatment of previous root canal therapy - anterior,,Endo,775.0,620.0
+D3347,retreatment of previous root canal therapy - premolar,,Endo,875.0,700.0
+D3348,retreatment of previous root canal therapy - molar,,Endo,975.0,780.0
+D3351,"apexification/recalcification – initial visit (apical closure/calcific repair of perforations, root resorption, etc.)",,Endo,800.0,640.0
+D3352,apexification/recalcification – interim medication replacement,,Endo,800.0,640.0
+D3353,"apexification/recalcification - final visit (includes completed root canal therapy - apical closure/calcific repair of perforations, root resorption, etc.)",,Endo,850.0,680.0
+D3355,pulpal regeneration - initial visit,,Endo,800.0,640.0
+D3356,pulpal regeneration - interim medication replacement,,Endo,800.0,640.0
+D3357,pulpal regeneration - completion of treatment,,Endo,800.0,640.0
+D3410,apicoectomy - anterior,Apicoectomy,Endo,850.0,680.0
+D3421,apicoectomy - premolar (first root),,Endo,850.0,680.0
+D3425,apicoectomy - molar (first root),,Endo,850.0,680.0
+D3426,apicoectomy (each additional root),,Endo,850.0,680.0
+D3427,periradicular surgery without apicoectomy,,Endo,850.0,680.0
+D3428,"bone graft in conjunction with periradicular surgery – per tooth, single site",,Endo,800.0,640.0
+D3429,bone graft in conjunction with periradicular surgery – each additional contiguous tooth in the same surgical site,,Endo,800.0,640.0
+D3430,retrograde filling - per root,,Endo,800.0,640.0
+D3431,biologic materials to aid in soft and osseous tissue regeneration in conjunction with periradicular surgery,,Endo,800.0,640.0
+D3432,"guided tissue regeneration, resorbable barrier, per site, in conjunction with periradicular surgery",,Endo,800.0,640.0
+D3450,root amputation - per root,,Endo,800.0,640.0
+D3460,endodontic endosseous implant,,Endo,800.0,640.0
+D3470,intentional re-implantation (including necessary splinting),,Endo,800.0,640.0
+D3471,surgical repair of root resorption - anterior,,Endo,800.0,640.0
+D3472,surgical repair of root resorption – premolar,,Endo,800.0,640.0
+D3473,surgical repair of root resorption – molar,,Endo,800.0,640.0
+D3501,surgical exposure of root surface without apicoectomy or repair of root resorption – anterior,,Endo,850.0,680.0
+D3502,surgical exposure of root surface without apicoectomy or repair of root resorption – premolar,,Endo,850.0,680.0
+D3503,surgical exposure of root surface without apicoectomy or repair of root resorption – molar,,Endo,850.0,680.0
+D3910,surgical procedure for isolation of tooth with rubber dam,,Endo,800.0,640.0
+D3920,"hemisection (including any root removal), not including root canal therapy",,Endo,850.0,680.0
+D3950,canal preparation and fitting of preformed dowel or post,,Endo,800.0,640.0
+D3999,"unspecified endodontic procedure, by report",,Endo,800.0,640.0
+D4210,gingivectomy or gingivoplasty - four or more contiguous teeth or tooth bounded spaces per quadrant,,Perio,500.0,400.0
+D4211,gingivectomy or gingivoplasty - one to three contiguous teeth or tooth bounded spaces per quadrant,,Perio,500.0,400.0
+D4212,"gingivectomy or gingivoplasty to allow access for restorative procedure, per tooth",,Perio,500.0,400.0
+D4230,anatomical crown exposure – four or more contiguous teeth or tooth bounded spaces per quadrant,,Perio,500.0,400.0
+D4231,anatomical crown exposure – one to three teeth or tooth bounded spaces per quadrant,,Perio,500.0,400.0
+D4240,"gingival flap procedure, including root planing - four or more contiguous teeth or tooth bounded spaces per quadrant",,Perio,500.0,400.0
+D4241,"gingival flap procedure, including root planing - one to three contiguous teeth or tooth bounded spaces per quadrant",,Perio,500.0,400.0
+D4245,apically positioned flap,,Perio,500.0,400.0
+D4249,clinical crown lengthening – hard tissue,,Perio,500.0,400.0
+D4260,osseous surgery (including elevation of a full thickness flap and closure) – four or more contiguous teeth or tooth bounded spaces per quadrant,,Perio,1200.0,960.0
+D4261,osseous surgery (including elevation of a full thickness flap and closure) – one to three contiguous teeth or tooth bounded spaces per quadrant,,Perio,1200.0,960.0
+D4263,bone replacement graft – retained natural tooth – first site in quadrant,,Perio,500.0,400.0
+D4264,bone replacement graft – retained natural tooth – each additional site in quadrant,,Perio,500.0,400.0
+D4265,biologic materials to aid in soft and osseous tissue regeneration,,Perio,1200.0,960.0
+D4266,"guided tissue regeneration - resorbable barrier, per site",,Perio,500.0,400.0
+D4267,"guided tissue regeneration - nonresorbable barrier, per site (includes membrane removal)",,Perio,500.0,400.0
+D4268,"surgical revision procedure, per tooth",,Perio,500.0,400.0
+D4270,pedicle soft tissue graft procedure,,Perio,500.0,400.0
+D4273,"autogenous connective tissue graft procedure (including donor and recipient surgical sites) first tooth, implant, or edentulous tooth position in graft",,Perio,500.0,400.0
+D4274,"mesial/distal wedge procedure, single tooth (when not performed in conjunction with surgical procedures in the same anatomical area)",,Perio,500.0,400.0
+D4275,"non-autogenous connective tissue graft (including recipient site and donor material) first tooth, implant, or edentulous tooth position in graft",,Perio,500.0,400.0
+D4276,"combined connective tissue and double pedicle graft, per tooth",,Perio,500.0,400.0
+D4277,"free soft tissue graft procedure (including recipient and donor surgical sites) first tooth, implant or edentulous tooth position in graft",,Perio,500.0,400.0
+D4278,"free soft tissue graft procedure (including recipient and donor surgical sites) each additional contiguous tooth, implant or edentulous tooth position in same graft site",,Perio,500.0,400.0
+D4283,"autogenous connective tissue graft procedure (including donor and recipient surgical sites) – each additional contiguous tooth, implant or edentulous tooth position in same graft site",,Perio,500.0,400.0
+D4285,"non-autogenous connective tissue graft procedure (including recipient surgical site and donor material) – each additional contiguous tooth, implant or edentulous tooth position in same",,Perio,500.0,400.0
+D4320,provisional splinting - intracoronal,,Perio,500.0,400.0
+D4321,provisional splinting - extracoronal,,Perio,500.0,400.0
+D4341,periodontal scaling and root planing - four or more teeth per quadrant,SRP Quad 4+,Perio,240.0,192.0
+D4342,periodontal scaling and root planing - one to three teeth per quadrant,SRP Quad 1-3,Perio,185.0,148.0
+D4346,"scaling in presence of generalized moderate or severe gingival inflammation – full mouth, after oral evaluation",Gingival Debridement,Prev,180.0,144.0
+D4355,full mouth debridement to enable a comprehensive oral evaluation and diagnosis on a subsequent visit,,Perio,500.0,400.0
+D4381,"localized delivery of antimicrobial agents via a controlled release vehicle into diseased crevicular tissue, per tooth",,Perio,500.0,400.0
+D4910,periodontal maintenance,Perio Maint,Perio,145.0,116.0
+D4920,unscheduled dressing change (by someone other than treating dentist or their staff),,Perio,500.0,400.0
+D4921,gingival irrigation – per quadrant,,Perio,500.0,400.0
+D4999,"unspecified periodontal procedure, by report",,Perio,500.0,400.0
+D5110,complete denture - maxillary,,Rest / Prosth • Remov,2050.0,1640.0
+D5120,complete denture - mandibular,,Rest / Prosth • Remov,2050.0,1640.0
+D5130,immediate denture - maxillary,,Rest / Prosth • Remov,2000.0,1600.0
+D5140,immediate denture - mandibular,,Rest / Prosth • Remov,2000.0,1600.0
+D5211,"maxillary partial denture – resin base (including, retentive/clasping materials, rests, and teeth)",,Rest / Prosth • Remov,2350.0,1880.0
+D5212,"mandibular partial denture – resin base (including, retentive/clasping materials, rests, and teeth)",,Rest / Prosth • Remov,2350.0,1880.0
+D5213,"maxillary partial denture - cast metal framework with resin denture bases (including retentive/clasping materials, rests and teeth)",,Rest / Prosth • Remov,2350.0,1880.0
+D5214,"mandibular partial denture - cast metal framework with resin denture bases (including retentive/clasping materials, rests and teeth)",,Rest / Prosth • Remov,2350.0,1880.0
+D5221,"immediate maxillary partial denture - resin base (including retentive/clasping materials, rests and teeth)",,Rest / Prosth • Remov,2350.0,1880.0
+D5222,"immediate mandibular partial denture - resin base (including retentive/clasping materials, rests and teeth)",,Rest / Prosth • Remov,2350.0,1880.0
+D5223,"immediate maxillary partial denture - cast metal framework with resin denture bases (including retentive/clasping materials, rests and teeth)",,Rest / Prosth • Remov,2350.0,1880.0
+D5224,"immediate mandibular partial denture - cast metal framework with resin denture bases (including retentive/clasping materials, rests and teeth)",,Rest / Prosth • Remov,2350.0,1880.0
+D5225,"maxillary partial denture - flexible base (including retentive/clasping materials, rests, and teeth)",,Rest / Prosth • Remov,2350.0,1880.0
+D5226,"mandibular partial denture - flexible base (including retentive/clasping materials, rests, and teeth)",,Rest / Prosth • Remov,2350.0,1880.0
+D5282,"removable unilateral partial denture – one piece cast metal (including retentive/clasping materials, rests, and teeth), maxillary",,Rest / Prosth • Remov,2350.0,1880.0
+D5283,"removable unilateral partial denture – one piece cast metal (including rententive/clasping materias, rests, and teeth), mandibular",,Rest / Prosth • Remov,2350.0,1880.0
+D5284,"removable unilateral partial denture – one piece flexible base (including retentive/clasping materials, rests, and teeth) – per quadrant",,Rest / Prosth • Remov,2350.0,1880.0
+D5286,"removable unilateral partial denture – one piece resin (including retentive/clasping materials, rests, and teeth) – per quadrant",,Rest / Prosth • Remov,2350.0,1880.0
+D5410,adjust complete denture - maxillary,,Rest / Prosth • Remov,2050.0,1640.0
+D5411,adjust complete denture - mandibular,,Rest / Prosth • Remov,2050.0,1640.0
+D5421,adjust partial denture - maxillary,,Rest / Prosth • Remov,2350.0,1880.0
+D5422,adjust partial denture - mandibular,,Rest / Prosth • Remov,2350.0,1880.0
+D5511,"repair broken complete denture base, mandibular",,Rest / Prosth • Remov,2050.0,1640.0
+D5512,"repair broken complete denture base, maxillary",,Rest / Prosth • Remov,2050.0,1640.0
+D5520,replace missing or broken teeth - complete denture (each tooth),,Rest / Prosth • Remov,2050.0,1640.0
+D5611,"repair resin partial denture base, mandibular",,Rest / Prosth • Remov,2350.0,1880.0
+D5612,"repair resin partial denture base, maxillary",,Rest / Prosth • Remov,2350.0,1880.0
+D5621,"repair cast partial framework, mandibular",,Rest / Prosth • Remov,1500.0,1200.0
+D5622,"repair cast partial framework, maxillary",,Rest / Prosth • Remov,1500.0,1200.0
+D5630,repair or replace broken retentive clasping materials – per tooth,,Rest / Prosth • Remov,1500.0,1200.0
+D5640,replace broken teeth - per tooth,,Rest / Prosth • Remov,1500.0,1200.0
+D5650,add tooth to existing partial denture,,Rest / Prosth • Remov,2350.0,1880.0
+D5660,add clasp to existing partial denture - per tooth,,Rest / Prosth • Remov,2350.0,1880.0
+D5670,replace all teeth and acrylic on cast metal framework (maxillary),,Rest / Prosth • Remov,1500.0,1200.0
+D5671,replace all teeth and acrylic on cast metal framework (mandibular),,Rest / Prosth • Remov,1500.0,1200.0
+D5710,rebase complete maxillary denture,,Rest / Prosth • Remov,2050.0,1640.0
+D5711,rebase complete mandibular denture,,Rest / Prosth • Remov,2050.0,1640.0
+D5720,rebase maxillary partial denture,,Rest / Prosth • Remov,2350.0,1880.0
+D5721,rebase mandibular partial denture,,Rest / Prosth • Remov,2350.0,1880.0
+D5730,reline complete maxillary denture (direct),,Rest / Prosth • Remov,2050.0,1640.0
+D5731,reline complete mandibular denture (direct),,Rest / Prosth • Remov,2050.0,1640.0
+D5740,reline maxillary partial denture (direct),,Rest / Prosth • Remov,2350.0,1880.0
+D5741,reline mandibular partial denture (direct),,Rest / Prosth • Remov,2350.0,1880.0
+D5750,reline complete maxillary denture (indirect),,Rest / Prosth • Remov,2050.0,1640.0
+D5751,reline complete mandibular denture (indirect),,Rest / Prosth • Remov,2050.0,1640.0
+D5760,reline maxillary partial denture (indirect),,Rest / Prosth • Remov,2350.0,1880.0
+D5761,reline mandibular partial denture (indirect),,Rest / Prosth • Remov,2350.0,1880.0
+D5810,interim complete denture (maxillary),,Rest / Prosth • Remov,2050.0,1640.0
+D5811,interim complete denture (mandibular),,Rest / Prosth • Remov,2050.0,1640.0
+D5820,"interim partial denture (including retentive/clasping materials, rests, and teeth), maxillary",,Rest / Prosth • Remov,2350.0,1880.0
+D5821,"interim partial denture (including retentive/clasping materials, rests, and teeth), mandibular",,Rest / Prosth • Remov,2350.0,1880.0
+D5850,"tissue conditioning, maxillary",,Rest / Prosth • Remov,1500.0,1200.0
+D5851,"tissue conditioning, mandibular",,Rest / Prosth • Remov,1500.0,1200.0
+D5862,"precision attachment, by report",,Rest / Prosth • Remov,1500.0,1200.0
+D5863,overdenture – complete maxillary,,Rest / Prosth • Remov,2050.0,1640.0
+D5864,overdenture – partial maxillary,,Rest / Prosth • Remov,2350.0,1880.0
+D5865,overdenture – complete mandibular,,Rest / Prosth • Remov,2050.0,1640.0
+D5866,overdenture – partial mandibular,,Rest / Prosth • Remov,2350.0,1880.0
+D5867,replacement of replaceable part of semi-precision or precision attachment (male or female component),,Rest / Prosth • Remov,1500.0,1200.0
+D5875,modification of removable prosthesis following implant surgery,,Rest / Prosth • Remov,1500.0,1200.0
+D5876,add metal substructure to acrylic full denture (per arch),,Rest / Prosth • Remov,2000.0,1600.0
+D5899,"unspecified removable prosthodontic procedure, by report",,Rest / Prosth • Remov,1500.0,1200.0
+D5911,facial moulage (sectional),,Rest / Prosth • Remov,1500.0,1200.0
+D5912,facial moulage (complete),,Rest / Prosth • Remov,1500.0,1200.0
+D5913,nasal prosthesis,,Rest / Prosth • Remov,1500.0,1200.0
+D5914,auricular prosthesis,,Rest / Prosth • Remov,1500.0,1200.0
+D5915,orbital prosthesis,,Rest / Prosth • Remov,1500.0,1200.0
+D5916,ocular prosthesis,,Rest / Prosth • Remov,1500.0,1200.0
+D5919,facial prosthesis,,Rest / Prosth • Remov,1500.0,1200.0
+D5922,nasal septal prosthesis,,Rest / Prosth • Remov,1500.0,1200.0
+D5923,"ocular prosthesis, interim",,Rest / Prosth • Remov,1500.0,1200.0
+D5924,cranial prosthesis,,Rest / Prosth • Remov,1500.0,1200.0
+D5925,facial augmentation implant prosthesis,,Rest / Prosth • Remov,1500.0,1200.0
+D5926,"nasal prosthesis, replacement",,Rest / Prosth • Remov,1500.0,1200.0
+D5927,"auricular prosthesis, replacement",,Rest / Prosth • Remov,1500.0,1200.0
+D5928,"orbital prosthesis, replacement",,Rest / Prosth • Remov,1500.0,1200.0
+D5929,"facial prosthesis, replacement",,Rest / Prosth • Remov,1500.0,1200.0
+D5931,"obturator prosthesis, surgical",,Rest / Prosth • Remov,1500.0,1200.0
+D5932,"obturator prosthesis, definitive",,Rest / Prosth • Remov,1500.0,1200.0
+D5933,"obturator prosthesis, modification",,Rest / Prosth • Remov,1500.0,1200.0
+D5934,mandibular resection prosthesis with guide flange,,Rest / Prosth • Remov,1500.0,1200.0
+D5935,mandibular resection prosthesis without guide flange,,Rest / Prosth • Remov,1500.0,1200.0
+D5936,"obturator prosthesis, interim",,Rest / Prosth • Remov,1500.0,1200.0
+D5937,trismus appliance (not for TMD treatment),,Rest / Prosth • Remov,1500.0,1200.0
+D5951,feeding aid,,Rest / Prosth • Remov,1500.0,1200.0
+D5952,"speech aid prosthesis, pediatric",,Rest / Prosth • Remov,1500.0,1200.0
+D5953,"speech aid prosthesis, adult",,Rest / Prosth • Remov,1500.0,1200.0
+D5954,palatal augmentation prosthesis,,Rest / Prosth • Remov,1500.0,1200.0
+D5955,"palatal lift prosthesis, definitive",,Rest / Prosth • Remov,1500.0,1200.0
+D5958,"palatal lift prosthesis, interim",,Rest / Prosth • Remov,1500.0,1200.0
+D5959,"palatal lift prosthesis, modification",,Rest / Prosth • Remov,1500.0,1200.0
+D5960,"speech aid prosthesis, modification",,Rest / Prosth • Remov,1500.0,1200.0
+D5982,surgical stent,,Rest / Prosth • Remov,1500.0,1200.0
+D5983,radiation carrier,,Rest / Prosth • Remov,1500.0,1200.0
+D5984,radiation shield,,Rest / Prosth • Remov,1500.0,1200.0
+D5985,radiation cone locator,,Rest / Prosth • Remov,1500.0,1200.0
+D5986,fluoride gel carrier,,Rest / Prosth • Remov,1500.0,1200.0
+D5987,commissure splint,,Rest / Prosth • Remov,1500.0,1200.0
+D5988,surgical splint,,Rest / Prosth • Remov,1500.0,1200.0
+D5991,vesiculobullous disease medicament carrier,,Rest / Prosth • Remov,1500.0,1200.0
+D5992,"adjust maxillofacial prosthetic appliance, by report",,Rest / Prosth • Remov,1500.0,1200.0
+D5993,"maintenance and cleaning of a maxillofacial prosthesis (extra- or intra-oral) other than required adjustments, by report",,Rest / Prosth • Remov,1500.0,1200.0
+D5994,periodontal medicament carrier with peripheral seal – laboratory processed,,Rest / Prosth • Remov,1500.0,1200.0
+D5995,periodontal medicament carrier with peripheral seal – laboratory processed – maxillary,,Rest / Prosth • Remov,1500.0,1200.0
+D5996,periodontal medicament carrier with peripheral seal – laboratory processed – mandibular,,Rest / Prosth • Remov,1500.0,1200.0
+D5999,"unspecified maxillofacial prosthesis, by report",,Rest / Prosth • Remov,1500.0,1200.0
+D6010,surgical placement of implant body: endosteal implant,Implant Placement,Implants,2300.0,1840.0
+D6011,surgical access to an implant body (second stage implant surgery),,Implants,1500.0,1200.0
+D6012,surgical placement of interim implant body for transitional prosthesis: endosteal implant,,Implants,2300.0,1840.0
+D6013,surgical placement of mini implant,,Implants,2300.0,1840.0
+D6040,surgical placement: eposteal implant,,Implants,2300.0,1840.0
+D6050,surgical placement: transosteal implant,,Implants,2300.0,1840.0
+D6051,interim abutment,,Implants,1200.0,960.0
+D6052,semi-precision attachment abutment,,Implants,1200.0,960.0
+D6055,connecting bar – implant supported or abutment supported,,Implants,680.0,544.0
+D6056,prefabricated abutment – includes modification and placement,Custom Abutment,Implants,680.0,544.0
+D6057,custom fabricated abutment – includes placement,,Implants,1200.0,960.0
+D6058,abutment supported porcelain/ceramic crown,,Implants,1250.0,1000.0
+D6059,abutment supported porcelain fused to metal crown (high noble metal),,Implants,1250.0,1000.0
+D6060,abutment supported porcelain fused to metal crown (predominantly base metal),,Implants,1250.0,1000.0
+D6061,abutment supported porcelain fused to metal crown (noble metal),,Implants,1250.0,1000.0
+D6062,abutment supported cast metal crown (high noble metal),,Implants,1100.0,880.0
+D6063,abutment supported cast metal crown (predominantly base metal),,Implants,1100.0,880.0
+D6064,abutment supported cast metal crown (noble metal),,Implants,1100.0,880.0
+D6065,implant supported porcelain/ceramic crown,Implant Crown,Implants,1550.0,1240.0
+D6066,implant supported crown - porcelain fused to high noble alloys,,Implants,1550.0,1240.0
+D6067,implant supported crown - high noble alloys,,Implants,1550.0,1240.0
+D6068,abutment supported retainer for porcelain/ceramic FPD,,Implants,1250.0,1000.0
+D6069,abutment supported retainer for porcelain fused to metal FPD (high noble metal),,Implants,1250.0,1000.0
+D6070,abutment supported retainer for porcelain fused to metal FPD (predominantly base metal),,Implants,1250.0,1000.0
+D6071,abutment supported retainer for porcelain fused to metal FPD (noble metal),,Implants,1250.0,1000.0
+D6072,abutment supported retainer for cast metal FPD (high noble metal),,Implants,1100.0,880.0
+D6073,abutment supported retainer for cast metal FPD (predominantly base metal),,Implants,1100.0,880.0
+D6074,abutment supported retainer for cast metal FPD (noble metal),,Implants,1100.0,880.0
+D6075,implant supported retainer for ceramic FPD,,Implants,1500.0,1200.0
+D6076,implant supported retainer for FPD - porcelain fused to high noble alloys,,Implants,1500.0,1200.0
+D6077,implant supported retainer for metal FPD - high noble alloys,,Implants,1500.0,1200.0
+D6080,"implant maintenance procedures when prostheses are removed and reinserted, including cleansing of prostheses and abutments",,Implants,680.0,544.0
+D6081,"scaling and debridement in the presence of inflammation or mucositis of a single implant, including cleaning of the implant surfaces, without flap entry and closure",,Implants,1500.0,1200.0
+D6082,implant supported crown - porcelain fused to predominantly base alloys,,Implants,1550.0,1240.0
+D6083,implant supported crown - porcelain fused to noble alloys,,Implants,1550.0,1240.0
+D6084,implant supported crown - porcelain fused to titanium and titanium alloys,,Implants,1550.0,1240.0
+D6085,provisional implant crown,,Implants,1550.0,1240.0
+D6086,implant supported crown - predominantly base alloys,,Implants,1550.0,1240.0
+D6087,implant supported crown - noble alloys,,Implants,1550.0,1240.0
+D6088,implant supported crown - titanium and titanium alloys,,Implants,1550.0,1240.0
+D6090,"repair implant supported prosthesis, by report",,Implants,1500.0,1200.0
+D6091,"replacement of replaceable part of semi-precision or precision attachment (male or female component) of implant/abutment supported prosthesis, per attachment",,Implants,2300.0,1840.0
+D6092,re-cement or re-bond implant/abutment supported crown,,Implants,1550.0,1240.0
+D6093,re-cement or re-bond implant/abutment supported fixed partial denture,,Implants,680.0,544.0
+D6094,abutment supported crown - titanium and titanium alloys,,Implants,1100.0,880.0
+D6095,"repair implant abutment, by report",,Implants,680.0,544.0
+D6096,remove broken implant retaining screw,,Implants,1500.0,1200.0
+D6097,abutment supported crown - porcelain fused to titanium and titanium alloys,,Implants,1250.0,1000.0
+D6098,implant supported retainer - porcelain fused to predominantly base alloys,,Implants,1500.0,1200.0
+D6099,implant supported retainer for FPD - porcelain fused to noble alloys,,Implants,1500.0,1200.0
+D6100,"implant removal, by report",,Implants,1500.0,1200.0
+D6101,"debridement of a peri-implant defect or defects surrounding a single implant, and surface cleaning of the exposed implant surfaces, including flap entry and closure",,Implants,1500.0,1200.0
+D6102,"debridement and osseous contouring of a peri-implant defect or defects surrounding a single implant and includes surface cleaning of the exposed implant surfaces, including flap entry",,Implants,1500.0,1200.0
+D6103,bone graft for repair of peri-implant defect – does not include flap entry and closure,,Implants,1500.0,1200.0
+D6104,bone graft at time of implant placement,Sinus Lift,Implants,1350.0,1080.0
+D6110,implant /abutment supported removable denture for edentulous arch – maxillary,,Implants,680.0,544.0
+D6111,implant /abutment supported removable denture for edentulous arch – mandibular,,Implants,680.0,544.0
+D6112,implant /abutment supported removable denture for partially edentulous arch – maxillary,,Implants,680.0,544.0
+D6113,implant /abutment supported removable denture for partially edentulous arch – mandibular,,Implants,680.0,544.0
+D6114,implant /abutment supported fixed denture for edentulous arch – maxillary,,Implants,680.0,544.0
+D6115,implant /abutment supported fixed denture for edentulous arch – mandibular,,Implants,680.0,544.0
+D6116,implant /abutment supported fixed denture for partially edentulous arch – maxillary,,Implants,680.0,544.0
+D6117,implant /abutment supported fixed denture for partially edentulous arch – mandibular,,Implants,680.0,544.0
+D6118,implant/abutment supported interim fixed denture for edentulous arch – mandibular,,Implants,680.0,544.0
+D6119,implant/abutment supported interim fixed denture for edentulous arch – maxillary,,Implants,680.0,544.0
+D6120,implant supported retainer – porcelain fused to titanium and titanium alloys,,Implants,1500.0,1200.0
+D6121,implant supported retainer for metal FPD – predominantly base alloys,,Implants,1500.0,1200.0
+D6122,implant supported retainer for metal FPD – noble alloys,,Implants,1500.0,1200.0
+D6123,implant supported retainer for metal FPD – titanium and titanium alloys,,Implants,1500.0,1200.0
+D6190,"radiographic/surgical implant index, by report",,Implants,1500.0,1200.0
+D6191,semi-precision abutment – placement,,Implants,1200.0,960.0
+D6192,semi-precision attachment – placement,,Implants,1200.0,960.0
+D6194,abutment supported retainer crown for FPD – titanium and titanium alloys,,Implants,1100.0,880.0
+D6195,abutment supported retainer - porcelain fused to titanium and titanium alloys,,Implants,1250.0,1000.0
+D6199,"unspecified implant procedure, by report",,Implants,1500.0,1200.0
+D6205,pontic - indirect resin based composite,,Rest / Prosth • Fixed,1100.0,880.0
+D6210,pontic - cast high noble metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6211,pontic - cast predominantly base metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6212,pontic - cast noble metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6214,pontic - titanium and titanium alloys,,Rest / Prosth • Fixed,1100.0,880.0
+D6240,pontic - porcelain fused to high noble metal,,Rest / Prosth • Fixed,1250.0,1000.0
+D6241,pontic - porcelain fused to predominantly base metal,,Rest / Prosth • Fixed,1250.0,1000.0
+D6242,pontic - porcelain fused to noble metal,,Rest / Prosth • Fixed,1250.0,1000.0
+D6243,pontic - porcelain fused to titanium and titanium alloys,,Rest / Prosth • Fixed,1250.0,1000.0
+D6245,pontic - porcelain/ceramic,,Rest / Prosth • Fixed,1250.0,1000.0
+D6250,pontic - resin with high noble metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6251,pontic - resin with predominantly base metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6252,pontic - resin with noble metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6253,provisional pontic - further treatment or completion of diagnosis necessary prior to final  impression,,Rest / Prosth • Fixed,1100.0,880.0
+D6545,retainer - cast metal for resin bonded fixed prosthesis,,Rest / Prosth • Fixed,1100.0,880.0
+D6548,retainer - porcelain/ceramic for resin bonded fixed prosthesis,,Rest / Prosth • Fixed,1250.0,1000.0
+D6549,retainer – for resin bonded fixed prosthesis,,Rest / Prosth • Fixed,1100.0,880.0
+D6600,"retainer inlay - porcelain/ceramic, two surfaces",,Rest / Prosth • Fixed,1250.0,1000.0
+D6601,"retainer inlay - porcelain/ceramic, three or more surfaces",,Rest / Prosth • Fixed,1250.0,1000.0
+D6602,"retainer inlay - cast high noble metal, two surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6603,"retainer inlay - cast high noble metal, three or more surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6604,"retainer inlay - cast predominantly base metal, two surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6605,"retainer inlay - cast predominantly base metal, three or more surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6606,"retainer inlay - cast noble metal, two surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6607,"retainer inlay - cast noble metal, three or more surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6608,"retainer onlay - porcelain/ceramic, two surfaces",,Rest / Prosth • Fixed,1250.0,1000.0
+D6609,"retainer onlay - porcelain/ceramic, three or more surfaces",,Rest / Prosth • Fixed,1250.0,1000.0
+D6610,"retainer onlay - cast high noble metal, two surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6611,"retainer onlay - cast high noble metal, three or more surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6612,"retainer onlay - cast predominantly base metal, two surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6613,"retainer onlay - cast predominantly base metal, three or more surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6614,"retainer onlay - cast noble metal, two surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6615,"retainer onlay - cast noble metal, three or more surfaces",,Rest / Prosth • Fixed,1100.0,880.0
+D6624,retainer inlay - titanium,,Rest / Prosth • Fixed,1100.0,880.0
+D6634,retainer onlay - titanium,,Rest / Prosth • Fixed,1100.0,880.0
+D6710,retainer crown - indirect resin based composite,,Rest / Prosth • Fixed,1100.0,880.0
+D6720,retainer crown - resin with high noble metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6721,retainer crown - resin with predominantly base metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6722,retainer crown - resin with noble metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6740,retainer crown - porcelain/ceramic,,Rest / Prosth • Fixed,1250.0,1000.0
+D6750,retainer crown - porcelain fused to high noble metal,,Rest / Prosth • Fixed,1250.0,1000.0
+D6751,retainer crown - porcelain fused to predominantly base metal,,Rest / Prosth • Fixed,1250.0,1000.0
+D6752,retainer crown - porcelain fused to noble metal,,Rest / Prosth • Fixed,1250.0,1000.0
+D6753,retainer crown - porcelain fused to titanium and titanium alloys,,Rest / Prosth • Fixed,1250.0,1000.0
+D6780,retainer crown - 3/4 cast high noble metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6781,retainer crown - 3/4 cast predominantly base metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6782,retainer crown - 3/4 cast noble metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6783,retainer crown - 3/4 porcelain/ceramic,,Rest / Prosth • Fixed,1250.0,1000.0
+D6784,retainer crown ¾ - titanium and titanium alloys,,Rest / Prosth • Fixed,1100.0,880.0
+D6790,retainer crown - full cast high noble metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6791,retainer crown - full cast predominantly base metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6792,retainer crown - full cast noble metal,,Rest / Prosth • Fixed,1100.0,880.0
+D6793,provisional retainer crown - further treatment or completion of diagnosis necessary prior to final impression,,Rest / Prosth • Fixed,1100.0,880.0
+D6794,retainer crown - titanium and titanium alloys,,Rest / Prosth • Fixed,1100.0,880.0
+D6920,connector bar,,Rest / Prosth • Fixed,1200.0,960.0
+D6930,re-cement or re-bond fixed partial denture,,Rest / Prosth • Fixed,1200.0,960.0
+D6940,stress breaker,,Rest / Prosth • Fixed,1200.0,960.0
+D6950,precision attachment,,Rest / Prosth • Fixed,1200.0,960.0
+D6980,fixed partial denture repair necessitated by restorative material failure,,Rest / Prosth • Fixed,1200.0,960.0
+D6985,"pediatric partial denture, fixed",,Rest / Prosth • Fixed,1200.0,960.0
+D6999,"unspecified fixed prosthodontic procedure, by report",,Rest / Prosth • Fixed,1200.0,960.0
+D7111,"extraction, coronal remnants – primary tooth",,Surgery,355.0,284.0
+D7140,"extraction, erupted tooth or exposed root (elevation and/or forceps removal)",Simple Extraction,Surgery,225.0,180.0
+D7210,"extraction, erupted tooth requiring removal of bone and/or sectioning of tooth, and including elevation of mucoperiosteal flap if indicated",Surgical Extraction,Surgery,355.0,284.0
+D7220,removal of impacted tooth - soft tissue,,Surgery,475.0,380.0
+D7230,removal of impacted tooth - partially bony,,Surgery,525.0,420.0
+D7240,removal of impacted tooth - completely bony,3rd Molar Imp Soft,Surgery,475.0,380.0
+D7241,"removal of impacted tooth - completely bony, with unusual surgical complications",3rd Molar Imp Full,Surgery,575.0,460.0
+D7250,removal of residual tooth roots (cutting procedure),,Surgery,500.0,400.0
+D7251,coronectomy – intentional partial tooth removal,,Surgery,500.0,400.0
+D7260,oroantral fistula closure,,Surgery,500.0,400.0
+D7261,primary closure of a sinus perforation,,Surgery,500.0,400.0
+D7270,tooth re-implantation and/or stabilization of accidentally evulsed or displaced tooth,,Surgery,500.0,400.0
+D7272,tooth transplantation (includes re-implantation from one site to another and splinting and/or stabilization),,Surgery,500.0,400.0
+D7280,exposure of an unerupted tooth,,Surgery,500.0,400.0
+D7282,mobilization of erupted or malpositioned tooth to aid eruption,,Surgery,500.0,400.0
+D7283,placement of device to facilitate eruption of impacted tooth,,Surgery,575.0,460.0
+D7285,"incisional biopsy of oral tissue-hard (bone, tooth)",,Surgery,500.0,400.0
+D7286,incisional biopsy of oral tissue-soft,,Surgery,500.0,400.0
+D7287,exfoliative cytological sample collection,,Surgery,500.0,400.0
+D7288,brush biopsy - transepithelial sample collection,,Surgery,500.0,400.0
+D7290,surgical repositioning of teeth,,Surgery,500.0,400.0
+D7291,"transseptal fiberotomy/supra crestal fiberotomy, by report",,Surgery,500.0,400.0
+D7292,placement of temporary anchorage device [screw retained plate] requiring flap; includes device removal,,Surgery,500.0,400.0
+D7293,placement of temporary anchorage device requiring flap; includes device removal,,Surgery,500.0,400.0
+D7294,placement of temporary anchorage device without flap; includes device removal,,Surgery,500.0,400.0
+D7295,harvest of bone for use in autogenous grafting procedure,,Surgery,500.0,400.0
+D7296,"corticotomy – one to three teeth or tooth spaces, per quadrant",,Surgery,500.0,400.0
+D7297,"corticotomy – four or more teeth or tooth spaces, per quadrant",,Surgery,500.0,400.0
+D7310,"alveoloplasty in conjunction with extractions - four or more teeth or tooth spaces, per quadrant",Alveoloplasty,Surgery,385.0,308.0
+D7311,"alveoloplasty in conjunction with extractions - one to three teeth or tooth spaces, per quadrant",,Surgery,355.0,284.0
+D7320,"alveoloplasty not in conjunction with extractions - four or more teeth or tooth spaces, per quadrant",,Surgery,355.0,284.0
+D7321,"alveoloplasty not in conjunction with extractions - one to three teeth or tooth spaces, per quadrant",,Surgery,355.0,284.0
+D7340,vestibuloplasty - ridge extension (secondary epithelialization),,Surgery,500.0,400.0
+D7350,"vestibuloplasty - ridge extension (including soft tissue grafts, muscle reattachment, revision of soft tissue attachment and management of hypertrophied and hyperplastic tissue)",,Surgery,500.0,400.0
+D7410,excision of benign lesion up to 1.25 cm,,Surgery,500.0,400.0
+D7411,excision of benign lesion greater than 1.25 cm,,Surgery,500.0,400.0
+D7412,"excision of benign lesion, complicated",,Surgery,500.0,400.0
+D7413,excision of malignant lesion up to 1.25 cm,,Surgery,500.0,400.0
+D7414,excision of malignant lesion greater than 1.25 cm,,Surgery,500.0,400.0
+D7415,"excision of malignant lesion, complicated",,Surgery,500.0,400.0
+D7440,excision of malignant tumor - lesion diameter up to 1.25 cm,,Surgery,500.0,400.0
+D7441,excision of malignant tumor - lesion diameter greater than 1.25 cm,,Surgery,500.0,400.0
+D7450,removal of benign odontogenic cyst or tumor - lesion diameter up to 1.25 cm,,Surgery,500.0,400.0
+D7451,removal of benign odontogenic cyst or tumor - lesion diameter greater than 1.25 cm,,Surgery,500.0,400.0
+D7460,removal of benign nonodontogenic cyst or tumor - lesion diameter up to 1.25 cm,,Surgery,500.0,400.0
+D7461,removal of benign nonodontogenic cyst or tumor - lesion diameter greater than 1.25 cm,,Surgery,500.0,400.0
+D7465,"destruction of lesion(s) by physical or chemical method, by report",,Surgery,500.0,400.0
+D7471,removal of lateral exostosis (maxilla or mandible),,Surgery,500.0,400.0
+D7472,removal of torus palatinus,,Surgery,500.0,400.0
+D7473,removal of torus mandibularis,,Surgery,500.0,400.0
+D7485,reduction of osseous tuberosity,,Surgery,500.0,400.0
+D7490,radical resection of maxilla or mandible,,Surgery,500.0,400.0
+D7510,incision and drainage of abscess - intraoral soft tissue,,Surgery,500.0,400.0
+D7511,incision and drainage of abscess - intraoral soft tissue - complicated (includes drainage of multiple fascial spaces),,Surgery,500.0,400.0
+D7520,incision and drainage of abscess - extraoral soft tissue,,Surgery,500.0,400.0
+D7521,incision and drainage of abscess - extraoral soft tissue - complicated (includes drainage of multiple fascial spaces),,Surgery,500.0,400.0
+D7530,"removal of foreign body from mucosa, skin, or subcutaneous alveolar tissue",,Surgery,500.0,400.0
+D7540,"removal of reaction producing foreign bodies, musculoskeletal system",,Surgery,500.0,400.0
+D7550,partial ostectomy/sequestrectomy for removal of non-vital bone,,Surgery,500.0,400.0
+D7560,maxillary sinusotomy for removal of tooth fragment or foreign body,,Surgery,500.0,400.0
+D7610,"maxilla - open reduction (teeth immobilized, if present)",,Surgery,500.0,400.0
+D7620,"maxilla - closed reduction (teeth immobilized, if present)",,Surgery,500.0,400.0
+D7630,"mandible - open reduction (teeth immobilized, if present)",,Surgery,500.0,400.0
+D7640,"mandible - closed reduction (teeth immobilized, if present)",,Surgery,500.0,400.0
+D7650,malar and/or zygomatic arch - open reduction,,Surgery,500.0,400.0
+D7660,malar and/or zygomatic arch - closed reduction,,Surgery,500.0,400.0
+D7670,"alveolus - closed reduction, may include stabilization of teeth",,Surgery,500.0,400.0
+D7671,"alveolus - open reduction, may include stabilization of teeth",,Surgery,500.0,400.0
+D7680,facial bones - complicated reduction with fixation and multiple surgical approaches,,Surgery,500.0,400.0
+D7710,maxilla - open reduction,,Surgery,500.0,400.0
+D7720,maxilla - closed reduction,,Surgery,500.0,400.0
+D7730,mandible - open reduction,,Surgery,500.0,400.0
+D7740,mandible - closed reduction,,Surgery,500.0,400.0
+D7750,malar and/or zygomatic arch - open reduction,,Surgery,500.0,400.0
+D7760,malar and/or zygomatic arch - closed reduction,,Surgery,500.0,400.0
+D7770,alveolus - open reduction stabilization of teeth,,Surgery,500.0,400.0
+D7771,"alveolus, closed reduction stabilization of teeth",,Surgery,500.0,400.0
+D7780,facial bones - complicated reduction with fixation and multiple approaches,,Surgery,500.0,400.0
+D7810,open reduction of dislocation,,Surgery,500.0,400.0
+D7820,closed reduction of dislocation,,Surgery,500.0,400.0
+D7830,manipulation under anesthesia,,Surgery,500.0,400.0
+D7840,condylectomy,,Surgery,500.0,400.0
+D7850,"surgical discectomy, with/without implant",,Surgery,500.0,400.0
+D7852,disc repair,,Surgery,500.0,400.0
+D7854,synovectomy,,Surgery,500.0,400.0
+D7856,myotomy,,Surgery,500.0,400.0
+D7858,joint reconstruction,,Surgery,500.0,400.0
+D7860,arthrotomy,,Surgery,500.0,400.0
+D7865,arthroplasty,,Surgery,500.0,400.0
+D7870,arthrocentesis,,Surgery,500.0,400.0
+D7871,non-arthroscopic lysis and lavage,,Surgery,500.0,400.0
+D7872,"arthroscopy - diagnosis, with or without biopsy",,Surgery,500.0,400.0
+D7873,arthroscopy: lavage and lysis of adhesions,,Surgery,500.0,400.0
+D7874,arthroscopy: disc repositioning and stabilization,,Surgery,500.0,400.0
+D7875,arthroscopy: synovectomy,,Surgery,500.0,400.0
+D7876,arthroscopy: discectomy,,Surgery,500.0,400.0
+D7877,arthroscopy: debridement,,Surgery,500.0,400.0
+D7880,"occlusal orthotic device, by report",,Surgery,500.0,400.0
+D7881,occlusal orthotic device adjustment,,Surgery,500.0,400.0
+D7899,"unspecified TMD therapy, by report",,Surgery,500.0,400.0
+D7910,suture of recent small wounds up to 5 cm,,Surgery,500.0,400.0
+D7911,complicated suture - up to 5 cm,,Surgery,500.0,400.0
+D7912,complicated suture - greater than 5 cm,,Surgery,500.0,400.0
+D7920,"skin graft (identify defect covered, location and type of graft)",,Surgery,500.0,400.0
+D7921,collection and application of autologous blood concentrate product,,Surgery,500.0,400.0
+D7922,"placement of intra-socket biological dressing to aid in hemostasis or clot stabilization, per site",,Surgery,500.0,400.0
+D7940,osteoplasty - for orthognathic deformities,,Surgery,500.0,400.0
+D7941,osteotomy - mandibular rami,,Surgery,500.0,400.0
+D7943,osteotomy - mandibular rami with bone graft; includes obtaining the graft,,Surgery,500.0,400.0
+D7944,osteotomy - segmented or subapical,,Surgery,500.0,400.0
+D7945,osteotomy - body of mandible,,Surgery,500.0,400.0
+D7946,LeFort I (maxilla - total),,Surgery,500.0,400.0
+D7947,LeFort I (maxilla - segmented),,Surgery,500.0,400.0
+D7948,LeFort II or LeFort III (osteoplasty of facial bones for midface hypoplasia or retrusion) - without bone graft,,Surgery,500.0,400.0
+D7949,LeFort II or LeFort III - with bone graft,,Surgery,500.0,400.0
+D7950,"osseous, osteoperiosteal, or cartilage graft of the mandible or maxilla - autogenous or nonautogenous, by report",,Surgery,500.0,400.0
+D7951,sinus augmentation with bone or bone substitutes via a lateral open approach,,Surgery,500.0,400.0
+D7952,sinus augmentation via a vertical approach,,Surgery,500.0,400.0
+D7953,bone replacement graft for ridge preservation - per site,,Surgery,500.0,400.0
+D7955,repair of maxillofacial soft and/or hard tissue defect,,Surgery,500.0,400.0
+D7960,frenulectomy - also known as frenectomy or frenotomy - separate procedure not incidental to another procedure,Frenectomy,Surgery,450.0,360.0
+D7961,buccal / labial frenectomy (frenulectomy),,Surgery,500.0,400.0
+D7962,lingual frenectomy (frenulectomy),,Surgery,500.0,400.0
+D7963,frenuloplasty,,Surgery,500.0,400.0
+D7970,excision of hyperplastic tissue - per arch,,Surgery,500.0,400.0
+D7971,excision of pericoronal gingiva,,Surgery,500.0,400.0
+D7972,surgical reduction of fibrous tuberosity,,Surgery,500.0,400.0
+D7979,non – surgical sialolithotomy,,Surgery,500.0,400.0
+D7980,surgical sialolithotomy,,Surgery,500.0,400.0
+D7981,"excision of salivary gland, by report",,Surgery,500.0,400.0
+D7982,sialodochoplasty,,Surgery,500.0,400.0
+D7983,closure of salivary fistula,,Surgery,500.0,400.0
+D7990,emergency tracheotomy,,Surgery,500.0,400.0
+D7991,coronoidectomy,,Surgery,500.0,400.0
+D7993,surgical placement of craniofacial implant – extra oral,,Surgery,500.0,400.0
+D7994,surgical placement: zygomatic implant,,Surgery,500.0,400.0
+D7995,"synthetic graft - mandible or facial bones, by report",,Surgery,500.0,400.0
+D7996,"implant-mandible for augmentation purposes (excluding alveolar ridge), by report",,Surgery,500.0,400.0
+D7997,"appliance removal (not by dentist who placed appliance), includes removal of archbar",,Surgery,500.0,400.0
+D7998,intraoral placement of a fixation device not in conjunction with a fracture,,Surgery,500.0,400.0
+D7999,"unspecified oral surgery procedure, by report",,Surgery,500.0,400.0
+D8010,limited orthodontic treatment of the primary dentition,,Ortho,2500.0,2000.0
+D8020,limited orthodontic treatment of the transitional dentition,,Ortho,2500.0,2000.0
+D8030,limited orthodontic treatment of the adolescent dentition,,Ortho,2500.0,2000.0
+D8040,limited orthodontic treatment of the adult dentition,,Ortho,2500.0,2000.0
+D8050,interceptive orthodontic treatment of the primary dentition,,Ortho,2500.0,2000.0
+D8060,interceptive orthodontic treatment of the transitional dentition,,Ortho,2500.0,2000.0
+D8070,comprehensive orthodontic treatment of the transitional dentition,,Ortho,6500.0,5200.0
+D8080,comprehensive orthodontic treatment of the adolescent dentition,Comp Braces Child,Ortho,5500.0,4400.0
+D8090,comprehensive orthodontic treatment of the adult dentition,Comp Braces Adult,Ortho,6500.0,5200.0
+D8210,removable appliance therapy,,Ortho,500.0,400.0
+D8220,fixed appliance therapy,,Ortho,500.0,400.0
+D8660,pre-orthodontic treatment examination to monitor growth and development,,Ortho,500.0,400.0
+D8670,periodic orthodontic treatment visit,,Ortho,500.0,400.0
+D8680,"orthodontic retention (removal of appliances, construction and placement of retainer(s))",,Ortho,500.0,400.0
+D8681,removable orthodontic retainer adjustment,,Ortho,500.0,400.0
+D8690,orthodontic treatment (alternative billing to a contract fee),,Ortho,500.0,400.0
+D8695,removal of fixed orthodontic appliances for reasons other than completion of treatment,,Ortho,500.0,400.0
+D8696,repair of orthodontic appliance – maxillary,,Ortho,500.0,400.0
+D8697,repair of orthodontic appliance – mandibular,,Ortho,500.0,400.0
+D8698,re-cement or re-bond fixed retainer – maxillary,,Ortho,500.0,400.0
+D8699,re-cement or re-bond fixed retainer – mandibular,,Ortho,500.0,400.0
+D8701,"repair of fixed retainer, includes reattachment – maxillary",,Ortho,500.0,400.0
+D8702,"repair of fixed retainer, includes reattachment – mandibular",,Ortho,500.0,400.0
+D8703,replacement of lost or broken retainer – maxillary,,Ortho,500.0,400.0
+D8704,replacement of lost or broken retainer – mandibular,,Ortho,500.0,400.0
+D8999,"unspecified orthodontic procedure, by report",,Ortho,500.0,400.0
+D9110,palliative (emergency) treatment of dental pain - minor procedure,Palliative,Adjunct,110.0,88.0
+D9120,fixed partial denture sectioning,,Adjunct,100.0,80.0
+D9130,temporomandibular joint dysfunction – non-invasive physical therapies,,Adjunct,100.0,80.0
+D9210,local anesthesia not in conjunction with operative or surgical procedures,,Adjunct,100.0,80.0
+D9211,regional block anesthesia,,Adjunct,100.0,80.0
+D9212,trigeminal division block anesthesia,,Adjunct,100.0,80.0
+D9215,local anesthesia in conjunction with operative or surgical procedures,,Adjunct,100.0,80.0
+D9219,"evaluation for moderate sedation, deep sedation or general anesthesia",,Adjunct,175.0,140.0
+D9222,deep sedation/general anesthesia – first 15 minutes,,Adjunct,175.0,140.0
+D9223,deep sedation/general anesthesia – each subsequent 15 minute increment,IV Sedation 15m,Adjunct,175.0,140.0
+D9230,"inhalation of nitrous oxide/analgesia, anxiolysis",Nitrous Oxide,Adjunct,85.0,68.0
+D9239,intravenous moderate  (conscious) sedation/analgesia- first 15 minutes,,Adjunct,175.0,140.0
+D9243,intravenous moderate (conscious) sedation/analgesia – each subsequent 15 minute increment,,Adjunct,175.0,140.0
+D9248,non-intravenous conscious sedation,,Adjunct,175.0,140.0
+D9310,consultation - diagnostic service provided by dentist or physician other than requesting dentist or physician,,Adjunct,100.0,80.0
+D9311,consultation with a medical health care professional,,Adjunct,100.0,80.0
+D9410,house/extended care facility call,,Adjunct,100.0,80.0
+D9420,hospital or ambulatory surgical center call,,Adjunct,100.0,80.0
+D9430,office visit for observation (during regularly scheduled hours) - no other services performed,,Adjunct,100.0,80.0
+D9440,office visit - after regularly scheduled hours,,Adjunct,100.0,80.0
+D9450,"case presentation, detailed and extensive treatment planning",,Adjunct,100.0,80.0
+D9610,"therapeutic parenteral drug, single administration",,Adjunct,100.0,80.0
+D9612,"therapeutic parenteral drugs, two or more administrations, different medications",,Adjunct,100.0,80.0
+D9613,infiltration of sustained release therapeutic drug – single or multiple sites,,Adjunct,100.0,80.0
+D9630,drugs or medicaments dispensed in the office for home use,,Adjunct,100.0,80.0
+D9910,application of desensitizing medicament,,Adjunct,100.0,80.0
+D9911,"application of desensitizing resin for cervical and/or root surface, per tooth",,Adjunct,100.0,80.0
+D9920,"behavior management, by report",,Adjunct,100.0,80.0
+D9930,"treatment of complications (post-surgical) - unusual circumstances, by report",,Adjunct,100.0,80.0
+D9932,"cleaning and inspection of removable complete denture, maxillary",,Adjunct,100.0,80.0
+D9933,"cleaning and inspection of removable complete denture, mandibular",,Adjunct,100.0,80.0
+D9934,"cleaning and inspection of removable partial denture, maxillary",,Adjunct,100.0,80.0
+D9935,"cleaning and inspection of removable partial denture, mandibular",,Adjunct,100.0,80.0
+D9941,fabrication of athletic mouthguard,,Adjunct,100.0,80.0
+D9942,repair and/or reline of occlusal guard,,Adjunct,550.0,440.0
+D9943,occlusal guard adjustment,,Adjunct,550.0,440.0
+D9944,"occlusal guard – hard appliance, full arch",Occl Guard Hard,Adjunct,550.0,440.0
+D9945,"occlusal guard – soft appliance, full arch",,Adjunct,550.0,440.0
+D9946,"occlusal guard – hard appliance, partial arch",,Adjunct,550.0,440.0
+D9950,occlusion analysis - mounted case,,Adjunct,100.0,80.0
+D9951,occlusal adjustment - limited,,Adjunct,100.0,80.0
+D9952,occlusal adjustment - complete,,Adjunct,100.0,80.0
+D9961,duplicate/copy patient's records,,Adjunct,100.0,80.0
+D9970,enamel microabrasion,,Adjunct,100.0,80.0
+D9971,odontoplasty - per tooth,,Adjunct,100.0,80.0
+D9972,external bleaching - per arch - performed in office,,Adjunct,250.0,200.0
+D9973,external bleaching - per tooth,,Adjunct,250.0,200.0
+D9974,internal bleaching - per tooth,,Adjunct,250.0,200.0
+D9975,"external bleaching for home application, per arch; includes materials and fabrication of custom trays",Bleach Tray,Adjunct,250.0,200.0
+D9985,sales tax,,Adjunct,100.0,80.0
+D9986,missed appointment,,Adjunct,100.0,80.0
+D9987,cancelled appointment,,Adjunct,100.0,80.0
+D9990,certified translation or sign-language services – per visit,,Adjunct,100.0,80.0
+D9991,dental case management - addressing appointment compliance barriers,,Adjunct,100.0,80.0
+D9992,dental case management - care coordination,,Adjunct,100.0,80.0
+D9993,dental case management - motivational interviewing,,Adjunct,100.0,80.0
+D9994,dental case management - patient education to improve oral health literacy,,Adjunct,100.0,80.0
+D9995,teledentistry – synchronous; real-time encounter,,Adjunct,100.0,80.0
+D9996,teledentistry – asynchronous; information stored and forwarded to dentist for subsequent review,,Adjunct,100.0,80.0
+D9997,dental case management - patients with special health care needs,,Adjunct,100.0,80.0
+D9999,"unspecified adjunctive procedure, by report",,Adjunct,100.0,80.0
