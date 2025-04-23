@@ -117,10 +117,10 @@ const PriorityTile: React.FC<PriorityTileProps> = ({ title, count, value, icon, 
             <div className={`${color.text} font-medium text-sm`}>{title}</div>
             <div className="text-lg font-bold mt-1 flex items-baseline">
               {count > 0 ? (
-                <>
+                <React.Fragment>
                   <span>{count}</span>
                   {value && <span className="text-sm ml-1 opacity-70">{value}</span>}
-                </>
+                </React.Fragment>
               ) : (
                 <span className="text-sm opacity-70">None today</span>
               )}

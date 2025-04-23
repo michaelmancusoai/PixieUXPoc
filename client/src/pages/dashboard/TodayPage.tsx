@@ -561,7 +561,7 @@ export default function TodayPage() {
                 </div>
                 
                 {todos.some(todo => todo.completed) && (
-                  <>
+                  <React.Fragment>
                     <Separator className="my-3" />
                     <div className="text-xs font-medium text-muted-foreground mb-2">Completed</div>
                     {todos.filter(todo => todo.completed).map(todo => (
@@ -574,7 +574,7 @@ export default function TodayPage() {
                         onToggle={() => toggleTodo(todo.id)}
                       />
                     ))}
-                  </>
+                  </React.Fragment>
                 )}
                 
                 <Button variant="ghost" size="sm" className="w-full mt-3 text-muted-foreground">
