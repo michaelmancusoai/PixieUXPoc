@@ -580,7 +580,7 @@ export default function PatientsPage() {
         </div>
 
         {/* Main content with patient list and optional filter sidebar */}
-        <div className="flex px-6 bg-white">
+        <div className="flex px-6 py-4 bg-white mt-0">
           {/* Filters drawer */}
           {filterDrawerOpen && (
             <div className="w-64 border-r border-gray-200 p-4">
@@ -737,27 +737,29 @@ export default function PatientsPage() {
                                   {getInitials(patient.fullName)}
                                 </AvatarFallback>
                               </Avatar>
-                              <div>
-                                <div className="font-medium">{patient.fullName}</div>
-                                <div className="text-xs text-gray-500">MRN: {patient.chartNumber}</div>
-                                <div className="flex mt-1 space-x-1">
-                                  <Button 
-                                    variant="ghost" 
-                                    size="icon" 
-                                    className="h-6 w-6" 
-                                    onClick={(e) => handleCallPatient(e, patient)}
-                                  >
-                                    <Phone className="h-3.5 w-3.5 text-green-600" />
-                                  </Button>
-                                  <Button 
-                                    variant="ghost" 
-                                    size="icon" 
-                                    className="h-6 w-6" 
-                                    onClick={(e) => handleMessagePatient(e, patient)}
-                                  >
-                                    <MessageSquare className="h-3.5 w-3.5 text-blue-600" />
-                                  </Button>
+                              <div className="flex-1">
+                                <div className="flex items-center">
+                                  <div className="font-medium mr-2">{patient.fullName}</div>
+                                  <div className="flex space-x-1">
+                                    <Button 
+                                      variant="ghost" 
+                                      size="icon" 
+                                      className="h-6 w-6" 
+                                      onClick={(e) => handleCallPatient(e, patient)}
+                                    >
+                                      <Phone className="h-3.5 w-3.5 text-green-600" />
+                                    </Button>
+                                    <Button 
+                                      variant="ghost" 
+                                      size="icon" 
+                                      className="h-6 w-6" 
+                                      onClick={(e) => handleMessagePatient(e, patient)}
+                                    >
+                                      <MessageSquare className="h-3.5 w-3.5 text-blue-600" />
+                                    </Button>
+                                  </div>
                                 </div>
+                                <div className="text-xs text-gray-500">MRN: {patient.chartNumber}</div>
                               </div>
                             </div>
                           </TableCell>
