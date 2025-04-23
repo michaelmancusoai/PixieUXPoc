@@ -617,19 +617,19 @@ export default function StatementsPage() {
                 </div>
 
                 {/* Filter chips */}
-                {(filters.status !== "All" || filters.deliveryMethod !== "All" || dateRange?.from) && (
+                {(filters.status !== "All Statuses" || filters.deliveryMethod !== "All Methods" || dateRange?.from) && (
                   <div className="flex items-center gap-2 px-6 py-2 bg-card border-b text-sm">
                     <span className="text-muted-foreground">Filtered results: {filteredStatements.length}</span>
                     
-                    {filters.status !== "All" && (
+                    {filters.status !== "All Statuses" && (
                       <Badge variant="outline" className="bg-primary/10 text-primary">
-                        {filters.status} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, status: "All" })} />
+                        {filters.status} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, status: "All Statuses" })} />
                       </Badge>
                     )}
                     
-                    {filters.deliveryMethod !== "All" && (
+                    {filters.deliveryMethod !== "All Methods" && (
                       <Badge variant="outline" className="bg-primary/10 text-primary">
-                        {filters.deliveryMethod} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, deliveryMethod: "All" })} />
+                        {filters.deliveryMethod} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, deliveryMethod: "All Methods" })} />
                       </Badge>
                     )}
                     
@@ -649,8 +649,8 @@ export default function StatementsPage() {
                     
                     <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => {
                       setFilters({
-                        status: "All",
-                        deliveryMethod: "All"
+                        status: "All Statuses",
+                        deliveryMethod: "All Methods"
                       });
                       setDateRange(undefined);
                     }}>
