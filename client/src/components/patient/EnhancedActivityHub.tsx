@@ -525,8 +525,8 @@ export default function EnhancedActivityHub() {
   };
   
   return (
-    <Card className="shadow-sm">
-      <CardHeader className="px-4 py-3 border-b">
+    <Card className="shadow-sm h-full flex flex-col">
+      <CardHeader className="px-4 py-3 border-b flex-shrink-0">
         <div className="flex flex-col space-y-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg font-medium">Activity Hub</CardTitle>
@@ -602,7 +602,7 @@ export default function EnhancedActivityHub() {
         </div>
       </CardHeader>
       
-      <div className="max-h-[800px] overflow-y-auto">
+      <div className="flex-grow">
         {Object.keys(groupedActivities).length > 0 ? (
           Object.entries(groupedActivities).map(([month, activities]) => (
             <div key={month} className="mb-2">
