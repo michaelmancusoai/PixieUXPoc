@@ -38,6 +38,7 @@ import {
   CreditCard,
   Plus,
   PlusCircle,
+  RefreshCw,
   DollarSign,
   Printer,
   Download,
@@ -66,7 +67,7 @@ type Payment = {
   status: "Completed" | "Pending" | "Failed" | "Refunded";
   paymentFor: "Treatment" | "Consultation" | "Products" | "Insurance";
   description: string;
-  paymentProcessor?: "Stripe" | "Square" | "PayPal" | "Manual";
+  paymentProcessor?: "Phase 3 Payments" | "PayPal" | "Manual";
   transactionId?: string;
 };
 
@@ -83,8 +84,8 @@ const mockPayments: Payment[] = [
     status: "Completed",
     paymentFor: "Treatment",
     description: "Invisalign - Monthly Payment",
-    paymentProcessor: "Stripe",
-    transactionId: "txn_1Oi4sSKj38fKBUGy9ixB1Qrs"
+    paymentProcessor: "Phase 3 Payments",
+    transactionId: "p3p_1Oi4sSKj38fKBUGy9ixB1Qrs"
   },
   {
     id: 2,
@@ -107,8 +108,8 @@ const mockPayments: Payment[] = [
     status: "Completed",
     paymentFor: "Treatment",
     description: "Crown procedure - Partial payment",
-    paymentProcessor: "Square",
-    transactionId: "sqr_52fKBR8sjso29xB1Qrs"
+    paymentProcessor: "Phase 3 Payments",
+    transactionId: "p3p_52fKBR8sjso29xB1Qrs"
   },
   {
     id: 4,
@@ -132,8 +133,8 @@ const mockPayments: Payment[] = [
     status: "Failed",
     paymentFor: "Treatment",
     description: "Periodontal scaling",
-    paymentProcessor: "Stripe",
-    transactionId: "txn_2Oj5tTLk49gLCVHz0jyC2Rst"
+    paymentProcessor: "Phase 3 Payments",
+    transactionId: "p3p_2Oj5tTLk49gLCVHz0jyC2Rst"
   },
   {
     id: 6,
@@ -161,7 +162,7 @@ const mockPayments: Payment[] = [
     paymentFor: "Treatment",
     description: "Root canal treatment",
     paymentProcessor: "Phase 3 Payments",
-    transactionId: "txn_3Pi6uUMk40hMDWIz1kyD3Suv"
+    transactionId: "p3p_3Pi6uUMk40hMDWIz1kyD3Suv"
   },
   {
     id: 8,
@@ -336,6 +337,22 @@ export default function PaymentsPage() {
     }
   };
   
+  // Process refund for selected payments
+  const processRefund = () => {
+    // In a real app, this would call an API to process the refund
+    const completedPaymentIds = selectedPayments.filter(id => 
+      mockPayments.find(p => p.id === id)?.status === "Completed"
+    );
+    
+    if (completedPaymentIds.length === 0) return;
+    
+    // This is a mock implementation - would be replaced with actual API call
+    alert(`Processing refunds for ${completedPaymentIds.length} payments`);
+    
+    // Reset selection after processing
+    setSelectedPayments([]);
+  };
+  
   // Toggle row expansion
   const toggleRowExpand = (id: number, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -464,6 +481,19 @@ export default function PaymentsPage() {
                   >
                     <Printer className="h-4 w-4 mr-1" />
                     Print Selected
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-9"
+                    onClick={processRefund}
+                    disabled={selectedPayments.length === 0 || 
+                      !selectedPayments.some(id => 
+                        mockPayments.find(p => p.id === id)?.status === "Completed"
+                      )}
+                  >
+                    <RefreshCw className="h-4 w-4 mr-1" />
+                    Process Refund
                   </Button>
                 </div>
               </div>
