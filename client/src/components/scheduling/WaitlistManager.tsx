@@ -212,27 +212,16 @@ export const WaitlistManager = () => {
             <CardTitle className="text-base">Waitlist</CardTitle>
             <Badge variant="outline">{waitlist.length}</Badge>
           </div>
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={handleSeedWaitlist} 
-              disabled={isSeeding}
-              title="Add sample data to waitlist"
-            >
-              {isSeeding ? 'Seeding...' : 'Seed Waitlist'}
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={() => setAddDialogOpen(true)}
-              title="Add patient to waitlist"
-              className="flex items-center gap-1.5"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              Add
-            </Button>
-          </div>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            onClick={() => setAddDialogOpen(true)}
+            title="Add patient to waitlist"
+            className="flex items-center gap-1.5"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Add
+          </Button>
         </CardHeader>
         
         <CardContent className="p-4 pb-6 flex-1 overflow-auto">
@@ -249,95 +238,82 @@ export const WaitlistManager = () => {
               </Button>
             </div>
           ) : (
-            <Tabs defaultValue="HIGH">
-              <TabsList className="mb-4">
-                <TabsTrigger value="HIGH" className="flex items-center gap-1">
-                  <Badge variant="destructive" className="h-5 rounded-full">{groupedWaitlist.HIGH.length}</Badge>
-                  High Priority
-                </TabsTrigger>
-                <TabsTrigger value="NORMAL" className="flex items-center gap-1">
-                  <Badge variant="default" className="h-5 rounded-full">{groupedWaitlist.NORMAL.length}</Badge>
-                  Normal
-                </TabsTrigger>
-                <TabsTrigger value="LOW" className="flex items-center gap-1">
-                  <Badge variant="secondary" className="h-5 rounded-full">{groupedWaitlist.LOW.length}</Badge>
-                  Low
-                </TabsTrigger>
-              </TabsList>
-              
-              {Object.entries(groupedWaitlist).map(([priority, items]) => (
-                <TabsContent key={priority} value={priority} className="m-0">
-                  <ScrollArea className="h-[calc(100vh-13rem)] pr-4">
-                    <div className="space-y-3">
-                      {items.map((item: any) => {
-                        const patient = item.patient || {};
-                        const daysWaiting = differenceInDays(new Date(), new Date(item.requestDate));
-                        
-                        return (
-                          <div key={item.id} className="border rounded-lg p-3 relative group">
-                            <div className="flex justify-between items-start">
-                              <div>
-                                <div className="font-medium">{patient.firstName} {patient.lastName}</div>
-                                <div className="text-sm text-gray-500 flex items-center mt-1">
-                                  <User className="h-3.5 w-3.5 mr-1" />
-                                  Chart: {patient.chartNumber} • DOB: {format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')}
-                                </div>
-                              </div>
-                              <Badge variant={priorityLabel(item.priority).variant as any}>
-                                {priorityLabel(item.priority).text}
-                              </Badge>
-                            </div>
-                            
-                            <div className="text-sm mt-2 space-y-1.5">
-                              {item.requestedProcedure && (
-                                <div className="flex items-center text-gray-700">
-                                  <FileText className="h-3.5 w-3.5 mr-1.5" />
-                                  {item.requestedProcedure}
-                                </div>
-                              )}
-                              
-                              {item.contactNumber && (
-                                <div className="flex items-center text-gray-700">
-                                  <Phone className="h-3.5 w-3.5 mr-1.5" />
-                                  {item.contactNumber}
-                                </div>
-                              )}
-                              
-                              <div className="flex items-center text-gray-700">
-                                <Calendar className="h-3.5 w-3.5 mr-1.5" />
-                                Added {format(new Date(item.requestDate), 'MMM d, yyyy')}
-                                {daysWaiting > 0 && (
-                                  <Badge variant="outline" className="ml-2 text-xs">
-                                    {daysWaiting} {daysWaiting === 1 ? 'day' : 'days'} waiting
-                                  </Badge>
-                                )}
-                              </div>
-                              
-                              {item.notes && (
-                                <div className="mt-2 text-sm bg-gray-50 p-2 rounded border">
-                                  {item.notes}
-                                </div>
-                              )}
-                            </div>
-                            
-                            <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                onClick={() => handleRemoveFromWaitlist(item.id)}
-                                title="Remove from waitlist"
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            </div>
+            <ScrollArea className="h-[calc(100vh-13rem)] pr-4">
+              <div className="space-y-3">
+                {waitlist.map((item: any) => {
+                  const patient = item.patient || {};
+                  // Safely handle dates - if we can't parse the date, default to today
+                  let daysWaiting = 0;
+                  let requestDate = new Date();
+                  
+                  try {
+                    if (item.requestDate) {
+                      requestDate = new Date(item.requestDate);
+                      daysWaiting = differenceInDays(new Date(), requestDate);
+                    }
+                  } catch (e) {
+                    console.error("Error parsing date:", e);
+                  }
+                  
+                  return (
+                    <div key={item.id} className="border rounded-lg p-3 relative group">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <div className="font-medium">{patient.firstName} {patient.lastName}</div>
+                          <div className="text-sm text-gray-500 flex items-center mt-1">
+                            <User className="h-3.5 w-3.5 mr-1" />
+                            Chart: {patient.chartNumber} • DOB: {format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')}
                           </div>
-                        );
-                      })}
+                        </div>
+                      </div>
+                      
+                      <div className="text-sm mt-2 space-y-1.5">
+                        {item.requestedProcedure && (
+                          <div className="flex items-center text-gray-700">
+                            <FileText className="h-3.5 w-3.5 mr-1.5" />
+                            {item.requestedProcedure}
+                          </div>
+                        )}
+                        
+                        {item.contactNumber && (
+                          <div className="flex items-center text-gray-700">
+                            <Phone className="h-3.5 w-3.5 mr-1.5" />
+                            {item.contactNumber}
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center text-gray-700">
+                          <Calendar className="h-3.5 w-3.5 mr-1.5" />
+                          Added {format(requestDate, 'MMM d, yyyy')}
+                          {daysWaiting > 0 && (
+                            <Badge variant="outline" className="ml-2 text-xs">
+                              {daysWaiting} {daysWaiting === 1 ? 'day' : 'days'} waiting
+                            </Badge>
+                          )}
+                        </div>
+                        
+                        {item.notes && (
+                          <div className="mt-2 text-sm bg-gray-50 p-2 rounded border">
+                            {item.notes}
+                          </div>
+                        )}
+                      </div>
+                      
+                      <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => handleRemoveFromWaitlist(item.id)}
+                          title="Remove from waitlist"
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
-                  </ScrollArea>
-                </TabsContent>
-              ))}
-            </Tabs>
+                  );
+                })}
+              </div>
+            </ScrollArea>
           )}
         </CardContent>
       </Card>
@@ -473,32 +449,7 @@ export const WaitlistManager = () => {
                 )}
               />
               
-              {/* Priority */}
-              <FormField
-                control={form.control}
-                name="priority"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Priority</FormLabel>
-                    <Select
-                      value={field.value}
-                      onValueChange={(value) => field.onChange(value)}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select priority" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="HIGH">High Priority</SelectItem>
-                        <SelectItem value="NORMAL">Normal Priority</SelectItem>
-                        <SelectItem value="LOW">Low Priority</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+{/* Priority removed as requested */}
               
               {/* Notes */}
               <FormField
