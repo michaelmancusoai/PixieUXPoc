@@ -161,7 +161,33 @@ const mockClaims: Claim[] = [
     planType: "DHMO",
     insuranceOrder: "Primary",
     claimStatus: "Sent",
-    submissionDate: "04/10/2025"
+    submissionDate: "04/10/2025",
+    procedures: [
+      {
+        cdtCode: "D4260",
+        toothNumber: "",
+        toothSurface: "",
+        description: "Osseous surgery - four or more contiguous teeth per quadrant",
+        fee: 4250.00,
+        negotiated: 4250.00,
+        deductible: 0.00,
+        coverage: 90,
+        patientEstimate: 425.00,
+        insuranceEstimate: 3825.00
+      },
+      {
+        cdtCode: "D2950",
+        toothNumber: "25-28",
+        toothSurface: "",
+        description: "Core buildup, including any pins when required",
+        fee: 2460.50,
+        negotiated: 2460.50,
+        deductible: 0.00,
+        coverage: 80,
+        patientEstimate: 95.45,
+        insuranceEstimate: 2885.50
+      }
+    ]
   },
   {
     id: 4,
@@ -175,7 +201,33 @@ const mockClaims: Claim[] = [
     planType: "DR",
     insuranceOrder: "Primary",
     claimStatus: "Sent",
-    submissionDate: "04/08/2025"
+    submissionDate: "04/08/2025",
+    procedures: [
+      {
+        cdtCode: "D0120",
+        toothNumber: "",
+        toothSurface: "",
+        description: "Periodic oral evaluation",
+        fee: 150.15,
+        negotiated: 150.15,
+        deductible: 0.00,
+        coverage: 100,
+        patientEstimate: 0.00,
+        insuranceEstimate: 150.15
+      },
+      {
+        cdtCode: "D1110",
+        toothNumber: "",
+        toothSurface: "",
+        description: "Prophylaxis - adult",
+        fee: 300.30,
+        negotiated: 300.30,
+        deductible: 0.00,
+        coverage: 100,
+        patientEstimate: 450.75,
+        insuranceEstimate: 300.30
+      }
+    ]
   },
   {
     id: 5,
@@ -189,7 +241,33 @@ const mockClaims: Claim[] = [
     planType: "DHMO",
     insuranceOrder: "Secondary",
     claimStatus: "Resent",
-    submissionDate: "04/15/2025"
+    submissionDate: "04/15/2025",
+    procedures: [
+      {
+        cdtCode: "D0220",
+        toothNumber: "",
+        toothSurface: "",
+        description: "Intraoral - periapical first radiographic image",
+        fee: 65.05,
+        negotiated: 65.05,
+        deductible: 0.00,
+        coverage: 90,
+        patientEstimate: 6.50,
+        insuranceEstimate: 58.55
+      },
+      {
+        cdtCode: "D2392",
+        toothNumber: "20",
+        toothSurface: "MO",
+        description: "Resin-based composite - two surfaces, posterior",
+        fee: 385.30,
+        negotiated: 385.30,
+        deductible: 0.00,
+        coverage: 60,
+        patientEstimate: 444.30,
+        insuranceEstimate: 391.80
+      }
+    ]
   },
   {
     id: 6,
@@ -203,7 +281,57 @@ const mockClaims: Claim[] = [
     planType: "PPO",
     insuranceOrder: "Primary",
     claimStatus: "Sent",
-    submissionDate: "04/09/2025"
+    submissionDate: "04/09/2025",
+    procedures: [
+      {
+        cdtCode: "D2750",
+        toothNumber: "3",
+        toothSurface: "",
+        description: "Crown - porcelain fused to high noble metal",
+        fee: 1350.00,
+        negotiated: 1350.00,
+        deductible: 0.00,
+        coverage: 80,
+        patientEstimate: 270.00,
+        insuranceEstimate: 1080.00
+      },
+      {
+        cdtCode: "D2752",
+        toothNumber: "14",
+        toothSurface: "",
+        description: "Crown - porcelain fused to noble metal",
+        fee: 1350.00,
+        negotiated: 1350.00,
+        deductible: 0.00,
+        coverage: 80,
+        patientEstimate: 270.00,
+        insuranceEstimate: 1080.00
+      },
+      {
+        cdtCode: "D7140",
+        toothNumber: "16",
+        toothSurface: "",
+        description: "Extraction - erupted tooth or exposed root",
+        fee: 250.00,
+        negotiated: 250.00,
+        deductible: 0.00,
+        coverage: 80,
+        patientEstimate: 50.00,
+        insuranceEstimate: 200.00
+      },
+      {
+        cdtCode: "D6010",
+        toothNumber: "19",
+        toothSurface: "",
+        description: "Surgical placement of implant body",
+        fee: 1500.00,
+        negotiated: 1500.00,
+        deductible: 0.00,
+        coverage: 70,
+        patientEstimate: -340.00,
+        insuranceEstimate: 2090.00
+      }
+    ]
   },
   {
     id: 7,
@@ -217,7 +345,33 @@ const mockClaims: Claim[] = [
     planType: "PPO",
     insuranceOrder: "Primary",
     claimStatus: "Resent",
-    submissionDate: "04/12/2025"
+    submissionDate: "04/12/2025",
+    procedures: [
+      {
+        cdtCode: "D1234",
+        toothNumber: "15",
+        toothSurface: "L",
+        description: "resin-based composite - two surfaces, anterior",
+        fee: 1075.00,
+        negotiated: 1075.00,
+        deductible: 50.00,
+        coverage: 80,
+        patientEstimate: 290.50,
+        insuranceEstimate: 976.00
+      },
+      {
+        cdtCode: "D7281",
+        toothNumber: "16",
+        toothSurface: "M",
+        description: "inlay - porcelain/ceramic - one surface",
+        fee: 675.20,
+        negotiated: 675.20,
+        deductible: 0.00,
+        coverage: 70,
+        patientEstimate: 459.60,
+        insuranceEstimate: 774.20
+      }
+    ]
   },
   
   // Not Submitted Claims
