@@ -13,6 +13,7 @@ import MissionControlPage from "@/pages/dashboard/MissionControlPage";
 import SchedulePage from "@/pages/SchedulePage";
 import PatientsPage from "@/pages/PatientsPage";
 import BillingPage from "@/pages/BillingPage";
+import ClaimsPage from "@/pages/ClaimsPage";
 import ReportsPage from "@/pages/ReportsPage";
 import SettingsPage from "@/pages/SettingsPage";
 import PatientProfilePage from "@/pages/PatientProfilePage";
@@ -32,6 +33,7 @@ function Router() {
       <Route path="/patients/profile/:id" component={PatientProfilePage} />
       <Route path="/patients/:subpage" component={PatientsPage} />
       <Route path="/billing" component={BillingPage} />
+      <Route path="/billing/claims" component={ClaimsPage} />
       <Route path="/billing/:subpage" component={BillingPage} />
       <Route path="/reports" component={ReportsPage} />
       <Route path="/reports/:subpage" component={ReportsPage} />

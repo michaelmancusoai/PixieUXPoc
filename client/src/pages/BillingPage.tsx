@@ -3,6 +3,7 @@ import { NavigationWrapper } from "@/components/NavigationWrapper";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { FileText, CreditCard, Wallet, BarChart3, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "wouter";
 
 export default function BillingPage() {
   return (
@@ -24,15 +25,17 @@ export default function BillingPage() {
             </CardContent>
           </Card>
           
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-2xl font-bold">$5,830</CardTitle>
-              <CardDescription>Outstanding Claims</CardDescription>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <div className="text-xs text-muted-foreground">12 pending claims</div>
-            </CardContent>
-          </Card>
+          <Link href="/billing/claims" className="block">
+            <Card className="transition-all hover:shadow-md">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-2xl font-bold">$5,830</CardTitle>
+                <CardDescription>Outstanding Claims</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="text-xs text-muted-foreground">12 pending claims</div>
+              </CardContent>
+            </Card>
+          </Link>
           
           <Card>
             <CardHeader className="pb-2">
@@ -76,7 +79,9 @@ export default function BillingPage() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground mb-4">Manage and track insurance claims.</p>
-              <Button variant="outline" size="sm">View Claims</Button>
+              <Link href="/billing/claims">
+                <Button variant="outline" size="sm">View Claims</Button>
+              </Link>
             </CardContent>
           </Card>
           
