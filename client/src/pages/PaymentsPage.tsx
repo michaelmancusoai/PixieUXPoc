@@ -677,10 +677,10 @@ export default function PaymentsPage() {
                         </TableRow>
                       ) : (
                         filteredPayments.map((payment) => (
-                          <TableRow 
-                            key={payment.id}
-                            className={selectedPayments.includes(payment.id) ? "bg-muted/50" : ""}
-                          >
+                          <React.Fragment key={payment.id}>
+                            <TableRow 
+                              className={selectedPayments.includes(payment.id) ? "bg-muted/50" : ""}
+                            >
                             <TableCell>
                               <Checkbox 
                                 checked={selectedPayments.includes(payment.id)} 
@@ -727,21 +727,157 @@ export default function PaymentsPage() {
                               {renderStatusBadge(payment.status)}
                             </TableCell>
                             <TableCell className="text-right">
-                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0" asChild>
-                                <a href="#" onClick={(e) => {
-                                  e.preventDefault();
-                                  // View payment details
-                                }}>
-                                  <span className="sr-only">View payment details</span>
+                              <div className="flex items-center justify-end space-x-1">
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
                                   <Eye className="h-4 w-4" />
-                                </a>
-                              </Button>
-                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                <Printer className="h-4 w-4" />
-                                <span className="sr-only">Print receipt</span>
-                              </Button>
+                                  <span className="sr-only">View payment details</span>
+                                </Button>
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                  <Printer className="h-4 w-4" />
+                                  <span className="sr-only">Print receipt</span>
+                                </Button>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="h-8 w-8 p-0 ml-1"
+                                  onClick={(e) => toggleRowExpand(payment.id, e)}
+                                >
+                                  {expandedRows.includes(payment.id) ? (
+                                    <ChevronDown className="h-4 w-4" />
+                                  ) : (
+                                    <ChevronRight className="h-4 w-4" />
+                                  )}
+                                  <span className="sr-only">Expand details</span>
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
+                          
+                          {expandedRows.includes(payment.id) && (
+                            <TableRow className="bg-muted/30 border-t-0">
+                              <TableCell colSpan={8} className="p-0">
+                                <div className="p-4">
+                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                    {/* Payment Information */}
+                                    <Card className="shadow-sm">
+                                      <CardHeader className="py-3 px-4 border-b">
+                                        <CardTitle className="text-sm font-medium">Payment Information</CardTitle>
+                                      </CardHeader>
+                                      <CardContent className="py-3 px-4 text-sm">
+                                        <div className="space-y-2">
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Date:</div>
+                                            <div className="col-span-2">{format(new Date(payment.date), "MMM d, yyyy")}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Amount:</div>
+                                            <div className="col-span-2 font-medium">${payment.amount.toFixed(2)}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Status:</div>
+                                            <div className="col-span-2">{renderStatusBadge(payment.status)}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Description:</div>
+                                            <div className="col-span-2">{payment.description}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Category:</div>
+                                            <div className="col-span-2">{payment.paymentFor}</div>
+                                          </div>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                    
+                                    {/* Payment Method Details */}
+                                    <Card className="shadow-sm">
+                                      <CardHeader className="py-3 px-4 border-b">
+                                        <CardTitle className="text-sm font-medium">Payment Method</CardTitle>
+                                      </CardHeader>
+                                      <CardContent className="py-3 px-4 text-sm">
+                                        <div className="space-y-2">
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Method:</div>
+                                            <div className="col-span-2">{payment.paymentMethod}</div>
+                                          </div>
+                                          
+                                          {payment.paymentMethod === "Credit Card" && (
+                                            <>
+                                              <div className="grid grid-cols-3 gap-1">
+                                                <div className="text-muted-foreground">Card Type:</div>
+                                                <div className="col-span-2">{payment.cardType}</div>
+                                              </div>
+                                              {payment.lastFour && (
+                                                <div className="grid grid-cols-3 gap-1">
+                                                  <div className="text-muted-foreground">Last 4 Digits:</div>
+                                                  <div className="col-span-2">•••• {payment.lastFour}</div>
+                                                </div>
+                                              )}
+                                            </>
+                                          )}
+                                          
+                                          {payment.paymentMethod === "Check" && payment.checkNumber && (
+                                            <div className="grid grid-cols-3 gap-1">
+                                              <div className="text-muted-foreground">Check Number:</div>
+                                              <div className="col-span-2">{payment.checkNumber}</div>
+                                            </div>
+                                          )}
+                                          
+                                          {payment.paymentProcessor && (
+                                            <div className="grid grid-cols-3 gap-1">
+                                              <div className="text-muted-foreground">Processor:</div>
+                                              <div className="col-span-2">{payment.paymentProcessor}</div>
+                                            </div>
+                                          )}
+                                          
+                                          {payment.transactionId && (
+                                            <div className="grid grid-cols-3 gap-1">
+                                              <div className="text-muted-foreground">Transaction ID:</div>
+                                              <div className="col-span-2 text-xs text-muted-foreground font-mono">
+                                                {payment.transactionId}
+                                              </div>
+                                            </div>
+                                          )}
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                    
+                                    {/* Patient Information */}
+                                    <Card className="shadow-sm">
+                                      <CardHeader className="py-3 px-4 border-b">
+                                        <CardTitle className="text-sm font-medium">Patient Information</CardTitle>
+                                      </CardHeader>
+                                      <CardContent className="py-3 px-4 text-sm">
+                                        <div className="space-y-2">
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Patient:</div>
+                                            <div className="col-span-2">{payment.patientName}</div>
+                                          </div>
+                                          <div className="grid grid-cols-3 gap-1">
+                                            <div className="text-muted-foreground">Chart Number:</div>
+                                            <div className="col-span-2">PT-{(1000 + payment.id).toString().slice(1)}</div>
+                                          </div>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                  </div>
+                                  
+                                  {/* Action buttons */}
+                                  <div className="flex justify-end space-x-2 mt-4">
+                                    <Button variant="outline" size="sm">
+                                      <Printer className="h-4 w-4 mr-2" />
+                                      Print Receipt
+                                    </Button>
+                                    <Button variant="default" size="sm">
+                                      <Eye className="h-4 w-4 mr-2" />
+                                      View Full Details
+                                    </Button>
+                                  </div>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </React.Fragment>
                         ))
                       )}
                     </TableBody>
