@@ -121,7 +121,33 @@ const mockClaims: Claim[] = [
     planType: "Indemnity plan",
     insuranceOrder: "Secondary",
     claimStatus: "Sent",
-    submissionDate: "04/12/2025"
+    submissionDate: "04/12/2025",
+    procedures: [
+      {
+        cdtCode: "D6750",
+        toothNumber: "30",
+        toothSurface: "",
+        description: "Crown - porcelain fused to high noble metal",
+        fee: 1295.00,
+        negotiated: 1036.00,
+        deductible: 0.00,
+        coverage: 80,
+        patientEstimate: 258.50,
+        insuranceEstimate: 1036.50
+      },
+      {
+        cdtCode: "D7240",
+        toothNumber: "1,16,17,32",
+        toothSurface: "",
+        description: "Removal of impacted tooth - completely bony",
+        fee: 9445.00,
+        negotiated: 9703.50,
+        deductible: 0.00,
+        coverage: 80,
+        patientEstimate: 481.50,
+        insuranceEstimate: 9703.50
+      }
+    ]
   },
   {
     id: 3,
