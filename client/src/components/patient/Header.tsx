@@ -49,7 +49,7 @@ export default function Header() {
 
 export function PatientCard() {
   return (
-    <Card>
+    <Card className="shadow-sm">
       <CardContent className="p-4">
         <div className="flex items-start mb-4">
           <Avatar className="h-14 w-14 mr-4 bg-[#F56A46] flex-shrink-0">

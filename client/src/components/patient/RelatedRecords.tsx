@@ -19,8 +19,8 @@ import {
 
 export default function RelatedRecords() {
   return (
-    <Card>
-      <CardHeader className="px-4 py-3">
+    <Card className="shadow-sm">
+      <CardHeader className="px-4 py-3 border-b">
         <CardTitle className="text-lg font-medium">Related Records</CardTitle>
       </CardHeader>
       
