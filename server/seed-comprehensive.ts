@@ -4,6 +4,7 @@ import {
   operatories, 
   appointments,
   patients,
+  users,
   AppointmentStatus
 } from '@shared/schema';
 import { eq } from 'drizzle-orm';
@@ -20,12 +21,23 @@ async function seedComprehensiveSchedulingData() {
   const existingProviders = await db.select().from(providers);
   const existingOperatories = await db.select().from(operatories);
   const existingPatients = await db.select().from(patients);
+  const existingUsers = await db.select().from(users);
   
-  // If no patients/providers/operatories exist, warn and exit
-  if (existingPatients.length === 0 || existingProviders.length === 0 || existingOperatories.length === 0) {
-    console.log('❌ Missing required data! Please seed patients, providers, and operatories first.');
+  // If no patients/operatories exist, warn and exit
+  if (existingPatients.length === 0 || existingOperatories.length === 0) {
+    console.log('❌ Missing required data! Please seed patients and operatories first.');
     return;
   }
+  
+  // If no users exist, warn and exit
+  if (existingUsers.length === 0) {
+    console.log('❌ Missing users data! Please seed users first.');
+    return;
+  }
+  
+  // Map provider names to user IDs (assuming users might be providers)
+  // This is needed because appointments.providerId references users.id
+  const usersAsProviders = existingUsers.slice(0, Math.min(3, existingUsers.length));
   
   // Procedure types with associated durations
   const procedureTypes = [
@@ -59,10 +71,10 @@ async function seedComprehensiveSchedulingData() {
     const currentDate = addDays(today, dayOffset);
     const formattedDate = format(currentDate, 'yyyy-MM-dd');
     
-    // For each provider
-    for (const provider of existingProviders) {
+    // For each user as provider
+    for (const provider of usersAsProviders) {
       // For each operatory (assign each provider to 1-2 operatories per day)
-      const operatoryCount = provider.name.includes('Hygienist') ? 1 : 2;
+      const operatoryCount = Math.random() > 0.5 ? 1 : 2; // 50% chance of 1 or 2 operatories
       const providerOperatories = existingOperatories
         .slice(0, operatoryCount)
         .sort(() => Math.random() - 0.5); // Shuffle
@@ -163,17 +175,8 @@ async function seedComprehensiveSchedulingData() {
             const hasCdtCode = Math.random() > 0.6;
             const cdtCode = hasCdtCode ? `D${Math.floor(1000 + Math.random() * 9000)}` : null;
             
-            // Convert any Date objects in timestamps to strings
-            const stringTimestamps: any = {};
-            for (const [key, value] of Object.entries(timestamps)) {
-              if (value instanceof Date) {
-                stringTimestamps[key] = value.toISOString();
-              } else {
-                stringTimestamps[key] = value;
-              }
-            }
-            
-            appointmentData.push({
+            // Create appointment data object with proper date formats
+            const apptData: any = {
               patientId: patient.id,
               providerId: provider.id,
               operatoryId: operatory.id,
@@ -181,17 +184,25 @@ async function seedComprehensiveSchedulingData() {
               procedure: `${procedure.name} ${procedure.name.includes('canal') ? 'on upper left incisor' : 
                           procedure.name.includes('filling') ? 'on lower molar' :
                           procedure.name.includes('crown') ? 'for tooth #18' : ''}`,
-              date: formattedDate,
-              startTime: formatTimeString(currentTime),
-              endTime: formatTimeString(appointmentEndTime),
+              date: new Date(formattedDate),
+              startTime: new Date(`${formattedDate}T${formatTimeString(currentTime)}`),
+              endTime: new Date(`${formattedDate}T${formatTimeString(appointmentEndTime)}`),
               status,
               duration: procedure.duration,
               notes: `Sample ${procedure.name} appointment`,
               cdtCode,
-              ...stringTimestamps,
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString()
-            });
+              createdAt: new Date(),
+              updatedAt: new Date()
+            };
+            
+            // Add timestamp fields directly as Date objects
+            for (const [key, value] of Object.entries(timestamps)) {
+              if (value instanceof Date) {
+                apptData[key] = value;
+              }
+            }
+            
+            appointmentData.push(apptData);
           }
           
           // Move to next appointment slot (30-minute increments)
