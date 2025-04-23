@@ -938,8 +938,8 @@ export default function ClaimsPage() {
                         </TableRow>
                       ) : (
                         <>
-                          {filteredClaims.map((claim) => (
-                            <div key={claim.id}>
+                          {filteredClaims.map((claim: Claim) => (
+                            <React.Fragment key={`claim-group-${claim.id}`}>
                               <TableRow 
                                 className={selectedClaims.includes(claim.id) ? "bg-muted/50" : ""}
                               >
@@ -988,8 +988,8 @@ export default function ClaimsPage() {
                                   </Button>
                                 </TableCell>
                               </TableRow>
-
-                              {/* Expanded claim details */}
+                              
+                              {/* Conditionally render the expanded details */}
                               {expandedClaimId === claim.id && claim.procedures && (
                                 <TableRow className="bg-gray-50">
                                   <TableCell colSpan={12} className="p-0">
@@ -1009,7 +1009,7 @@ export default function ClaimsPage() {
                                           </tr>
                                         </thead>
                                         <tbody>
-                                          {claim.procedures.map((procedure, index) => (
+                                          {claim.procedures.map((procedure: Procedure, index: number) => (
                                             <tr key={index} className="border-b hover:bg-gray-50">
                                               <td className="py-2 px-3 text-sm border-r">{procedure.cdtCode}</td>
                                               <td className="py-2 px-3 text-sm border-r">
@@ -1027,20 +1027,20 @@ export default function ClaimsPage() {
                                           <tr className="bg-gray-50">
                                             <td colSpan={3} className="py-2 px-3 text-sm font-semibold border-r">Total</td>
                                             <td className="py-2 px-3 text-sm font-semibold border-r text-right">
-                                              ${claim.procedures.reduce((sum, p) => sum + p.fee, 0).toFixed(2)}
+                                              ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.fee, 0).toFixed(2)}
                                             </td>
                                             <td className="py-2 px-3 text-sm font-semibold border-r text-right">
-                                              ${claim.procedures.reduce((sum, p) => sum + p.negotiated, 0).toFixed(2)}
+                                              ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.negotiated, 0).toFixed(2)}
                                             </td>
                                             <td className="py-2 px-3 text-sm font-semibold border-r text-right">
-                                              ${claim.procedures.reduce((sum, p) => sum + p.deductible, 0).toFixed(2)}
+                                              ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.deductible, 0).toFixed(2)}
                                             </td>
                                             <td className="py-2 px-3 text-sm font-semibold border-r text-right">-</td>
                                             <td className="py-2 px-3 text-sm font-semibold border-r text-right">
-                                              ${claim.procedures.reduce((sum, p) => sum + p.patientEstimate, 0).toFixed(2)}
+                                              ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.patientEstimate, 0).toFixed(2)}
                                             </td>
                                             <td className="py-2 px-3 text-sm font-semibold text-right">
-                                              ${claim.procedures.reduce((sum, p) => sum + p.insuranceEstimate, 0).toFixed(2)}
+                                              ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.insuranceEstimate, 0).toFixed(2)}
                                             </td>
                                           </tr>
                                         </tbody>
@@ -1049,7 +1049,7 @@ export default function ClaimsPage() {
                                   </TableCell>
                                 </TableRow>
                               )}
-                            </div>
+                            </React.Fragment>
                           ))}
                         </>
                       )}
