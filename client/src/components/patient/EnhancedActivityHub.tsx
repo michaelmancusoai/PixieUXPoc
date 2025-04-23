@@ -70,12 +70,27 @@ const groupActivitiesByMonth = (activities: ActivityItem[]) => {
   // Sort upcoming activities by date (ascending)
   upcoming.sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime());
   
-  // Add upcoming activities to the result
+  // Create ordered result with Upcoming first, then most recent months
+  const result: Record<string, ActivityItem[]> = {};
+  
+  // Add upcoming activities to the top
   if (upcoming.length > 0) {
-    grouped["Upcoming"] = upcoming;
+    result["Upcoming"] = upcoming;
   }
   
-  return grouped;
+  // Sort months in reverse chronological order (newest to oldest)
+  const sortedMonths = Object.keys(grouped).sort((a, b) => {
+    const dateA = new Date(a);
+    const dateB = new Date(b);
+    return dateB.getTime() - dateA.getTime();
+  });
+  
+  // Add sorted months to result
+  sortedMonths.forEach(month => {
+    result[month] = grouped[month];
+  });
+  
+  return result;
 };
 
 // Sample activity items for the enhanced hub
