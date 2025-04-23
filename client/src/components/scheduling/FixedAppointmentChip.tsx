@@ -260,14 +260,20 @@ const getQuickActions = (
 const getStatusTooltipSuffix = (appointment: AppointmentWithDetails) => {
   const status = appointment.status;
   
-  if (status === AppointmentStatus.CHECKED_IN && appointment.arrivedAt) {
-    return `Arrived @ ${format(new Date(appointment.arrivedAt), 'h:mm a')}`;
-  } else if (status === AppointmentStatus.SEATED && appointment.statusUpdatedAt) {
-    return `Seated @ ${format(new Date(appointment.statusUpdatedAt), 'h:mm a')}`;
-  } else if (status === AppointmentStatus.IN_CHAIR && appointment.chairStartedAt) {
-    return `Tx started @ ${format(new Date(appointment.chairStartedAt), 'h:mm a')}`;
-  } else if (status === AppointmentStatus.COMPLETED && appointment.completedAt) {
-    return `Dismissed @ ${format(new Date(appointment.completedAt), 'h:mm a')}`;
+  try {
+    if (status === AppointmentStatus.CHECKED_IN && appointment.arrivedAt) {
+      return `Arrived @ ${format(new Date(appointment.arrivedAt), 'h:mm a')}`;
+    } else if (status === AppointmentStatus.SEATED && appointment.seatedAt) {
+      return `Seated @ ${format(new Date(appointment.seatedAt), 'h:mm a')}`;
+    } else if (status === AppointmentStatus.IN_CHAIR && appointment.chairStartedAt) {
+      return `Tx started @ ${format(new Date(appointment.chairStartedAt), 'h:mm a')}`;
+    } else if (status === AppointmentStatus.COMPLETED && appointment.completedAt) {
+      return `Dismissed @ ${format(new Date(appointment.completedAt), 'h:mm a')}`;
+    } else if (status === AppointmentStatus.DOCTOR_READY) {
+      return "Doctor is ready";
+    }
+  } catch (error) {
+    console.error("Error getting status tooltip:", error);
   }
   
   return "";

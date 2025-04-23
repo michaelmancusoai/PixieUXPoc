@@ -1,11 +1,10 @@
 import { db } from './db';
 import { 
-  providers, 
-  operatories, 
   appointments,
   patients,
   users,
-  AppointmentStatus
+  operatories,
+  AppointmentStatus 
 } from '@shared/schema';
 import { eq } from 'drizzle-orm';
 import { addMinutes, format, parseISO, startOfDay, addDays } from 'date-fns';
@@ -18,7 +17,6 @@ async function seedComprehensiveSchedulingData() {
   await db.delete(appointments);
   
   // Get existing data
-  const existingProviders = await db.select().from(providers);
   const existingOperatories = await db.select().from(operatories);
   const existingPatients = await db.select().from(patients);
   const existingUsers = await db.select().from(users);
