@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format, addDays, differenceInDays, parseISO } from "date-fns";
 import { NavigationWrapper } from "@/components/NavigationWrapper";
@@ -182,7 +182,7 @@ const ScheduleHeatmap = ({ schedule }) => {
             
             {/* Cells */}
             {hours.map(hour => (
-              <>
+              <React.Fragment key={hour}>
                 {schedule.operatories.map(op => {
                   const cellData = schedule.cells.find(
                     cell => cell.hour === hour && cell.operatoryId === op.id
@@ -213,7 +213,7 @@ const ScheduleHeatmap = ({ schedule }) => {
                     </div>
                   );
                 })}
-              </>
+              </React.Fragment>
             ))}
           </div>
         </div>
