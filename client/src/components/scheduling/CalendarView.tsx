@@ -53,10 +53,10 @@ export default function CalendarView({
 
   // Set up resource columns when resources are loaded
   useEffect(() => {
-    if (resources) {
+    if (resources && resources.length > 0) {
       setResourceColumns(resources);
-    } else {
-      // Default columns if data isn't loaded yet
+    } else if (resourceColumns.length === 0) {
+      // Default columns if data isn't loaded yet - only set if resourceColumns is empty
       setResourceColumns([
         { id: 1, name: 'Op 1' },
         { id: 2, name: 'Op 2' },
@@ -64,7 +64,7 @@ export default function CalendarView({
         { id: 4, name: 'Op 4' }
       ]);
     }
-  }, [resources]);
+  }, [resources, resourceColumns.length]);
 
   // Generate time slots for the day (5-minute intervals)
   const timeSlots = useMemo(() => {

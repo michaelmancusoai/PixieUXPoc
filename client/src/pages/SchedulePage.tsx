@@ -8,19 +8,61 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs";
-import { ViewMode, ViewModeType } from "@/shared/schema";
+import { ViewModeType, AppointmentWithDetails } from "@shared/schema";
+import { 
+  DndContext, 
+  DragOverlay, 
+  MouseSensor, 
+  TouchSensor, 
+  useSensor, 
+  useSensors,
+  DragStartEvent,
+  DragEndEvent,
+  DragCancelEvent
+} from "@dnd-kit/core";
 import CalendarView from "@/components/scheduling/CalendarView";
-import { AppointmentChip } from "@/components/scheduling/AppointmentChip";
+import AppointmentChip from "@/components/scheduling/AppointmentChip";
 import { WaitlistManager } from "@/components/scheduling/WaitlistManager";
 
 export default function SchedulePage() {
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   const [viewMode, setViewMode] = useState<ViewModeType>("DAY");
+  const [activeAppointment, setActiveAppointment] = useState<AppointmentWithDetails | null>(null);
+
+  // Set up dnd-kit sensors
+  const mouseSensor = useSensor(MouseSensor, {
+    activationConstraint: {
+      distance: 10, // 10px of movement before drag starts
+    },
+  });
+
+  const touchSensor = useSensor(TouchSensor, {
+    activationConstraint: {
+      delay: 250, // 250ms delay before drag starts
+      tolerance: 5, // 5px of movement before drag starts
+    },
+  });
+
+  const sensors = useSensors(mouseSensor, touchSensor);
 
   // Handlers for date navigation
   const goToNextDay = () => setSelectedDate(prev => addDays(prev, 1));
   const goToPrevDay = () => setSelectedDate(prev => subDays(prev, 1));
   const goToToday = () => setSelectedDate(new Date());
+
+  // Drag and drop handlers
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    setActiveAppointment(active.data?.current?.appointment || null);
+  };
+
+  const handleDragEnd = (_event: DragEndEvent) => {
+    setActiveAppointment(null);
+  };
+
+  const handleDragCancel = (_event: DragCancelEvent) => {
+    setActiveAppointment(null);
+  };
 
   return (
     <div className="container mx-auto p-4 max-w-7xl">
@@ -64,7 +106,24 @@ export default function SchedulePage() {
               </div>
             </CardHeader>
             <CardContent>
-              <CalendarView selectedDate={selectedDate} viewMode={viewMode} />
+              <DndContext 
+                sensors={sensors}
+                onDragStart={handleDragStart}
+                onDragEnd={handleDragEnd}
+                onDragCancel={handleDragCancel}
+              >
+                <CalendarView selectedDate={selectedDate} viewMode={viewMode} />
+                <DragOverlay>
+                  {activeAppointment ? (
+                    <div className="opacity-80">
+                      <AppointmentChip 
+                        appointment={activeAppointment} 
+                        style={{ width: '200px', height: '80px' }} 
+                      />
+                    </div>
+                  ) : null}
+                </DragOverlay>
+              </DndContext>
             </CardContent>
           </Card>
         </div>
