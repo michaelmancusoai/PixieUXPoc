@@ -115,6 +115,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Appointments API
+  app.get(`${apiPrefix}/appointments`, async (req: Request, res: Response) => {
+    try {
+      // For a real implementation, we'd add a storage method to get all appointments
+      // For now, we'll get appointments from all patients
+      const patients = await storage.listPatients(100, 0);
+      const allAppointments = [];
+      
+      for (const patient of patients) {
+        const patientAppointments = await storage.getPatientAppointments(patient.id);
+        allAppointments.push(...patientAppointments);
+      }
+      
+      res.json(allAppointments);
+    } catch (error) {
+      console.error("Error fetching all appointments:", error);
+      res.status(500).json({ error: "Failed to fetch appointments" });
+    }
+  });
+  
   app.get(`${apiPrefix}/patients/:id/appointments`, async (req: Request, res: Response) => {
     try {
       const patientId = parseInt(req.params.id);
