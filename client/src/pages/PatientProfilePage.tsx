@@ -30,10 +30,10 @@ export default function PatientProfilePage() {
   
   return (
     <NavigationWrapper>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-gray-50">
         <Header />
         
-        <main className="w-full py-5">
+        <main className="w-full py-5 bg-gray-50">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 xl:gap-6">
             {/* Column A: Snapshot Cards - consistent width with Column C */}
             <section className="col-span-1 lg:col-span-3 xl:col-span-3 flex flex-col gap-4">
