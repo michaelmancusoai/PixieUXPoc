@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   AlertCircle, 
   Calendar, 
+  CheckCircle,
   Clock, 
   CreditCard, 
   FileText, 
@@ -155,13 +156,13 @@ function HeatmapCell({ utilization, operatory, time }) {
   );
 }
 
-// Agenda Steps for the huddle
+// Agenda Steps for the huddle - focused on topics rather than roles
 const agendaSteps = [
-  { title: 'Owner', leader: 'Dr. Carter', focus: 'Celebrate wins, revenue', icon: TrendingUp },
-  { title: 'Front Office', leader: 'Amanda', focus: 'Unconfirmed appointments & balances', icon: MessageSquare },
-  { title: 'Hygiene', leader: 'Lisa', focus: 'Recall gaps, perio cases', icon: Stethoscope },
-  { title: 'Doctor', leader: 'Dr. Smith', focus: 'Clinical risks, lab status', icon: User },
-  { title: 'Billing', leader: 'James', focus: 'Yesterday denials, AR plan', icon: Wallet }
+  { title: 'Celebrate Wins', focus: 'Yesterday\'s achievements, positive outcomes', icon: TrendingUp },
+  { title: 'Schedule Status', focus: 'Confirmations, gaps, balances due', icon: Calendar },
+  { title: 'Clinical Priorities', focus: 'Special cases, treatment notes, lab status', icon: Stethoscope },
+  { title: 'Resource Needs', focus: 'Supplies, staffing, equipment readiness', icon: Package },
+  { title: 'Action Items', focus: 'Tasks, follow-ups, communications', icon: CheckCircle }
 ];
 
 export default function DailyHuddlePage() {
@@ -335,7 +336,6 @@ export default function DailyHuddlePage() {
                     <StepIcon className="h-5 w-5" />
                   </div>
                   <p className="font-medium text-sm">{step.title}</p>
-                  <p className="text-xs mt-1">{step.leader}</p>
                   <p className={cn("text-xs mt-1", index === currentStep ? "text-white/80" : "text-gray-500")}>{step.focus}</p>
                 </div>
               );
