@@ -810,6 +810,19 @@ export default function DailyHuddlePage() {
                                     
                                     {/* Visual gauge */}
                                     <div className="mt-2 relative h-3 bg-gray-100 rounded-full overflow-hidden">
+                                      {/* Status threshold background zones */}
+                                      <div className="absolute top-0 h-full w-full">
+                                        {/* Red zone (0-80%) */}
+                                        <div className="absolute left-0 top-0 h-full w-[80%] bg-red-50" />
+                                        
+                                        {/* Yellow zone (80-95%) */}
+                                        <div className="absolute left-[80%] top-0 h-full w-[15%] bg-amber-50" />
+                                        
+                                        {/* Green zone (95-100%) */}
+                                        <div className="absolute left-[95%] top-0 h-full w-[5%] bg-green-50" />
+                                      </div>
+                                      
+                                      {/* Progress bar */}
                                       <div 
                                         className={cn(
                                           "absolute top-0 left-0 h-full rounded-r-full",
@@ -824,22 +837,26 @@ export default function DailyHuddlePage() {
                                         style={{ width: `${progressValue}%` }} 
                                       />
                                       
-                                      {/* Target marker and status indicators */}
+                                      {/* Status threshold tick marks */}
+                                      <div className="absolute top-0 h-full w-full">
+                                        {/* Red zone (0-80%) */}
+                                        <div className="absolute left-[80%] top-0 h-full w-0.5 bg-gray-600 z-10" />
+                                        <div className="absolute left-[80%] top-0 text-[9px] text-gray-600 mt-3.5 ml-1">80%</div>
+                                        
+                                        {/* Yellow zone (80-95%) */}
+                                        <div className="absolute left-[95%] top-0 h-full w-0.5 bg-gray-600 z-10" />
+                                        <div className="absolute left-[95%] top-0 text-[9px] text-gray-600 mt-3.5 ml-1">95%</div>
+                                      </div>
+                                      
+                                      {/* Target marker */}
                                       {metric.status !== 'neutral' && (
-                                        <>
-                                          <div 
-                                            className="absolute top-0 w-0.5 h-5 bg-gray-800 z-10"
-                                            style={{ 
-                                              left: `${metric.status === 'below' || metric.status === 'slightly-below' ? progressValue : 100}%`,
-                                              marginTop: '-1px' 
-                                            }}
-                                          />
-                                          
-                                          {/* Status threshold ranges (for slightly-below) */}
-                                          {metric.status === 'slightly-below' && (
-                                            <div className="absolute bottom-0 h-1 bg-gradient-to-r from-red-400 via-amber-400 to-green-400 w-full opacity-30" />
-                                          )}
-                                        </>
+                                        <div 
+                                          className="absolute top-0 w-0.5 h-5 bg-gray-800 z-20"
+                                          style={{ 
+                                            left: `${metric.status === 'below' || metric.status === 'slightly-below' ? progressValue : 100}%`,
+                                            marginTop: '-1px' 
+                                          }}
+                                        />
                                       )}
                                     </div>
                                   </div>
