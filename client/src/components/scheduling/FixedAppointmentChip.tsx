@@ -370,7 +370,7 @@ export default function AppointmentChip({
             aria-label={`Appointment ${patient?.firstName} ${patient?.lastName}, status ${statusText}${elapsedTime ? `, started ${elapsedTime}` : ''}`}
           >
             {/* Patient name at top - always shown */}
-            <div className="flex justify-between items-start mb-1">
+            <div className="flex justify-between items-start mb-2">
               <span className={cn("font-medium truncate", isCompactView ? "text-xs" : "text-sm")}>
                 {patient?.firstName} {patient?.lastName}
               </span>
@@ -380,7 +380,7 @@ export default function AppointmentChip({
             </div>
             
             {/* Status line - consistent location and format with visual styling */}
-            <div className="flex items-center mb-1">
+            <div className="flex items-center mb-2">
               <span className={cn(
                 "text-[10px] font-medium px-1.5 py-0.5 rounded-sm mr-auto",
                 statusText.includes("CHAIR") ? "bg-blue-50 text-blue-700" :
@@ -426,15 +426,15 @@ export default function AppointmentChip({
               /* Regular View - Full Information */
               <>
                 {/* Procedure line */}
-                <div className="flex items-center mb-1">
-                  <span className="text-[10px] text-gray-600 truncate max-w-[100%]">
+                <div className="flex items-center mb-2">
+                  <span className="text-[11px] font-medium text-gray-700 truncate max-w-[100%]">
                     {appointment.procedure || ''}
                   </span>
                 </div>
 
                 {/* Provider/time line */}
                 <div className="flex justify-between items-center">
-                  <span className="text-[10px] text-gray-600 truncate max-w-[60%]">
+                  <span className="text-[10px] font-medium text-gray-600 truncate max-w-[60%]">
                     {provider?.firstName ? `Dr. ${provider.firstName}` : ''}
                   </span>
                   

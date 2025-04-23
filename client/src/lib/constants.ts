@@ -1,7 +1,7 @@
 // Time Constants
 export const MINS_IN_HOUR = 60;
 export const HOURS_IN_DAY = 24;
-export const TIME_SLOT = 5; // 5-minute intervals
+export const TIME_SLOT = 8; // 8-pixels per 5-minute interval (increased for better visibility)
 export const BUSINESS_START_HOUR = 8; // 8:00 AM
 export const BUSINESS_END_HOUR = 18; // 6:00 PM
 

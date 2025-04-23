@@ -200,7 +200,7 @@ export default function CalendarView({
       </div>
       
       {/* Calendar Content */}
-      <div ref={containerRef} className="relative overflow-auto" style={{ height: 'calc(100vh - 180px)' }}>
+      <div ref={containerRef} className="relative overflow-auto" style={{ height: 'calc(100vh - 140px)' }}>
         <div
           className="grid relative"
           style={{
