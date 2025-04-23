@@ -42,14 +42,14 @@ export function getAppointmentPosition(appointment: AppointmentWithDetails, slot
       minutes = appointment.startTime.getMinutes();
     }
     
-    // Calculate minutes from calendar start (midnight 0:00)
-    const calendarStartHour = 0; // Calendar now starts at midnight
+    // Calculate minutes from calendar start (8:00 AM)
+    const calendarStartHour = BUSINESS_START_HOUR; // Calendar starts at business hours
     const calendarStartMinutes = calendarStartHour * MINS_IN_HOUR;
     const appointmentStartMinutes = hours * MINS_IN_HOUR + minutes;
     const minutesFromStart = appointmentStartMinutes - calendarStartMinutes;
     
     // Calculate top position and height
-    const top = (minutesFromStart / 5) * slotHeight;
+    const top = (minutesFromStart / 5) * slotHeight; // 5-minute intervals
     const height = Math.max((appointment.duration / 5) * slotHeight, slotHeight); // Ensure minimum height
     
     return { top, height };
@@ -100,6 +100,81 @@ export function getAppointmentTiming(appointment: AppointmentWithDetails): strin
     console.error("Error formatting appointment timing:", error, appointment);
     return "00:00 - 00:00";
   }
+}
+
+// Get staggering information for overlapping appointments
+export function getAppointmentStaggering(
+  appointment: AppointmentWithDetails,
+  resourceAppointments: AppointmentWithDetails[],
+  staggerAmount = 8 // Stagger by 8px by default
+) {
+  // Group appointments by start time
+  const timeGroupedAppointments: Record<string, AppointmentWithDetails[]> = {};
+  
+  resourceAppointments.forEach(apt => {
+    // Convert appointment start time to a consistent string format for grouping
+    let startHour = 0, startMinute = 0;
+    
+    if (typeof apt.startTime === 'string') {
+      if (apt.startTime.includes('T')) {
+        const date = parseISO(apt.startTime);
+        startHour = date.getHours();
+        startMinute = date.getMinutes();
+      } else {
+        const timeParts = apt.startTime.split(':');
+        if (timeParts.length >= 2) {
+          startHour = parseInt(timeParts[0], 10);
+          startMinute = parseInt(timeParts[1], 10);
+        }
+      }
+    } else if (apt.startTime instanceof Date) {
+      startHour = apt.startTime.getHours();
+      startMinute = apt.startTime.getMinutes();
+    }
+    
+    // Use hour:minute as key
+    const timeKey = `${startHour}:${startMinute}`;
+    
+    if (!timeGroupedAppointments[timeKey]) {
+      timeGroupedAppointments[timeKey] = [];
+    }
+    
+    timeGroupedAppointments[timeKey].push(apt);
+  });
+  
+  // Find this appointment's time key
+  let thisStartHour = 0, thisStartMinute = 0;
+  
+  if (typeof appointment.startTime === 'string') {
+    if (appointment.startTime.includes('T')) {
+      const date = parseISO(appointment.startTime);
+      thisStartHour = date.getHours();
+      thisStartMinute = date.getMinutes();
+    } else {
+      const timeParts = appointment.startTime.split(':');
+      if (timeParts.length >= 2) {
+        thisStartHour = parseInt(timeParts[0], 10);
+        thisStartMinute = parseInt(timeParts[1], 10);
+      }
+    }
+  } else if (appointment.startTime instanceof Date) {
+    thisStartHour = appointment.startTime.getHours();
+    thisStartMinute = appointment.startTime.getMinutes();
+  }
+  
+  const thisTimeKey = `${thisStartHour}:${thisStartMinute}`;
+  const overlappingAppointments = timeGroupedAppointments[thisTimeKey] || [];
+  
+  // Find this appointment's index in the overlapping appointments
+  const overlapIndex = overlappingAppointments.findIndex(apt => apt.id === appointment.id);
+  const overlappingCount = overlappingAppointments.length;
+  
+  // Calculate staggering
+  const leftOffset = overlappingCount > 1 ? (overlapIndex * staggerAmount) : 0;
+  const widthReduction = overlappingCount > 1 ? ((overlappingCount - 1) * staggerAmount) : 0;
+  const zIndex = 5 + overlapIndex; // Higher z-index for later overlapping appointments
+  
+  return { leftOffset, widthReduction, zIndex, overlapIndex, overlappingCount };
 }
 
 // Countdown timer component

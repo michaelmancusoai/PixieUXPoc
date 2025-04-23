@@ -13,7 +13,8 @@ import {
   getTimeFromMinutes, 
   getAppointmentPosition, 
   snapToTimeSlot,
-  getAppointmentTiming 
+  getAppointmentTiming,
+  getAppointmentStaggering
 } from "@/lib/scheduling-utils";
 
 interface CalendarViewProps {
@@ -327,39 +328,15 @@ export default function CalendarView({
                   return overlaps;
                 };
                 
-                // Group appointments by start time
-                interface TimeSlotGroup {
-                  [key: string]: AppointmentWithDetails[];
-                }
-                
-                const timeSlotGroups: TimeSlotGroup = {};
-                
-                // Group appointments by their start time (for simple overlap detection)
-                resourceAppointments.forEach(apt => {
-                  const startTime = parseISO(apt.startTime.toString());
-                  const timeKey = format(startTime, 'HH:mm'); // Just use hour:minute as the key
-                  
-                  if (!timeSlotGroups[timeKey]) {
-                    timeSlotGroups[timeKey] = [];
-                  }
-                  
-                  timeSlotGroups[timeKey].push(apt);
-                });
-                
                 // Render appointments with staggering for overlaps
-                return resourceAppointments.map((appointment, index) => {
+                return resourceAppointments.map((appointment) => {
                   const { top, height } = getAppointmentPosition(appointment, TIME_SLOT);
-                  const startTime = parseISO(appointment.startTime.toString());
-                  const timeKey = format(startTime, 'HH:mm');
                   
                   // Calculate horizontal staggering if there are overlapping appointments
-                  const overlappingAppointments = timeSlotGroups[timeKey] || [];
-                  const overlappingCount = overlappingAppointments.length;
-                  const overlapIndex = overlappingAppointments.findIndex(apt => apt.id === appointment.id);
-                  
-                  // Only stagger if there's more than one appointment in this time slot
-                  const staggerAmount = overlappingCount > 1 ? (overlapIndex * 8) : 0; // 8px stagger per overlapping appointment
-                  const widthReduction = overlappingCount > 1 ? ((overlappingCount - 1) * 8) : 0;
+                  const { leftOffset, widthReduction, zIndex } = getAppointmentStaggering(
+                    appointment,
+                    resourceAppointments
+                  );
                   
                   return (
                     <AppointmentChip
@@ -368,10 +345,10 @@ export default function CalendarView({
                       style={{
                         position: 'absolute',
                         top: `${top}px`,
-                        left: `${4 + staggerAmount}px`,
+                        left: `${4 + leftOffset}px`,
                         width: `calc(100% - ${8 + widthReduction}px)`,
                         height: `${height}px`,
-                        zIndex: 5 + overlapIndex, // Higher z-index for later overlapping appointments
+                        zIndex: zIndex, // Higher z-index for later overlapping appointments
                       }}
                     />
                   );
