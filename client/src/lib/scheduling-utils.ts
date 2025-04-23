@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { format, formatDistance, parseISO, differenceInMinutes, differenceInSeconds, isSameDay } from 'date-fns';
+import { format, formatDistance, parseISO, differenceInMinutes, differenceInSeconds, isSameDay, addMinutes } from 'date-fns';
 import { AppointmentWithDetails } from '@shared/schema';
 import { BUSINESS_START_HOUR, MINS_IN_HOUR } from './constants';
 
