@@ -28,6 +28,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Mock data for the calendar heatmap
 const operatories = ['Op 1', 'Op 2', 'Op 3', 'Op 4', 'Hyg 1', 'Hyg 2'];
@@ -158,6 +165,19 @@ const agendaSteps = [
   { title: 'Action Items', focus: 'Tasks, follow-ups, communications', icon: CheckCircle }
 ];
 
+// Color options for custom items
+const colorOptions = [
+  { value: 'positive', label: 'Positive', class: 'bg-green-50 border-green-300 text-green-800' },
+  { value: 'warning', label: 'Warning', class: 'bg-amber-50 border-amber-300 text-amber-800' },
+  { value: 'negative', label: 'Negative', class: 'bg-red-50 border-red-300 text-red-800' },
+  { value: 'action', label: 'Action', class: 'bg-blue-50 border-blue-300 text-blue-800' }
+];
+
+interface CustomItem {
+  text: string;
+  color: string;
+}
+
 interface Metric {
   label: string;
   value: string;
@@ -246,7 +266,7 @@ export default function DailyHuddlePage() {
   const [huddleActive, setHuddleActive] = useState(false);
   const [timeLeft, setTimeLeft] = useState(60);
   const [timerActive, setTimerActive] = useState(false);
-  const [customItems, setCustomItems] = useState<Record<string, string[]>>({
+  const [customItems, setCustomItems] = useState<Record<string, CustomItem[]>>({
     'Celebrate Wins': [],
     'Schedule Status': [],
     'Clinical Priorities': [],
@@ -254,14 +274,17 @@ export default function DailyHuddlePage() {
     'Action Items': []
   });
   const [newItemText, setNewItemText] = useState('');
+  const [newItemColor, setNewItemColor] = useState('action'); // Default color type
   const [editingItem, setEditingItem] = useState<{
     type: 'system' | 'custom';
     sectionTitle: string;
     index: number;
     text: string;
+    color?: string;
   } | null>(null);
   
   const [editText, setEditText] = useState('');
+  const [editColor, setEditColor] = useState('');
   
   // Start the huddle
   const startHuddle = () => {
@@ -284,9 +307,14 @@ export default function DailyHuddlePage() {
   const addCustomItem = (sectionTitle: string) => {
     if (newItemText.trim() === '') return;
     
+    const newItem: CustomItem = {
+      text: newItemText.trim(),
+      color: newItemColor
+    };
+    
     setCustomItems(prev => ({
       ...prev,
-      [sectionTitle]: [...(prev[sectionTitle] || []), newItemText.trim()]
+      [sectionTitle]: [...prev[sectionTitle], newItem]
     }));
     
     setNewItemText('');
@@ -301,9 +329,10 @@ export default function DailyHuddlePage() {
   };
   
   // Start editing an item
-  const startEditingItem = (type: 'system' | 'custom', sectionTitle: string, index: number, text: string) => {
-    setEditingItem({ type, sectionTitle, index, text });
+  const startEditingItem = (type: 'system' | 'custom', sectionTitle: string, index: number, text: string, color?: string) => {
+    setEditingItem({ type, sectionTitle, index, text, color });
     setEditText(text);
+    setEditColor(color || 'action');
   };
   
   // Save edited item
@@ -313,7 +342,10 @@ export default function DailyHuddlePage() {
     if (editingItem.type === 'custom') {
       setCustomItems(prev => {
         const newItems = [...prev[editingItem.sectionTitle]];
-        newItems[editingItem.index] = editText.trim();
+        newItems[editingItem.index] = {
+          text: editText.trim(),
+          color: editColor
+        };
         return {
           ...prev,
           [editingItem.sectionTitle]: newItems
@@ -554,7 +586,6 @@ export default function DailyHuddlePage() {
             {agendaSteps.map((step, index) => {
               const StepIcon = step.icon;
               const isActive = index === currentStep;
-              const hasCustomItems = customItems[step.title] && customItems[step.title].length > 0;
               
               return (
                 <div
@@ -633,33 +664,9 @@ export default function DailyHuddlePage() {
                         
                         {/* Discussion Items Section */}
                         <div className="mt-6">
-                          <div className="mb-4 flex justify-between items-center">
-                            <h4 className="font-medium text-gray-900">Discussion Items:</h4>
-                            
-                            {/* Add Item Form */}
-                            <div className="flex items-center gap-2">
-                              <input
-                                type="text"
-                                placeholder="Add custom item to discuss..."
-                                value={newItemText}
-                                onChange={(e) => setNewItemText(e.target.value)}
-                                className="w-64 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-2"
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') {
-                                    addCustomItem(step.title);
-                                  }
-                                }}
-                              />
-                              <Button 
-                                onClick={() => addCustomItem(step.title)}
-                                variant="outline"
-                                size="sm"
-                                className="border-primary text-primary hover:bg-primary/5"
-                              >
-                                <Plus className="h-4 w-4 mr-1" />
-                                Add
-                              </Button>
-                            </div>
+                          <div className="mb-4">
+                            <h4 className="font-medium text-gray-900 mb-1">Discussion Items:</h4>
+                            <p className="text-sm text-gray-500">System-generated and custom items for this section.</p>
                           </div>
                           
                           <div className="space-y-2">
@@ -679,26 +686,50 @@ export default function DailyHuddlePage() {
                                     <X className="h-4 w-4" />
                                   </Button>
                                 </div>
-                                <div className="flex gap-2">
+                                <div className="flex flex-col gap-2">
                                   <input
                                     type="text"
                                     value={editText}
                                     onChange={(e) => setEditText(e.target.value)}
-                                    className="flex-1 rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-2"
+                                    className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-2"
                                     onKeyDown={(e) => {
                                       if (e.key === 'Enter') {
                                         saveEditedItem();
                                       }
                                     }}
                                   />
-                                  <Button 
-                                    onClick={saveEditedItem}
-                                    variant="default"
-                                    size="sm"
-                                    className="bg-primary hover:bg-primary/90"
-                                  >
-                                    Save
-                                  </Button>
+                                  <div className="flex items-center justify-between mt-2">
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-sm text-gray-500">Priority:</span>
+                                      <Select
+                                        value={editColor}
+                                        onValueChange={setEditColor}
+                                      >
+                                        <SelectTrigger className="w-32 h-8">
+                                          <SelectValue placeholder="Select color" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          {colorOptions.map(option => (
+                                            <SelectItem 
+                                              key={option.value} 
+                                              value={option.value}
+                                              className={option.class}
+                                            >
+                                              {option.label}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                    </div>
+                                    <Button 
+                                      onClick={saveEditedItem}
+                                      variant="default"
+                                      size="sm"
+                                      className="bg-primary hover:bg-primary/90"
+                                    >
+                                      Save Changes
+                                    </Button>
+                                  </div>
                                 </div>
                               </div>
                             )}
@@ -718,7 +749,7 @@ export default function DailyHuddlePage() {
                                     variant="ghost"
                                     size="sm"
                                     className="h-6 w-6 p-0 text-gray-500 hover:text-gray-700 hover:bg-gray-100/50"
-                                    onClick={() => startEditingItem('system', step.title, idx, highlight.text)}
+                                    onClick={() => startEditingItem('system', step.title, idx, highlight.text, highlight.type)}
                                   >
                                     <Edit className="h-3.5 w-3.5" />
                                   </Button>
@@ -735,36 +766,94 @@ export default function DailyHuddlePage() {
                             ))}
                             
                             {/* Custom Items */}
-                            {customItems[step.title]?.length ? (
-                              customItems[step.title].map((item, idx) => (
-                                <div 
-                                  key={`custom-${idx}`} 
-                                  className="p-3 rounded-md border border-blue-200 bg-blue-50 text-blue-800 text-sm flex items-center justify-between"
-                                >
-                                  <span>{item}</span>
-                                  <div className="flex items-center gap-1">
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-6 w-6 p-0 text-blue-700 hover:text-blue-900 hover:bg-blue-100/50"
-                                      onClick={() => startEditingItem('custom', step.title, idx, item)}
+                            {customItems[step.title].map((item, idx) => (
+                              <div 
+                                key={`custom-${idx}`} 
+                                className={cn(
+                                  "p-3 rounded-md border text-sm flex items-center justify-between",
+                                  getHighlightColor(item.color)
+                                )}
+                              >
+                                <span>{item.text}</span>
+                                <div className="flex items-center gap-1">
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0 text-gray-500 hover:text-gray-700 hover:bg-gray-100/50"
+                                    onClick={() => startEditingItem('custom', step.title, idx, item.text, item.color)}
+                                  >
+                                    <Edit className="h-3.5 w-3.5" />
+                                  </Button>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-6 w-6 p-0 text-gray-500 hover:text-red-700 hover:bg-red-100/50"
+                                    onClick={() => removeCustomItem(step.title, idx)}
+                                  >
+                                    <Trash2 className="h-3.5 w-3.5" />
+                                  </Button>
+                                </div>
+                              </div>
+                            ))}
+                            
+                            {/* Add Item Form */}
+                            {!editingItem && (
+                              <div className="mt-6 pt-3 border-t border-gray-200">
+                                <div className="flex flex-col gap-3">
+                                  <h4 className="text-sm font-medium text-gray-700">Add custom discussion item:</h4>
+                                  <div className="flex gap-3">
+                                    <div className="flex-1">
+                                      <input
+                                        type="text"
+                                        placeholder="Enter a new discussion item..."
+                                        value={newItemText}
+                                        onChange={(e) => setNewItemText(e.target.value)}
+                                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-2"
+                                        onKeyDown={(e) => {
+                                          if (e.key === 'Enter') {
+                                            addCustomItem(step.title);
+                                          }
+                                        }}
+                                      />
+                                    </div>
+                                    <Select
+                                      value={newItemColor}
+                                      onValueChange={setNewItemColor}
                                     >
-                                      <Edit className="h-3.5 w-3.5" />
-                                    </Button>
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      className="h-6 w-6 p-0 text-blue-700 hover:text-red-700 hover:bg-red-100/50"
-                                      onClick={() => removeCustomItem(step.title, idx)}
+                                      <SelectTrigger className="w-32">
+                                        <SelectValue placeholder="Priority" />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {colorOptions.map(option => (
+                                          <SelectItem 
+                                            key={option.value} 
+                                            value={option.value}
+                                            className={option.class}
+                                          >
+                                            {option.label}
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                    <Button 
+                                      onClick={() => addCustomItem(step.title)}
+                                      variant="outline"
+                                      className="border-primary text-primary hover:bg-primary/5"
                                     >
-                                      <Trash2 className="h-3.5 w-3.5" />
+                                      <Plus className="h-4 w-4 mr-1" />
+                                      Add Item
                                     </Button>
                                   </div>
                                 </div>
-                              ))
-                            ) : customItems[step.title]?.length === 0 && stepData.highlights.length === 0 ? (
-                              <p className="text-sm text-gray-500 italic">No discussion items yet. Add custom items above to discuss during the huddle.</p>
-                            ) : null}
+                              </div>
+                            )}
+                            
+                            {/* Empty state message */}
+                            {!editingItem && stepData.highlights.length === 0 && customItems[step.title].length === 0 && (
+                              <div className="p-6 text-center border border-dashed rounded-md">
+                                <p className="text-sm text-gray-500">No discussion items yet. Add custom items above.</p>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </>
