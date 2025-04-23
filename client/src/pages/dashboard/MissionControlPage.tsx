@@ -268,7 +268,7 @@ function ExceptionCard({ patient, type }: ExceptionCardProps) {
       <CardContent className="p-2">
         <div className="flex justify-between items-center">
           <p className={cn("font-medium text-xs", styles.text)}>{patient.name}</p>
-          {type === 'late' && (
+          {type === 'late' && patient.timeInStatus !== undefined && (
             <Badge variant="outline" className={styles.text}>
               {formatTime(patient.timeInStatus)}
             </Badge>

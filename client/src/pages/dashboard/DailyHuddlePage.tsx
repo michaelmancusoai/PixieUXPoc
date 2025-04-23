@@ -7,6 +7,7 @@ import {
   CheckCircle,
   Clock, 
   CreditCard, 
+  DollarSign,
   FileText,
   Package, 
   Pause,
@@ -14,6 +15,7 @@ import {
   Play,
   PlayCircle,
   Plus,
+  PlusCircle,
   RefreshCw,
   Sun,
   Trash2, 
@@ -120,7 +122,7 @@ interface HeatmapCellProps {
 function HeatmapCell({ utilization, operatory, time }: HeatmapCellProps) {
   // Color gradient based on utilization
   const getBackgroundColor = (util: number) => {
-    if (util === 0) return 'bg-gray-100';
+    if (util === 0) return 'bg-gray-50';
     if (util < 0.3) return 'bg-blue-100';
     if (util < 0.7) return 'bg-blue-300';
     return 'bg-blue-500';
@@ -129,25 +131,78 @@ function HeatmapCell({ utilization, operatory, time }: HeatmapCellProps) {
   // Determine if this is a gap that should be highlighted
   const isGap = utilization === 0;
   
+  // Calculate estimated revenue potential (simplified example)
+  const revenuePotential = isGap ? Math.floor(Math.random() * 150 + 50) * 10 : 0; // Random value between $500-$2000
+  
   return (
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger asChild>
           <div
             className={cn(
-              "w-full h-10 border border-gray-200",
+              "w-full h-10 border relative transition-all duration-200 cursor-pointer",
               getBackgroundColor(utilization),
-              isGap && "border-amber-500 border-dashed"
+              isGap 
+                ? "border-amber-500 border-dashed hover:bg-amber-50 group" 
+                : "border-gray-200 hover:bg-opacity-80"
             )}
-          />
+          >
+            {isGap && (
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <PlusCircle className="h-5 w-5 text-amber-600" />
+              </div>
+            )}
+            {!isGap && utilization >= 0.7 && (
+              <div className="absolute top-0 right-0">
+                <div className="w-0 h-0 border-t-[8px] border-r-[8px] border-t-green-600 border-r-transparent" />
+              </div>
+            )}
+          </div>
         </TooltipTrigger>
-        <TooltipContent>
-          <div className="text-xs">
-            <p className="font-medium">{operatory} - {time}</p>
+        <TooltipContent className="p-3 space-y-1 w-60 border shadow-lg">
+          <div className="text-xs space-y-2">
+            <div className="flex justify-between items-center">
+              <p className="font-semibold text-sm">{operatory} - {time}</p>
+              {isGap ? (
+                <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                  Gap
+                </Badge>
+              ) : (
+                <Badge variant="outline" className={cn(
+                  utilization < 0.3 ? "bg-blue-50 text-blue-700 border-blue-200" :
+                  utilization < 0.7 ? "bg-blue-100 text-blue-800 border-blue-300" :
+                  "bg-green-50 text-green-700 border-green-200"
+                )}>
+                  {Math.round(utilization * 100)}% utilized
+                </Badge>
+              )}
+            </div>
+            
             {isGap ? (
-              <p className="text-amber-600">Open slot - Potential revenue</p>
+              <div className="space-y-2 pt-1">
+                <p className="text-amber-600 font-medium">Open slot - Available to book</p>
+                <div className="flex justify-between items-center bg-amber-50 p-2 rounded text-amber-800">
+                  <div className="flex items-center gap-1">
+                    <DollarSign className="h-3.5 w-3.5" />
+                    <span className="text-xs font-medium">Revenue potential</span>
+                  </div>
+                  <span className="font-bold">${revenuePotential}</span>
+                </div>
+                <Button variant="outline" size="sm" className="w-full h-7 text-xs bg-white border-amber-300 text-amber-700 hover:bg-amber-50 mt-1">
+                  <Calendar className="h-3 w-3 mr-1" /> 
+                  Fill This Gap
+                </Button>
+              </div>
             ) : (
-              <p>Utilization: {Math.round(utilization * 100)}%</p>
+              <div className="space-y-1 pt-1">
+                <p className="text-muted-foreground">Booked • {Math.round(utilization * 100)}% utilization</p>
+                {utilization >= 0.7 && (
+                  <div className="flex items-center gap-1 text-green-600 text-xs mt-1">
+                    <CheckCircle className="h-3 w-3" />
+                    <span>Optimally booked</span>
+                  </div>
+                )}
+              </div>
             )}
           </div>
         </TooltipContent>
@@ -452,44 +507,81 @@ export default function DailyHuddlePage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* Left Column - Schedule Heatmap */}
           <div className="lg:col-span-6 space-y-2">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mb-4">
               <h2 className="text-lg font-bold">Today's Schedule</h2>
-              <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-                Fill ${gapPotential} potential
-              </Badge>
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 flex items-center gap-1.5">
+                  <DollarSign className="h-3 w-3" />
+                  <span className="font-semibold">${gapPotential}</span> potential revenue 
+                </Badge>
+                <Button size="sm" variant="outline" className="border-amber-300 text-amber-700 hover:bg-amber-50 h-7">
+                  <PlusCircle className="h-3.5 w-3.5 mr-1" /> Fill Gaps
+                </Button>
+              </div>
             </div>
             
-            <div className="flex overflow-x-auto">
-              <div className="sticky left-0 bg-white z-10 pr-2">
-                <div className="h-10"></div> {/* Empty space for alignment */}
-                {hours.map((hour, i) => (
-                  <div key={i} className="h-10 flex items-center justify-end pr-2 text-sm font-medium">
-                    {hour}
-                  </div>
-                ))}
+            <div className="border rounded-md bg-white shadow-sm">
+              <div className="flex overflow-x-auto">
+                <div className="sticky left-0 bg-white z-10 pr-2 shadow-sm">
+                  <div className="h-10"></div> {/* Empty space for alignment */}
+                  {hours.map((hour, i) => (
+                    <div key={i} className="h-10 flex items-center justify-end pr-2 text-sm font-medium">
+                      {hour}
+                    </div>
+                  ))}
+                </div>
+                
+                <div className="grid flex-1" style={{ gridTemplateColumns: `repeat(${operatories.length}, minmax(90px, 1fr))` }}>
+                  {/* Header row with operatory names */}
+                  {operatories.map((op, i) => (
+                    <div key={i} className="h-10 border-b border-gray-300 px-2 flex items-center justify-center font-medium text-sm bg-gray-50">
+                      {op}
+                    </div>
+                  ))}
+                  
+                  {/* Time slots grid */}
+                  {hours.map((hour, rowIndex) => (
+                    <div key={rowIndex} className="contents">
+                      {operatories.map((op, colIndex) => {
+                        const isGap = scheduleData[op][hour] === 0;
+                        return (
+                          <HeatmapCell 
+                            key={`${rowIndex}-${colIndex}`}
+                            utilization={scheduleData[op][hour]}
+                            operatory={op}
+                            time={hour}
+                          />
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
               </div>
               
-              <div className="grid" style={{ gridTemplateColumns: `repeat(${operatories.length}, minmax(80px, 1fr))` }}>
-                {/* Header row with operatory names */}
-                {operatories.map((op, i) => (
-                  <div key={i} className="h-10 border-b border-gray-300 px-2 flex items-center justify-center font-medium text-sm">
-                    {op}
+              {/* Legend */}
+              <div className="border-t border-gray-200 p-2 flex items-center justify-between text-xs text-gray-600">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 bg-gray-50 border border-amber-500 border-dashed"></div>
+                    <span>Open slot</span>
                   </div>
-                ))}
-                
-                {/* Time slots grid */}
-                {hours.map((hour, rowIndex) => (
-                  <div key={rowIndex} className="contents">
-                    {operatories.map((op, colIndex) => (
-                      <HeatmapCell 
-                        key={`${rowIndex}-${colIndex}`}
-                        utilization={scheduleData[op][hour]}
-                        operatory={op}
-                        time={hour}
-                      />
-                    ))}
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 bg-blue-100 border border-gray-200"></div>
+                    <span>&lt;30% booked</span>
                   </div>
-                ))}
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 bg-blue-300 border border-gray-200"></div>
+                    <span>30-70% booked</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-3 h-3 bg-blue-500 border border-gray-200"></div>
+                    <span>&gt;70% booked</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1.5 text-amber-700">
+                  <PlusCircle className="h-3.5 w-3.5" />
+                  <span>Hover over gaps to see options</span>
+                </div>
               </div>
             </div>
           </div>
