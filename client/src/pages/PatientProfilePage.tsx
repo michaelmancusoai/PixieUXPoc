@@ -34,10 +34,14 @@ export default function PatientProfilePage() {
         <main className="w-full py-5">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 xl:gap-6">
             {/* Column A: Snapshot Cards - consistent width with Column C */}
-            <section className="col-span-1 lg:col-span-3 xl:col-span-3 flex flex-col gap-4">
+            <section className="col-span-1 lg:col-span-3 xl:col-span-3 flex flex-col gap-4 lg:max-h-screen">
               <h2 className="sr-only">Patient Snapshot</h2>
-              <PatientCard />
-              <SnapshotCards />
+              <div className="flex-none">
+                <PatientCard />
+              </div>
+              <div className="flex-1 overflow-y-auto max-h-[calc(100vh-400px)]">
+                <SnapshotCards />
+              </div>
             </section>
             
             {/* Column B: Activity Hub */}
