@@ -18,7 +18,53 @@ import {
 import { Switch } from "@/components/ui/switch";
 
 // Helper to convert HSL string to separate values
+// Convert HSL to HEX
+function hslToHex(h: number, s: number, l: number): string {
+  // Convert HSL to RGB
+  s /= 100;
+  l /= 100;
+
+  const a = s * Math.min(l, 1 - l);
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
+
 function parseHslValue(hslString: string): { h: number, s: number, l: number } {
+  // Handle hex color input
+  if (hslString.startsWith('#')) {
+    const r = parseInt(hslString.slice(1, 3), 16) / 255;
+    const g = parseInt(hslString.slice(3, 5), 16) / 255;
+    const b = parseInt(hslString.slice(5, 7), 16) / 255;
+    
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const l = (max + min) / 2;
+    
+    let h = 0, s = 0;
+    
+    if (max !== min) {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        case b: h = (r - g) / d + 4; break;
+      }
+      h /= 6;
+    }
+    
+    return { 
+      h: Math.round(h * 360), 
+      s: Math.round(s * 100), 
+      l: Math.round(l * 100) 
+    };
+  }
+  
+  // Handle HSL format
   const [h, s, l] = hslString.split(' ').map(value => parseFloat(value));
   return { 
     h: h || 0, 
@@ -44,27 +90,45 @@ function ColorPicker({ label, value, onChange }: ColorPickerProps) {
   const [hue, setHue] = useState(h);
   const [saturation, setSaturation] = useState(s);
   const [lightness, setLightness] = useState(l);
+  const [hexValue, setHexValue] = useState(hslToHex(h, s, l));
 
   useEffect(() => {
     const { h, s, l } = parseHslValue(value);
     setHue(h);
     setSaturation(s);
     setLightness(l);
+    setHexValue(hslToHex(h, s, l));
   }, [value]);
 
   const handleHueChange = (newHue: number[]) => {
     setHue(newHue[0]);
-    onChange(formatHslValue(newHue[0], saturation, lightness));
+    const newValue = formatHslValue(newHue[0], saturation, lightness);
+    setHexValue(hslToHex(newHue[0], saturation, lightness));
+    onChange(newValue);
   };
 
   const handleSaturationChange = (newSaturation: number[]) => {
     setSaturation(newSaturation[0]);
-    onChange(formatHslValue(hue, newSaturation[0], lightness));
+    const newValue = formatHslValue(hue, newSaturation[0], lightness);
+    setHexValue(hslToHex(hue, newSaturation[0], lightness));
+    onChange(newValue);
   };
 
   const handleLightnessChange = (newLightness: number[]) => {
     setLightness(newLightness[0]);
-    onChange(formatHslValue(hue, saturation, newLightness[0]));
+    const newValue = formatHslValue(hue, saturation, newLightness[0]);
+    setHexValue(hslToHex(hue, saturation, newLightness[0]));
+    onChange(newValue);
+  };
+
+  const handleHexChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newHex = e.target.value;
+    setHexValue(newHex);
+    
+    // Only process valid hex colors
+    if (/^#[0-9A-F]{6}$/i.test(newHex)) {
+      onChange(newHex);
+    }
   };
 
   const colorStyle = {
@@ -80,8 +144,15 @@ function ColorPicker({ label, value, onChange }: ColorPickerProps) {
             className="w-8 h-8 rounded-md border" 
             style={colorStyle} 
           />
-          <div className="text-sm text-muted-foreground">
-            HSL({hue}, {saturation}%, {lightness}%)
+          <div className="flex gap-2 items-center">
+            <Input 
+              value={hexValue}
+              onChange={handleHexChange}
+              className="w-24 h-8 text-xs font-mono"
+            />
+            <div className="text-xs text-muted-foreground hidden sm:block">
+              HSL({hue}, {saturation}%, {lightness}%)
+            </div>
           </div>
         </div>
       </div>
@@ -226,10 +297,13 @@ export default function ThemeSettingsPage() {
         <Card>
           <CardContent className="p-6">
             <Tabs value={activeTab} onValueChange={setActiveTab}>
-              <TabsList className="mb-6 grid grid-cols-4">
-                <TabsTrigger value="core">Core Colors</TabsTrigger>
+              <TabsList className="mb-6 grid grid-cols-7">
+                <TabsTrigger value="core">Colors</TabsTrigger>
                 <TabsTrigger value="components">Components</TabsTrigger>
-                <TabsTrigger value="sidebar">Sidebar</TabsTrigger>
+                <TabsTrigger value="typography">Typography</TabsTrigger>
+                <TabsTrigger value="layout">Layout</TabsTrigger>
+                <TabsTrigger value="shapes">Shapes</TabsTrigger>
+                <TabsTrigger value="motion">Motion</TabsTrigger>
                 <TabsTrigger value="charts">Charts</TabsTrigger>
               </TabsList>
               
@@ -396,6 +470,199 @@ export default function ThemeSettingsPage() {
                   value={localTheme.sidebarBorder}
                   onChange={(value) => handlePropertyChange("sidebarBorder", value)}
                 />
+              </TabsContent>
+              
+              <TabsContent value="typography" className="space-y-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label>Font Family</Label>
+                    <Input
+                      value={localTheme.fontFamily}
+                      onChange={(e) => handlePropertyChange("fontFamily", e.target.value)}
+                      placeholder="'Inter', sans-serif"
+                      className="mt-2"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label>Font Size</Label>
+                    <Input
+                      value={localTheme.fontSize}
+                      onChange={(e) => handlePropertyChange("fontSize", e.target.value)}
+                      placeholder="16px"
+                      className="mt-2"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label>Line Height</Label>
+                    <Input
+                      value={localTheme.lineHeight}
+                      onChange={(e) => handlePropertyChange("lineHeight", e.target.value)}
+                      placeholder="1.5"
+                      className="mt-2"
+                    />
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>Font Weight Light</Label>
+                      <Input
+                        value={localTheme.fontWeightLight}
+                        onChange={(e) => handlePropertyChange("fontWeightLight", e.target.value)}
+                        placeholder="300"
+                        className="mt-2"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label>Font Weight Regular</Label>
+                      <Input
+                        value={localTheme.fontWeightRegular}
+                        onChange={(e) => handlePropertyChange("fontWeightRegular", e.target.value)}
+                        placeholder="400"
+                        className="mt-2"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label>Font Weight Medium</Label>
+                      <Input
+                        value={localTheme.fontWeightMedium}
+                        onChange={(e) => handlePropertyChange("fontWeightMedium", e.target.value)}
+                        placeholder="500"
+                        className="mt-2"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label>Font Weight Bold</Label>
+                      <Input
+                        value={localTheme.fontWeightBold}
+                        onChange={(e) => handlePropertyChange("fontWeightBold", e.target.value)}
+                        placeholder="700"
+                        className="mt-2"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="layout" className="space-y-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label>Base Spacing</Label>
+                    <Input
+                      value={localTheme.spacing}
+                      onChange={(e) => handlePropertyChange("spacing", e.target.value)}
+                      placeholder="8px"
+                      className="mt-2"
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">The base spacing unit used throughout the application</p>
+                  </div>
+                  
+                  <div>
+                    <Label>Border Radius</Label>
+                    <Input
+                      value={localTheme.borderRadius}
+                      onChange={(e) => handlePropertyChange("borderRadius", e.target.value)}
+                      placeholder="4px"
+                      className="mt-2"
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">Default border radius for elements</p>
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="shapes" className="space-y-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label>Small Shadow</Label>
+                    <Input
+                      value={localTheme.shadowSm}
+                      onChange={(e) => handlePropertyChange("shadowSm", e.target.value)}
+                      placeholder="0 1px 2px 0 rgb(0 0 0 / 0.05)"
+                      className="mt-2"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label>Medium Shadow</Label>
+                    <Input
+                      value={localTheme.shadowMd}
+                      onChange={(e) => handlePropertyChange("shadowMd", e.target.value)}
+                      placeholder="0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
+                      className="mt-2"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label>Large Shadow</Label>
+                    <Input
+                      value={localTheme.shadowLg}
+                      onChange={(e) => handlePropertyChange("shadowLg", e.target.value)}
+                      placeholder="0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1)"
+                      className="mt-2"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label>Extra Large Shadow</Label>
+                    <Input
+                      value={localTheme.shadowXl}
+                      onChange={(e) => handlePropertyChange("shadowXl", e.target.value)}
+                      placeholder="0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)"
+                      className="mt-2"
+                    />
+                  </div>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="motion" className="space-y-6">
+                <div className="space-y-4">
+                  <div>
+                    <Label>Transition Duration</Label>
+                    <Input
+                      value={localTheme.transitionDuration}
+                      onChange={(e) => handlePropertyChange("transitionDuration", e.target.value)}
+                      placeholder="150ms"
+                      className="mt-2"
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label>Ease Timing Function</Label>
+                    <Input
+                      value={localTheme.transitionTimingEase}
+                      onChange={(e) => handlePropertyChange("transitionTimingEase", e.target.value)}
+                      placeholder="cubic-bezier(0.4, 0, 0.2, 1)"
+                      className="mt-2"
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">Default timing function for transitions</p>
+                  </div>
+                  
+                  <div>
+                    <Label>In Timing Function</Label>
+                    <Input
+                      value={localTheme.transitionTimingIn}
+                      onChange={(e) => handlePropertyChange("transitionTimingIn", e.target.value)}
+                      placeholder="cubic-bezier(0.0, 0, 0.2, 1)"
+                      className="mt-2"
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">Timing function for elements entering the screen</p>
+                  </div>
+                  
+                  <div>
+                    <Label>Out Timing Function</Label>
+                    <Input
+                      value={localTheme.transitionTimingOut}
+                      onChange={(e) => handlePropertyChange("transitionTimingOut", e.target.value)}
+                      placeholder="cubic-bezier(0.4, 0, 1, 1)"
+                      className="mt-2"
+                    />
+                    <p className="text-sm text-muted-foreground mt-1">Timing function for elements leaving the screen</p>
+                  </div>
+                </div>
               </TabsContent>
               
               <TabsContent value="charts" className="space-y-6">
