@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { NavigationWrapper } from "@/components/NavigationWrapper";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -89,14 +89,28 @@ const statusColumns = {
 };
 
 // Format time for timer display
-const formatTime = (seconds) => {
+const formatTime = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
 // Patient card component
-const PatientCard = ({ patient, columnColor }) => {
+interface PatientProps {
+  patient: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    appointmentType: string;
+    status: string;
+    timeInStatus: number;
+    hasAlert?: boolean;
+    balance?: number;
+  };
+  columnColor: string;
+}
+
+const PatientCard: React.FC<PatientProps> = ({ patient, columnColor }) => {
   const [timeInStatus, setTimeInStatus] = useState(patient.timeInStatus || 0);
   
   useEffect(() => {
@@ -157,8 +171,22 @@ const PatientCard = ({ patient, columnColor }) => {
 };
 
 // Status column component
-const StatusColumn = ({ column, patients }) => {
-  const { title, icon, color, wipLimit, role } = statusColumns[column];
+interface StatusColumnProps {
+  column: string;
+  patients: Array<{
+    id: number;
+    firstName: string;
+    lastName: string;
+    appointmentType: string;
+    status: string;
+    timeInStatus: number;
+    hasAlert?: boolean;
+    balance?: number;
+  }>;
+}
+
+const StatusColumn: React.FC<StatusColumnProps> = ({ column, patients }) => {
+  const { title, icon, color, wipLimit, role } = statusColumns[column as keyof typeof statusColumns];
   const count = patients.length;
   const isOverLimit = count > wipLimit && wipLimit !== Infinity;
   
@@ -202,7 +230,19 @@ const StatusColumn = ({ column, patients }) => {
 };
 
 // Exception rail component
-const ExceptionRail = ({ patients }) => {
+interface ExceptionRailProps {
+  patients: Array<{
+    id: number;
+    firstName: string;
+    lastName: string;
+    appointmentType: string;
+    type: string;
+    timeInStatus?: number;
+    balance?: number;
+  }>;
+}
+
+const ExceptionRail: React.FC<ExceptionRailProps> = ({ patients }) => {
   // Group patients by exception type
   const late = patients.filter(patient => patient.type === "late");
   const noShow = patients.filter(patient => patient.type === "no-show");
@@ -281,7 +321,19 @@ const ExceptionRail = ({ patients }) => {
 };
 
 // Exception card component
-const ExceptionCard = ({ patient, type }) => {
+interface ExceptionCardProps {
+  patient: {
+    id: number;
+    firstName: string;
+    lastName: string;
+    appointmentType: string;
+    timeInStatus?: number;
+    balance?: number;
+  };
+  type: string;
+}
+
+const ExceptionCard: React.FC<ExceptionCardProps> = ({ patient, type }) => {
   // Exception type styling
   const getStyle = () => {
     switch(type) {
@@ -309,12 +361,12 @@ const ExceptionCard = ({ patient, type }) => {
             <div className="font-medium text-xs">{patient.lastName}, {patient.firstName.charAt(0)}</div>
             <div className="text-[10px] text-gray-500">{patient.appointmentType}</div>
           </div>
-          {type === "late" && (
+          {type === "late" && patient.timeInStatus && (
             <Badge variant="outline" className="text-[10px]" style={{ color: getStyle().color, borderColor: getStyle().color }}>
               +{patient.timeInStatus}m
             </Badge>
           )}
-          {type === "walk-out" && patient.balance > 0 && (
+          {type === "walk-out" && patient.balance && patient.balance > 0 && (
             <Badge variant="outline" className="text-[10px]" style={{ color: getStyle().color, borderColor: getStyle().color }}>
               ${(patient.balance/100).toFixed(2)}
             </Badge>
@@ -326,7 +378,11 @@ const ExceptionCard = ({ patient, type }) => {
 };
 
 // Empty state for exceptions
-const EmptyException = ({ type }) => {
+interface EmptyExceptionProps {
+  type: string;
+}
+
+const EmptyException: React.FC<EmptyExceptionProps> = ({ type }) => {
   const getMessage = () => {
     switch(type) {
       case "late": return "No late patients";
@@ -345,7 +401,14 @@ const EmptyException = ({ type }) => {
 };
 
 // KPI chip component
-const KpiChip = ({ label, value, target, icon }) => {
+interface KpiChipProps {
+  label: string;
+  value: number;
+  target: number;
+  icon: React.ReactNode;
+}
+
+const KpiChip: React.FC<KpiChipProps> = ({ label, value, target, icon }) => {
   // Color logic based on performance vs target
   const getColor = () => {
     const percentage = (value / target) * 100;
@@ -383,26 +446,26 @@ export default function MissionControlPage() {
   // Mock data for demonstration
   const patientFlowData = {
     "checked-in": [
-      { id: 1, name: "Smith, John", firstName: "John", lastName: "Smith", appointmentType: "Exam & Clean", operatory: "Op 1", provider: "Dr. Davis", timeInStatus: 120, hasAlert: true, dob: "1980-05-15", balance: 0 },
-      { id: 2, name: "Johnson, Emily", firstName: "Emily", lastName: "Johnson", appointmentType: "Filling", operatory: "Op 2", provider: "Dr. Wilson", timeInStatus: 240, hasAlert: false, dob: "1975-10-20", balance: 12500 }
+      { id: 1, firstName: "John", lastName: "Smith", appointmentType: "Exam & Clean", operatory: "Op 1", provider: "Dr. Davis", timeInStatus: 120, hasAlert: true, status: "checked-in", dob: "1980-05-15", balance: 0 },
+      { id: 2, firstName: "Emily", lastName: "Johnson", appointmentType: "Filling", operatory: "Op 2", provider: "Dr. Wilson", timeInStatus: 240, hasAlert: false, status: "checked-in", dob: "1975-10-20", balance: 12500 }
     ],
     "seated": [
-      { id: 3, name: "Williams, Sarah", firstName: "Sarah", lastName: "Williams", appointmentType: "Root Canal", operatory: "Op 3", provider: "Dr. Brown", timeInStatus: 180, hasAlert: false, dob: "1990-03-25", balance: 0 }
+      { id: 3, firstName: "Sarah", lastName: "Williams", appointmentType: "Root Canal", operatory: "Op 3", provider: "Dr. Brown", timeInStatus: 180, hasAlert: false, status: "seated", dob: "1990-03-25", balance: 0 }
     ],
     "pre-clinical": [
-      { id: 4, name: "Jones, Robert", firstName: "Robert", lastName: "Jones", appointmentType: "Crown Prep", operatory: "Op 4", provider: "Dr. Miller", timeInStatus: 150, hasAlert: false, dob: "1988-07-12", balance: 0 }
+      { id: 4, firstName: "Robert", lastName: "Jones", appointmentType: "Crown Prep", operatory: "Op 4", provider: "Dr. Miller", timeInStatus: 150, hasAlert: false, status: "pre-clinical", dob: "1988-07-12", balance: 0 }
     ],
     "doctor-ready": [
-      { id: 5, name: "Brown, Michael", firstName: "Michael", lastName: "Brown", appointmentType: "Extraction", operatory: "Op 5", provider: "Dr. Davis", timeInStatus: 90, hasAlert: true, dob: "1970-11-30", balance: 20000 }
+      { id: 5, firstName: "Michael", lastName: "Brown", appointmentType: "Extraction", operatory: "Op 5", provider: "Dr. Davis", timeInStatus: 90, hasAlert: true, status: "doctor-ready", dob: "1970-11-30", balance: 20000 }
     ],
     "in-chair": [
-      { id: 6, name: "Davis, Jennifer", firstName: "Jennifer", lastName: "Davis", appointmentType: "Implant", operatory: "Op 6", provider: "Dr. Wilson", timeInStatus: 360, hasAlert: false, dob: "1982-09-05", balance: 0 }
+      { id: 6, firstName: "Jennifer", lastName: "Davis", appointmentType: "Implant", operatory: "Op 6", provider: "Dr. Wilson", timeInStatus: 360, hasAlert: false, status: "in-chair", dob: "1982-09-05", balance: 0 }
     ],
     "wrap-up": [
-      { id: 7, name: "Miller, David", firstName: "David", lastName: "Miller", appointmentType: "Scaling", operatory: "Op 7", provider: "Dr. Brown", timeInStatus: 210, hasAlert: false, dob: "1965-04-18", balance: 0 }
+      { id: 7, firstName: "David", lastName: "Miller", appointmentType: "Scaling", operatory: "Op 7", provider: "Dr. Brown", timeInStatus: 210, hasAlert: false, status: "wrap-up", dob: "1965-04-18", balance: 0 }
     ],
     "ready-checkout": [
-      { id: 8, name: "Wilson, Elizabeth", firstName: "Elizabeth", lastName: "Wilson", appointmentType: "Veneer", operatory: "Op 8", provider: "Dr. Miller", timeInStatus: 270, hasAlert: true, dob: "1992-01-25", balance: 35000 }
+      { id: 8, firstName: "Elizabeth", lastName: "Wilson", appointmentType: "Veneer", operatory: "Op 8", provider: "Dr. Miller", timeInStatus: 270, hasAlert: true, status: "ready-checkout", dob: "1992-01-25", balance: 35000 }
     ],
     "checked-out": []
   };
@@ -418,63 +481,65 @@ export default function MissionControlPage() {
   // Mock KPI data
   const kpiData = {
     waitToSeat: { value: 6, target: 5 },
-    seatToDoctor: { value: 7, target: 8 },
-    throughput: { value: 12, target: 18 },
-    utilization: { value: 85, target: 90 }
+    seatToDoctor: { value: 4, target: 8 },
+    throughput: { value: 12, target: 16 },
+    utilization: { value: 72, target: 85 }
   };
   
   return (
     <NavigationWrapper>
-      <div className="container mx-auto px-4 py-6">
-        {/* KPI Header */}
-        <div className="bg-gray-50 rounded-lg p-3 mb-4 flex items-center justify-between">
-          <div className="flex items-center">
-            <div className="mr-3">
-              <h1 className="text-xl font-bold">{format(new Date(), "EEEE, MMMM d")}</h1>
-              <div className="text-sm text-gray-500">Mission Control</div>
-            </div>
+      <div className="flex flex-col h-full">
+        {/* Header with KPIs */}
+        <div className="bg-slate-800 text-white px-4 py-3 mb-4 flex items-center justify-between rounded-lg shadow-md">
+          <div className="flex items-center space-x-4">
+            <h1 className="text-xl font-bold">Mission Control</h1>
+            <span className="text-gray-300">{format(new Date(), "EEEE, MMMM d")}</span>
           </div>
           
           <div className="flex items-center space-x-3">
             <KpiChip 
-              label="Wait to Seat" 
-              value={`${kpiData.waitToSeat.value}m`} 
-              target={`${kpiData.waitToSeat.target}m`} 
+              label="Wait-to-Seat" 
+              value={kpiData.waitToSeat.value} 
+              target={kpiData.waitToSeat.target} 
               icon={<Clock className="h-4 w-4" />} 
             />
             <KpiChip 
-              label="Seat to Doctor" 
-              value={`${kpiData.seatToDoctor.value}m`} 
-              target={`${kpiData.seatToDoctor.target}m`} 
-              icon={<Stethoscope className="h-4 w-4" />} 
+              label="Seat-to-Doctor" 
+              value={kpiData.seatToDoctor.value} 
+              target={kpiData.seatToDoctor.target}
+              icon={<HelpCircle className="h-4 w-4" />}
             />
             <KpiChip 
               label="Throughput" 
               value={kpiData.throughput.value} 
-              target={kpiData.throughput.target} 
-              icon={<BarChart4 className="h-4 w-4" />} 
+              target={kpiData.throughput.target}
+              icon={<Calendar className="h-4 w-4" />}
             />
             <KpiChip 
-              label="Utilization" 
-              value={`${kpiData.utilization.value}%`} 
-              target={`${kpiData.utilization.target}%`} 
-              icon={<Calendar className="h-4 w-4" />} 
+              label="Utilization %" 
+              value={kpiData.utilization.value} 
+              target={kpiData.utilization.target}
+              icon={<BarChart4 className="h-4 w-4" />}
             />
           </div>
         </div>
         
-        {/* Kanban Board */}
-        <div className="flex h-[calc(100vh-230px)] overflow-x-auto space-x-3 pb-3">
-          {Object.keys(statusColumns).map(column => (
-            <StatusColumn 
-              key={column} 
-              column={column} 
-              patients={patientFlowData[column] || []} 
-            />
-          ))}
-          
-          {/* Exception Rail */}
-          <ExceptionRail patients={exceptionData} />
+        {/* Main columns grid */}
+        <div className="flex-1 overflow-x-auto min-h-0">
+          <div className="flex h-full gap-2 pb-2">
+            {/* Flow columns */}
+            <StatusColumn column="checked-in" patients={patientFlowData["checked-in"]} />
+            <StatusColumn column="seated" patients={patientFlowData["seated"]} />
+            <StatusColumn column="pre-clinical" patients={patientFlowData["pre-clinical"]} />
+            <StatusColumn column="doctor-ready" patients={patientFlowData["doctor-ready"]} />
+            <StatusColumn column="in-chair" patients={patientFlowData["in-chair"]} />
+            <StatusColumn column="wrap-up" patients={patientFlowData["wrap-up"]} />
+            <StatusColumn column="ready-checkout" patients={patientFlowData["ready-checkout"]} />
+            <StatusColumn column="checked-out" patients={patientFlowData["checked-out"]} />
+            
+            {/* Exception rail */}
+            <ExceptionRail patients={exceptionData} />
+          </div>
         </div>
       </div>
     </NavigationWrapper>

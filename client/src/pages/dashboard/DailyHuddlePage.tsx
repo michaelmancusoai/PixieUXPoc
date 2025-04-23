@@ -1,28 +1,21 @@
-import React, { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { format, addDays, differenceInDays, parseISO } from "date-fns";
+import React, { useState } from "react";
+import { format } from "date-fns";
 import { NavigationWrapper } from "@/components/NavigationWrapper";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import {
   AlertCircle,
   BarChart3,
   BellRing,
-  Calendar,
-  CheckCircle,
-  CreditCard,
   DollarSign,
   FileText,
-  HelpCircle,
   Package,
   Plus,
   ThumbsUp,
@@ -30,18 +23,23 @@ import {
   Trash2,
   UserX,
   Users,
-  Zap,
   MessageSquare,
-  AlertTriangle,
-  Clock,
   ArrowRight,
   ArrowRightCircle,
-  MoveRight,
   Sun
 } from "lucide-react";
 
 // KPI component with color-coded threshold ticks
-const KpiCard = ({ title, value, target, percent, prefix = '', suffix = '', icon }) => {
+interface KpiCardProps {
+  title: string;
+  value: number;
+  target: number;
+  prefix?: string;
+  suffix?: string;
+  icon: React.ReactNode;
+}
+
+const KpiCard: React.FC<KpiCardProps> = ({ title, value, target, prefix = '', suffix = '', icon }) => {
   // Calculate progress and color thresholds
   const progress = Math.min(Math.round((value / target) * 100), 100);
   
@@ -90,7 +88,17 @@ const KpiCard = ({ title, value, target, percent, prefix = '', suffix = '', icon
 };
 
 // Priority tile component
-const PriorityTile = ({ title, count, value, icon, actionText, colorScheme, onClick }) => {
+interface PriorityTileProps {
+  title: string;
+  count: number;
+  value: string;
+  icon: React.ReactNode;
+  actionText: string;
+  colorScheme: string;
+  onClick?: () => void;
+}
+
+const PriorityTile: React.FC<PriorityTileProps> = ({ title, count, value, icon, actionText, colorScheme, onClick }) => {
   const colors = {
     red: { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-100' },
     amber: { bg: 'bg-amber-50', text: 'text-amber-700', border: 'border-amber-100' },
@@ -99,7 +107,7 @@ const PriorityTile = ({ title, count, value, icon, actionText, colorScheme, onCl
     purple: { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-100' },
   };
   
-  const color = colors[colorScheme] || colors.blue;
+  const color = colors[colorScheme as keyof typeof colors] || colors.blue;
   
   return (
     <Card className={`relative overflow-hidden ${color.bg} ${color.border} border shadow-sm`}>
@@ -139,10 +147,36 @@ const PriorityTile = ({ title, count, value, icon, actionText, colorScheme, onCl
   );
 };
 
+// Schedule data types
+interface ScheduleDataCell {
+  hour: string;
+  operatoryId: number;
+  utilization: number;
+  hasGap?: boolean;
+  patientName?: string | null;
+  procedure?: string;
+}
+
+interface ScheduleOperatory {
+  id: number;
+  name: string;
+}
+
+interface ScheduleData {
+  utilization: number;
+  potentialRevenue: number;
+  operatories: ScheduleOperatory[];
+  cells: ScheduleDataCell[];
+}
+
 // Schedule heatmap component
-const ScheduleHeatmap = ({ schedule }) => {
+interface ScheduleHeatmapProps {
+  schedule: ScheduleData;
+}
+
+const ScheduleHeatmap: React.FC<ScheduleHeatmapProps> = ({ schedule }) => {
   // Helper to calculate utilization color
-  const getUtilizationColor = (percent) => {
+  const getUtilizationColor = (percent: number) => {
     if (percent >= 90) return "bg-emerald-500";
     if (percent >= 70) return "bg-emerald-400";
     if (percent >= 50) return "bg-emerald-300";
@@ -182,38 +216,36 @@ const ScheduleHeatmap = ({ schedule }) => {
             
             {/* Cells */}
             {hours.map(hour => (
-              <React.Fragment key={hour}>
-                {schedule.operatories.map(op => {
-                  const cellData = schedule.cells.find(
-                    cell => cell.hour === hour && cell.operatoryId === op.id
-                  ) || { utilization: 0, hasGap: false, patientName: null };
-                  
-                  return (
-                    <div 
-                      key={`${hour}-${op.id}`} 
-                      className={`h-10 rounded ${getUtilizationColor(cellData.utilization)} 
-                                ${cellData.hasGap ? 'border-2 border-dashed border-amber-500' : ''} 
-                                relative group`}
-                    >
-                      {cellData.patientName && (
-                        <TooltipProvider>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-2 h-2 rounded-full bg-white"></div>
-                              </div>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              <p>{cellData.patientName}</p>
-                              <p className="text-xs text-gray-500">{cellData.procedure}</p>
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      )}
-                    </div>
-                  );
-                })}
-              </React.Fragment>
+              schedule.operatories.map(op => {
+                const cellData = schedule.cells.find(
+                  cell => cell.hour === hour && cell.operatoryId === op.id
+                ) || { utilization: 0, hasGap: false, patientName: null };
+                
+                return (
+                  <div 
+                    key={`${hour}-${op.id}`} 
+                    className={`h-10 rounded ${getUtilizationColor(cellData.utilization)} 
+                              ${cellData.hasGap ? 'border-2 border-dashed border-amber-500' : ''} 
+                              relative group`}
+                  >
+                    {cellData.patientName && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-2 h-2 rounded-full bg-white"></div>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p>{cellData.patientName}</p>
+                            <p className="text-xs text-gray-500">{cellData.procedure}</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </div>
+                );
+              })
             ))}
           </div>
         </div>
@@ -231,9 +263,24 @@ const ScheduleHeatmap = ({ schedule }) => {
   );
 };
 
+// Discussion item type
+interface DiscussionItemType {
+  id: number;
+  title: string;
+  description?: string;
+  color: string; 
+  section: string;
+  type: 'system' | 'custom';
+}
+
 // Discussion topic component
-const DiscussionItem = ({ item, onDelete }) => {
-  const colors = {
+interface DiscussionItemProps {
+  item: DiscussionItemType;
+  onDelete?: (id: number) => void;
+}
+
+const DiscussionItem: React.FC<DiscussionItemProps> = ({ item, onDelete }) => {
+  const colors: Record<string, string> = {
     red: 'border-red-200 bg-red-50 text-red-700',
     green: 'border-emerald-200 bg-emerald-50 text-emerald-700',
     blue: 'border-blue-200 bg-blue-50 text-blue-700',
@@ -265,7 +312,14 @@ const DiscussionItem = ({ item, onDelete }) => {
 };
 
 // Add Discussion Dialog
-const AddDiscussionDialog = ({ open, setOpen, onAdd, section }) => {
+interface AddDiscussionDialogProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  onAdd: (item: Omit<DiscussionItemType, 'id'>) => void;
+  section: string;
+}
+
+const AddDiscussionDialog: React.FC<AddDiscussionDialogProps> = ({ open, setOpen, onAdd, section }) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [color, setColor] = useState('blue');
@@ -273,7 +327,6 @@ const AddDiscussionDialog = ({ open, setOpen, onAdd, section }) => {
   const handleSubmit = () => {
     if (title.trim()) {
       onAdd({
-        id: Date.now(),
         title: title.trim(),
         description: description.trim(),
         color,
@@ -347,8 +400,8 @@ const AddDiscussionDialog = ({ open, setOpen, onAdd, section }) => {
 };
 
 // Helper to get color for color swatches
-function getColorForSwatch(color) {
-  const colors = {
+function getColorForSwatch(color: string): string {
+  const colors: Record<string, string> = {
     blue: '#2563eb',
     green: '#10b981',
     amber: '#d97706',
@@ -378,7 +431,7 @@ export default function DailyHuddlePage() {
   });
   
   // State for schedule heatmap
-  const [schedule] = useState({
+  const [schedule] = useState<ScheduleData>({
     utilization: 78,
     potentialRevenue: 3200,
     operatories: [
@@ -407,7 +460,6 @@ export default function DailyHuddlePage() {
       { hour: '11 AM', operatoryId: 4, utilization: 100, patientName: 'Thomas, R', procedure: 'Crown' },
       { hour: '11 AM', operatoryId: 5, utilization: 100, patientName: 'Jackson, M', procedure: 'Cleaning' },
       
-      // More cells for remaining hours...
       { hour: '12 PM', operatoryId: 1, utilization: 0 },
       { hour: '12 PM', operatoryId: 2, utilization: 0 },
       { hour: '12 PM', operatoryId: 3, utilization: 0 },
@@ -447,27 +499,27 @@ export default function DailyHuddlePage() {
   });
   
   // Discussion items state for each tab
-  const [ownerItems, setOwnerItems] = useState([
+  const [ownerItems, setOwnerItems] = useState<DiscussionItemType[]>([
     { id: 1, title: 'Weekly production exceeded target by 5%', description: 'Great work team!', color: 'green', section: 'owner', type: 'system' },
     { id: 2, title: 'Hygiene department had 100% recare success rate', color: 'green', section: 'owner', type: 'system' }
   ]);
   
-  const [frontItems, setFrontItems] = useState([
+  const [frontItems, setFrontItems] = useState<DiscussionItemType[]>([
     { id: 3, title: '5 unconfirmed appointments for today', description: 'Need to call ASAP', color: 'amber', section: 'front', type: 'system' },
     { id: 4, title: '3 patients arriving with outstanding balances', color: 'red', section: 'front', type: 'system' }
   ]);
   
-  const [hygieneItems, setHygieneItems] = useState([
+  const [hygieneItems, setHygieneItems] = useState<DiscussionItemType[]>([
     { id: 5, title: '2 recall gaps can be filled today', color: 'blue', section: 'hygiene', type: 'system' },
     { id: 6, title: 'New hygiene forms arrived', description: 'Located in cabinet 3', color: 'gray', section: 'hygiene', type: 'custom' }
   ]);
   
-  const [doctorItems, setDoctorItems] = useState([
+  const [doctorItems, setDoctorItems] = useState<DiscussionItemType[]>([
     { id: 7, title: '2 lab cases due but not received', color: 'amber', section: 'doctor', type: 'system' },
     { id: 8, title: 'Dr. Wilson celebrating work anniversary today', color: 'purple', section: 'doctor', type: 'custom' }
   ]);
   
-  const [billingItems, setBillingItems] = useState([
+  const [billingItems, setBillingItems] = useState<DiscussionItemType[]>([
     { id: 9, title: '3 claims denied yesterday', description: 'Need to resubmit with correct codes', color: 'red', section: 'billing', type: 'system' },
     { id: 10, title: 'New EOB processing training next week', color: 'blue', section: 'billing', type: 'custom' }
   ]);
@@ -477,276 +529,324 @@ export default function DailyHuddlePage() {
   const [currentSection, setCurrentSection] = useState('');
   
   // Get the setter function for the current section
-  const getSetterForSection = (section) => {
+  const getSetterForSection = (section: string) => {
     switch(section) {
       case 'owner': return setOwnerItems;
       case 'front': return setFrontItems;
       case 'hygiene': return setHygieneItems;
       case 'doctor': return setDoctorItems;
       case 'billing': return setBillingItems;
-      default: return () => {};
+      default: return setOwnerItems;
     }
   };
   
-  // Add a discussion item to a section
-  const handleAddItem = (item) => {
+  // Add a new discussion item
+  const handleAddItem = (item: Omit<DiscussionItemType, 'id'>) => {
     const setter = getSetterForSection(item.section);
-    setter(prev => [...prev, item]);
+    const newItem = {
+      ...item,
+      id: Date.now()
+    };
+    
+    setter(prev => [...prev, newItem]);
   };
   
-  // Delete a discussion item from a section
-  const handleDeleteItem = (section, id) => {
+  // Delete a discussion item
+  const handleDeleteItem = (section: string, id: number) => {
     const setter = getSetterForSection(section);
     setter(prev => prev.filter(item => item.id !== id));
   };
   
-  // Open the add dialog for a specific section
-  const openAddDialog = (section) => {
+  // Open add dialog for a specific section
+  const openAddDialog = (section: string) => {
     setCurrentSection(section);
     setAddDialogOpen(true);
   };
   
   return (
     <NavigationWrapper>
-      <div className="container mx-auto px-4 py-6">
-        {/* Top Header with Yesterday's KPIs */}
-        <div className="bg-gray-50 rounded-lg p-4 mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <div>
-              <h1 className="text-xl font-bold">{format(new Date(), "EEEE, MMMM d")}</h1>
-              <div className="text-sm text-gray-500 flex items-center">
-                <Sun className="h-4 w-4 mr-1" />
-                Daily Huddle
-              </div>
+      <div className="container max-w-6xl mx-auto pb-8">
+        {/* Header with yesterday's KPIs */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Sun className="h-6 w-6 text-amber-500" />
+              <h1 className="text-2xl font-bold">Daily Huddle</h1>
+              <span className="text-muted-foreground">{format(new Date(), "EEEE, MMMM d, yyyy")}</span>
             </div>
-            <Button variant="outline" className="gap-1">
-              <FileText className="h-4 w-4" /> Export Summary
-            </Button>
+            <Badge variant="outline" className="px-3 py-1 text-sm flex gap-1 items-center">
+              <Users className="h-3.5 w-3.5" />
+              <span>All staff present</span>
+            </Badge>
           </div>
           
-          <div className="text-sm font-medium text-gray-500 mb-2">Yesterday's Performance</div>
+          <h2 className="text-lg font-semibold mb-3">Yesterday's Performance</h2>
           <div className="grid grid-cols-4 gap-4">
-            <KpiCard
-              title="Production"
-              value={kpis.production.value}
-              target={kpis.production.target}
-              prefix="$"
-              icon={<DollarSign className="h-5 w-5" />}
+            <KpiCard 
+              title="Production" 
+              value={kpis.production.value} 
+              target={kpis.production.target} 
+              prefix="$" 
+              icon={<BarChart3 className="h-5 w-5" />} 
             />
-            <KpiCard
-              title="Collection %"
-              value={kpis.collection.value}
+            
+            <KpiCard 
+              title="Collection %" 
+              value={kpis.collection.value} 
               target={kpis.collection.target}
-              suffix="%"
-              icon={<CreditCard className="h-5 w-5" />}
+              suffix="%" 
+              icon={<DollarSign className="h-5 w-5" />} 
             />
-            <KpiCard
-              title="Avg Wait Time"
-              value={kpis.waitTime.value}
+            
+            <KpiCard 
+              title="Wait Time" 
+              value={kpis.waitTime.value} 
               target={kpis.waitTime.target}
-              suffix=" min"
-              icon={<Clock className="h-5 w-5" />}
+              suffix=" min" 
+              icon={<Timer className="h-5 w-5" />} 
             />
-            <KpiCard
-              title="Net Promoter Score"
-              value={kpis.nps.value}
+            
+            <KpiCard 
+              title="NPS Score" 
+              value={kpis.nps.value} 
               target={kpis.nps.target}
-              icon={<ThumbsUp className="h-5 w-5" />}
+              icon={<ThumbsUp className="h-5 w-5" />} 
             />
           </div>
         </div>
         
-        {/* Main Content - Schedule and Priorities */}
-        <div className="grid grid-cols-12 gap-6 mb-6">
-          {/* Schedule Heatmap - Left */}
-          <div className="col-span-7">
+        {/* Today's schedule and priorities */}
+        <div className="mb-8 grid grid-cols-2 gap-6">
+          {/* Left column - Schedule heatmap */}
+          <div>
+            <h2 className="text-lg font-semibold mb-3">Today's Schedule</h2>
             <ScheduleHeatmap schedule={schedule} />
           </div>
           
-          {/* Priority Tiles - Right */}
-          <div className="col-span-5 grid grid-cols-2 gap-4 content-start">
-            <PriorityTile 
-              title="Unconfirmed Patients" 
-              count={priorities.unconfirmed.count} 
-              value={priorities.unconfirmed.value} 
-              icon={priorities.unconfirmed.icon} 
-              actionText={priorities.unconfirmed.actionText} 
-              colorScheme={priorities.unconfirmed.colorScheme} 
-            />
-            <PriorityTile 
-              title="High Balances" 
-              count={priorities.balances.count} 
-              value={priorities.balances.value} 
-              icon={priorities.balances.icon} 
-              actionText={priorities.balances.actionText} 
-              colorScheme={priorities.balances.colorScheme} 
-            />
-            <PriorityTile 
-              title="Lab Cases Due" 
-              count={priorities.labCases.count} 
-              value={priorities.labCases.value} 
-              icon={priorities.labCases.icon} 
-              actionText={priorities.labCases.actionText} 
-              colorScheme={priorities.labCases.colorScheme} 
-            />
-            <PriorityTile 
-              title="Low Supplies" 
-              count={priorities.supplies.count} 
-              value={priorities.supplies.value} 
-              icon={priorities.supplies.icon} 
-              actionText={priorities.supplies.actionText} 
-              colorScheme={priorities.supplies.colorScheme} 
-            />
-            <div className="col-span-2">
+          {/* Right column - Priority tiles */}
+          <div>
+            <h2 className="text-lg font-semibold mb-3">Today's Priorities</h2>
+            <div className="grid grid-cols-2 gap-3">
               <PriorityTile 
-                title="Staff Out Today" 
-                count={priorities.staffOut.count} 
-                value={priorities.staffOut.value} 
-                icon={priorities.staffOut.icon} 
-                actionText={priorities.staffOut.actionText} 
-                colorScheme={priorities.staffOut.colorScheme} 
+                title="Unconfirmed Appointments" 
+                count={priorities.unconfirmed.count} 
+                value={priorities.unconfirmed.value} 
+                icon={priorities.unconfirmed.icon} 
+                colorScheme={priorities.unconfirmed.colorScheme} 
+                actionText={priorities.unconfirmed.actionText} 
+                onClick={() => {}}
               />
+              
+              <PriorityTile 
+                title="High Balances" 
+                count={priorities.balances.count} 
+                value={priorities.balances.value} 
+                icon={priorities.balances.icon} 
+                colorScheme={priorities.balances.colorScheme}
+                actionText={priorities.balances.actionText} 
+                onClick={() => {}}
+              />
+              
+              <PriorityTile 
+                title="Lab Cases Due" 
+                count={priorities.labCases.count} 
+                value={priorities.labCases.value} 
+                icon={priorities.labCases.icon} 
+                colorScheme={priorities.labCases.colorScheme}
+                actionText={priorities.labCases.actionText} 
+                onClick={() => {}}
+              />
+              
+              <PriorityTile 
+                title="Supplies Low" 
+                count={priorities.supplies.count} 
+                value={priorities.supplies.value} 
+                icon={priorities.supplies.icon} 
+                colorScheme={priorities.supplies.colorScheme}
+                actionText={priorities.supplies.actionText} 
+                onClick={() => {}}
+              />
+              
+              <div className="col-span-2">
+                <PriorityTile 
+                  title="Staff Out" 
+                  count={priorities.staffOut.count} 
+                  value={priorities.staffOut.value} 
+                  icon={priorities.staffOut.icon} 
+                  colorScheme={priorities.staffOut.colorScheme}
+                  actionText={priorities.staffOut.actionText}
+                  onClick={() => {}} 
+                />
+              </div>
             </div>
           </div>
         </div>
         
-        {/* Huddle Agenda */}
-        <Card className="shadow-sm">
-          <CardHeader className="pb-2">
-            <div className="flex justify-between items-center">
-              <CardTitle className="text-lg">Huddle Agenda</CardTitle>
-              <div className="flex items-center text-sm text-muted-foreground">
-                <Timer className="mr-1 h-4 w-4" />
-                60 second discussion per topic
+        {/* Discussion items */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-lg font-semibold">Discussion Items</h2>
+            <div className="text-sm text-gray-500">Complete in 5 minutes</div>
+          </div>
+          
+          <Tabs defaultValue="owner" className="w-full border rounded-lg">
+            <TabsList className="border-b bg-muted/50 w-full rounded-t-lg grid grid-cols-5">
+              <TabsTrigger value="owner" className="data-[state=active]:bg-background rounded-none">Owner</TabsTrigger>
+              <TabsTrigger value="front" className="data-[state=active]:bg-background rounded-none">Front Office</TabsTrigger>
+              <TabsTrigger value="hygiene" className="data-[state=active]:bg-background rounded-none">Hygiene</TabsTrigger>
+              <TabsTrigger value="doctor" className="data-[state=active]:bg-background rounded-none">Doctor</TabsTrigger>
+              <TabsTrigger value="billing" className="data-[state=active]:bg-background rounded-none">Billing</TabsTrigger>
+            </TabsList>
+            
+            {/* Owner items */}
+            <TabsContent value="owner" className="p-4">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-sm font-medium">Practice Overview</h3>
+                <Button variant="outline" size="sm" className="h-8" onClick={() => openAddDialog('owner')}>
+                  <Plus className="mr-1 h-3.5 w-3.5" />
+                  Add Item
+                </Button>
               </div>
-            </div>
-            <CardDescription>
-              Click through each role's tab for discussion points
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Tabs defaultValue="owner" className="w-full">
-              <TabsList className="w-full grid grid-cols-5">
-                <TabsTrigger value="owner">Owner</TabsTrigger>
-                <TabsTrigger value="front">Front Office</TabsTrigger>
-                <TabsTrigger value="hygiene">Hygiene</TabsTrigger>
-                <TabsTrigger value="doctor">Doctor</TabsTrigger>
-                <TabsTrigger value="billing">Billing</TabsTrigger>
-              </TabsList>
               
-              <TabsContent value="owner" className="pt-4">
-                <div className="flex justify-between mb-3">
-                  <h3 className="font-medium">Owner's Discussion Items</h3>
-                  <Button variant="outline" size="sm" onClick={() => openAddDialog('owner')}>
-                    <Plus className="h-3.5 w-3.5 mr-1" /> Add Item
-                  </Button>
-                </div>
-                
+              <div className="space-y-1">
                 {ownerItems.map(item => (
                   <DiscussionItem 
                     key={item.id} 
                     item={item} 
-                    onDelete={item.type === 'custom' ? () => handleDeleteItem('owner', item.id) : undefined} 
+                    onDelete={item.type === 'custom' ? (id) => handleDeleteItem('owner', id) : undefined} 
                   />
                 ))}
                 
                 {ownerItems.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    <MessageSquare className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                    <p>No discussion items added yet</p>
-                    <Button variant="outline" size="sm" className="mt-2" onClick={() => openAddDialog('owner')}>
-                      <Plus className="h-3.5 w-3.5 mr-1" /> Add First Item
-                    </Button>
+                  <div className="text-center py-6 text-gray-500">
+                    <FileText className="h-10 w-10 mx-auto mb-2 opacity-20" />
+                    <p>No items to discuss yet</p>
                   </div>
                 )}
-              </TabsContent>
+              </div>
+            </TabsContent>
+            
+            {/* Front Office items */}
+            <TabsContent value="front" className="p-4">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-sm font-medium">Front Office Updates</h3>
+                <Button variant="outline" size="sm" className="h-8" onClick={() => openAddDialog('front')}>
+                  <Plus className="mr-1 h-3.5 w-3.5" />
+                  Add Item
+                </Button>
+              </div>
               
-              <TabsContent value="front" className="pt-4">
-                <div className="flex justify-between mb-3">
-                  <h3 className="font-medium">Front Office Discussion Items</h3>
-                  <Button variant="outline" size="sm" onClick={() => openAddDialog('front')}>
-                    <Plus className="h-3.5 w-3.5 mr-1" /> Add Item
-                  </Button>
-                </div>
-                
+              <div className="space-y-1">
                 {frontItems.map(item => (
                   <DiscussionItem 
                     key={item.id} 
                     item={item} 
-                    onDelete={item.type === 'custom' ? () => handleDeleteItem('front', item.id) : undefined} 
+                    onDelete={item.type === 'custom' ? (id) => handleDeleteItem('front', id) : undefined} 
                   />
                 ))}
-              </TabsContent>
-              
-              <TabsContent value="hygiene" className="pt-4">
-                <div className="flex justify-between mb-3">
-                  <h3 className="font-medium">Hygiene Discussion Items</h3>
-                  <Button variant="outline" size="sm" onClick={() => openAddDialog('hygiene')}>
-                    <Plus className="h-3.5 w-3.5 mr-1" /> Add Item
-                  </Button>
-                </div>
                 
+                {frontItems.length === 0 && (
+                  <div className="text-center py-6 text-gray-500">
+                    <FileText className="h-10 w-10 mx-auto mb-2 opacity-20" />
+                    <p>No items to discuss yet</p>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+            
+            {/* Hygiene items */}
+            <TabsContent value="hygiene" className="p-4">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-sm font-medium">Hygiene Department</h3>
+                <Button variant="outline" size="sm" className="h-8" onClick={() => openAddDialog('hygiene')}>
+                  <Plus className="mr-1 h-3.5 w-3.5" />
+                  Add Item
+                </Button>
+              </div>
+              
+              <div className="space-y-1">
                 {hygieneItems.map(item => (
                   <DiscussionItem 
                     key={item.id} 
                     item={item} 
-                    onDelete={item.type === 'custom' ? () => handleDeleteItem('hygiene', item.id) : undefined} 
+                    onDelete={item.type === 'custom' ? (id) => handleDeleteItem('hygiene', id) : undefined} 
                   />
                 ))}
-              </TabsContent>
-              
-              <TabsContent value="doctor" className="pt-4">
-                <div className="flex justify-between mb-3">
-                  <h3 className="font-medium">Doctor Discussion Items</h3>
-                  <Button variant="outline" size="sm" onClick={() => openAddDialog('doctor')}>
-                    <Plus className="h-3.5 w-3.5 mr-1" /> Add Item
-                  </Button>
-                </div>
                 
+                {hygieneItems.length === 0 && (
+                  <div className="text-center py-6 text-gray-500">
+                    <FileText className="h-10 w-10 mx-auto mb-2 opacity-20" />
+                    <p>No items to discuss yet</p>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+            
+            {/* Doctor items */}
+            <TabsContent value="doctor" className="p-4">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-sm font-medium">Doctor's Notes</h3>
+                <Button variant="outline" size="sm" className="h-8" onClick={() => openAddDialog('doctor')}>
+                  <Plus className="mr-1 h-3.5 w-3.5" />
+                  Add Item
+                </Button>
+              </div>
+              
+              <div className="space-y-1">
                 {doctorItems.map(item => (
                   <DiscussionItem 
                     key={item.id} 
                     item={item} 
-                    onDelete={item.type === 'custom' ? () => handleDeleteItem('doctor', item.id) : undefined} 
+                    onDelete={item.type === 'custom' ? (id) => handleDeleteItem('doctor', id) : undefined}
                   />
                 ))}
-              </TabsContent>
-              
-              <TabsContent value="billing" className="pt-4">
-                <div className="flex justify-between mb-3">
-                  <h3 className="font-medium">Billing Discussion Items</h3>
-                  <Button variant="outline" size="sm" onClick={() => openAddDialog('billing')}>
-                    <Plus className="h-3.5 w-3.5 mr-1" /> Add Item
-                  </Button>
-                </div>
                 
+                {doctorItems.length === 0 && (
+                  <div className="text-center py-6 text-gray-500">
+                    <FileText className="h-10 w-10 mx-auto mb-2 opacity-20" />
+                    <p>No items to discuss yet</p>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+            
+            {/* Billing items */}
+            <TabsContent value="billing" className="p-4">
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="text-sm font-medium">Billing & Insurance</h3>
+                <Button variant="outline" size="sm" className="h-8" onClick={() => openAddDialog('billing')}>
+                  <Plus className="mr-1 h-3.5 w-3.5" />
+                  Add Item
+                </Button>
+              </div>
+              
+              <div className="space-y-1">
                 {billingItems.map(item => (
                   <DiscussionItem 
                     key={item.id} 
                     item={item} 
-                    onDelete={item.type === 'custom' ? () => handleDeleteItem('billing', item.id) : undefined} 
+                    onDelete={item.type === 'custom' ? (id) => handleDeleteItem('billing', id) : undefined}
                   />
                 ))}
-              </TabsContent>
-            </Tabs>
-          </CardContent>
-          <CardFooter className="flex justify-between border-t pt-4">
-            <div className="text-sm text-muted-foreground">
-              Today's agenda has {ownerItems.length + frontItems.length + hygieneItems.length + doctorItems.length + billingItems.length} discussion items
-            </div>
-            <Button>
-              Start Huddle <MoveRight className="ml-1 h-4 w-4" />
-            </Button>
-          </CardFooter>
-        </Card>
+                
+                {billingItems.length === 0 && (
+                  <div className="text-center py-6 text-gray-500">
+                    <FileText className="h-10 w-10 mx-auto mb-2 opacity-20" />
+                    <p>No items to discuss yet</p>
+                  </div>
+                )}
+              </div>
+            </TabsContent>
+          </Tabs>
+        </div>
       </div>
       
       {/* Add discussion item dialog */}
       <AddDiscussionDialog 
-        open={addDialogOpen}
-        setOpen={setAddDialogOpen}
-        onAdd={handleAddItem}
-        section={currentSection}
+        open={addDialogOpen} 
+        setOpen={setAddDialogOpen} 
+        onAdd={handleAddItem} 
+        section={currentSection} 
       />
     </NavigationWrapper>
   );
