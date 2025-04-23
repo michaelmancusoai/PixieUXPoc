@@ -704,7 +704,7 @@ const mockClaims: Claim[] = [
 
 // Filter options
 const insuranceCarriers = [
-  "All",
+  "All Carriers",
   "Delta Dental of California",
   "Metlife",
   "United Healthcare",
@@ -713,14 +713,14 @@ const insuranceCarriers = [
 ];
 
 const providers = [
-  "All",
+  "All Providers",
   "Dr. Floyd Miles",
   "Dr. Annette Black",
   "Dr. Ronald Richards",
 ];
 
 const statuses = [
-  "All",
+  "All Statuses",
   "Sent",
   "Pending",
   "Resent",
@@ -735,10 +735,10 @@ export default function ClaimsPage() {
   const [expandedClaimId, setExpandedClaimId] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [filters, setFilters] = useState({
-    insuranceCarrier: "All",
-    provider: "All",
-    insuranceOrder: "All",
-    claimStatus: "All",
+    insuranceCarrier: "All Carriers",
+    provider: "All Providers",
+    insuranceOrder: "All Orders",
+    claimStatus: "All Statuses",
   });
 
   // Get filtered claims
@@ -769,16 +769,16 @@ export default function ClaimsPage() {
     }
 
     // Apply dropdown filters
-    if (filters.insuranceCarrier !== "All") {
+    if (filters.insuranceCarrier !== "All Carriers") {
       filtered = filtered.filter(claim => claim.insuranceCarrier === filters.insuranceCarrier);
     }
-    if (filters.provider !== "All") {
+    if (filters.provider !== "All Providers") {
       filtered = filtered.filter(claim => claim.billingProvider === filters.provider);
     }
-    if (filters.insuranceOrder !== "All") {
+    if (filters.insuranceOrder !== "All Orders") {
       filtered = filtered.filter(claim => claim.insuranceOrder === filters.insuranceOrder);
     }
-    if (filters.claimStatus !== "All") {
+    if (filters.claimStatus !== "All Statuses") {
       filtered = filtered.filter(claim => claim.claimStatus === filters.claimStatus);
     }
 
@@ -918,7 +918,7 @@ export default function ClaimsPage() {
                         <SelectValue placeholder="Insurance Order" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="All">All</SelectItem>
+                        <SelectItem value="All Orders">All Orders</SelectItem>
                         <SelectItem value="Primary">Primary</SelectItem>
                         <SelectItem value="Secondary">Secondary</SelectItem>
                       </SelectContent>
@@ -953,27 +953,39 @@ export default function ClaimsPage() {
                 </div>
 
                 {/* Filter chips */}
-                {(filters.insuranceCarrier !== "All" || filters.provider !== "All") && (
+                {(filters.insuranceCarrier !== "All Carriers" || filters.provider !== "All Providers" || filters.claimStatus !== "All Statuses" || filters.insuranceOrder !== "All Orders") && (
                   <div className="flex items-center gap-2 px-6 py-2 bg-card border-b text-sm">
                     <span className="text-muted-foreground">Filtered results: {filteredClaims.length}</span>
                     
-                    {filters.insuranceCarrier !== "All" && (
+                    {filters.insuranceCarrier !== "All Carriers" && (
                       <Badge variant="outline" className="bg-primary/10 text-primary">
-                        {filters.insuranceCarrier} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, insuranceCarrier: "All" })} />
+                        {filters.insuranceCarrier} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, insuranceCarrier: "All Carriers" })} />
                       </Badge>
                     )}
                     
-                    {filters.provider !== "All" && (
+                    {filters.provider !== "All Providers" && (
                       <Badge variant="outline" className="bg-primary/10 text-primary">
-                        {filters.provider} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, provider: "All" })} />
+                        {filters.provider} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, provider: "All Providers" })} />
+                      </Badge>
+                    )}
+
+                    {filters.claimStatus !== "All Statuses" && (
+                      <Badge variant="outline" className="bg-primary/10 text-primary">
+                        {filters.claimStatus} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, claimStatus: "All Statuses" })} />
+                      </Badge>
+                    )}
+
+                    {filters.insuranceOrder !== "All Orders" && (
+                      <Badge variant="outline" className="bg-primary/10 text-primary">
+                        {filters.insuranceOrder} <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setFilters({ ...filters, insuranceOrder: "All Orders" })} />
                       </Badge>
                     )}
                     
                     <Button variant="ghost" size="sm" className="h-7 text-xs" onClick={() => setFilters({
-                      insuranceCarrier: "All",
-                      provider: "All",
-                      insuranceOrder: "All",
-                      claimStatus: "All"
+                      insuranceCarrier: "All Carriers",
+                      provider: "All Providers",
+                      insuranceOrder: "All Orders",
+                      claimStatus: "All Statuses"
                     })}>
                       Clear all
                     </Button>
@@ -1025,10 +1037,10 @@ export default function ClaimsPage() {
                                 onClick={() => {
                                   setSearchQuery("");
                                   setFilters({
-                                    insuranceCarrier: "All",
-                                    provider: "All",
+                                    insuranceCarrier: "All Carriers",
+                                    provider: "All Providers",
                                     insuranceOrder: "All",
-                                    claimStatus: "All"
+                                    claimStatus: "All Statuses"
                                   });
                                 }}
                               >
