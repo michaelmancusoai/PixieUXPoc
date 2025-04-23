@@ -282,10 +282,22 @@ export default function CalendarView({
                     apt.providerId === resource.id : 
                     (apt.operatoryId === resource.id || (apt.operatoryId === null && colIndex === 0));
                   
-                  // Check if appointment's startTime is on the selected date
-                  const aptStartTime = parseISO(apt.startTime.toString());
-                  const dateMatch = isSameDay(aptStartTime, selectedDate);
+                  // Check if appointment's date matches the selected date
+                  let dateMatch = false;
                   
+                  // First try using the date field if it exists
+                  if (apt.date) {
+                    const aptDate = typeof apt.date === 'string' ? parseISO(apt.date) : apt.date;
+                    dateMatch = isSameDay(aptDate, selectedDate);
+                  }
+                  
+                  // If no match or no date field, fall back to checking startTime
+                  if (!dateMatch && apt.startTime) {
+                    const aptStartTime = parseISO(apt.startTime.toString());
+                    dateMatch = isSameDay(aptStartTime, selectedDate);
+                  }
+                  
+                  console.log(`Appointment ${apt.id} resource: ${resourceMatch}, date: ${dateMatch}`);
                   return resourceMatch && dateMatch;
                 })
                 .map(appointment => {
