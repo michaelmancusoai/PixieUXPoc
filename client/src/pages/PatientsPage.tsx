@@ -696,11 +696,11 @@ export default function PatientsPage() {
                     <TableRow>
                       <TableHead className="w-[180px] pr-8">Name</TableHead>
                       <TableHead className="w-[80px] pr-6">Actions</TableHead>
-                      {columnVisibility.dob && <TableHead className="w-[130px] pr-8">DOB / Age</TableHead>}
-                      {columnVisibility.lastVisit && <TableHead className="w-[130px] pr-8">Last Visit</TableHead>}
-                      {columnVisibility.nextVisit && <TableHead className="w-[130px] pr-8">Next Visit</TableHead>}
-                      {columnVisibility.balance && <TableHead className="w-[110px] pr-8">Balance</TableHead>}
-                      {columnVisibility.plan && <TableHead className="w-[130px] pr-8">Plan</TableHead>}
+                      {columnVisibility.dob && <TableHead className="w-[156px] pr-8">DOB / Age</TableHead>}
+                      {columnVisibility.lastVisit && <TableHead className="w-[156px] pr-8">Last Visit</TableHead>}
+                      {columnVisibility.nextVisit && <TableHead className="w-[156px] pr-8">Next Visit</TableHead>}
+                      {columnVisibility.balance && <TableHead className="w-[132px] pr-8">Balance</TableHead>}
+                      {columnVisibility.plan && <TableHead className="w-[156px] pr-8">Plan</TableHead>}
                       {columnVisibility.tags && <TableHead className="flex-1">Status Tags</TableHead>}
                     </TableRow>
                   </TableHeader>
