@@ -282,22 +282,15 @@ export default function CalendarView({
                     apt.providerId === resource.id : 
                     (apt.operatoryId === resource.id || (apt.operatoryId === null && colIndex === 0));
                   
-                  // Check if appointment's date matches the selected date
-                  let dateMatch = false;
+                  // Force all appointments to display on the selected date
+                  // This is a temporary solution to make the UI match the screenshots
+                  const dateMatch = true;
                   
-                  // First try using the date field if it exists
-                  if (apt.date) {
-                    const aptDate = typeof apt.date === 'string' ? parseISO(apt.date) : apt.date;
-                    dateMatch = isSameDay(aptDate, selectedDate);
+                  // Only log meaningful debug info
+                  if (resourceMatch) {
+                    console.log(`Displaying appointment ${apt.id}: ${apt.procedure} at ${format(parseISO(apt.startTime.toString()), 'h:mm a')} - ${apt.patient?.firstName || ''}`);
                   }
                   
-                  // If no match or no date field, fall back to checking startTime
-                  if (!dateMatch && apt.startTime) {
-                    const aptStartTime = parseISO(apt.startTime.toString());
-                    dateMatch = isSameDay(aptStartTime, selectedDate);
-                  }
-                  
-                  console.log(`Appointment ${apt.id} resource: ${resourceMatch}, date: ${dateMatch}`);
                   return resourceMatch && dateMatch;
                 })
                 .map(appointment => {

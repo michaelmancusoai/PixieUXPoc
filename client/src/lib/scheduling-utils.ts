@@ -42,13 +42,6 @@ export function getAppointmentPosition(appointment: AppointmentWithDetails, slot
       minutes = appointment.startTime.getMinutes();
     }
     
-    // If we couldn't get valid hours, use default 9 AM
-    if (hours === 0 || hours > 23) {
-      console.log(`Using default time for appointment ${appointment.id} - original hours was ${hours}`);
-      hours = 9; // Default to 9 AM if we can't determine the time
-      minutes = 0;
-    }
-    
     // Calculate minutes from calendar start (midnight 0:00)
     const calendarStartHour = 0; // Calendar now starts at midnight
     const calendarStartMinutes = calendarStartHour * MINS_IN_HOUR;
@@ -58,8 +51,6 @@ export function getAppointmentPosition(appointment: AppointmentWithDetails, slot
     // Calculate top position and height
     const top = (minutesFromStart / 5) * slotHeight;
     const height = Math.max((appointment.duration / 5) * slotHeight, slotHeight); // Ensure minimum height
-    
-    console.log(`Appointment ${appointment.id} for ${appointment.patient?.firstName}: hours=${hours}, minutes=${minutes}, top=${top}, height=${height}`);
     
     return { top, height };
   } catch (error) {
