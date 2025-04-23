@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import {
   Search,
   Filter,
@@ -275,6 +276,7 @@ export default function StatementsPage() {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [showInsights, setShowInsights] = useState(false);
   const [filters, setFilters] = useState({
     status: "All Statuses",
     deliveryMethod: "All Methods",
@@ -453,14 +455,30 @@ export default function StatementsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Outstanding Balance</CardTitle>
+                <CardTitle className="text-base font-medium">Current Statements</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
                   <FileText className="h-8 w-8 mr-3 text-blue-500" />
                   <div>
                     <div className="text-2xl font-bold">${totalOutstanding.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">Current selection</div>
+                    <div className="text-sm text-muted-foreground">
+                      {filteredStatements.filter(s => s.status !== "Paid").length} active statements
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t flex justify-between items-center">
+                  <div>
+                    <div className="text-sm font-medium">{filteredStatements.filter(s => s.status === "Draft").length}</div>
+                    <div className="text-xs text-muted-foreground">Drafts</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">{filteredStatements.filter(s => s.status === "Sent").length}</div>
+                    <div className="text-xs text-muted-foreground">Sent</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-red-500">{filteredStatements.filter(s => s.status === "Overdue").length}</div>
+                    <div className="text-xs text-muted-foreground">Overdue</div>
                   </div>
                 </div>
               </CardContent>
@@ -468,14 +486,24 @@ export default function StatementsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Overdue Amount</CardTitle>
+                <CardTitle className="text-base font-medium">Statement Activity</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
-                  <AlertCircle className="h-8 w-8 mr-3 text-red-500" />
+                  <AlertCircle className="h-8 w-8 mr-3 text-amber-500" />
                   <div>
                     <div className="text-2xl font-bold">${totalOverdue.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">Requires immediate action</div>
+                    <div className="text-sm text-muted-foreground">Overdue amount</div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="text-sm font-medium">7 days</div>
+                    <div className="text-xs text-muted-foreground">Avg time to pay</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">68%</div>
+                    <div className="text-xs text-muted-foreground">E-statement adoption</div>
                   </div>
                 </div>
               </CardContent>
@@ -487,20 +515,21 @@ export default function StatementsPage() {
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex flex-col space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Create and manage statements</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Button className="h-9 flex-1">
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button className="h-9 w-full">
                       <PlusCircle className="h-4 w-4 mr-1" />
                       New Statement
                     </Button>
-                    <Button variant="outline" className="h-9 flex-1">
+                    <Button variant="outline" className="h-9 w-full">
+                      <Send className="h-4 w-4 mr-1" />
+                      Send Reminders
+                    </Button>
+                    <Button variant="outline" className="h-9 w-full">
                       <Download className="h-4 w-4 mr-1" />
                       Export Report
                     </Button>
                     {draftCount > 0 && (
-                      <Button variant="outline" className="h-9 flex-1">
+                      <Button variant="outline" className="h-9 w-full">
                         <Send className="h-4 w-4 mr-1" />
                         Send {draftCount} Draft{draftCount > 1 ? 's' : ''}
                       </Button>
@@ -513,9 +542,22 @@ export default function StatementsPage() {
 
           <Card className="shadow-sm">
             <CardHeader className="px-6 py-4 border-b">
-              <div className="flex justify-between items-center">
-                <CardTitle>Statement Records</CardTitle>
-                <div className="flex space-x-2">
+              <div className="flex flex-wrap justify-between items-center">
+                <div className="flex items-center">
+                  <CardTitle>Statement Records</CardTitle>
+                  <div className="ml-4 flex items-center">
+                    <span className="text-sm text-muted-foreground mr-2">
+                      Show Insights
+                    </span>
+                    <Switch 
+                      id="show-insights" 
+                      className="data-[state=checked]:bg-blue-500" 
+                      checked={showInsights}
+                      onCheckedChange={setShowInsights}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2 sm:mt-0">
                   <Button 
                     variant="default" 
                     size="sm" 
@@ -537,6 +579,118 @@ export default function StatementsPage() {
                 </div>
               </div>
             </CardHeader>
+            
+            {/* Insights Panel - Toggled by the switch */}
+            {showInsights && (
+              <div className="p-6 border-b bg-blue-50/50">
+                <div className="mb-4">
+                  <h3 className="text-md font-medium mb-2">Statement Insights</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    There are {filteredStatements.filter(s => s.status === "Overdue").length} overdue statements totaling ${totalOverdue.toFixed(2)}. E-statements have a 42% higher timely payment rate.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Payment Rate by Delivery Method</h4>
+                      <div className="flex justify-between items-end">
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-xs text-muted-foreground">Email</span>
+                            <span className="text-xs font-medium">76%</span>
+                          </div>
+                          <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-500 rounded-full" style={{ width: '76%' }}></div>
+                          </div>
+                        </div>
+                        <Mail className="h-5 w-5 text-blue-500 ml-2" />
+                      </div>
+                      <div className="flex justify-between items-end mt-3">
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-xs text-muted-foreground">Portal</span>
+                            <span className="text-xs font-medium">65%</span>
+                          </div>
+                          <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-purple-500 rounded-full" style={{ width: '65%' }}></div>
+                          </div>
+                        </div>
+                        <Globe className="h-5 w-5 text-purple-500 ml-2" />
+                      </div>
+                      <div className="flex justify-between items-end mt-3">
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-xs text-muted-foreground">Mail</span>
+                            <span className="text-xs font-medium">34%</span>
+                          </div>
+                          <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-amber-500 rounded-full" style={{ width: '34%' }}></div>
+                          </div>
+                        </div>
+                        <FileText className="h-5 w-5 text-amber-500 ml-2" />
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Statement Metrics</h4>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-blue-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">Avg. Time to Pay</div>
+                          <div className="text-xl font-bold text-blue-600">12 days</div>
+                          <div className="text-xs text-blue-600">from receipt</div>
+                        </div>
+                        <div className="bg-green-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">Collection Rate</div>
+                          <div className="text-xl font-bold text-green-600">94%</div>
+                          <div className="text-xs text-green-600">within 60 days</div>
+                        </div>
+                        <div className="bg-amber-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">Avg. Statement</div>
+                          <div className="text-xl font-bold text-amber-600">$285</div>
+                          <div className="text-xs text-amber-600">per invoice</div>
+                        </div>
+                        <div className="bg-purple-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">E-Statement</div>
+                          <div className="text-xl font-bold text-purple-600">68%</div>
+                          <div className="text-xs text-purple-600">adoption rate</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Recommended Actions</h4>
+                      <ul className="text-xs space-y-2">
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-red-100 flex items-center justify-center mr-2 mt-0.5">
+                            <AlertCircle className="h-3 w-3 text-red-500" />
+                          </div>
+                          <div>
+                            <span className="font-medium block">Send reminder to overdue accounts</span>
+                            <span className="text-muted-foreground">{filteredStatements.filter(s => s.status === "Overdue").length} accounts, ${totalOverdue.toFixed(2)} total</span>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center mr-2 mt-0.5">
+                            <Mail className="h-3 w-3 text-blue-500" />
+                          </div>
+                          <div>
+                            <span className="font-medium block">Switch to e-statements</span>
+                            <span className="text-muted-foreground">32% of patients still use paper</span>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center mr-2 mt-0.5">
+                            <DollarSign className="h-3 w-3 text-green-500" />
+                          </div>
+                          <div>
+                            <span className="font-medium block">Offer payment options</span>
+                            <span className="text-muted-foreground">For balances over $400</span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <CardContent className="p-0">
               <Tabs defaultValue="all" className="w-full" onValueChange={setSelectedTab}>
