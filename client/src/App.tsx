@@ -14,6 +14,7 @@ import SchedulePage from "@/pages/SchedulePage";
 import PatientsPage from "@/pages/PatientsPage";
 import BillingPage from "@/pages/BillingPage";
 import ClaimsPage from "@/pages/ClaimsPage";
+import PaymentsPage from "@/pages/PaymentsPage";
 import ReportsPage from "@/pages/ReportsPage";
 import SettingsPage from "@/pages/SettingsPage";
 import PatientProfilePage from "@/pages/PatientProfilePage";
@@ -34,7 +35,9 @@ function Router() {
       <Route path="/patients/:subpage" component={PatientsPage} />
       <Route path="/billing" component={BillingPage} />
       <Route path="/billing/claims" component={ClaimsPage} />
-      <Route path="/claims" component={ClaimsPage} /> 
+      <Route path="/claims" component={ClaimsPage} />
+      <Route path="/billing/payments" component={PaymentsPage} />
+      <Route path="/payments" component={PaymentsPage} />
       <Route path="/billing/:subpage" component={BillingPage} />
       <Route path="/reports" component={ReportsPage} />
       <Route path="/reports/:subpage" component={ReportsPage} />
