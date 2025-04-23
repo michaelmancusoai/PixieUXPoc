@@ -262,7 +262,15 @@ export const WaitlistManager = () => {
                           <div className="font-medium">{patient.firstName} {patient.lastName}</div>
                           <div className="text-sm text-gray-500 flex items-center mt-1">
                             <User className="h-3.5 w-3.5 mr-1" />
-                            Chart: {patient.chartNumber} • DOB: {format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')}
+                            Chart: {patient.chartNumber} {patient.dateOfBirth ? `• DOB: ${
+                              (() => {
+                                try {
+                                  return format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')
+                                } catch (e) {
+                                  return 'Unknown'
+                                }
+                              })()
+                            }` : ''}
                           </div>
                         </div>
                       </div>
@@ -369,7 +377,15 @@ export const WaitlistManager = () => {
                               >
                                 <div className="font-medium">{patient.firstName} {patient.lastName}</div>
                                 <div className="text-xs text-gray-500">
-                                  Chart: {patient.chartNumber} • DOB: {format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')}
+                                  Chart: {patient.chartNumber} {patient.dateOfBirth ? `• DOB: ${
+                                    (() => {
+                                      try {
+                                        return format(new Date(patient.dateOfBirth), 'MM/dd/yyyy')
+                                      } catch (e) {
+                                        return 'Unknown'
+                                      }
+                                    })()
+                                  }` : ''}
                                 </div>
                               </div>
                             ))}
@@ -402,7 +418,15 @@ export const WaitlistManager = () => {
                               </Button>
                             </div>
                             <div className="text-xs text-gray-500">
-                              Chart: {selectedPatient.chartNumber} • DOB: {format(new Date(selectedPatient.dateOfBirth), 'MM/dd/yyyy')}
+                              Chart: {selectedPatient.chartNumber} {selectedPatient.dateOfBirth ? `• DOB: ${
+                                (() => {
+                                  try {
+                                    return format(new Date(selectedPatient.dateOfBirth), 'MM/dd/yyyy')
+                                  } catch (e) {
+                                    return 'Unknown'
+                                  }
+                                })()
+                              }` : ''}
                             </div>
                           </div>
                         )}
