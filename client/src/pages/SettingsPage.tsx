@@ -1,8 +1,31 @@
 import { NavigationWrapper } from "@/components/NavigationWrapper";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Building, Shield, Calendar, Activity, Receipt, MessageSquare, Package, Wallet, RefreshCcw, Cog, CreditCard, FileBarChart, Users, LockKeyhole } from "lucide-react";
+import { 
+  Building, 
+  Shield, 
+  Calendar, 
+  Activity, 
+  Receipt, 
+  MessageSquare, 
+  Package, 
+  Wallet, 
+  RefreshCcw, 
+  Cog, 
+  CreditCard, 
+  FileBarChart, 
+  Users, 
+  LockKeyhole, 
+  Palette
+} from "lucide-react";
+import { useLocation } from "wouter";
 
 export default function SettingsPage() {
+  const [, navigate] = useLocation();
+
+  const handleCardClick = (path: string) => {
+    navigate(path);
+  };
+  
   return (
     <NavigationWrapper>
       <div className="space-y-6">
@@ -106,6 +129,19 @@ export default function SettingsPage() {
           </div>
         </div>
         
+        {/* Appearance Settings */}
+        <div className="space-y-3">
+          <h2 className="text-xl font-semibold border-b pb-2">Appearance</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <SettingsCard 
+              title="Theme" 
+              description="Customize colors, spacing, and visual elements to match your practice branding" 
+              icon={Palette} 
+              onClick={() => handleCardClick("/settings/theme")}
+            />
+          </div>
+        </div>
+        
         {/* Integrations Settings */}
         <div className="space-y-3 mb-6">
           <h2 className="text-xl font-semibold border-b pb-2">Integrations</h2>
@@ -136,11 +172,15 @@ interface SettingsCardProps {
   title: string;
   description: string;
   icon: React.ElementType;
+  onClick?: () => void;
 }
 
-function SettingsCard({ title, description, icon: Icon }: SettingsCardProps) {
+function SettingsCard({ title, description, icon: Icon, onClick }: SettingsCardProps) {
   return (
-    <Card className="hover:border-primary/50 transition-colors cursor-pointer">
+    <Card 
+      className="hover:border-primary/50 transition-colors cursor-pointer"
+      onClick={onClick}
+    >
       <CardHeader className="flex flex-row items-center gap-3 p-3 pb-2">
         <div className="bg-primary/10 p-1.5 rounded-md flex-shrink-0">
           <Icon className="h-4 w-4 text-primary" />

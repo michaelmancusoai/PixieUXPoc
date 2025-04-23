@@ -20,7 +20,11 @@ import { Switch } from "@/components/ui/switch";
 // Helper to convert HSL string to separate values
 function parseHslValue(hslString: string): { h: number, s: number, l: number } {
   const [h, s, l] = hslString.split(' ').map(value => parseFloat(value));
-  return { h, s: parseInt(s) || 0, l: parseInt(l) || 0 };
+  return { 
+    h: h || 0, 
+    s: parseFloat(s?.toString() || '0') || 0, 
+    l: parseFloat(l?.toString() || '0') || 0 
+  };
 }
 
 // Helper to format HSL values back to string
