@@ -523,15 +523,8 @@ export default function DailyHuddlePage() {
                   )}
                   onClick={() => selectStep(index)}
                 >
-                  <div className="relative">
+                  <div>
                     <StepIcon className={cn("h-5 w-5 mb-2", isActive ? "text-white" : "text-gray-500")} />
-                    {hasCustomItems && (
-                      <Badge 
-                        className="absolute -top-2 -right-2 h-4 w-4 p-0 flex items-center justify-center bg-blue-500 text-white text-[10px]"
-                      >
-                        {customItems[step.title].length}
-                      </Badge>
-                    )}
                   </div>
                   <span className="font-medium text-sm">{step.title}</span>
                 </div>
@@ -596,11 +589,8 @@ export default function DailyHuddlePage() {
                         
                         {/* System Highlights/Issues */}
                         <div className="mt-6">
-                          <div className="flex items-center justify-between mb-3">
+                          <div className="mb-3">
                             <h4 className="font-medium text-gray-900">System Generated Items:</h4>
-                            <Badge variant="outline" className="bg-gray-100 text-gray-700">
-                              {stepData.highlights.length} items
-                            </Badge>
                           </div>
                           <div className="space-y-2">
                             {stepData.highlights.map((highlight, idx) => (
@@ -619,13 +609,8 @@ export default function DailyHuddlePage() {
                         
                         {/* Custom Items Section */}
                         <div className="mt-8 border-t pt-6">
-                          <div className="flex items-center justify-between mb-3">
+                          <div className="mb-3">
                             <h4 className="font-medium text-gray-900">Custom Items:</h4>
-                            {hasCustomItems && (
-                              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200">
-                                {customItems[step.title].length} custom {customItems[step.title].length === 1 ? 'item' : 'items'}
-                              </Badge>
-                            )}
                           </div>
                           
                           {/* Add Item Form */}
