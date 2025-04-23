@@ -1,0 +1,315 @@
+Daily Huddle View Design Spec – Draft 1 (US‑Localised)
+
+“A good huddle gives you the illusion of inevitability—you leave believing the day can’t help but go to plan.” — Rory Sutherland
+
+The Daily Huddle view is a 5‑minute, staff‑facing snapshot that primes the team for a flawless day. It rolls yesterday’s lessons into today’s objectives and highlights risks before they turn into bottlenecks.
+
+0. Ritual Objectives (Jobs‑to‑Be‑Done)
+
+Question
+
+Data Source
+
+Behavioural Cue
+
+How did we perform yesterday?
+
+Mission Control cycle‑time KPIs
+
+Fresh‑start effect – yesterday closed, new day begins
+
+What revenue is booked vs goal?
+
+Scheduler & production targets
+
+Loss aversion – show shortfall first
+
+Where are today’s risks?
+
+Unconfirmed appts, stock alerts, staff absences
+
+Salience – red badges, countdown timers
+
+Who’s doing what?
+
+Staff roster, operatory assignments
+
+Implementation intentions
+
+1. Global Layout (12‑col Grid projected on TV)
+
+Zone
+
+Span
+
+Purpose
+
+MUI Skeleton
+
+Header Strip
+
+12
+
+Date · Weather · “Yesterday at‑a‑glance” KPIs
+
+<AppBar color="primary">
+
+Left Column – Today’s Schedule Heatmap
+
+6
+
+Visual density map of booked time vs gaps
+
+<CalendarHeatmap> custom
+
+Right Column – Priority Tiles
+
+6
+
+Unconfirmed, High Balance, Lab Awaiting, Stock Low, Staff Absent
+
+<Grid container spacing={2}> of <Paper>
+
+Footer Agenda Bar
+
+12
+
+Time‑boxed speaking order: Owner, Front, Hygiene, Doctor, Billing
+
+<Stepper alternativeLabel>
+
+Screen rotates to full‑screen mode with F11; auto‑refreshes every 120 s.
+
+2. Header Strip KPIs (Yesterday)
+
+KPI
+
+Target
+
+Colour Logic
+
+Tooltip
+
+Production
+
+≥ $X goal
+
+Green above, amber within 10 %, red below
+
+“$4 120 vs goal $5 000 (‑18 %)”
+
+Collection %
+
+≥ 90 %
+
+Same gradient
+
+trend sparkline
+
+Wait‑to‑Seat Avg
+
+< 5 min
+
+same
+
+distribution bar
+
+Net Promoter Score
+
+≥ 70
+
+Same
+
+survey count
+
+Weather (locale) adds conversational flair—boosts staff mood.
+
+3. Schedule Heatmap (Left Column)
+
+3.1 Heat Tiles
+
+Grid: Hours (rows) × Operatories (cols).
+
+Cell colour intensity = utilisation % of 5‑min slot.
+
+Hover displays patient name & procedure.
+
+3.2 Gap Call‑outs
+
+Gaps ≥ 20 min outlined in amber; blinking border if > 40 min.
+
+Sidebar chip “Fill $3 200 potential” triggers recall list.
+
+4. Priority Tiles (Right Column)
+
+Tile
+
+Icon
+
+Metric
+
+CTA
+
+Unconfirmed Patients
+
+📱
+
+“5 unconfirmed / $2 400 prod”
+
+“Send SMS Blast”
+
+High Balances Arriving
+
+💵
+
+“3 patients owe $780”
+
+“Collect at check‑in”
+
+Lab Cases Due Today
+
+🦷
+
+“2 crowns not arrived”
+
+“Call Lab”
+
+Low Stock
+
+📦
+
+“Fluoride Varnish below par”
+
+“Create PO”
+
+Staff Out
+
+👤❌
+
+“RDH Maria sick”
+
+“Shift hygiene gaps”
+
+Tiles are <Paper elevation={2}> 260 × 140 px, colour tinted by urgency.
+
+5. Footer Agenda Bar
+
+<Stepper> with five steps, 60‑second countdown each, auto‑advances.
+
+Step
+
+Leader
+
+Talking Points
+
+Owner
+
+Celebrate wins, revenue delta
+
+Positive priming
+
+Front Office
+
+Unconfirmed & balances
+
+Implementation intentions
+
+Hygiene
+
+Recall gaps, perio watchers
+
+Shared mental model
+
+Doctor
+
+Clinical risks, lab status
+
+Authority clarifies priorities
+
+Billing
+
+Yesterday denials, AR plan
+
+Loss recovery
+
+Bar turns red if step overruns; gentle ding prompts move‑on.
+
+6. Behavioural Nudges
+
+Cue
+
+Behaviour
+
+Mechanism
+
+Countdown timers
+
+Brevity & focus
+
+Goal gradient
+
+Revenue shortfall framed as loss
+
+Action to upsell or fill gaps
+
+Loss aversion
+
+Gap $ value
+
+Makes abstract time concrete
+
+Money illusion
+
+Positive first (wins)
+
+Mood elevation
+
+Peak‑end rule
+
+7. MUI Implementation Cheatsheet
+
+Element
+
+Component
+
+Key Props
+
+Heatmap Grid
+
+<Box> + CSS Grid
+
+coloured via inline style
+
+Priority Tile
+
+<Paper>
+
+sx={{ position:'relative' }} for CTA overlay
+
+CTA Button
+
+<Button variant="outlined">
+
+opens linked list view
+
+Agenda Stepper
+
+<MobileStepper> alt label
+
+autoPlay interval 60 000
+
+Countdown
+
+<Typography> update via hook
+
+large monospace font
+
+8. Compliance & Accessibility
+
+Tile icons + aria‑labels.
+
+Heatmap cells accessible via keyboard arrow nav & tooltip on focus.
+
+Colour plus icon & text ensures status for colour‑blind.
+
+End of Daily Huddle Draft 1 – eager for your tweaks & additions

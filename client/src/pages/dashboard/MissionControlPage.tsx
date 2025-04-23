@@ -266,26 +266,6 @@ export default function MissionControlPage() {
               <span className="font-normal mr-1">Utilization:</span> 87%
             </Badge>
             <div className="flex-grow"></div>
-            
-            {/* Action buttons for medium screens and up */}
-            <div className="hidden md:flex gap-2 items-center ml-auto">
-              <Button variant="outline" size="sm" className="border-red-200 text-red-600 hover:bg-red-50">
-                <AlertCircle className="mr-2 h-4 w-4" />
-                Verify Insurance (5)
-              </Button>
-              <Button variant="outline" size="sm" className="border-amber-200 text-amber-600 hover:bg-amber-50">
-                <Clock className="mr-2 h-4 w-4" />
-                Contact Lab (1)
-              </Button>
-            </div>
-            
-            {/* Responsive button for small screens */}
-            <div className="md:hidden">
-              <Button variant="outline" size="sm" className="border-red-200 text-red-600 hover:bg-red-50">
-                <AlertCircle className="mr-2 h-4 w-4" />
-                Critical Tasks (3)
-              </Button>
-            </div>
           </div>
           
           <Separator className="my-4" />
