@@ -263,17 +263,20 @@ export default function PaymentsPage() {
     }
 
     // Apply date range filter
-    if (dateRange.from) {
+    if (dateRange?.from) {
+      const from = dateRange.from;
       filtered = filtered.filter(payment => {
         const paymentDate = new Date(payment.date);
-        return dateRange.from && paymentDate >= dateRange.from;
+        return paymentDate >= from;
       });
     }
 
-    if (dateRange.to) {
+    if (dateRange?.to) {
+      const to = dateRange.to;
       filtered = filtered.filter(payment => {
         const paymentDate = new Date(payment.date);
-        return dateRange.to && paymentDate <= new Date(dateRange.to.setHours(23, 59, 59, 999));
+        const endOfDay = new Date(new Date(to).setHours(23, 59, 59, 999));
+        return paymentDate <= endOfDay;
       });
     }
 
@@ -536,8 +539,8 @@ export default function PaymentsPage() {
                           className="w-[240px] h-9 justify-start text-left font-normal"
                         >
                           <CalendarRange className="mr-2 h-4 w-4" />
-                          {dateRange.from ? (
-                            dateRange.to ? (
+                          {dateRange?.from ? (
+                            dateRange?.to ? (
                               <>
                                 {format(dateRange.from, "LLL dd, y")} -{" "}
                                 {format(dateRange.to, "LLL dd, y")}
@@ -554,7 +557,7 @@ export default function PaymentsPage() {
                         <CalendarComponent
                           initialFocus
                           mode="range"
-                          defaultMonth={dateRange.from}
+                          defaultMonth={dateRange?.from}
                           selected={dateRange}
                           onSelect={setDateRange}
                           numberOfMonths={2}
@@ -575,7 +578,7 @@ export default function PaymentsPage() {
                 </div>
 
                 {/* Filter chips */}
-                {(filters.paymentMethod !== "All" || filters.paymentStatus !== "All" || filters.paymentType !== "All" || dateRange.from) && (
+                {(filters.paymentMethod !== "All" || filters.paymentStatus !== "All" || filters.paymentType !== "All" || dateRange?.from) && (
                   <div className="flex items-center gap-2 px-6 py-2 bg-card border-b text-sm">
                     <span className="text-muted-foreground">Filtered results: {filteredPayments.length}</span>
                     
@@ -597,11 +600,17 @@ export default function PaymentsPage() {
                       </Badge>
                     )}
                     
-                    {dateRange.from && (
+                    {dateRange?.from && (
                       <Badge variant="outline" className="bg-primary/10 text-primary">
                         {format(dateRange.from, "MMM d, yyyy")} 
-                        {dateRange.to && <> - {format(dateRange.to, "MMM d, yyyy")}</>}
-                        <X className="ml-1 h-3 w-3 cursor-pointer" onClick={() => setDateRange({})} />
+                        {dateRange?.to && <> - {format(dateRange.to, "MMM d, yyyy")}</>}
+                        <X 
+                          className="ml-1 h-3 w-3 cursor-pointer" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setDateRange(undefined);
+                          }} 
+                        />
                       </Badge>
                     )}
                     
@@ -611,7 +620,7 @@ export default function PaymentsPage() {
                         paymentStatus: "All",
                         paymentType: "All"
                       });
-                      setDateRange({});
+                      setDateRange(undefined);
                     }}>
                       Clear all
                     </Button>
