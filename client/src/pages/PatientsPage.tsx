@@ -376,7 +376,7 @@ export default function PatientsPage() {
 
   return (
     <NavigationWrapper>
-      <div className="flex flex-col space-y-4">
+      <div className="flex flex-col">
         {/* Header with title, segments and actions */}
         <div className="bg-white border-b border-gray-200 px-6 py-4">
           <div className="flex items-center justify-between mb-4">
@@ -580,7 +580,7 @@ export default function PatientsPage() {
         </div>
 
         {/* Main content with patient list and optional filter sidebar */}
-        <div className="flex px-6 bg-white mt-0 border-b-0">
+        <div className="flex px-6 bg-white mt-0 border-b-0 border-t-0 pt-0">
           {/* Filters drawer */}
           {filterDrawerOpen && (
             <div className="w-64 border-r border-gray-200 p-4">
@@ -714,13 +714,13 @@ export default function PatientsPage() {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Name</TableHead>
+                      <TableHead className="w-[80px]">Actions</TableHead>
                       {columnVisibility.dob && <TableHead>DOB / Age</TableHead>}
                       {columnVisibility.lastVisit && <TableHead>Last Visit</TableHead>}
                       {columnVisibility.nextVisit && <TableHead>Next Visit</TableHead>}
                       {columnVisibility.balance && <TableHead>Balance</TableHead>}
                       {columnVisibility.plan && <TableHead>Plan</TableHead>}
                       {columnVisibility.tags && <TableHead>Status Tags</TableHead>}
-                      <TableHead className="w-[80px]">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -742,6 +742,27 @@ export default function PatientsPage() {
                                 <div className="font-medium">{patient.fullName}</div>
                                 <div className="text-xs text-gray-500">MRN: {patient.chartNumber}</div>
                               </div>
+                            </div>
+                          </TableCell>
+                          
+                          <TableCell>
+                            <div className="flex items-center justify-center space-x-1">
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-7 w-7" 
+                                onClick={(e) => handleCallPatient(e, patient)}
+                              >
+                                <Phone className="h-4 w-4 text-green-600" />
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-7 w-7" 
+                                onClick={(e) => handleMessagePatient(e, patient)}
+                              >
+                                <MessageSquare className="h-4 w-4 text-blue-600" />
+                              </Button>
                             </div>
                           </TableCell>
                           
@@ -809,27 +830,6 @@ export default function PatientsPage() {
                               </div>
                             </TableCell>
                           )}
-                          
-                          <TableCell>
-                            <div className="flex items-center justify-center space-x-1">
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-7 w-7" 
-                                onClick={(e) => handleCallPatient(e, patient)}
-                              >
-                                <Phone className="h-4 w-4 text-green-600" />
-                              </Button>
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-7 w-7" 
-                                onClick={(e) => handleMessagePatient(e, patient)}
-                              >
-                                <MessageSquare className="h-4 w-4 text-blue-600" />
-                              </Button>
-                            </div>
-                          </TableCell>
                         </TableRow>
                       ))
                     ) : (
