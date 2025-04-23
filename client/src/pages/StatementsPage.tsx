@@ -486,17 +486,26 @@ export default function StatementsPage() {
                 <CardTitle className="text-base font-medium">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
-                <div className="flex items-center justify-between">
-                  <Button className="h-9">
-                    <PlusCircle className="h-4 w-4 mr-1" />
-                    New Statement
-                  </Button>
-                  {draftCount > 0 && (
-                    <Button variant="outline" className="h-9">
-                      <Send className="h-4 w-4 mr-1" />
-                      Send {draftCount} Draft{draftCount > 1 ? 's' : ''}
+                <div className="flex flex-col space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Create and manage statements</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Button className="h-9 flex-1">
+                      <PlusCircle className="h-4 w-4 mr-1" />
+                      New Statement
                     </Button>
-                  )}
+                    <Button variant="outline" className="h-9 flex-1">
+                      <Download className="h-4 w-4 mr-1" />
+                      Export Report
+                    </Button>
+                    {draftCount > 0 && (
+                      <Button variant="outline" className="h-9 flex-1">
+                        <Send className="h-4 w-4 mr-1" />
+                        Send {draftCount} Draft{draftCount > 1 ? 's' : ''}
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -516,9 +525,14 @@ export default function StatementsPage() {
                     <Send className="h-4 w-4 mr-1" />
                     Send Selected
                   </Button>
-                  <Button variant="outline" size="sm" className="h-9">
-                    <RefreshCw className="h-4 w-4 mr-1" />
-                    Generate Statements
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-9"
+                    disabled={selectedStatements.length === 0}
+                  >
+                    <Printer className="h-4 w-4 mr-1" />
+                    Print Selected
                   </Button>
                 </div>
               </div>
