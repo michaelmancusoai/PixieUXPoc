@@ -42,8 +42,8 @@ export function getAppointmentPosition(appointment: AppointmentWithDetails, slot
       minutes = appointment.startTime.getMinutes();
     }
     
-    // Calculate minutes from calendar start (7:00 AM)
-    const calendarStartHour = 7; // Updated to match the calendar start time
+    // Calculate minutes from calendar start (midnight 0:00)
+    const calendarStartHour = 0; // Calendar now starts at midnight
     const calendarStartMinutes = calendarStartHour * MINS_IN_HOUR;
     const appointmentStartMinutes = hours * MINS_IN_HOUR + minutes;
     const minutesFromStart = appointmentStartMinutes - calendarStartMinutes;

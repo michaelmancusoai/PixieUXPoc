@@ -70,10 +70,10 @@ export default function CalendarView({
   const timeSlots = useMemo(() => {
     const slots = [];
     const totalMinutes = HOURS_IN_DAY * MINS_IN_HOUR;
-    const startHour = 7; // 7:00 AM
-    const endHour = 19; // 7:00 PM - extending beyond business hours to show all appointments
+    const startHour = 0; // Midnight (0:00)
+    const endHour = 24; // Midnight next day (24:00) - ensure we capture all appointments
     
-    for (let i = startHour * MINS_IN_HOUR; i <= endHour * MINS_IN_HOUR; i += TIME_SLOT) {
+    for (let i = startHour * MINS_IN_HOUR; i < endHour * MINS_IN_HOUR; i += TIME_SLOT) {
       slots.push({
         time: i,
         label: format(addMinutes(new Date().setHours(0, 0, 0, 0), i), 'h:mm a'),

@@ -19,6 +19,7 @@ import { Badge } from '@/components/ui/badge';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { insertWaitlistSchema, type InsertWaitlist } from '@shared/schema';
+import { seedWaitlist } from '@/lib/seed-waitlist';
 
 // Form schema for adding to waitlist
 const formSchema = insertWaitlistSchema.extend({
@@ -31,8 +32,42 @@ export const WaitlistManager = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [patientSearchTerm, setPatientSearchTerm] = useState('');
   const [selectedPatient, setSelectedPatient] = useState<any | null>(null);
+  const [isSeeding, setIsSeeding] = useState(false);
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // Function to seed the waitlist with sample data
+  const handleSeedWaitlist = async () => {
+    try {
+      setIsSeeding(true);
+      const result = await seedWaitlist();
+      
+      if (result) {
+        toast({
+          title: "Waitlist Seeded",
+          description: "Sample patients have been added to the waitlist",
+        });
+        
+        // Refresh waitlist
+        queryClient.invalidateQueries({ queryKey: ['/api/waitlist'] });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to seed waitlist. Please try again.",
+          variant: "destructive"
+        });
+      }
+    } catch (error) {
+      console.error('Failed to seed waitlist:', error);
+      toast({
+        title: "Error",
+        description: "Failed to seed waitlist. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSeeding(false);
+    }
+  };
 
   // Fetch waitlist
   const { data: waitlist = [], isLoading } = useQuery({
@@ -176,6 +211,27 @@ export const WaitlistManager = () => {
             <ListFilter className="h-5 w-5 text-primary" />
             <CardTitle className="text-base">Waitlist</CardTitle>
             <Badge variant="outline">{waitlist.length}</Badge>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleSeedWaitlist} 
+              disabled={isSeeding}
+              title="Add sample data to waitlist"
+            >
+              {isSeeding ? 'Seeding...' : 'Seed Waitlist'}
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setAddDialogOpen(true)}
+              title="Add patient to waitlist"
+              className="flex items-center gap-1.5"
+            >
+              <Plus className="h-3.5 w-3.5" />
+              Add
+            </Button>
           </div>
         </CardHeader>
         
