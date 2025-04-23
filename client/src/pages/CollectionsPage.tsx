@@ -685,13 +685,9 @@ export default function CollectionsPage() {
               <CardContent className="py-6 px-5">
                 <div className="flex flex-col space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Create and manage collections</span>
+                    <span className="text-sm text-muted-foreground">Manage collection accounts</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Button className="h-9 flex-1">
-                      <PlusCircle className="h-4 w-4 mr-1" />
-                      New Collection
-                    </Button>
                     <Button variant="outline" className="h-9 flex-1">
                       <PhoneCall className="h-4 w-4 mr-1" />
                       Call List

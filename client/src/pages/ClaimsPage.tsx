@@ -883,13 +883,9 @@ export default function ClaimsPage() {
               <CardContent className="py-6 px-5">
                 <div className="flex flex-col space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Create and manage claims</span>
+                    <span className="text-sm text-muted-foreground">Process and manage insurance claims</span>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <Button className="h-9 flex-1">
-                      <Plus className="h-4 w-4 mr-1" />
-                      New Claim
-                    </Button>
                     <Button variant="outline" className="h-9 flex-1">
                       <Download className="h-4 w-4 mr-1" />
                       Export Report
