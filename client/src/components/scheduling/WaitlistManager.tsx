@@ -174,13 +174,9 @@ export const WaitlistManager = () => {
         <CardHeader className="flex flex-row items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
             <ListFilter className="h-5 w-5 text-primary" />
-            <CardTitle className="text-xl">Waitlist</CardTitle>
+            <CardTitle className="text-base">Waitlist</CardTitle>
             <Badge variant="outline">{waitlist.length}</Badge>
           </div>
-          <Button onClick={() => setAddDialogOpen(true)} size="sm">
-            <Plus className="h-4 w-4 mr-1" />
-            Add to Waitlist
-          </Button>
         </CardHeader>
         
         <CardContent className="p-4 pb-6 flex-1 overflow-auto">
@@ -189,8 +185,12 @@ export const WaitlistManager = () => {
               <div className="animate-pulse">Loading waitlist...</div>
             </div>
           ) : waitlist.length === 0 ? (
-            <div className="text-center text-gray-500 py-8">
+            <div className="text-center text-gray-500 py-6">
               <p>No patients on the waitlist</p>
+              <Button onClick={() => setAddDialogOpen(true)} variant="outline" className="mt-4">
+                <Plus className="h-4 w-4 mr-1.5" />
+                Add to Waitlist
+              </Button>
             </div>
           ) : (
             <Tabs defaultValue="HIGH">

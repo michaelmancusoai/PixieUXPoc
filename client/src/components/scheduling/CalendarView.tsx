@@ -39,7 +39,7 @@ export default function CalendarView({
 
   // Fetch appointments for the selected date
   const { data: appointments = [], refetch: refetchAppointments } = useQuery<AppointmentWithDetails[]>({
-    queryKey: ['/api/appointments', format(selectedDate, 'yyyy-MM-dd'), viewMode],
+    queryKey: ['/api/schedule/appointments', format(selectedDate, 'yyyy-MM-dd'), viewMode],
     enabled: true,
   });
   
@@ -277,17 +277,14 @@ export default function CalendarView({
               {appointments
                 .filter(apt => {
                   // Check if appointment belongs to this resource (operatory or provider)
+                  // Default to the first resource if operatoryId is null
                   const resourceMatch = viewMode === 'PROVIDER' ? 
                     apt.providerId === resource.id : 
-                    apt.operatoryId === resource.id;
+                    (apt.operatoryId === resource.id || (apt.operatoryId === null && colIndex === 0));
                   
-                  // Check if appointment is on the selected date
-                  // If apt.date is already a Date object, use it directly
-                  const aptDate = typeof apt.date === 'string' || apt.date instanceof String 
-                    ? parseISO(apt.date.toString()) 
-                    : apt.date;
-                  
-                  const dateMatch = isSameDay(aptDate, selectedDate);
+                  // Check if appointment's startTime is on the selected date
+                  const aptStartTime = parseISO(apt.startTime.toString());
+                  const dateMatch = isSameDay(aptStartTime, selectedDate);
                   
                   return resourceMatch && dateMatch;
                 })

@@ -19,8 +19,23 @@ export function getTimeFromMinutes(minutes: number): string {
 // Calculate appointment position in the calendar grid
 export function getAppointmentPosition(appointment: AppointmentWithDetails, slotHeight: number) {
   // Parse start time
-  const startTime = appointment.startTime.toString();
-  const [hours, minutes] = startTime.split(':').map(Number);
+  let hours, minutes;
+  if (typeof appointment.startTime === 'string') {
+    if (appointment.startTime.includes('T')) {
+      // Handle ISO date format
+      const date = new Date(appointment.startTime);
+      hours = date.getHours();
+      minutes = date.getMinutes();
+    } else {
+      // Handle HH:MM:SS format
+      [hours, minutes] = appointment.startTime.split(':').map(Number);
+    }
+  } else {
+    // Handle Date object
+    const date = new Date(appointment.startTime);
+    hours = date.getHours();
+    minutes = date.getMinutes();
+  }
   
   // Calculate minutes from calendar start (7:00 AM)
   const calendarStartHour = 7; // Updated to match the calendar start time
@@ -42,8 +57,25 @@ export function snapToTimeSlot(minutes: number, slotSize = 5): number {
 
 // Format appointment timing details
 export function getAppointmentTiming(appointment: AppointmentWithDetails): string {
-  const startTime = appointment.startTime.toString();
-  const [hours, minutes] = startTime.split(':').map(Number);
+  let hours, minutes;
+  
+  if (typeof appointment.startTime === 'string') {
+    if (appointment.startTime.includes('T')) {
+      // Handle ISO date format
+      const date = new Date(appointment.startTime);
+      hours = date.getHours();
+      minutes = date.getMinutes();
+    } else {
+      // Handle HH:MM:SS format
+      [hours, minutes] = appointment.startTime.split(':').map(Number);
+    }
+  } else {
+    // Handle Date object
+    const date = new Date(appointment.startTime);
+    hours = date.getHours();
+    minutes = date.getMinutes();
+  }
+  
   const start = format(new Date().setHours(hours, minutes), 'h:mm a');
   
   const endHours = Math.floor((hours * 60 + minutes + appointment.duration) / 60);
