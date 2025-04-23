@@ -80,6 +80,7 @@ type Procedure = {
 
 // Mocked data
 const mockClaims: Claim[] = [
+  // Submitted Claims
   {
     id: 1,
     patientName: "Sarah Jonas",
@@ -92,6 +93,7 @@ const mockClaims: Claim[] = [
     planType: "PPO",
     insuranceOrder: "Primary",
     claimStatus: "Sent",
+    submissionDate: "04/13/2025",
     procedures: [
       {
         cdtCode: "D1234",
@@ -118,7 +120,8 @@ const mockClaims: Claim[] = [
     insuranceCarrier: "Metlife",
     planType: "Indemnity plan",
     insuranceOrder: "Secondary",
-    claimStatus: "Sent"
+    claimStatus: "Sent",
+    submissionDate: "04/12/2025"
   },
   {
     id: 3,
@@ -131,7 +134,8 @@ const mockClaims: Claim[] = [
     insuranceCarrier: "United Healthcare",
     planType: "DHMO",
     insuranceOrder: "Primary",
-    claimStatus: "Sent"
+    claimStatus: "Sent",
+    submissionDate: "04/10/2025"
   },
   {
     id: 4,
@@ -144,7 +148,8 @@ const mockClaims: Claim[] = [
     insuranceCarrier: "Humana Dental",
     planType: "DR",
     insuranceOrder: "Primary",
-    claimStatus: "Sent"
+    claimStatus: "Sent",
+    submissionDate: "04/08/2025"
   },
   {
     id: 5,
@@ -157,7 +162,8 @@ const mockClaims: Claim[] = [
     insuranceCarrier: "Humana Dental",
     planType: "DHMO",
     insuranceOrder: "Secondary",
-    claimStatus: "Resent"
+    claimStatus: "Resent",
+    submissionDate: "04/15/2025"
   },
   {
     id: 6,
@@ -170,7 +176,8 @@ const mockClaims: Claim[] = [
     insuranceCarrier: "Delta Dental",
     planType: "PPO",
     insuranceOrder: "Primary",
-    claimStatus: "Sent"
+    claimStatus: "Sent",
+    submissionDate: "04/09/2025"
   },
   {
     id: 7,
@@ -183,7 +190,240 @@ const mockClaims: Claim[] = [
     insuranceCarrier: "Metlife",
     planType: "PPO",
     insuranceOrder: "Primary",
-    claimStatus: "Resent"
+    claimStatus: "Resent",
+    submissionDate: "04/12/2025"
+  },
+  
+  // Not Submitted Claims
+  {
+    id: 8,
+    patientName: "Robert Chen",
+    dateOfService: "04/18/2025",
+    claimAmount: 825.75,
+    insuranceEstimate: 660.60,
+    patientEstimate: 165.15,
+    billingProvider: "Dr. Floyd Miles",
+    insuranceCarrier: "Delta Dental of California",
+    planType: "PPO",
+    insuranceOrder: "Primary",
+    claimStatus: "Not Sent",
+    procedures: [
+      {
+        cdtCode: "D2390",
+        toothNumber: "8",
+        toothSurface: "MIF",
+        description: "Anterior resin-based composite crown",
+        fee: 825.75,
+        negotiated: 660.60,
+        deductible: 0,
+        coverage: 80,
+        patientEstimate: 165.15,
+        insuranceEstimate: 660.60
+      }
+    ]
+  },
+  {
+    id: 9,
+    patientName: "Michelle Parker",
+    dateOfService: "04/16/2025",
+    claimAmount: 1250.00,
+    insuranceEstimate: 1000.00,
+    patientEstimate: 250.00,
+    billingProvider: "Dr. Annette Black",
+    insuranceCarrier: "Metlife",
+    planType: "PPO",
+    insuranceOrder: "Primary",
+    claimStatus: "Not Sent",
+    procedures: [
+      {
+        cdtCode: "D3310",
+        toothNumber: "19",
+        toothSurface: "",
+        description: "Endodontic therapy - anterior tooth",
+        fee: 1250.00,
+        negotiated: 1000.00,
+        deductible: 0,
+        coverage: 80,
+        patientEstimate: 250.00,
+        insuranceEstimate: 1000.00
+      }
+    ]
+  },
+  {
+    id: 10,
+    patientName: "Thomas Wright",
+    dateOfService: "04/17/2025",
+    claimAmount: 350.00,
+    insuranceEstimate: 280.00,
+    patientEstimate: 70.00,
+    billingProvider: "Dr. Floyd Miles",
+    insuranceCarrier: "Delta Dental of California",
+    planType: "PPO",
+    insuranceOrder: "Primary",
+    claimStatus: "Not Sent",
+    procedures: [
+      {
+        cdtCode: "D0210",
+        toothNumber: "",
+        toothSurface: "",
+        description: "Intraoral - complete series of radiographic images",
+        fee: 350.00,
+        negotiated: 280.00,
+        deductible: 0,
+        coverage: 80,
+        patientEstimate: 70.00,
+        insuranceEstimate: 280.00
+      }
+    ]
+  },
+  {
+    id: 11,
+    patientName: "Serena Johnson",
+    dateOfService: "04/19/2025",
+    claimAmount: 2100.00,
+    insuranceEstimate: 1680.00,
+    patientEstimate: 420.00,
+    billingProvider: "Dr. Ronald Richards",
+    insuranceCarrier: "Humana Dental",
+    planType: "PPO",
+    insuranceOrder: "Primary",
+    claimStatus: "Not Sent",
+    procedures: [
+      {
+        cdtCode: "D2740",
+        toothNumber: "14",
+        toothSurface: "",
+        description: "Crown - porcelain/ceramic",
+        fee: 1100.00,
+        negotiated: 880.00,
+        deductible: 0,
+        coverage: 80,
+        patientEstimate: 220.00,
+        insuranceEstimate: 880.00
+      },
+      {
+        cdtCode: "D2950",
+        toothNumber: "14",
+        toothSurface: "",
+        description: "Core buildup, including any pins when required",
+        fee: 1000.00,
+        negotiated: 800.00,
+        deductible: 0,
+        coverage: 80,
+        patientEstimate: 200.00,
+        insuranceEstimate: 800.00
+      }
+    ]
+  },
+  
+  // EOBs in Progress
+  {
+    id: 12,
+    patientName: "Alex Rodriguez",
+    dateOfService: "04/02/2025",
+    claimAmount: 525.00,
+    insuranceEstimate: 420.00,
+    patientEstimate: 105.00,
+    billingProvider: "Dr. Floyd Miles",
+    insuranceCarrier: "Delta Dental of California",
+    planType: "PPO",
+    insuranceOrder: "Primary",
+    claimStatus: "Pending",
+    submissionDate: "04/03/2025",
+    procedures: [
+      {
+        cdtCode: "D1110",
+        toothNumber: "",
+        toothSurface: "",
+        description: "Prophylaxis - adult",
+        fee: 125.00,
+        negotiated: 100.00,
+        deductible: 0,
+        coverage: 100,
+        patientEstimate: 0.00,
+        insuranceEstimate: 100.00
+      },
+      {
+        cdtCode: "D0274",
+        toothNumber: "",
+        toothSurface: "",
+        description: "Bitewings - four radiographic images",
+        fee: 100.00,
+        negotiated: 80.00,
+        deductible: 0,
+        coverage: 100,
+        patientEstimate: 0.00,
+        insuranceEstimate: 80.00
+      },
+      {
+        cdtCode: "D2391",
+        toothNumber: "30",
+        toothSurface: "MO",
+        description: "Posterior composite - one surface",
+        fee: 300.00,
+        negotiated: 240.00,
+        deductible: 0,
+        coverage: 80,
+        patientEstimate: 105.00,
+        insuranceEstimate: 240.00
+      }
+    ]
+  },
+  {
+    id: 13,
+    patientName: "Victoria Kim",
+    dateOfService: "04/05/2025",
+    claimAmount: 850.00,
+    insuranceEstimate: 680.00,
+    patientEstimate: 170.00,
+    billingProvider: "Dr. Annette Black",
+    insuranceCarrier: "Metlife",
+    planType: "PPO",
+    insuranceOrder: "Primary",
+    claimStatus: "Pending",
+    submissionDate: "04/06/2025",
+    procedures: [
+      {
+        cdtCode: "D4341",
+        toothNumber: "",
+        toothSurface: "",
+        description: "Periodontal scaling and root planing - four or more teeth per quadrant",
+        fee: 850.00,
+        negotiated: 680.00,
+        deductible: 0,
+        coverage: 80,
+        patientEstimate: 170.00,
+        insuranceEstimate: 680.00
+      }
+    ]
+  },
+  {
+    id: 14,
+    patientName: "Marcus Lee",
+    dateOfService: "04/08/2025",
+    claimAmount: 1750.00,
+    insuranceEstimate: 1400.00,
+    patientEstimate: 350.00,
+    billingProvider: "Dr. Ronald Richards",
+    insuranceCarrier: "Humana Dental",
+    planType: "PPO",
+    insuranceOrder: "Primary",
+    claimStatus: "Pending",
+    submissionDate: "04/09/2025",
+    procedures: [
+      {
+        cdtCode: "D3330",
+        toothNumber: "3",
+        toothSurface: "",
+        description: "Endodontic therapy, molar",
+        fee: 1750.00,
+        negotiated: 1400.00,
+        deductible: 0,
+        coverage: 80,
+        patientEstimate: 350.00,
+        insuranceEstimate: 1400.00
+      }
+    ]
   }
 ];
 
