@@ -78,14 +78,35 @@ const initialFlowDistribution = {
 };
 
 // Format elapsed time (mm:ss)
-const formatTime = (seconds) => {
+const formatTime = (seconds: number): string => {
   const mins = Math.floor(seconds / 60);
   const secs = seconds % 60;
   return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
 };
 
+// Patient interface
+interface PatientData {
+  id: number;
+  name: string;
+  firstName: string;
+  lastName: string;
+  appointmentType: string;
+  operatory: string;
+  provider: string;
+  timeInStatus: number;
+  hasAlert: boolean;
+  dob: string;
+  balance: number;
+}
+
+// Patient card component props interface
+interface PatientCardProps {
+  patient: PatientData;
+  columnColor: string;
+}
+
 // Patient card component
-function PatientCard({ patient, columnColor }) {
+function PatientCard({ patient, columnColor }: PatientCardProps) {
   const formattedTime = formatTime(patient.timeInStatus);
   const isTimerWarning = patient.timeInStatus > 300; // Warning after 5 minutes
   
@@ -158,7 +179,7 @@ function FlowColumn({ column, patients, className }: FlowColumnProps) {
   const Icon = column.icon;
   
   return (
-    <div className={cn("min-w-[200px] w-full flex flex-col h-full", className)}>
+    <div className={cn("min-w-[220px] w-full flex flex-col h-full", className)}>
       <div className={cn(
         "text-white px-3 py-2 rounded-t-md flex justify-between items-center",
         column.color
@@ -201,8 +222,30 @@ function FlowColumn({ column, patients, className }: FlowColumnProps) {
   );
 }
 
+// Exception Patient interface
+interface ExceptionPatient {
+  id: number;
+  name: string;
+  firstName: string;
+  lastName: string;
+  appointmentType: string;
+  appointmentTime?: string;
+  operatory?: string;
+  provider?: string;
+  timeInStatus?: number;
+  hasAlert?: boolean;
+  dob?: string;
+  balance?: number;
+}
+
+// Exception Card Props Interface
+interface ExceptionCardProps {
+  patient: ExceptionPatient;
+  type: 'late' | 'noShow' | 'cancelled' | 'walkOut';
+}
+
 // Exception Card Component
-function ExceptionCard({ patient, type }) {
+function ExceptionCard({ patient, type }: ExceptionCardProps) {
   const getTypeStyles = () => {
     switch (type) {
       case 'late':
@@ -248,8 +291,13 @@ function ExceptionCard({ patient, type }) {
   );
 }
 
+// Define flow state type
+interface FlowState {
+  [key: string]: PatientData[];
+}
+
 export default function MissionControlPage() {
-  const [flowState, setFlowState] = useState(initialFlowDistribution);
+  const [flowState, setFlowState] = useState<FlowState>(initialFlowDistribution);
 
   return (
     <NavigationWrapper>
@@ -288,7 +336,7 @@ export default function MissionControlPage() {
         {/* Main Flow Board */}
         <div className="flex">
           {/* Flow Columns */}
-          <div className="flex overflow-x-auto pb-4 gap-4 flex-grow flex-1" style={{ minHeight: "calc(100vh - 300px)" }}>
+          <div className="flex overflow-x-auto pb-4 gap-3 flex-grow flex-1" style={{ minHeight: "calc(100vh - 300px)" }}>
             {flowColumns.map((column, index) => (
               <FlowColumn 
                 key={column.id} 
@@ -300,8 +348,8 @@ export default function MissionControlPage() {
           </div>
           
           {/* Exception Rail */}
-          <div className="w-72 ml-4 hidden lg:block">
-            <div className="bg-gray-50 rounded-md p-3 space-y-4 h-full">
+          <div className="w-80 ml-3 hidden lg:block">
+            <div className="bg-gray-50 rounded-md p-3 space-y-3 h-full">
               <div>
                 <h3 className="text-sm font-semibold flex items-center text-amber-700 mb-2">
                   <Clock className="h-4 w-4 mr-1" />
