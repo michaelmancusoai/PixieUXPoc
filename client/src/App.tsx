@@ -34,6 +34,7 @@ function Router() {
       <Route path="/patients/:subpage" component={PatientsPage} />
       <Route path="/billing" component={BillingPage} />
       <Route path="/billing/claims" component={ClaimsPage} />
+      <Route path="/claims" component={ClaimsPage} /> 
       <Route path="/billing/:subpage" component={BillingPage} />
       <Route path="/reports" component={ReportsPage} />
       <Route path="/reports/:subpage" component={ReportsPage} />
