@@ -8,7 +8,7 @@ import AppointmentChip from "./FixedAppointmentChip";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { HOURS_IN_DAY, MINS_IN_HOUR, TIME_SLOT } from "@/lib/constants";
+import { HOURS_IN_DAY, MINS_IN_HOUR, TIME_SLOT, BUSINESS_START_HOUR, BUSINESS_END_HOUR } from "@/lib/constants";
 import { 
   getTimeFromMinutes, 
   getAppointmentPosition, 
@@ -69,11 +69,13 @@ export default function CalendarView({
   // Generate time slots for the day (5-minute intervals)
   const timeSlots = useMemo(() => {
     const slots = [];
-    const totalMinutes = HOURS_IN_DAY * MINS_IN_HOUR;
-    const startHour = 8; // 8:00 AM
-    const endHour = 18; // 6:00 PM
+    const startHour = BUSINESS_START_HOUR; // 8:00 AM
+    const endHour = BUSINESS_END_HOUR; // 6:00 PM
     
-    for (let i = startHour * MINS_IN_HOUR; i <= endHour * MINS_IN_HOUR; i += TIME_SLOT) {
+    // Use 5-minute intervals for time slots
+    const slotInterval = 5;
+    
+    for (let i = startHour * MINS_IN_HOUR; i <= endHour * MINS_IN_HOUR; i += slotInterval) {
       slots.push({
         time: i,
         label: format(addMinutes(new Date().setHours(0, 0, 0, 0), i), 'h:mm a'),

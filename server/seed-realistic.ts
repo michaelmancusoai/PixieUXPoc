@@ -60,8 +60,8 @@ async function seedRealisticSchedulingData() {
   const businessHours = {
     startHour: 8, // 8:00 AM
     startMinute: 0,
-    endHour: 17, // 5:00 PM
-    endMinute: 30,
+    endHour: 18, // 6:00 PM
+    endMinute: 0,
     lunchStartHour: 12, // 12:00 PM
     lunchStartMinute: 0,
     lunchDuration: 60 // 60 minutes
