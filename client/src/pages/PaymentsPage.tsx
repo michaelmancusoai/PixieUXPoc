@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import {
   Search,
   Filter,
@@ -48,6 +49,18 @@ import {
   X,
   CalendarRange,
   ChevronsUpDown,
+  BarChart3,
+  TrendingUp,
+  TrendingDown,
+  CreditCard as CreditCardIcon,
+  Banknote,
+  Receipt,
+  BadgePercent,
+  ArrowUpRight,
+  Mail,
+  FileText,
+  Globe,
+  ScrollText,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -233,6 +246,7 @@ export default function PaymentsPage() {
   const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
+  const [showInsights, setShowInsights] = useState(false);
   const [filters, setFilters] = useState({
     paymentMethod: "All Methods",
     paymentStatus: "All Statuses",
@@ -300,8 +314,8 @@ export default function PaymentsPage() {
 
   const filteredPayments = getFilteredPayments();
 
-  // Calculate totals
-  const calculateTotals = () => {
+  // Calculate totals and payment metrics
+  const calculateMetrics = () => {
     const total = filteredPayments.reduce((sum, payment) => {
       if (payment.status === "Completed") {
         return sum + payment.amount;
@@ -311,11 +325,92 @@ export default function PaymentsPage() {
 
     const totalPending = filteredPayments.filter(p => p.status === "Pending")
       .reduce((sum, payment) => sum + payment.amount, 0);
+      
+    const totalRefunded = filteredPayments.filter(p => p.status === "Refunded")
+      .reduce((sum, payment) => sum + payment.amount, 0);
+      
+    // Payment method breakdowns
+    const creditCardPayments = filteredPayments.filter(p => p.paymentMethod === "Credit Card" && p.status === "Completed");
+    const creditCardTotal = creditCardPayments.reduce((sum, payment) => sum + payment.amount, 0);
+    const creditCardPercentage = total > 0 ? (creditCardTotal / total) * 100 : 0;
+    
+    const cashPayments = filteredPayments.filter(p => p.paymentMethod === "Cash" && p.status === "Completed");
+    const cashTotal = cashPayments.reduce((sum, payment) => sum + payment.amount, 0);
+    const cashPercentage = total > 0 ? (cashTotal / total) * 100 : 0;
+    
+    const checkPayments = filteredPayments.filter(p => p.paymentMethod === "Check" && p.status === "Completed");
+    const checkTotal = checkPayments.reduce((sum, payment) => sum + payment.amount, 0);
+    const checkPercentage = total > 0 ? (checkTotal / total) * 100 : 0;
+    
+    // Payment category breakdowns
+    const treatmentPayments = filteredPayments.filter(p => p.paymentFor === "Treatment" && p.status === "Completed");
+    const treatmentTotal = treatmentPayments.reduce((sum, payment) => sum + payment.amount, 0);
+    const treatmentPercentage = total > 0 ? (treatmentTotal / total) * 100 : 0;
+    
+    const consultationPayments = filteredPayments.filter(p => p.paymentFor === "Consultation" && p.status === "Completed");
+    const consultationTotal = consultationPayments.reduce((sum, payment) => sum + payment.amount, 0);
+    
+    const productsPayments = filteredPayments.filter(p => p.paymentFor === "Products" && p.status === "Completed");
+    const productsTotal = productsPayments.reduce((sum, payment) => sum + payment.amount, 0);
+    
+    const insurancePayments = filteredPayments.filter(p => p.paymentFor === "Insurance" && p.status === "Completed");
+    const insuranceTotal = insurancePayments.reduce((sum, payment) => sum + payment.amount, 0);
+    
+    // Calculate average payment amount
+    const avgPaymentAmount = total / filteredPayments.filter(p => p.status === "Completed").length || 0;
+    
+    // Calculate payment success rate
+    const totalAttemptedPayments = filteredPayments.filter(p => p.status === "Completed" || p.status === "Failed").length;
+    const successfulPayments = filteredPayments.filter(p => p.status === "Completed").length;
+    const paymentSuccessRate = totalAttemptedPayments > 0 ? (successfulPayments / totalAttemptedPayments) * 100 : 0;
+    
+    // Phase 3 Payments processor stats
+    const phase3Payments = filteredPayments.filter(p => p.paymentProcessor === "Phase 3 Payments" && p.status === "Completed");
+    const phase3Total = phase3Payments.reduce((sum, payment) => sum + payment.amount, 0);
+    const phase3Percentage = total > 0 ? (phase3Total / total) * 100 : 0;
 
-    return { total, totalPending };
+    return { 
+      total, 
+      totalPending, 
+      totalRefunded,
+      creditCardTotal,
+      creditCardPercentage,
+      cashTotal,
+      cashPercentage,
+      checkTotal,
+      checkPercentage,
+      treatmentTotal,
+      treatmentPercentage,
+      consultationTotal,
+      productsTotal,
+      insuranceTotal,
+      avgPaymentAmount,
+      paymentSuccessRate,
+      phase3Total,
+      phase3Percentage
+    };
   };
 
-  const { total, totalPending } = calculateTotals();
+  const { 
+    total, 
+    totalPending, 
+    totalRefunded,
+    creditCardTotal,
+    creditCardPercentage,
+    cashTotal,
+    cashPercentage,
+    checkTotal,
+    checkPercentage,
+    treatmentTotal,
+    treatmentPercentage,
+    consultationTotal,
+    productsTotal,
+    insuranceTotal,
+    avgPaymentAmount,
+    paymentSuccessRate,
+    phase3Total,
+    phase3Percentage
+  } = calculateMetrics();
 
   // Handle row checkbox click
   const handleRowSelect = (id: number) => {
@@ -416,14 +511,30 @@ export default function PaymentsPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Total Received</CardTitle>
+                <CardTitle className="text-base font-medium">Payment Summary</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
                   <DollarSign className="h-8 w-8 mr-3 text-green-500" />
                   <div>
                     <div className="text-2xl font-bold">${total.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">Current selection</div>
+                    <div className="text-sm text-muted-foreground">
+                      {filteredPayments.filter(p => p.status === "Completed").length} completed payments
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t flex justify-between items-center">
+                  <div>
+                    <div className="text-sm font-medium">${avgPaymentAmount.toFixed(0)}</div>
+                    <div className="text-xs text-muted-foreground">Avg. payment</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">{paymentSuccessRate.toFixed(0)}%</div>
+                    <div className="text-xs text-muted-foreground">Success rate</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-amber-500">${totalRefunded.toFixed(0)}</div>
+                    <div className="text-xs text-muted-foreground">Refunded</div>
                   </div>
                 </div>
               </CardContent>
@@ -431,14 +542,28 @@ export default function PaymentsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Pending Payments</CardTitle>
+                <CardTitle className="text-base font-medium">Payment Methods</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
-                  <Clock className="h-8 w-8 mr-3 text-blue-500" />
+                  <CreditCardIcon className="h-8 w-8 mr-3 text-blue-500" />
                   <div>
                     <div className="text-2xl font-bold">${totalPending.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">Awaiting processing</div>
+                    <div className="text-sm text-muted-foreground">Pending payments</div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t grid grid-cols-3 gap-2">
+                  <div>
+                    <div className="text-sm font-medium">{creditCardPercentage.toFixed(0)}%</div>
+                    <div className="text-xs text-muted-foreground">Credit Card</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">{cashPercentage.toFixed(0)}%</div>
+                    <div className="text-xs text-muted-foreground">Cash</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">{checkPercentage.toFixed(0)}%</div>
+                    <div className="text-xs text-muted-foreground">Check</div>
                   </div>
                 </div>
               </CardContent>
@@ -450,17 +575,22 @@ export default function PaymentsPage() {
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex flex-col space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Create and manage payments</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <Button className="h-9 flex-1">
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button className="h-9 w-full">
                       <PlusCircle className="h-4 w-4 mr-1" />
                       New Payment
                     </Button>
-                    <Button variant="outline" className="h-9 flex-1">
+                    <Button variant="outline" className="h-9 w-full">
+                      <RefreshCw className="h-4 w-4 mr-1" />
+                      Process Refund
+                    </Button>
+                    <Button variant="outline" className="h-9 w-full">
                       <Download className="h-4 w-4 mr-1" />
                       Export Report
+                    </Button>
+                    <Button variant="outline" className="h-9 w-full">
+                      <Printer className="h-4 w-4 mr-1" />
+                      Print Receipt
                     </Button>
                   </div>
                 </div>
@@ -470,9 +600,22 @@ export default function PaymentsPage() {
 
           <Card className="shadow-sm">
             <CardHeader className="px-6 py-4 border-b">
-              <div className="flex justify-between items-center">
-                <CardTitle>Payment Records</CardTitle>
-                <div className="flex space-x-2">
+              <div className="flex flex-wrap justify-between items-center">
+                <div className="flex items-center">
+                  <CardTitle>Payment Records</CardTitle>
+                  <div className="ml-4 flex items-center">
+                    <span className="text-sm text-muted-foreground mr-2">
+                      Show Insights
+                    </span>
+                    <Switch 
+                      id="show-insights" 
+                      className="data-[state=checked]:bg-blue-500" 
+                      checked={showInsights}
+                      onCheckedChange={setShowInsights}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2 sm:mt-0">
                   <Button 
                     variant="default" 
                     size="sm" 
@@ -498,6 +641,127 @@ export default function PaymentsPage() {
                 </div>
               </div>
             </CardHeader>
+            
+            {/* Insights Panel - Toggled by the switch */}
+            {showInsights && (
+              <div className="p-6 border-b bg-blue-50/50">
+                <div className="mb-4">
+                  <h3 className="text-md font-medium mb-2">Payment Insights</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Payment analytics for the current period show a {paymentSuccessRate.toFixed(0)}% transaction success rate with an average payment of ${avgPaymentAmount.toFixed(2)}.
+                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Payment Methods</h4>
+                      <div className="flex justify-between items-end">
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-xs text-muted-foreground">Credit Card</span>
+                            <span className="text-xs font-medium">{creditCardPercentage.toFixed(0)}%</span>
+                          </div>
+                          <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-500 rounded-full" style={{ width: `${creditCardPercentage}%` }}></div>
+                          </div>
+                        </div>
+                        <CreditCardIcon className="h-5 w-5 text-blue-500 ml-2" />
+                      </div>
+                      <div className="flex justify-between items-end mt-3">
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-xs text-muted-foreground">Cash</span>
+                            <span className="text-xs font-medium">{cashPercentage.toFixed(0)}%</span>
+                          </div>
+                          <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-green-500 rounded-full" style={{ width: `${cashPercentage}%` }}></div>
+                          </div>
+                        </div>
+                        <Banknote className="h-5 w-5 text-green-500 ml-2" />
+                      </div>
+                      <div className="flex justify-between items-end mt-3">
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-xs text-muted-foreground">Check</span>
+                            <span className="text-xs font-medium">{checkPercentage.toFixed(0)}%</span>
+                          </div>
+                          <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-amber-500 rounded-full" style={{ width: `${checkPercentage}%` }}></div>
+                          </div>
+                        </div>
+                        <ScrollText className="h-5 w-5 text-amber-500 ml-2" />
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Revenue Breakdown</h4>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-blue-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">Treatments</div>
+                          <div className="text-xl font-bold text-blue-600">${treatmentTotal.toFixed(0)}</div>
+                          <div className="text-xs text-blue-600">{treatmentPercentage.toFixed(0)}% of revenue</div>
+                        </div>
+                        <div className="bg-green-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">Consultations</div>
+                          <div className="text-xl font-bold text-green-600">${consultationTotal.toFixed(0)}</div>
+                          <div className="text-xs text-green-600">{(consultationTotal / total * 100).toFixed(0)}% of revenue</div>
+                        </div>
+                        <div className="bg-amber-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">Products</div>
+                          <div className="text-xl font-bold text-amber-600">${productsTotal.toFixed(0)}</div>
+                          <div className="text-xs text-amber-600">{(productsTotal / total * 100).toFixed(0)}% of revenue</div>
+                        </div>
+                        <div className="bg-purple-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">Insurance</div>
+                          <div className="text-xl font-bold text-purple-600">${insuranceTotal.toFixed(0)}</div>
+                          <div className="text-xs text-purple-600">{(insuranceTotal / total * 100).toFixed(0)}% of revenue</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Payment Performance</h4>
+                      <ul className="text-xs space-y-2">
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center mr-2 mt-0.5">
+                            <CheckCircle className="h-3 w-3 text-green-500" />
+                          </div>
+                          <div>
+                            <span className="font-medium block">Phase 3 Payments</span>
+                            <span className="text-muted-foreground">${phase3Total.toFixed(2)} ({phase3Percentage.toFixed(0)}% of transactions)</span>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-amber-100 flex items-center justify-center mr-2 mt-0.5">
+                            <AlertCircle className="h-3 w-3 text-amber-500" />
+                          </div>
+                          <div>
+                            <span className="font-medium block">Failed Transactions</span>
+                            <span className="text-muted-foreground">{filteredPayments.filter(p => p.status === "Failed").length} failed payments to review</span>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-red-100 flex items-center justify-center mr-2 mt-0.5">
+                            <ArrowUpRight className="h-3 w-3 text-red-500" />
+                          </div>
+                          <div>
+                            <span className="font-medium block">Refund Activity</span>
+                            <span className="text-muted-foreground">${totalRefunded.toFixed(2)} refunded this period</span>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center mr-2 mt-0.5">
+                            <BadgePercent className="h-3 w-3 text-blue-500" />
+                          </div>
+                          <div>
+                            <span className="font-medium block">Transaction Success Rate</span>
+                            <span className="text-muted-foreground">{paymentSuccessRate.toFixed(1)}% success rate</span>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <CardContent className="p-0">
               <Tabs defaultValue="all" className="w-full" onValueChange={setSelectedTab}>
