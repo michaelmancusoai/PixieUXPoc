@@ -1,0 +1,223 @@
+Appointment Card – Final Design Specification (US‑Localised)
+
+“A single tile on the scheduler should be a command centre in miniature—revealing status, nudging action, and never lying about time.” — Rory Sutherland
+
+This document consolidates all open requirements for the Scheduling appointment card, including Mission Control flow‑status decor, essential data fields, role‑based quick‑actions, interaction rules, accessibility, and implementation notes. Hand this to design & engineering as the authoritative brief; no other scheduler specs need consultation for the card itself.
+
+1. Card Anatomy (160 × 80 px default)
+
+Layer
+
+Contents
+
+Behavioural Rationale
+
+MUI Implementation
+
+Border / Fill
+
+Colour & pattern derived from status (see §2)
+
+Immediate situational awareness
+
+sx styles from getStatusStyles(status)
+
+Line 1
+
+Patient LastName, FI · right‑aligned alert icon (allergy ⚠️, balance 💵)
+
+Name recognition; risk salience
+
+<Typography noWrap> + <SvgIcon>
+
+Line 2
+
+Appt Type / CDT · duration badge (“45 m”)
+
+Sets mental model, prevents overruns
+
+stacked <Box>
+
+Timer Badge
+
+mm:ss since column entry (or “+5 m” overdue)
+
+Goal‑gradient pressure
+
+<Chip size="small"> updates via global timer store
+
+Status Indicator
+
+Icon or overlay per §2
+
+Colour‑blind support
+
+part of status styles
+
+Chip truncates text beyond 16 chars with ellipsis; full content in tooltip.
+
+2. Status‑to‑Decoration Map
+
+Flow Status
+
+Border / Fill
+
+Icon / Overlay
+
+Tooltip Suffix
+
+Checked‑In
+
+2 px left success.light
+
+🕑 clock
+
+“Arrived @ 09:02”
+
+Seated
+
+Border info.main
+
+🪑 chair
+
+“Seated @ 09:05”
+
+Pre‑Clinical Prep
+
+same border + stethoscope right icon
+
+🩺
+
+“Vitals started”
+
+Doctor Ready
+
+Pulsing info.light fill (3 s)
+
+❕ bell
+
+“Doctor ready”
+
+In Treatment
+
+primary.dark fill
+
+🦷
+
+“Tx started @ 09:10”
+
+Clinical Wrap‑Up
+
+Grey diagonal stripe overlay
+
+📝
+
+“Wrap‑up in progress”
+
+Ready for Checkout
+
+Normal fill + green ➜ badge
+
+➜
+
+“Escort to checkout”
+
+Checked‑Out
+
+40 % opacity + ✓
+
+✓
+
+“Dismissed @ 09:45”
+
+Late
+
+Amber border + “L” tag
+
+
+
+“Late by 5 m”
+
+No‑Show
+
+Dashed red outline + “NS”
+
+
+
+“No‑Show”
+
+Cancelled / Walk‑Out
+
+Grey line‑through text
+
+
+
+“Cancelled”
+
+All colours pulled from theme tokens for contrast AA.
+
+3. Role‑Based Quick‑Actions (Tooltip Menu)
+
+Role
+
+Visible Actions
+
+API Trigger
+
+Keyboard Shortcut
+
+Front Desk
+
+Check‑In, Collect Balance, Send SMS, Cancel
+
+POST /status
+
+Enter (focused)
+
+Assistant
+
+Seat Patient, Start Vitals/X‑ray, Mark Doctor Ready, Mark Ready for Checkout
+
+same
+
+Alt+S, Alt+V, Alt+R, Alt+C
+
+Provider
+
+Begin Treatment, Add Note, Wrap‑Up
+
+same
+
+Alt+B, Alt+N, Alt+W
+
+Billing
+
+View Ledger, Add To AR Queue
+
+none
+
+Alt+L, Alt+A
+
+Tooltip menu (<Menu> anchored to chip) shows only actions allowed for current role and next valid state.
+
+4. Interaction Rules
+
+Drag‑and‑Drop – Chip draggable to new time/resource only if status ≤ Checked‑In; otherwise drag disabled to prevent mid‑treatment moves.
+
+Legal Status Advance – Component calls advanceStatus(patientId); backend validates state machine.
+
+Timer Continuity – elapsedMs prop updates via Redux store every 5 s; renders badge.
+
+Hover Tooltip – Shows full name, DOB, provider, operatory, balance, insurance verified ✓/✖, allergies list.
+
+Double‑Click – Opens patient side‑drawer (full chart preview) in ≤ 300 ms.
+
+5. Accessibility & A11y Hooks
+
+aria-label: “Appointment Jane Smith, status In Treatment, started 5 minutes ago.”
+
+Icons + text prefixes (CI, IT) ensure non‑colour cues.
+
+Live‑region updates when status changes (“Patient Jane Smith marked Seated”).
+
+Card focus via Tab; context actions with Space/Enter.

@@ -31,85 +31,81 @@ interface AppointmentChipProps {
   userRole?: "front_desk" | "assistant" | "provider" | "billing";
 }
 
-// Friendly, clear styles for appointment status
+// Friendly, clear styles for appointment status following design specs
 const getStatusStyles = (status: string): CSSProperties => {
   switch (status) {
     case AppointmentStatus.SCHEDULED: 
       return { 
         backgroundColor: 'white',
-        border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #94a3b8' // Neutral gray for scheduled
+        border: '1px solid #e2e8f0'
       };
     case AppointmentStatus.CONFIRMED:
       return { 
         backgroundColor: 'white',
-        border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #3b82f6' // Blue for confirmed
+        border: '1px solid #e2e8f0'
       };
     case AppointmentStatus.CHECKED_IN:
       return { 
         backgroundColor: 'white',
         border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #10b981' // Green for checked in
+        borderLeft: '2px solid #10b981' // Left green success.light border per spec
       };
     case AppointmentStatus.SEATED:
+      return { 
+        backgroundColor: 'white',
+        border: '1px solid #0ea5e9' // Border info.main per spec
+      };
     case AppointmentStatus.PRE_CLINICAL:
       return { 
-        backgroundColor: 'white', // Consistent white background
-        border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #0ea5e9' // Sky blue
+        backgroundColor: 'white',
+        border: '1px solid #0ea5e9' // Same border as SEATED with stethoscope icon
       };
     case AppointmentStatus.DOCTOR_READY:
       return { 
-        backgroundColor: 'white', // Consistent white background
+        backgroundColor: 'rgba(186, 230, 253, 0.4)', // Subtle info.light background
         border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #059669', // Green
-        animation: 'pulse-glow 2s infinite'
+        animation: 'pulse 3s infinite' // Pulsing effect per spec
       };
     case AppointmentStatus.IN_CHAIR:
       return { 
-        backgroundColor: 'white', // Consistent white background
-        border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #3b82f6' // Blue
+        backgroundColor: '#1e40af', // primary.dark fill per spec
+        border: '1px solid #1e40af',
+        color: 'white' // Ensure text contrast on dark background
       };
     case AppointmentStatus.WRAP_UP:
       return {
-        backgroundColor: 'white', // Consistent white background
+        backgroundColor: 'white',
         border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #64748b' // Gray blue
+        backgroundImage: 'repeating-linear-gradient(45deg, #f8fafc, #f8fafc 5px, #f1f5f9 5px, #f1f5f9 10px)' // Grey diagonal stripe overlay
       };
     case AppointmentStatus.READY_CHECKOUT:
       return { 
-        backgroundColor: 'white', // Consistent white background
-        border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #14b8a6' // Teal
+        backgroundColor: 'white',
+        border: '1px solid #e2e8f0'
+        // The green → badge is added separately
       };
     case AppointmentStatus.COMPLETED:
       return { 
-        backgroundColor: 'white', // Consistent white background
+        backgroundColor: 'white',
         border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #64748b', // Gray blue
-        opacity: 0.7
+        opacity: 0.4 // 40% opacity per spec
       };
     case AppointmentStatus.LATE:
       return { 
-        backgroundColor: 'white', // Consistent white background
-        border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #f97316' // Orange
+        backgroundColor: 'white',
+        border: '2px solid #f59e0b' // Amber border per spec
       };
     case AppointmentStatus.NO_SHOW:
       return { 
-        backgroundColor: 'white', // Consistent white background
-        border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #ef4444', // Red
-        borderStyle: 'dashed'
+        backgroundColor: 'white',
+        border: '1px dashed #ef4444' // Dashed red outline per spec
       };
     case AppointmentStatus.CANCELLED:
       return { 
-        backgroundColor: 'white', // Consistent white background
+        backgroundColor: 'white',
         border: '1px solid #e2e8f0',
-        borderLeft: '3px solid #94a3b8', // Gray
-        opacity: 0.6
+        textDecoration: 'line-through', // Grey line-through text per spec
+        opacity: 0.7
       };
     default:
       return { 
@@ -322,9 +318,10 @@ export default function AppointmentChip({
             ref={setNodeRef}
             {...(isDraggable ? { ...listeners, ...attributes } : {})}
             className={cn(
-              "flex flex-col p-1.5 rounded-sm text-xs select-none",
+              "flex flex-col p-1.5 rounded-md text-xs select-none",
               "shadow-sm hover:shadow transition-all",
-              "h-full",
+              "h-full w-full",
+              "border",
               isDraggable ? "cursor-grab active:cursor-grabbing" : "cursor-default"
             )}
             style={{
@@ -333,94 +330,76 @@ export default function AppointmentChip({
               transform: transform && isDraggable ? `translate3d(${transform.x}px, ${transform.y}px, 0)` : undefined,
               opacity: isDragging ? 0.7 : 1,
               zIndex: isDragging ? 100 : 5,
+              backgroundColor: 'white',
+              borderRadius: '0.375rem',
             }}
             onMouseEnter={() => setIsTooltipOpen(true)}
             onMouseLeave={() => setIsTooltipOpen(false)}
             onDoubleClick={handleDoubleClick}
             aria-label={`Appointment ${patient?.firstName} ${patient?.lastName}, status ${statusText}${elapsedTime ? `, started ${elapsedTime}` : ''}`}
           >
-            {/* Patient name at top - always shown */}
-            <div className="flex justify-between items-start mb-1">
-              <span className={cn("font-medium truncate", isCompactView ? "text-xs" : "text-sm")}>
+            {/* Line 1: Patient name + alert icons - "John Doe" */}
+            <div className="flex justify-between items-center mb-1.5">
+              <span className="font-medium text-sm">
                 {patient?.firstName} {patient?.lastName}
               </span>
-              <span className="text-[10px] text-gray-500">
-                Op {appointment.operatoryId || '?'}
-              </span>
-            </div>
-            
-            {/* Status line - consistent location and format with visual styling */}
-            <div className="flex items-center mb-1">
-              <span className={cn(
-                "text-[10px] font-medium px-1.5 py-0.5 rounded-sm mr-auto",
-                statusText.includes("CHAIR") ? "bg-blue-50 text-blue-700" :
-                statusText.includes("CHECKED_IN") ? "bg-green-50 text-green-700" :
-                statusText.includes("READY") ? "bg-teal-50 text-teal-700" :
-                statusText.includes("COMPLETED") ? "bg-gray-50 text-gray-700" :
-                statusText.includes("LATE") ? "bg-amber-50 text-amber-700" :
-                statusText.includes("NO_SHOW") ? "bg-red-50 text-red-700" :
-                "bg-gray-50 text-gray-700"
-              )}>
-                {statusText.replace(/_/g, ' ').replace(/(\w+)/g, (word) => 
-                  word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
-                )}
-                {elapsedTime && [
-                  AppointmentStatus.CHECKED_IN, 
-                  AppointmentStatus.SEATED, 
-                  AppointmentStatus.IN_CHAIR
-                ].includes(statusText as any) && (
-                  <span className="ml-1 text-[9px] opacity-80">
-                    ({elapsedTime})
+
+              <div className="flex items-center gap-1">
+                {hasAllergy && (
+                  <span title="Patient has allergies">
+                    <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
                   </span>
                 )}
-              </span>
-              
-              {hasAllergy && (
-                <span title="Patient has allergies" className="ml-1">
-                  <AlertTriangle className={cn(isCompactView ? "h-2.5 w-2.5" : "h-3 w-3", "text-amber-500")} />
-                </span>
-              )}
-            </div>
-
-            {isCompactView ? (
-              /* Compact View - Limited Information */
-              <div className="flex justify-between items-center">
-                <span className="text-[9px] text-gray-600 truncate max-w-[65%]">
-                  {appointment.procedure || ''}
-                </span>
-                <span className="text-[9px] bg-gray-100 px-1 rounded-sm text-gray-500">
-                  {durationText}
+                {hasWarning && (
+                  <span title={balanceDue}>
+                    <DollarSign className="h-3.5 w-3.5 text-green-600" />
+                  </span>
+                )}
+                <span className="text-xs text-gray-600">
+                  Op {appointment.operatoryId || '?'}
                 </span>
               </div>
-            ) : (
-              /* Regular View - Full Information */
-              <>
-                {/* Procedure line */}
-                <div className="flex items-center mb-1">
-                  <span className="text-[10px] text-gray-600 truncate max-w-[100%]">
-                    {appointment.procedure || ''}
-                  </span>
-                </div>
+            </div>
+            
+            {/* Line 2: Appointment Type + Status Tag */}
+            <div className="flex items-center justify-between mb-1.5">
+              <span className="text-sm font-medium text-gray-700 truncate max-w-[70%]">
+                {statusText === AppointmentStatus.READY_CHECKOUT ? 'Ready Checkout' : appointment.procedure || 'Scheduled'}
+              </span>
+              
+              <Badge 
+                variant="outline" 
+                className={cn(
+                  "ml-auto text-xs px-2 py-0.5 whitespace-nowrap",
+                  statusText.includes("READY_CHECKOUT") && "bg-green-50 text-green-700 border-green-200"
+                )}
+              >
+                {durationText}
+              </Badge>
+            </div>
 
-                {/* Provider/time line */}
-                <div className="flex justify-between items-center">
-                  <span className="text-[10px] text-gray-600 flex items-center">
-                    <span className="mr-0.5">Dr.</span>
-                    {provider?.name?.split(' ')[1] || 'Unassigned'}
-                  </span>
-                  
-                  <div className="flex items-center gap-1">
-                    {!elapsedTime && (
-                      <span className="text-[10px] text-gray-600">
-                        {format(new Date(`2025-01-01T${appointment.startTime}`), 'h:mm a')}
-                      </span>
-                    )}
-                    <span className="text-[9px] bg-gray-100 px-1 rounded-sm text-gray-500">
-                      {durationText}
-                    </span>
-                  </div>
-                </div>
-              </>
+            {/* Timer badge - shows elapsed time like "45m" */}
+            {elapsedTime && (
+              <div className="flex justify-end">
+                <Badge 
+                  variant="outline" 
+                  className={cn(
+                    "text-xs px-2 py-0.5 whitespace-nowrap",
+                    statusText.includes("LATE") ? "bg-amber-50 text-amber-700 border-amber-200" :
+                    statusText.includes("CHECKED_IN") ? "bg-green-50 text-green-700 border-green-200" :
+                    "bg-gray-50 text-gray-700 border-gray-200"
+                  )}
+                >
+                  {elapsedTime}
+                </Badge>
+              </div>
+            )}
+            
+            {/* Status indicator icon */}
+            {statusIcon && (
+              <div className="absolute bottom-1 right-1">
+                {statusIcon}
+              </div>
             )}
             
             {/* Quick action menu */}
