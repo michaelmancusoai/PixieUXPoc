@@ -340,13 +340,15 @@ export default function MissionControlPage() {
           <div className="flex overflow-x-auto pb-4 gap-3 flex-grow flex-1" style={{ minHeight: "calc(100vh - 300px)" }}>
             {flowColumns.map((column, index) => {
               // Adjust flex proportions based on column index
-              let flexProportion = "1";
+              let flexBasis = "0";
+              let flexGrow = 1;
+              
               if (index === 0) {
                 // First column less width
-                flexProportion = "0.75";
+                flexGrow = 0.75;
               } else if (index === flowColumns.length - 1 || index === flowColumns.length - 2) {
                 // Last two columns more width
-                flexProportion = "1.25";
+                flexGrow = 1.25;
               }
               
               return (
@@ -354,8 +356,7 @@ export default function MissionControlPage() {
                   key={column.id} 
                   column={column} 
                   patients={flowState[column.id] || []} 
-                  className={`flex-${flexProportion}`}
-                  style={{ flex: flexProportion }}
+                  style={{ flexBasis, flexGrow }}
                 />
               );
             })}
