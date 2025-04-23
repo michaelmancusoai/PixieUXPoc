@@ -70,6 +70,7 @@ type CollectionAccount = {
     type: "call" | "email" | "letter" | "none";
     date: string | null;
     result?: string;
+    notes?: string;
   };
   nextAction: {
     type: "call" | "email" | "letter" | "none";
@@ -78,6 +79,14 @@ type CollectionAccount = {
   };
   phone?: string;
   email?: string;
+  address?: string;
+  insuranceInfo?: string;
+  paymentHistory?: {
+    date: string;
+    amount: number;
+    method: string;
+  }[];
+  notes?: string[];
   status: "New" | "In Progress" | "Scheduled Payment" | "Sent to Agency" | "Hold";
   priority: "Low" | "Medium" | "High";
 };
@@ -138,7 +147,8 @@ const mockCollectionAccounts: CollectionAccount[] = [
     lastAction: {
       type: "letter",
       date: "2025-03-25",
-      result: "No response"
+      result: "No response",
+      notes: "Sent formal letter with payment options and financial assistance information."
     },
     nextAction: {
       type: "email",
@@ -147,6 +157,17 @@ const mockCollectionAccounts: CollectionAccount[] = [
     },
     phone: "(555) 456-7890",
     email: "robert.brown@example.com",
+    address: "123 Main St, Apt 4B, Anytown, CA 90210",
+    insuranceInfo: "Delta Dental - Policy #DD98765 - Coverage 80/20",
+    paymentHistory: [
+      { date: "2024-09-15", amount: 250.00, method: "Credit Card" },
+      { date: "2024-07-20", amount: 125.50, method: "Check" }
+    ],
+    notes: [
+      "2025-03-01: Patient mentioned financial hardship due to recent job loss.",
+      "2025-02-15: Requested itemized statement of all procedures.",
+      "2025-01-10: Disputed charge for x-rays, claiming insurance should have covered."
+    ],
     status: "In Progress",
     priority: "High"
   },
@@ -182,15 +203,29 @@ const mockCollectionAccounts: CollectionAccount[] = [
     lastAction: {
       type: "call",
       date: "2025-04-08",
-      result: "Discussed payment plan"
+      result: "Discussed payment plan",
+      notes: "Patient agreed to a 12-month payment plan at $175/month. First payment due May 1st."
     },
     nextAction: {
       type: "email",
       dueDate: "2025-04-25",
-      notes: "Send payment plan details"
+      notes: "Send payment plan details and agreement for electronic signature."
     },
     phone: "(555) 234-5678",
     email: "william.johnson@example.com",
+    address: "456 Oak Avenue, Unit 7C, Metropolis, NY 10001",
+    insuranceInfo: "Cigna Dental - Policy #CD112233 - Coverage 70/30 - Annual Max $1,500 (Reached)",
+    paymentHistory: [
+      { date: "2024-12-05", amount: 300.00, method: "Check" },
+      { date: "2024-10-12", amount: 500.00, method: "Bank Transfer" },
+      { date: "2024-08-30", amount: 200.00, method: "Credit Card" }
+    ],
+    notes: [
+      "2025-04-08: Patient open to payment plan and requested digital copy of all invoices.",
+      "2025-03-22: Called to discuss balance, patient experiencing temporary financial setback, but committed to paying balance.",
+      "2025-02-15: Reviewed insurance coverage with patient, explained annual maximum reached.",
+      "2025-01-20: Patient asked about financing options."
+    ],
     status: "In Progress",
     priority: "High"
   },
@@ -343,6 +378,7 @@ export default function CollectionsPage() {
   // State
   const [selectedTab, setSelectedTab] = useState("all");
   const [selectedAccounts, setSelectedAccounts] = useState<number[]>([]);
+  const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [filters, setFilters] = useState({
@@ -475,6 +511,19 @@ export default function CollectionsPage() {
     } else {
       setSelectedAccounts(filteredAccounts.map(account => account.id));
     }
+  };
+  
+  // Toggle expand/collapse row
+  const toggleRowExpand = (id: number, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setExpandedRows(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(rowId => rowId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
 
   // Render count badge for tabs
@@ -896,88 +945,271 @@ export default function CollectionsPage() {
                         </TableRow>
                       ) : (
                         filteredAccounts.map((account) => (
-                          <TableRow 
-                            key={account.id}
-                            className={selectedAccounts.includes(account.id) ? "bg-muted/50" : ""}
-                          >
-                            <TableCell>
-                              <Checkbox 
-                                checked={selectedAccounts.includes(account.id)} 
-                                onCheckedChange={() => handleRowSelect(account.id)}
-                                aria-label={`Select account for ${account.patientName}`}
-                              />
-                            </TableCell>
-                            <TableCell>
-                              {account.accountNumber}
-                            </TableCell>
-                            <TableCell className="font-medium">{account.patientName}</TableCell>
-                            <TableCell>
-                              <Badge variant={
-                                account.agingBucket === "0-30" ? "outline" :
-                                account.agingBucket === "31-60" ? "outline" :
-                                account.agingBucket === "61-90" ? "outline" :
-                                account.agingBucket === "91-120" ? "outline" :
-                                "outline"
-                              } className={
-                                account.agingBucket === "0-30" ? "bg-green-50 text-green-600 border-green-200" :
-                                account.agingBucket === "31-60" ? "bg-blue-50 text-blue-600 border-blue-200" :
-                                account.agingBucket === "61-90" ? "bg-amber-50 text-amber-600 border-amber-200" :
-                                account.agingBucket === "91-120" ? "bg-orange-50 text-orange-600 border-orange-200" :
-                                "bg-red-50 text-red-600 border-red-200"
-                              }>
-                                {account.agingBucket}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-right font-medium">
-                              ${account.totalDue.toFixed(2)}
-                            </TableCell>
-                            <TableCell>
-                              {renderPriorityBadge(account.priority)}
-                            </TableCell>
-                            <TableCell>
-                              {renderStatusBadge(account.status)}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center">
-                                {account.lastAction.date ? (
-                                  <>
-                                    {renderActionTypeIcon(account.lastAction.type)}
-                                    <span className="ml-2 whitespace-nowrap">{formatDateOrNone(account.lastAction.date)}</span>
-                                  </>
-                                ) : (
-                                  <span className="text-muted-foreground">None</span>
-                                )}
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center">
-                                {account.nextAction.dueDate ? (
-                                  <>
-                                    {renderActionTypeIcon(account.nextAction.type)}
-                                    <span className={`ml-2 whitespace-nowrap ${
-                                      isBefore(parseISO(account.nextAction.dueDate), new Date()) 
-                                        ? "text-red-600 font-medium" 
-                                        : ""
-                                    }`}>
-                                      {formatDateOrNone(account.nextAction.dueDate)}
-                                    </span>
-                                  </>
-                                ) : (
-                                  <span className="text-muted-foreground">None</span>
-                                )}
-                              </div>
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                <PhoneCall className="h-4 w-4" />
-                                <span className="sr-only">Call patient</span>
-                              </Button>
-                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                <Eye className="h-4 w-4" />
-                                <span className="sr-only">View details</span>
-                              </Button>
-                            </TableCell>
-                          </TableRow>
+                          <React.Fragment key={account.id}>
+                            <TableRow 
+                              className={`${selectedAccounts.includes(account.id) ? "bg-muted/50" : ""} ${expandedRows.includes(account.id) ? "border-b-0" : ""}`}
+                            >
+                              <TableCell>
+                                <Checkbox 
+                                  checked={selectedAccounts.includes(account.id)} 
+                                  onCheckedChange={() => handleRowSelect(account.id)}
+                                  aria-label={`Select account for ${account.patientName}`}
+                                />
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center">
+                                  <Button 
+                                    variant="ghost" 
+                                    size="sm" 
+                                    className="h-8 w-8 p-0 mr-2"
+                                    onClick={(e) => toggleRowExpand(account.id, e)}
+                                  >
+                                    {expandedRows.includes(account.id) ? (
+                                      <ChevronDown className="h-4 w-4" />
+                                    ) : (
+                                      <ChevronRight className="h-4 w-4" />
+                                    )}
+                                  </Button>
+                                  {account.accountNumber}
+                                </div>
+                              </TableCell>
+                              <TableCell className="font-medium">{account.patientName}</TableCell>
+                              <TableCell>
+                                <Badge variant={
+                                  account.agingBucket === "0-30" ? "outline" :
+                                  account.agingBucket === "31-60" ? "outline" :
+                                  account.agingBucket === "61-90" ? "outline" :
+                                  account.agingBucket === "91-120" ? "outline" :
+                                  "outline"
+                                } className={
+                                  account.agingBucket === "0-30" ? "bg-green-50 text-green-600 border-green-200" :
+                                  account.agingBucket === "31-60" ? "bg-blue-50 text-blue-600 border-blue-200" :
+                                  account.agingBucket === "61-90" ? "bg-amber-50 text-amber-600 border-amber-200" :
+                                  account.agingBucket === "91-120" ? "bg-orange-50 text-orange-600 border-orange-200" :
+                                  "bg-red-50 text-red-600 border-red-200"
+                                }>
+                                  {account.agingBucket}
+                                </Badge>
+                              </TableCell>
+                              <TableCell className="text-right font-medium">
+                                ${account.totalDue.toFixed(2)}
+                              </TableCell>
+                              <TableCell>
+                                {renderPriorityBadge(account.priority)}
+                              </TableCell>
+                              <TableCell>
+                                {renderStatusBadge(account.status)}
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center">
+                                  {account.lastAction.date ? (
+                                    <>
+                                      {renderActionTypeIcon(account.lastAction.type)}
+                                      <span className="ml-2 whitespace-nowrap">{formatDateOrNone(account.lastAction.date)}</span>
+                                    </>
+                                  ) : (
+                                    <span className="text-muted-foreground">None</span>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell>
+                                <div className="flex items-center">
+                                  {account.nextAction.dueDate ? (
+                                    <>
+                                      {renderActionTypeIcon(account.nextAction.type)}
+                                      <span className={`ml-2 whitespace-nowrap ${
+                                        isBefore(parseISO(account.nextAction.dueDate), new Date()) 
+                                          ? "text-red-600 font-medium" 
+                                          : ""
+                                      }`}>
+                                        {formatDateOrNone(account.nextAction.dueDate)}
+                                      </span>
+                                    </>
+                                  ) : (
+                                    <span className="text-muted-foreground">None</span>
+                                  )}
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                  <PhoneCall className="h-4 w-4" />
+                                  <span className="sr-only">Call patient</span>
+                                </Button>
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm" 
+                                  className="h-8 w-8 p-0"
+                                  onClick={(e) => toggleRowExpand(account.id, e)}
+                                >
+                                  <Eye className="h-4 w-4" />
+                                  <span className="sr-only">View details</span>
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                            
+                            {/* Expanded details row */}
+                            {expandedRows.includes(account.id) && (
+                              <TableRow className="bg-muted/30 border-t-0">
+                                <TableCell colSpan={10} className="p-0">
+                                  <div className="p-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                      {/* Contact Information */}
+                                      <Card className="shadow-sm">
+                                        <CardHeader className="py-3 px-4 border-b">
+                                          <CardTitle className="text-sm font-medium">Contact Information</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="py-3 px-4 text-sm">
+                                          <div className="space-y-2">
+                                            <div className="flex items-center">
+                                              <User className="h-4 w-4 mr-2 text-muted-foreground" />
+                                              <div>{account.patientName}</div>
+                                            </div>
+                                            {account.phone && (
+                                              <div className="flex items-center">
+                                                <Phone className="h-4 w-4 mr-2 text-muted-foreground" />
+                                                <div>{account.phone}</div>
+                                              </div>
+                                            )}
+                                            {account.email && (
+                                              <div className="flex items-center">
+                                                <Mail className="h-4 w-4 mr-2 text-muted-foreground" />
+                                                <div>{account.email}</div>
+                                              </div>
+                                            )}
+                                            {account.address && (
+                                              <div className="flex items-start">
+                                                <MapPin className="h-4 w-4 mr-2 mt-0.5 text-muted-foreground" />
+                                                <div>{account.address}</div>
+                                              </div>
+                                            )}
+                                          </div>
+                                        </CardContent>
+                                      </Card>
+                                      
+                                      {/* Insurance Information */}
+                                      <Card className="shadow-sm">
+                                        <CardHeader className="py-3 px-4 border-b">
+                                          <CardTitle className="text-sm font-medium">Insurance Information</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="py-3 px-4 text-sm">
+                                          {account.insuranceInfo ? (
+                                            <div className="flex items-start">
+                                              <ShieldCheck className="h-4 w-4 mr-2 mt-0.5 text-muted-foreground" />
+                                              <div>{account.insuranceInfo}</div>
+                                            </div>
+                                          ) : (
+                                            <div className="text-muted-foreground italic">No insurance information available</div>
+                                          )}
+                                        </CardContent>
+                                      </Card>
+                                      
+                                      {/* Last Action Details */}
+                                      <Card className="shadow-sm">
+                                        <CardHeader className="py-3 px-4 border-b">
+                                          <CardTitle className="text-sm font-medium">Last Action Details</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="py-3 px-4 text-sm">
+                                          {account.lastAction.date ? (
+                                            <div className="space-y-2">
+                                              <div className="flex items-center">
+                                                <CalendarClock className="h-4 w-4 mr-2 text-muted-foreground" />
+                                                <div>{formatDateOrNone(account.lastAction.date)}</div>
+                                              </div>
+                                              <div className="flex items-center">
+                                                <Activity className="h-4 w-4 mr-2 text-muted-foreground" />
+                                                <div>
+                                                  {account.lastAction.type === "call" ? "Phone Call" :
+                                                   account.lastAction.type === "email" ? "Email" :
+                                                   account.lastAction.type === "letter" ? "Letter" : "None"}
+                                                </div>
+                                              </div>
+                                              {account.lastAction.result && (
+                                                <div className="flex items-start">
+                                                  <CircleCheck className="h-4 w-4 mr-2 mt-0.5 text-muted-foreground" />
+                                                  <div>{account.lastAction.result}</div>
+                                                </div>
+                                              )}
+                                              {account.lastAction.notes && (
+                                                <div className="flex items-start">
+                                                  <FileText className="h-4 w-4 mr-2 mt-0.5 text-muted-foreground" />
+                                                  <div>{account.lastAction.notes}</div>
+                                                </div>
+                                              )}
+                                            </div>
+                                          ) : (
+                                            <div className="text-muted-foreground italic">No previous actions recorded</div>
+                                          )}
+                                        </CardContent>
+                                      </Card>
+                                    </div>
+                                    
+                                    {/* Payment History */}
+                                    {account.paymentHistory && account.paymentHistory.length > 0 && (
+                                      <Card className="shadow-sm mb-4">
+                                        <CardHeader className="py-3 px-4 border-b">
+                                          <CardTitle className="text-sm font-medium">Payment History</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="p-0">
+                                          <Table>
+                                            <TableHeader>
+                                              <TableRow>
+                                                <TableHead>Date</TableHead>
+                                                <TableHead>Method</TableHead>
+                                                <TableHead className="text-right">Amount</TableHead>
+                                              </TableRow>
+                                            </TableHeader>
+                                            <TableBody>
+                                              {account.paymentHistory.map((payment, idx) => (
+                                                <TableRow key={idx}>
+                                                  <TableCell>{format(parseISO(payment.date), "MMM d, yyyy")}</TableCell>
+                                                  <TableCell>{payment.method}</TableCell>
+                                                  <TableCell className="text-right font-medium">${payment.amount.toFixed(2)}</TableCell>
+                                                </TableRow>
+                                              ))}
+                                            </TableBody>
+                                          </Table>
+                                        </CardContent>
+                                      </Card>
+                                    )}
+                                    
+                                    {/* Notes */}
+                                    {account.notes && account.notes.length > 0 && (
+                                      <Card className="shadow-sm mb-4">
+                                        <CardHeader className="py-3 px-4 border-b">
+                                          <CardTitle className="text-sm font-medium">Account Notes</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="py-3 px-4">
+                                          <div className="space-y-3">
+                                            {account.notes.map((note, idx) => (
+                                              <div key={idx} className="pb-3 border-b last:border-0 last:pb-0">
+                                                <p>{note}</p>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </CardContent>
+                                      </Card>
+                                    )}
+                                    
+                                    {/* Action buttons */}
+                                    <div className="flex justify-end space-x-2 mt-4">
+                                      <Button variant="outline" size="sm">
+                                        <FileEdit className="h-4 w-4 mr-2" />
+                                        Add Note
+                                      </Button>
+                                      <Button variant="outline" size="sm">
+                                        <CreditCard className="h-4 w-4 mr-2" />
+                                        Payment Plan
+                                      </Button>
+                                      <Button variant="default" size="sm">
+                                        <PhoneCall className="h-4 w-4 mr-2" />
+                                        Contact Patient
+                                      </Button>
+                                    </div>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </React.Fragment>
                         ))
                       )}
                     </TableBody>
