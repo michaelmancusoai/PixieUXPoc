@@ -938,119 +938,121 @@ export default function ClaimsPage() {
                         </TableRow>
                       ) : (
                         <>
-                          {filteredClaims.map((claim: Claim) => (
-                            <React.Fragment key={`claim-group-${claim.id}`}>
-                              <TableRow 
-                                className={selectedClaims.includes(claim.id) ? "bg-muted/50" : ""}
-                              >
-                                <TableCell>
-                                  <Checkbox 
-                                    checked={selectedClaims.includes(claim.id)} 
-                                    onCheckedChange={() => handleRowSelect(claim.id)}
-                                    aria-label={`Select claim for ${claim.patientName}`}
-                                  />
-                                </TableCell>
-                                <TableCell>{claim.dateOfService}</TableCell>
-                                <TableCell className="font-medium">{claim.patientName}</TableCell>
-                                <TableCell className="text-right">${claim.claimAmount.toFixed(2)}</TableCell>
-                                <TableCell className="text-right">${claim.insuranceEstimate.toFixed(2)}</TableCell>
-                                <TableCell className="text-right">${claim.patientEstimate.toFixed(2)}</TableCell>
-                                <TableCell>{claim.billingProvider}</TableCell>
-                                <TableCell>{claim.insuranceCarrier}</TableCell>
-                                <TableCell>{claim.planType}</TableCell>
-                                <TableCell>
-                                  <Badge variant="outline" className={claim.insuranceOrder === "Primary" ? "bg-blue-50 text-blue-700 border-blue-200" : "bg-gray-50 text-gray-700 border-gray-200"}>
-                                    {claim.insuranceOrder}
-                                  </Badge>
-                                </TableCell>
-                                <TableCell>
-                                  <Badge 
-                                    className={`
-                                      ${claim.claimStatus === "Sent" ? "bg-green-100 text-green-700 hover:bg-green-200" : ""}
-                                      ${claim.claimStatus === "Resent" ? "bg-purple-100 text-purple-700 hover:bg-purple-200" : ""}
-                                      ${claim.claimStatus === "Pending" ? "bg-amber-100 text-amber-700 hover:bg-amber-200" : ""}
-                                      ${claim.claimStatus === "Not Sent" ? "bg-gray-100 text-gray-700 hover:bg-gray-200" : ""}
-                                    `}
-                                  >
-                                    {claim.claimStatus}
-                                  </Badge>
-                                </TableCell>
-                                <TableCell>
-                                  <Button 
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => toggleExpandClaim(claim.id)}
-                                    className="h-8 w-8 p-0"
-                                  >
-                                    <ChevronDown 
-                                      className={`h-4 w-4 transition-transform duration-200 ${expandedClaimId === claim.id ? "transform rotate-180" : ""}`} 
+                          {filteredClaims.map((claim: Claim) => {
+                            return (
+                              <React.Fragment key={`claim-row-${claim.id}`}>
+                                <TableRow 
+                                  className={selectedClaims.includes(claim.id) ? "bg-muted/50" : ""}
+                                >
+                                  <TableCell>
+                                    <Checkbox 
+                                      checked={selectedClaims.includes(claim.id)} 
+                                      onCheckedChange={() => handleRowSelect(claim.id)}
+                                      aria-label={`Select claim for ${claim.patientName}`}
                                     />
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                              
-                              {/* Conditionally render the expanded details */}
-                              {expandedClaimId === claim.id && claim.procedures && (
-                                <TableRow className="bg-gray-50">
-                                  <TableCell colSpan={12} className="p-0">
-                                    <div className="p-0">
-                                      <table className="w-full border-collapse">
-                                        <thead>
-                                          <tr className="border-y bg-gray-100">
-                                            <th className="py-2 px-3 text-xs font-semibold text-left border-r w-[100px]">CDT Code</th>
-                                            <th className="py-2 px-3 text-xs font-semibold text-left border-r w-[80px]">Tth/ Surf</th>
-                                            <th className="py-2 px-3 text-xs font-semibold text-left border-r">Description</th>
-                                            <th className="py-2 px-3 text-xs font-semibold text-right border-r">Fees</th>
-                                            <th className="py-2 px-3 text-xs font-semibold text-right border-r">Negotiated</th>
-                                            <th className="py-2 px-3 text-xs font-semibold text-right border-r">Deductible</th>
-                                            <th className="py-2 px-3 text-xs font-semibold text-right border-r">Coverage</th>
-                                            <th className="py-2 px-3 text-xs font-semibold text-right border-r">Pt Est</th>
-                                            <th className="py-2 px-3 text-xs font-semibold text-right">Ins Est</th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                          {claim.procedures.map((procedure: Procedure, index: number) => (
-                                            <tr key={index} className="border-b hover:bg-gray-50">
-                                              <td className="py-2 px-3 text-sm border-r">{procedure.cdtCode}</td>
-                                              <td className="py-2 px-3 text-sm border-r">
-                                                {procedure.toothNumber}{procedure.toothSurface ? '/' + procedure.toothSurface : ''}
-                                              </td>
-                                              <td className="py-2 px-3 text-sm border-r">{procedure.description}</td>
-                                              <td className="py-2 px-3 text-sm border-r text-right">${procedure.fee.toFixed(2)}</td>
-                                              <td className="py-2 px-3 text-sm border-r text-right">${procedure.negotiated.toFixed(2)}</td>
-                                              <td className="py-2 px-3 text-sm border-r text-right">${procedure.deductible.toFixed(2)}</td>
-                                              <td className="py-2 px-3 text-sm border-r text-right">{procedure.coverage}%</td>
-                                              <td className="py-2 px-3 text-sm border-r text-right">${procedure.patientEstimate.toFixed(2)}</td>
-                                              <td className="py-2 px-3 text-sm text-right">${procedure.insuranceEstimate.toFixed(2)}</td>
-                                            </tr>
-                                          ))}
-                                          <tr className="bg-gray-50">
-                                            <td colSpan={3} className="py-2 px-3 text-sm font-semibold border-r">Total</td>
-                                            <td className="py-2 px-3 text-sm font-semibold border-r text-right">
-                                              ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.fee, 0).toFixed(2)}
-                                            </td>
-                                            <td className="py-2 px-3 text-sm font-semibold border-r text-right">
-                                              ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.negotiated, 0).toFixed(2)}
-                                            </td>
-                                            <td className="py-2 px-3 text-sm font-semibold border-r text-right">
-                                              ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.deductible, 0).toFixed(2)}
-                                            </td>
-                                            <td className="py-2 px-3 text-sm font-semibold border-r text-right">-</td>
-                                            <td className="py-2 px-3 text-sm font-semibold border-r text-right">
-                                              ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.patientEstimate, 0).toFixed(2)}
-                                            </td>
-                                            <td className="py-2 px-3 text-sm font-semibold text-right">
-                                              ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.insuranceEstimate, 0).toFixed(2)}
-                                            </td>
-                                          </tr>
-                                        </tbody>
-                                      </table>
-                                    </div>
+                                  </TableCell>
+                                  <TableCell>{claim.dateOfService}</TableCell>
+                                  <TableCell className="font-medium">{claim.patientName}</TableCell>
+                                  <TableCell className="text-right">${claim.claimAmount.toFixed(2)}</TableCell>
+                                  <TableCell className="text-right">${claim.insuranceEstimate.toFixed(2)}</TableCell>
+                                  <TableCell className="text-right">${claim.patientEstimate.toFixed(2)}</TableCell>
+                                  <TableCell>{claim.billingProvider}</TableCell>
+                                  <TableCell>{claim.insuranceCarrier}</TableCell>
+                                  <TableCell>{claim.planType}</TableCell>
+                                  <TableCell>
+                                    <Badge variant="outline" className={claim.insuranceOrder === "Primary" ? "bg-blue-50 text-blue-700 border-blue-200" : "bg-gray-50 text-gray-700 border-gray-200"}>
+                                      {claim.insuranceOrder}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Badge 
+                                      className={`
+                                        ${claim.claimStatus === "Sent" ? "bg-green-100 text-green-700 hover:bg-green-200" : ""}
+                                        ${claim.claimStatus === "Resent" ? "bg-purple-100 text-purple-700 hover:bg-purple-200" : ""}
+                                        ${claim.claimStatus === "Pending" ? "bg-amber-100 text-amber-700 hover:bg-amber-200" : ""}
+                                        ${claim.claimStatus === "Not Sent" ? "bg-gray-100 text-gray-700 hover:bg-gray-200" : ""}
+                                      `}
+                                    >
+                                      {claim.claimStatus}
+                                    </Badge>
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button 
+                                      variant="ghost"
+                                      size="sm"
+                                      onClick={() => toggleExpandClaim(claim.id)}
+                                      className="h-8 w-8 p-0"
+                                    >
+                                      <ChevronDown 
+                                        className={`h-4 w-4 transition-transform duration-200 ${expandedClaimId === claim.id ? "transform rotate-180" : ""}`} 
+                                      />
+                                    </Button>
                                   </TableCell>
                                 </TableRow>
-                              )}
-                            </React.Fragment>
-                          ))}
+                                
+                                {/* Conditionally render the expanded details */}
+                                {expandedClaimId === claim.id && claim.procedures && (
+                                  <TableRow key={`claim-details-${claim.id}`} className="bg-gray-50">
+                                    <TableCell colSpan={12} className="p-0">
+                                      <div className="p-0">
+                                        <table className="w-full border-collapse">
+                                          <thead>
+                                            <tr className="border-y bg-gray-100">
+                                              <th className="py-2 px-3 text-xs font-semibold text-left border-r w-[100px]">CDT Code</th>
+                                              <th className="py-2 px-3 text-xs font-semibold text-left border-r w-[80px]">Tth/ Surf</th>
+                                              <th className="py-2 px-3 text-xs font-semibold text-left border-r">Description</th>
+                                              <th className="py-2 px-3 text-xs font-semibold text-right border-r">Fees</th>
+                                              <th className="py-2 px-3 text-xs font-semibold text-right border-r">Negotiated</th>
+                                              <th className="py-2 px-3 text-xs font-semibold text-right border-r">Deductible</th>
+                                              <th className="py-2 px-3 text-xs font-semibold text-right border-r">Coverage</th>
+                                              <th className="py-2 px-3 text-xs font-semibold text-right border-r">Pt Est</th>
+                                              <th className="py-2 px-3 text-xs font-semibold text-right">Ins Est</th>
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                            {claim.procedures.map((procedure: Procedure, index: number) => (
+                                              <tr key={index} className="border-b hover:bg-gray-50">
+                                                <td className="py-2 px-3 text-sm border-r">{procedure.cdtCode}</td>
+                                                <td className="py-2 px-3 text-sm border-r">
+                                                  {procedure.toothNumber}{procedure.toothSurface ? '/' + procedure.toothSurface : ''}
+                                                </td>
+                                                <td className="py-2 px-3 text-sm border-r">{procedure.description}</td>
+                                                <td className="py-2 px-3 text-sm border-r text-right">${procedure.fee.toFixed(2)}</td>
+                                                <td className="py-2 px-3 text-sm border-r text-right">${procedure.negotiated.toFixed(2)}</td>
+                                                <td className="py-2 px-3 text-sm border-r text-right">${procedure.deductible.toFixed(2)}</td>
+                                                <td className="py-2 px-3 text-sm border-r text-right">{procedure.coverage}%</td>
+                                                <td className="py-2 px-3 text-sm border-r text-right">${procedure.patientEstimate.toFixed(2)}</td>
+                                                <td className="py-2 px-3 text-sm text-right">${procedure.insuranceEstimate.toFixed(2)}</td>
+                                              </tr>
+                                            ))}
+                                            <tr className="bg-gray-50">
+                                              <td colSpan={3} className="py-2 px-3 text-sm font-semibold border-r">Total</td>
+                                              <td className="py-2 px-3 text-sm font-semibold border-r text-right">
+                                                ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.fee, 0).toFixed(2)}
+                                              </td>
+                                              <td className="py-2 px-3 text-sm font-semibold border-r text-right">
+                                                ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.negotiated, 0).toFixed(2)}
+                                              </td>
+                                              <td className="py-2 px-3 text-sm font-semibold border-r text-right">
+                                                ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.deductible, 0).toFixed(2)}
+                                              </td>
+                                              <td className="py-2 px-3 text-sm font-semibold border-r text-right">-</td>
+                                              <td className="py-2 px-3 text-sm font-semibold border-r text-right">
+                                                ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.patientEstimate, 0).toFixed(2)}
+                                              </td>
+                                              <td className="py-2 px-3 text-sm font-semibold text-right">
+                                                ${claim.procedures.reduce((sum: number, p: Procedure) => sum + p.insuranceEstimate, 0).toFixed(2)}
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </div>
+                                    </TableCell>
+                                  </TableRow>
+                                )}
+                              </React.Fragment>
+                            );
+                          })}
                         </>
                       )}
                     </TableBody>
