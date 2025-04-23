@@ -56,12 +56,12 @@ async function seedRealisticSchedulingData() {
     { name: 'Consultation', duration: 30 }
   ];
   
-  // Business hours configuration (8:00 AM - 6:00 PM)
+  // Business hours configuration (realistic for a dental practice)
   const businessHours = {
     startHour: 8, // 8:00 AM
     startMinute: 0,
-    endHour: 18, // 6:00 PM
-    endMinute: 0,
+    endHour: 17, // 5:00 PM
+    endMinute: 30,
     lunchStartHour: 12, // 12:00 PM
     lunchStartMinute: 0,
     lunchDuration: 60 // 60 minutes
@@ -137,36 +137,12 @@ async function seedRealisticSchedulingData() {
       while (appointmentsScheduled < appointmentsPerProvider[provider.id] && maxAttempts > 0) {
         maxAttempts--;
         
-        // Rather than fully random, use a more structured approach to distribute throughout the day
-        // Divide the day into 5 equal segments to distribute appointments evenly across the full 8am-6pm range
-        let segment;
-        if (appointmentsScheduled % 5 === 0) {
-            // Early morning: 8:00am - 10:00am
-            segment = { startHour: 8, endHour: 10 };
-        } else if (appointmentsScheduled % 5 === 1) {
-            // Late morning: 10:00am - 12:00pm
-            segment = { startHour: 10, endHour: 12 };
-        } else if (appointmentsScheduled % 5 === 2) {
-            // Early afternoon: 1:00pm - 3:00pm (after lunch)
-            segment = { startHour: 13, endHour: 15 };
-        } else if (appointmentsScheduled % 5 === 3) {
-            // Mid afternoon: 3:00pm - 4:30pm
-            segment = { startHour: 15, endHour: 16.5 };
-        } else {
-            // Late afternoon: 4:30pm - 6:00pm
-            segment = { startHour: 16.5, endHour: 18 };
-        }
-        
-        // Choose a start time within the selected segment
-        const hourSpan = segment.endHour - segment.startHour;
-        const startHourDecimal = segment.startHour + (Math.random() * hourSpan);
-        const startHour = Math.floor(startHourDecimal);
-        const startMinute = Math.floor((startHourDecimal - startHour) * 60);
-        // Round to nearest 5 minutes
-        const roundedStartMinute = Math.round(startMinute / 5) * 5;
+        // Choose a random start time within business hours
+        const startHour = Math.floor(Math.random() * (businessHours.endHour - businessHours.startHour)) + businessHours.startHour;
+        const startMinute = Math.floor(Math.random() * 12) * 5; // 5-minute increments
         
         const potentialStartTime = new Date(dayStart);
-        potentialStartTime.setHours(startHour, roundedStartMinute, 0, 0);
+        potentialStartTime.setHours(startHour, startMinute, 0, 0);
         
         // Skip if in lunch time
         if (potentialStartTime >= lunchStart && potentialStartTime < lunchEnd) {
