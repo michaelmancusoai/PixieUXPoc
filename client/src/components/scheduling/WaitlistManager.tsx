@@ -74,7 +74,7 @@ export const WaitlistManager = () => {
   // Function to handle removing from waitlist
   const handleRemoveFromWaitlist = async (id: number) => {
     try {
-      await apiRequest(`/api/waitlist/${id}`, { method: 'DELETE' });
+      await apiRequest('DELETE', `/api/waitlist/${id}`);
       
       toast({
         title: "Removed from waitlist",
@@ -114,7 +114,7 @@ export const WaitlistManager = () => {
         notes: values.notes || '',
       };
       
-      await apiRequest('/api/waitlist', { method: 'POST', data: waitlistData });
+      await apiRequest('POST', '/api/waitlist', waitlistData);
       
       toast({
         title: "Added to Waitlist",
