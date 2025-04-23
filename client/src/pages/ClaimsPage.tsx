@@ -60,7 +60,7 @@ type Claim = {
   insuranceCarrier: string;
   planType: string;
   insuranceOrder: "Primary" | "Secondary";
-  claimStatus: "Sent" | "Pending" | "Resent" | "Not Sent";
+  claimStatus: "Sent" | "Pending" | "Resent" | "Not Sent" | "Completed";
   submissionDate?: string;
   procedures?: Procedure[];
 };
@@ -604,6 +604,100 @@ const mockClaims: Claim[] = [
         insuranceEstimate: 1400.00
       }
     ]
+  },
+  
+  // Completed Claims
+  {
+    id: 15,
+    patientName: "David Wilson",
+    dateOfService: "03/15/2025",
+    claimAmount: 2500.75,
+    insuranceEstimate: 2000.60,
+    patientEstimate: 500.15,
+    billingProvider: "Dr. Floyd Miles",
+    insuranceCarrier: "Delta Dental of California",
+    planType: "PPO",
+    insuranceOrder: "Primary",
+    claimStatus: "Completed",
+    submissionDate: "03/16/2025",
+    procedures: [
+      {
+        cdtCode: "D2740",
+        toothNumber: "8",
+        toothSurface: "",
+        description: "Crown - porcelain/ceramic substrate",
+        fee: 1500.50,
+        negotiated: 1200.40,
+        deductible: 0,
+        coverage: 80,
+        patientEstimate: 300.10,
+        insuranceEstimate: 1200.40
+      },
+      {
+        cdtCode: "D2950",
+        toothNumber: "8",
+        toothSurface: "",
+        description: "Core buildup, including any pins when required",
+        fee: 1000.25,
+        negotiated: 800.20,
+        deductible: 0,
+        coverage: 80,
+        patientEstimate: 200.05,
+        insuranceEstimate: 800.20
+      }
+    ]
+  },
+  {
+    id: 16,
+    patientName: "Emily Clark",
+    dateOfService: "03/10/2025",
+    claimAmount: 350.25,
+    insuranceEstimate: 350.25,
+    patientEstimate: 0.00,
+    billingProvider: "Dr. Ronald Richards",
+    insuranceCarrier: "Humana Dental",
+    planType: "PPO",
+    insuranceOrder: "Primary",
+    claimStatus: "Completed",
+    submissionDate: "03/11/2025",
+    procedures: [
+      {
+        cdtCode: "D0120",
+        toothNumber: "",
+        toothSurface: "",
+        description: "Periodic oral evaluation",
+        fee: 100.00,
+        negotiated: 100.00,
+        deductible: 0,
+        coverage: 100,
+        patientEstimate: 0.00,
+        insuranceEstimate: 100.00
+      },
+      {
+        cdtCode: "D0274",
+        toothNumber: "",
+        toothSurface: "",
+        description: "Bitewings - four radiographic images",
+        fee: 150.25,
+        negotiated: 150.25,
+        deductible: 0,
+        coverage: 100,
+        patientEstimate: 0.00,
+        insuranceEstimate: 150.25
+      },
+      {
+        cdtCode: "D1110",
+        toothNumber: "",
+        toothSurface: "",
+        description: "Prophylaxis - adult",
+        fee: 100.00,
+        negotiated: 100.00,
+        deductible: 0,
+        coverage: 100,
+        patientEstimate: 0.00,
+        insuranceEstimate: 100.00
+      }
+    ]
   }
 ];
 
@@ -630,6 +724,7 @@ const statuses = [
   "Pending",
   "Resent",
   "Not Sent",
+  "Completed",
 ];
 
 export default function ClaimsPage() {
