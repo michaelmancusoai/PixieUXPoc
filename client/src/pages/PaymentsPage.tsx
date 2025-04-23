@@ -160,7 +160,7 @@ const mockPayments: Payment[] = [
     status: "Completed",
     paymentFor: "Treatment",
     description: "Root canal treatment",
-    paymentProcessor: "Stripe",
+    paymentProcessor: "Phase 3 Payments",
     transactionId: "txn_3Pi6uUMk40hMDWIz1kyD3Suv"
   },
   {
@@ -195,8 +195,8 @@ const mockPayments: Payment[] = [
     status: "Completed",
     paymentFor: "Treatment",
     description: "Dental cleaning",
-    paymentProcessor: "Square",
-    transactionId: "sqr_64gMCS9tju40zC2Stu"
+    paymentProcessor: "Phase 3 Payments",
+    transactionId: "p3p_64gMCS9tju40zC2Stu"
   }
 ];
 
