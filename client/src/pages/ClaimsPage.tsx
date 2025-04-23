@@ -820,11 +820,80 @@ export default function ClaimsPage() {
     </Badge>
   );
 
+  // Calculate total values for KPIs
+  const calculateTotals = () => {
+    const totalPending = filteredClaims
+      .filter(claim => claim.claimStatus === "Pending")
+      .reduce((sum, claim) => sum + claim.claimAmount, 0);
+    
+    const totalNotSent = filteredClaims
+      .filter(claim => claim.claimStatus === "Not Sent")
+      .reduce((sum, claim) => sum + claim.claimAmount, 0);
+    
+    const totalInsuranceEstimate = filteredClaims
+      .reduce((sum, claim) => sum + claim.insuranceEstimate, 0);
+    
+    return { totalPending, totalNotSent, totalInsuranceEstimate };
+  };
+
+  const { totalPending, totalNotSent, totalInsuranceEstimate } = calculateTotals();
+
   return (
     <NavigationWrapper>
       <div className="min-h-screen bg-muted">
         <div className="container mx-auto py-6">
           <h1 className="text-2xl font-bold mb-6">Claims Management</h1>
+          
+          {/* Summary Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <Card className="shadow-sm">
+              <CardHeader className="py-4 px-5 border-b">
+                <CardTitle className="text-base font-medium">Insurance Estimates</CardTitle>
+              </CardHeader>
+              <CardContent className="py-6 px-5">
+                <div className="flex items-center">
+                  <CreditCard className="h-8 w-8 mr-3 text-blue-500" />
+                  <div>
+                    <div className="text-2xl font-bold">${totalInsuranceEstimate.toFixed(2)}</div>
+                    <div className="text-sm text-muted-foreground">Current selection</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="shadow-sm">
+              <CardHeader className="py-4 px-5 border-b">
+                <CardTitle className="text-base font-medium">Pending Claims</CardTitle>
+              </CardHeader>
+              <CardContent className="py-6 px-5">
+                <div className="flex items-center">
+                  <Clock className="h-8 w-8 mr-3 text-amber-500" />
+                  <div>
+                    <div className="text-2xl font-bold">${totalPending.toFixed(2)}</div>
+                    <div className="text-sm text-muted-foreground">Awaiting processing</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="shadow-sm">
+              <CardHeader className="py-4 px-5 border-b">
+                <CardTitle className="text-base font-medium">Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="py-6 px-5">
+                <div className="flex items-center justify-between">
+                  <Button className="h-9">
+                    <Plus className="h-4 w-4 mr-1" />
+                    New Claim
+                  </Button>
+                  <Button variant="outline" className="h-9">
+                    <Download className="h-4 w-4 mr-1" />
+                    Export Report
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
           <Card className="shadow-sm">
             <CardHeader className="px-6 py-4 border-b">
