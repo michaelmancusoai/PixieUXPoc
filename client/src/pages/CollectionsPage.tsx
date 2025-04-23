@@ -23,6 +23,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -52,6 +60,20 @@ import {
   PhoneCall,
   MessageSquare,
   BellRing,
+  User,
+  Phone,
+  MapPin,
+  AtSign,
+  ShieldCheck,
+  Activity,
+  CalendarClock,
+  CircleCheck,
+  FileEdit,
+  History,
+  CreditCard,
+  MoreHorizontal,
+  PiggyBank,
+  UserCircle,
 } from "lucide-react";
 import { format, addDays, addMonths, isAfter, parseISO, isBefore } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -957,21 +979,7 @@ export default function CollectionsPage() {
                                 />
                               </TableCell>
                               <TableCell>
-                                <div className="flex items-center">
-                                  <Button 
-                                    variant="ghost" 
-                                    size="sm" 
-                                    className="h-8 w-8 p-0 mr-2"
-                                    onClick={(e) => toggleRowExpand(account.id, e)}
-                                  >
-                                    {expandedRows.includes(account.id) ? (
-                                      <ChevronDown className="h-4 w-4" />
-                                    ) : (
-                                      <ChevronRight className="h-4 w-4" />
-                                    )}
-                                  </Button>
-                                  {account.accountNumber}
-                                </div>
+                                {account.accountNumber}
                               </TableCell>
                               <TableCell className="font-medium">{account.patientName}</TableCell>
                               <TableCell>
@@ -1031,19 +1039,29 @@ export default function CollectionsPage() {
                                 </div>
                               </TableCell>
                               <TableCell className="text-right">
-                                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                  <PhoneCall className="h-4 w-4" />
-                                  <span className="sr-only">Call patient</span>
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="sm" 
-                                  className="h-8 w-8 p-0"
-                                  onClick={(e) => toggleRowExpand(account.id, e)}
-                                >
-                                  <Eye className="h-4 w-4" />
-                                  <span className="sr-only">View details</span>
-                                </Button>
+                                <div className="flex items-center justify-end space-x-1">
+                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                    <PhoneCall className="h-4 w-4" />
+                                    <span className="sr-only">Call patient</span>
+                                  </Button>
+                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                                    <Mail className="h-4 w-4" />
+                                    <span className="sr-only">Email patient</span>
+                                  </Button>
+                                  <Button 
+                                    variant="outline" 
+                                    size="sm" 
+                                    className="h-8 w-8 p-0 ml-2"
+                                    onClick={(e) => toggleRowExpand(account.id, e)}
+                                  >
+                                    {expandedRows.includes(account.id) ? (
+                                      <ChevronDown className="h-4 w-4" />
+                                    ) : (
+                                      <ChevronRight className="h-4 w-4" />
+                                    )}
+                                    <span className="sr-only">Expand details</span>
+                                  </Button>
+                                </div>
                               </TableCell>
                             </TableRow>
                             
