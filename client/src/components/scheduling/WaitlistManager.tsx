@@ -191,10 +191,6 @@ export const WaitlistManager = () => {
           ) : waitlist.length === 0 ? (
             <div className="text-center text-gray-500 py-8">
               <p>No patients on the waitlist</p>
-              <Button onClick={() => setAddDialogOpen(true)} variant="outline" className="mt-4">
-                <Plus className="h-4 w-4 mr-1" />
-                Add Patient to Waitlist
-              </Button>
             </div>
           ) : (
             <Tabs defaultValue="HIGH">
