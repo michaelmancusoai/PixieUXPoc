@@ -732,31 +732,131 @@ export default function DailyHuddlePage() {
                             return (
                               <div 
                                 key={idx} 
-                                className="bg-white p-4 rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+                                className={cn(
+                                  "p-4 rounded-md border-l-4 shadow-sm hover:shadow-md transition-shadow",
+                                  metric.status === 'above' 
+                                    ? "border-l-green-500 bg-gradient-to-r from-green-50 to-white" 
+                                    : metric.status === 'below' 
+                                      ? "border-l-red-500 bg-gradient-to-r from-red-50 to-white"
+                                      : "border-l-blue-500 bg-gradient-to-r from-blue-50 to-white"
+                                )}
                               >
-                                <div className="flex justify-between items-start mb-2">
-                                  <p className="text-sm font-medium text-gray-500">{metric.label}</p>
-                                  <div className={cn("p-1.5 rounded-full", badgeColor.replace('text-', 'bg-').replace('00', '500'))}>
-                                    <MetricIcon className="h-3.5 w-3.5 text-white" />
+                                <div className="flex justify-between items-start mb-3">
+                                  <div className="flex items-center gap-2">
+                                    <div className={cn(
+                                      "p-2 rounded-full",
+                                      metric.status === 'above' 
+                                        ? "bg-green-100 text-green-600" 
+                                        : metric.status === 'below' 
+                                          ? "bg-red-100 text-red-600"
+                                          : "bg-blue-100 text-blue-600"
+                                    )}>
+                                      <MetricIcon className="h-4 w-4" />
+                                    </div>
+                                    <p className="text-sm font-medium text-gray-700">{metric.label}</p>
                                   </div>
+                                  
+                                  {/* Status indicator with icon */}
+                                  {metric.status === 'above' ? (
+                                    <div className="flex items-center gap-1 text-green-600 bg-green-50 px-2 py-1 rounded-full text-xs font-medium">
+                                      <TrendingUp className="h-3 w-3" />
+                                      <span>Above Target</span>
+                                    </div>
+                                  ) : metric.status === 'below' ? (
+                                    <div className="flex items-center gap-1 text-red-600 bg-red-50 px-2 py-1 rounded-full text-xs font-medium">
+                                      <AlertCircle className="h-3 w-3" />
+                                      <span>Needs Attention</span>
+                                    </div>
+                                  ) : (
+                                    <div className="flex items-center gap-1 text-blue-600 bg-blue-50 px-2 py-1 rounded-full text-xs font-medium">
+                                      <CheckCircle className="h-3 w-3" />
+                                      <span>On Target</span>
+                                    </div>
+                                  )}
                                 </div>
                                 
-                                <div className="flex items-center gap-2 mb-2">
-                                  <span className="text-2xl font-bold">{metric.value}</span>
-                                  <Badge 
-                                    variant="outline" 
-                                    className={cn("ml-1 text-xs font-normal", badgeColor)}
-                                  >
-                                    Target: {metric.target}
-                                  </Badge>
-                                </div>
-                                
-                                {/* Progress bar */}
-                                <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                                  <div 
-                                    className={cn("h-2.5 rounded-full", progressColor)}
-                                    style={{ width: `${progressValue}%` }} 
-                                  ></div>
+                                {/* Visualization area */}
+                                <div className="flex items-end gap-3">
+                                  {/* Main value with comparison */}
+                                  <div className="flex-1">
+                                    {/* Main value with large font */}
+                                    <div className="flex items-baseline gap-2">
+                                      <span className="text-3xl font-bold">{metric.value}</span>
+                                      <Badge 
+                                        variant="outline" 
+                                        className={cn(
+                                          "text-xs font-normal border-0",
+                                          metric.status === 'above' 
+                                            ? "bg-green-50 text-green-700" 
+                                            : metric.status === 'below' 
+                                              ? "bg-red-50 text-red-700"
+                                              : "bg-blue-50 text-blue-700"
+                                        )}
+                                      >
+                                        Target: {metric.target}
+                                      </Badge>
+                                    </div>
+                                    
+                                    {/* Visual gauge */}
+                                    <div className="mt-2 relative h-3 bg-gray-100 rounded-full overflow-hidden">
+                                      <div 
+                                        className={cn(
+                                          "absolute top-0 left-0 h-full rounded-r-full",
+                                          metric.status === 'above' 
+                                            ? "bg-green-500" 
+                                            : metric.status === 'below' 
+                                              ? "bg-red-500"
+                                              : "bg-blue-500"
+                                        )}
+                                        style={{ width: `${progressValue}%` }} 
+                                      />
+                                      
+                                      {/* Target marker */}
+                                      {metric.status !== 'neutral' && (
+                                        <div 
+                                          className="absolute top-0 w-0.5 h-5 bg-gray-800 z-10"
+                                          style={{ 
+                                            left: `${metric.status === 'below' ? progressValue : 100}%`,
+                                            marginTop: '-1px' 
+                                          }}
+                                        />
+                                      )}
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Visual indicator based on metric type */}
+                                  <div className={cn(
+                                    "flex flex-col items-center justify-center rounded-lg p-2 min-w-[60px] text-center",
+                                    metric.status === 'above' 
+                                      ? "bg-green-100 text-green-700" 
+                                      : metric.status === 'below' 
+                                        ? "bg-red-100 text-red-700"
+                                        : "bg-blue-100 text-blue-700"
+                                  )}>
+                                    {/* Different visual indicators based on metric type */}
+                                    {metric.label.includes("Production") || metric.label.includes("Revenue") ? (
+                                      <>
+                                        <CreditCard className="h-5 w-5 mb-1" />
+                                        <span className="text-xs font-semibold">{progressValue}%</span>
+                                      </>
+                                    ) : metric.label.includes("Patient") || metric.label.includes("Satisfaction") ? (
+                                      <>
+                                        <UserMinus className="h-5 w-5 mb-1" />
+                                        <span className="text-xs font-semibold">{progressValue}%</span>
+                                      </>
+                                    ) : metric.label.includes("Unconfirmed") || metric.label.includes("Tasks") ? (
+                                      <>
+                                        <Clock className="h-5 w-5 mb-1" />
+                                        <span className="text-xs font-semibold">{Math.abs(parseInt(metric.value) - parseInt(metric.target))}</span>
+                                        <span className="text-xs">gap</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <TrendingUp className="h-5 w-5 mb-1" />
+                                        <span className="text-xs font-semibold">{progressValue}%</span>
+                                      </>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
                             );
