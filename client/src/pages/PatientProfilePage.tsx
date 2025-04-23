@@ -33,20 +33,20 @@ export default function PatientProfilePage() {
         
         <main className="w-full px-2 sm:px-3 py-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 xl:gap-5">
-            {/* Column A: Snapshot Cards */}
-            <section className="col-span-1 lg:col-span-2 xl:col-span-2 flex flex-col gap-4">
+            {/* Column A: Snapshot Cards - narrower */}
+            <section className="col-span-1 lg:col-span-2 xl:col-span-2 2xl:col-span-1 flex flex-col gap-4">
               <h2 className="sr-only">Patient Snapshot</h2>
               <PatientCard />
               <SnapshotCards />
             </section>
             
             {/* Column B: Activity Hub */}
-            <section className="col-span-1 lg:col-span-7 xl:col-span-7">
+            <section className="col-span-1 lg:col-span-6 xl:col-span-6 2xl:col-span-7">
               <ActivityHub />
             </section>
             
-            {/* Column C: Related Records */}
-            <section className="col-span-1 lg:col-span-3 xl:col-span-3">
+            {/* Column C: Related Records - wider */}
+            <section className="col-span-1 lg:col-span-4 xl:col-span-4 2xl:col-span-4">
               <RelatedRecords />
             </section>
           </div>

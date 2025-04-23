@@ -171,15 +171,16 @@ interface FlowColumnProps {
   };
   patients: any[];
   className?: string;
+  style?: React.CSSProperties;
 }
 
 // FlowColumn component
-function FlowColumn({ column, patients, className }: FlowColumnProps) {
+function FlowColumn({ column, patients, className, style }: FlowColumnProps) {
   const isOverWipLimit = patients.length > column.wipLimit;
   const Icon = column.icon;
   
   return (
-    <div className={cn("min-w-[220px] w-full flex flex-col h-full", className)}>
+    <div className={cn("min-w-[220px] w-full flex flex-col h-full", className)} style={style}>
       <div className={cn(
         "text-white px-3 py-2 rounded-t-md flex justify-between items-center",
         column.color
@@ -335,20 +336,33 @@ export default function MissionControlPage() {
         
         {/* Main Flow Board */}
         <div className="flex">
-          {/* Flow Columns */}
+          {/* Flow Columns - adjust column proportions to allocate more space to last columns */}
           <div className="flex overflow-x-auto pb-4 gap-3 flex-grow flex-1" style={{ minHeight: "calc(100vh - 300px)" }}>
-            {flowColumns.map((column, index) => (
-              <FlowColumn 
-                key={column.id} 
-                column={column} 
-                patients={flowState[column.id] || []} 
-                className="flex-1"
-              />
-            ))}
+            {flowColumns.map((column, index) => {
+              // Adjust flex proportions based on column index
+              let flexProportion = "1";
+              if (index === 0) {
+                // First column less width
+                flexProportion = "0.75";
+              } else if (index === flowColumns.length - 1 || index === flowColumns.length - 2) {
+                // Last two columns more width
+                flexProportion = "1.25";
+              }
+              
+              return (
+                <FlowColumn 
+                  key={column.id} 
+                  column={column} 
+                  patients={flowState[column.id] || []} 
+                  className={`flex-${flexProportion}`}
+                  style={{ flex: flexProportion }}
+                />
+              );
+            })}
           </div>
           
-          {/* Exception Rail */}
-          <div className="w-80 ml-3 hidden lg:block">
+          {/* Exception Rail - wider for better visibility */}
+          <div className="w-96 ml-3 hidden lg:block">
             <div className="bg-gray-50 rounded-md p-3 space-y-3 h-full">
               <div>
                 <h3 className="text-sm font-semibold flex items-center text-amber-700 mb-2">
