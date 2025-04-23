@@ -852,14 +852,23 @@ export default function DailyHuddlePage() {
                                         <div className="absolute right-0 top-0 text-[9px] text-green-500 mt-3.5 mr-5">100%</div>
                                       </div>
                                       
-                                      {/* Target marker */}
-                                      {metric.status !== 'neutral' && (
+                                      {/* Progress overlays for passed tick marks - white highlights where thresholds have been crossed */}
+                                      {progressValue >= 80 && (
                                         <div 
-                                          className="absolute top-0 w-0.5 h-5 bg-gray-800 z-20"
-                                          style={{ 
-                                            left: `${metric.status === 'below' || metric.status === 'slightly-below' ? progressValue : 100}%`,
-                                            marginTop: '-1px' 
-                                          }}
+                                          className="absolute top-0 h-full w-0.5 bg-white z-20"
+                                          style={{ left: '80%' }}
+                                        />
+                                      )}
+                                      {progressValue >= 95 && (
+                                        <div 
+                                          className="absolute top-0 h-full w-0.5 bg-white z-20"
+                                          style={{ left: '95%' }}
+                                        />
+                                      )}
+                                      {progressValue >= 100 && (
+                                        <div 
+                                          className="absolute top-0 h-full w-0.5 bg-white z-20"
+                                          style={{ right: '0' }}
                                         />
                                       )}
                                     </div>
