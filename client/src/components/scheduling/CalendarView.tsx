@@ -274,27 +274,90 @@ export default function CalendarView({
               })}
               
               {/* Appointments */}
-              {appointments
-                .filter(apt => {
-                  // Check if appointment belongs to this resource (operatory or provider)
-                  // Default to the first resource if operatoryId is null
-                  const resourceMatch = viewMode === 'PROVIDER' ? 
-                    apt.providerId === resource.id : 
-                    (apt.operatoryId === resource.id || (apt.operatoryId === null && colIndex === 0));
+              {(() => {
+                // Filter appointments for this resource
+                const resourceAppointments = appointments
+                  .filter(apt => {
+                    // Check if appointment belongs to this resource (operatory or provider)
+                    // Default to the first resource if operatoryId is null
+                    const resourceMatch = viewMode === 'PROVIDER' ? 
+                      apt.providerId === resource.id : 
+                      (apt.operatoryId === resource.id || (apt.operatoryId === null && colIndex === 0));
+                    
+                    // Force all appointments to display on the selected date
+                    // This is a temporary solution to make the UI match the screenshots
+                    const dateMatch = true;
+                    
+                    return resourceMatch && dateMatch;
+                  });
+                
+                // Function to detect overlapping appointments
+                const findOverlappingAppointments = (appointments: AppointmentWithDetails[]) => {
+                  // Create a map where key is appointment id and value is array of overlapping appointment ids
+                  const overlaps: Record<number, number[]> = {};
                   
-                  // Force all appointments to display on the selected date
-                  // This is a temporary solution to make the UI match the screenshots
-                  const dateMatch = true;
+                  // Initialize every appointment with an empty array
+                  appointments.forEach(apt => {
+                    overlaps[apt.id] = [];
+                  });
                   
-                  // Only log meaningful debug info
-                  if (resourceMatch) {
-                    console.log(`Displaying appointment ${apt.id}: ${apt.procedure} at ${format(parseISO(apt.startTime.toString()), 'h:mm a')} - ${apt.patient?.firstName || ''}`);
+                  // Compare each pair of appointments
+                  for (let i = 0; i < appointments.length; i++) {
+                    const appt1 = appointments[i];
+                    const start1 = parseISO(appt1.startTime.toString());
+                    const end1 = addMinutes(start1, appt1.duration);
+                    
+                    for (let j = i + 1; j < appointments.length; j++) {
+                      const appt2 = appointments[j];
+                      const start2 = parseISO(appt2.startTime.toString());
+                      const end2 = addMinutes(start2, appt2.duration);
+                      
+                      // Check if appointments overlap
+                      if ((start1 < end2 && end1 > start2) || 
+                          (start2 < end1 && end2 > start1)) {
+                        // They overlap, add to each other's lists
+                        overlaps[appt1.id].push(appt2.id);
+                        overlaps[appt2.id].push(appt1.id);
+                      }
+                    }
                   }
                   
-                  return resourceMatch && dateMatch;
-                })
-                .map(appointment => {
+                  return overlaps;
+                };
+                
+                // Group appointments by start time
+                interface TimeSlotGroup {
+                  [key: string]: AppointmentWithDetails[];
+                }
+                
+                const timeSlotGroups: TimeSlotGroup = {};
+                
+                // Group appointments by their start time (for simple overlap detection)
+                resourceAppointments.forEach(apt => {
+                  const startTime = parseISO(apt.startTime.toString());
+                  const timeKey = format(startTime, 'HH:mm'); // Just use hour:minute as the key
+                  
+                  if (!timeSlotGroups[timeKey]) {
+                    timeSlotGroups[timeKey] = [];
+                  }
+                  
+                  timeSlotGroups[timeKey].push(apt);
+                });
+                
+                // Render appointments with staggering for overlaps
+                return resourceAppointments.map((appointment, index) => {
                   const { top, height } = getAppointmentPosition(appointment, TIME_SLOT);
+                  const startTime = parseISO(appointment.startTime.toString());
+                  const timeKey = format(startTime, 'HH:mm');
+                  
+                  // Calculate horizontal staggering if there are overlapping appointments
+                  const overlappingAppointments = timeSlotGroups[timeKey] || [];
+                  const overlappingCount = overlappingAppointments.length;
+                  const overlapIndex = overlappingAppointments.findIndex(apt => apt.id === appointment.id);
+                  
+                  // Only stagger if there's more than one appointment in this time slot
+                  const staggerAmount = overlappingCount > 1 ? (overlapIndex * 8) : 0; // 8px stagger per overlapping appointment
+                  const widthReduction = overlappingCount > 1 ? ((overlappingCount - 1) * 8) : 0;
                   
                   return (
                     <AppointmentChip
@@ -303,15 +366,15 @@ export default function CalendarView({
                       style={{
                         position: 'absolute',
                         top: `${top}px`,
-                        left: '4px',
-                        right: '4px',
+                        left: `${4 + staggerAmount}px`,
+                        width: `calc(100% - ${8 + widthReduction}px)`,
                         height: `${height}px`,
-                        zIndex: 5,
+                        zIndex: 5 + overlapIndex, // Higher z-index for later overlapping appointments
                       }}
                     />
                   );
-                })
-              }
+                });
+              })()}
             </div>
           ))}
         </div>
