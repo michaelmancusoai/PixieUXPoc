@@ -3,6 +3,7 @@ import { useParams, useLocation } from "wouter";
 import { NavigationWrapper } from "@/components/NavigationWrapper";
 import Header, { PatientCard } from "@/components/patient/Header";
 import SnapshotCards from "@/components/patient/SnapshotCards";
+import AccordionSnapshotCards from "@/components/patient/AccordionSnapshotCards";
 import ActivityHub from "@/components/patient/ActivityHub";
 import EnhancedActivityHub from "@/components/patient/EnhancedActivityHub";
 import RelatedRecords from "@/components/patient/RelatedRecords";
@@ -38,7 +39,7 @@ export default function PatientProfilePage() {
             <section className="col-span-1 lg:col-span-3 xl:col-span-3 space-y-4">
               <h2 className="sr-only">Patient Snapshot</h2>
               <PatientCard />
-              <SnapshotCards />
+              <AccordionSnapshotCards />
             </section>
             
             {/* Column B: Activity Hub */}
