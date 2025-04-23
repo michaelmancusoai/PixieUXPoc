@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { NavigationWrapper } from "@/components/NavigationWrapper";
 import Header, { PatientCard } from "@/components/patient/Header";
 import SnapshotCards from "@/components/patient/SnapshotCards";
 import ActivityHub from "@/components/patient/ActivityHub";
+import EnhancedActivityHub from "@/components/patient/EnhancedActivityHub";
 import RelatedRecords from "@/components/patient/RelatedRecords";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -46,7 +47,7 @@ export default function PatientProfilePage() {
             
             {/* Column B: Activity Hub */}
             <section className="col-span-1 lg:col-span-6 xl:col-span-6">
-              <ActivityHub />
+              <EnhancedActivityHub />
             </section>
             
             {/* Column C: Related Records - same width as Column A */}
