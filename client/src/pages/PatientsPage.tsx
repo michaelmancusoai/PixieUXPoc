@@ -809,11 +809,6 @@ export default function PatientsPage() {
             )}
           </div>
         </div>
-        
-        {/* Summary footer */}
-        <div className="mx-6 border-t border-gray-200 p-3 bg-white text-sm text-gray-500 rounded-b-md">
-          {filteredPatients.length} patients • avg recall overdue 14 days
-        </div>
       </div>
     </NavigationWrapper>
   );
