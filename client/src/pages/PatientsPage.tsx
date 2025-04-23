@@ -694,13 +694,13 @@ export default function PatientsPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-[180px]">Name</TableHead>
-                      <TableHead className="w-[80px]">Actions</TableHead>
-                      {columnVisibility.dob && <TableHead className="w-[120px]">DOB / Age</TableHead>}
-                      {columnVisibility.lastVisit && <TableHead className="w-[110px]">Last Visit</TableHead>}
-                      {columnVisibility.nextVisit && <TableHead className="w-[110px]">Next Visit</TableHead>}
-                      {columnVisibility.balance && <TableHead className="w-[100px]">Balance</TableHead>}
-                      {columnVisibility.plan && <TableHead className="w-[120px]">Plan</TableHead>}
+                      <TableHead className="w-[180px] pr-8">Name</TableHead>
+                      <TableHead className="w-[80px] pr-6">Actions</TableHead>
+                      {columnVisibility.dob && <TableHead className="w-[130px] pr-8">DOB / Age</TableHead>}
+                      {columnVisibility.lastVisit && <TableHead className="w-[130px] pr-8">Last Visit</TableHead>}
+                      {columnVisibility.nextVisit && <TableHead className="w-[130px] pr-8">Next Visit</TableHead>}
+                      {columnVisibility.balance && <TableHead className="w-[110px] pr-8">Balance</TableHead>}
+                      {columnVisibility.plan && <TableHead className="w-[130px] pr-8">Plan</TableHead>}
                       {columnVisibility.tags && <TableHead className="flex-1">Status Tags</TableHead>}
                     </TableRow>
                   </TableHeader>
@@ -712,21 +712,21 @@ export default function PatientsPage() {
                           className="cursor-pointer hover:bg-gray-50"
                           onClick={() => navigateToPatient(patient.id)}
                         >
-                          <TableCell>
+                          <TableCell className="pr-8">
                             <div className="flex items-center gap-3">
-                              <Avatar className="h-8 w-8">
+                              <Avatar className="h-8 w-8 flex-shrink-0">
                                 <AvatarFallback style={{ backgroundColor: getAvatarColor(patient.fullName) }}>
                                   {getInitials(patient.fullName)}
                                 </AvatarFallback>
                               </Avatar>
-                              <div className="flex-1">
-                                <div className="font-medium">{patient.fullName}</div>
-                                <div className="text-xs text-gray-500">MRN: {patient.chartNumber}</div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium truncate">{patient.fullName}</div>
+                                <div className="text-xs text-gray-500 truncate">MRN: {patient.chartNumber}</div>
                               </div>
                             </div>
                           </TableCell>
                           
-                          <TableCell>
+                          <TableCell className="pr-6">
                             <div className="flex items-center justify-center space-x-1">
                               <Button 
                                 variant="ghost" 
@@ -748,18 +748,18 @@ export default function PatientsPage() {
                           </TableCell>
                           
                           {columnVisibility.dob && (
-                            <TableCell>
+                            <TableCell className="pr-8">
                               <div>{formatDate(patient.dob)}</div>
                               <div className="text-xs text-gray-500">{patient.age} years</div>
                             </TableCell>
                           )}
                           
                           {columnVisibility.lastVisit && (
-                            <TableCell>{formatDate(patient.lastVisit)}</TableCell>
+                            <TableCell className="pr-8">{formatDate(patient.lastVisit)}</TableCell>
                           )}
                           
                           {columnVisibility.nextVisit && (
-                            <TableCell>
+                            <TableCell className="pr-8">
                               {patient.nextVisit ? (
                                 formatDate(patient.nextVisit)
                               ) : (
@@ -771,7 +771,7 @@ export default function PatientsPage() {
                           )}
                           
                           {columnVisibility.balance && (
-                            <TableCell>
+                            <TableCell className="pr-8">
                               {patient.balance > 0 ? (
                                 <Badge variant="outline" className="bg-rose-50 text-rose-700 border-rose-200">
                                   ${patient.balance.toFixed(2)}
@@ -785,12 +785,12 @@ export default function PatientsPage() {
                           )}
                           
                           {columnVisibility.plan && (
-                            <TableCell>{patient.plan}</TableCell>
+                            <TableCell className="pr-8">{patient.plan}</TableCell>
                           )}
                           
                           {columnVisibility.tags && (
-                            <TableCell>
-                              <div className="flex flex-wrap gap-1">
+                            <TableCell className="pl-2">
+                              <div className="flex flex-wrap gap-1.5">
                                 {patient.tags.map(tag => {
                                   let badgeStyle = "bg-blue-50 text-blue-700 border-blue-200";
                                   
