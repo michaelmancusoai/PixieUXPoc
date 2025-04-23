@@ -29,6 +29,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Switch } from "@/components/ui/switch";
 import {
   Search,
   Filter,
@@ -47,6 +48,10 @@ import {
   Printer,
   Download,
   X,
+  Banknote,
+  BadgePercent,
+  ArrowUpRight,
+  ScrollText,
 } from "lucide-react";
 
 // Types
@@ -1055,9 +1060,22 @@ export default function ClaimsPage() {
 
           <Card className="shadow-sm">
             <CardHeader className="px-6 py-4 border-b">
-              <div className="flex justify-between items-center">
-                <CardTitle>Insurance Claims</CardTitle>
-                <div className="flex space-x-2">
+              <div className="flex flex-wrap justify-between items-center">
+                <div className="flex items-center">
+                  <CardTitle>Insurance Claims</CardTitle>
+                  <div className="ml-4 flex items-center">
+                    <span className="text-sm text-muted-foreground mr-2">
+                      Show Insights
+                    </span>
+                    <Switch 
+                      id="show-insights" 
+                      className="data-[state=checked]:bg-blue-500" 
+                      checked={showInsights}
+                      onCheckedChange={setShowInsights}
+                    />
+                  </div>
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2 sm:mt-0">
                   <Button 
                     variant="default" 
                     size="sm" 
@@ -1079,6 +1097,126 @@ export default function ClaimsPage() {
                 </div>
               </div>
             </CardHeader>
+            
+            {/* Insights Panel - Toggled by the switch */}
+            {showInsights && (
+              <div className="p-6 border-b bg-blue-50/50">
+                <div className="mb-4">
+                  <h3 className="text-md font-medium mb-2">Claims Insights</h3>
+                  <p className="text-sm text-muted-foreground mb-3">
+                    Claims analytics show a total value of ${totalClaimAmount.toFixed(2)} with an average claim value of ${avgClaimValue.toFixed(2)}. 
+                    Insurance is estimated to cover ${totalInsuranceEstimate.toFixed(2)}.
+                  </p>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Top Insurance Carriers</h4>
+                      {topCarriers.length > 0 ? (
+                        <>
+                          {topCarriers.map((carrier, index) => (
+                            <div key={index} className="flex justify-between items-end mt-3 first:mt-0">
+                              <div className="space-y-2">
+                                <div className="flex justify-between">
+                                  <span className="text-xs text-muted-foreground">{carrier.name}</span>
+                                  <span className="text-xs font-medium">{carrier.percentOfTotal.toFixed(0)}%</span>
+                                </div>
+                                <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
+                                  <div 
+                                    className={`h-full rounded-full ${index === 0 ? 'bg-blue-500' : index === 1 ? 'bg-green-500' : 'bg-amber-500'}`} 
+                                    style={{ width: `${carrier.percentOfTotal}%` }}
+                                  ></div>
+                                </div>
+                              </div>
+                              <div className="ml-2 text-sm font-medium">
+                                ${carrier.totalAmount.toFixed(0)}
+                              </div>
+                            </div>
+                          ))}
+                        </>
+                      ) : (
+                        <div className="text-sm text-muted-foreground mt-2">No carrier data available</div>
+                      )}
+                    </div>
+                    
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Claim Aging</h4>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="bg-green-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">0-30 Days</div>
+                          <div className="text-xl font-bold text-green-600">${agingBuckets.under30.toFixed(0)}</div>
+                          <div className="text-xs text-green-600">
+                            {agingBuckets.under30 > 0 ? ((agingBuckets.under30 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                          </div>
+                        </div>
+                        <div className="bg-blue-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">30-60 Days</div>
+                          <div className="text-xl font-bold text-blue-600">${agingBuckets.days30to60.toFixed(0)}</div>
+                          <div className="text-xs text-blue-600">
+                            {agingBuckets.days30to60 > 0 ? ((agingBuckets.days30to60 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                          </div>
+                        </div>
+                        <div className="bg-amber-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">60-90 Days</div>
+                          <div className="text-xl font-bold text-amber-600">${agingBuckets.days60to90.toFixed(0)}</div>
+                          <div className="text-xs text-amber-600">
+                            {agingBuckets.days60to90 > 0 ? ((agingBuckets.days60to90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                          </div>
+                        </div>
+                        <div className="bg-red-50 p-3 rounded-md">
+                          <div className="text-xs text-muted-foreground">90+ Days</div>
+                          <div className="text-xl font-bold text-red-600">${agingBuckets.over90.toFixed(0)}</div>
+                          <div className="text-xs text-red-600">
+                            {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-1">Primary vs Secondary</h4>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center">
+                          <div className="h-4 w-4 rounded-full bg-blue-500 mr-2"></div>
+                          <div>
+                            <div className="text-xs text-muted-foreground">Primary</div>
+                            <div className="text-sm font-medium">${primaryTotal.toFixed(0)}</div>
+                          </div>
+                        </div>
+                        <div className="flex items-center">
+                          <div className="h-4 w-4 rounded-full bg-green-500 mr-2"></div>
+                          <div>
+                            <div className="text-xs text-muted-foreground">Secondary</div>
+                            <div className="text-sm font-medium">${secondaryTotal.toFixed(0)}</div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+                        <div 
+                          className="h-full bg-blue-500 rounded-l-full" 
+                          style={{ 
+                            width: `${primaryTotal > 0 || secondaryTotal > 0 ? (primaryTotal / (primaryTotal + secondaryTotal)) * 100 : 0}%` 
+                          }}
+                        ></div>
+                      </div>
+                      
+                      <div className="pt-4 border-t">
+                        <div className="grid grid-cols-2 gap-2">
+                          <div>
+                            <div className="text-xs text-muted-foreground">Primary Ins. Est.</div>
+                            <div className="text-sm font-medium">${primaryInsuranceEstimate.toFixed(0)}</div>
+                          </div>
+                          <div>
+                            <div className="text-xs text-muted-foreground">Secondary Ins. Est.</div>
+                            <div className="text-sm font-medium">${secondaryInsuranceEstimate.toFixed(0)}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <CardContent className="p-0">
               <Tabs defaultValue="not-submitted" className="w-full" onValueChange={setSelectedTab}>
