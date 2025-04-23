@@ -690,18 +690,18 @@ export default function PatientsPage() {
                 </div>
               </div>
             ) : (
-              <div className="border rounded-md bg-white">
-                <Table>
+              <div className="border rounded-md bg-white overflow-x-auto">
+                <Table className="w-full table-auto">
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Name</TableHead>
-                      <TableHead className="w-[80px]">Actions</TableHead>
-                      {columnVisibility.dob && <TableHead>DOB / Age</TableHead>}
-                      {columnVisibility.lastVisit && <TableHead>Last Visit</TableHead>}
-                      {columnVisibility.nextVisit && <TableHead>Next Visit</TableHead>}
-                      {columnVisibility.balance && <TableHead>Balance</TableHead>}
-                      {columnVisibility.plan && <TableHead>Plan</TableHead>}
-                      {columnVisibility.tags && <TableHead>Status Tags</TableHead>}
+                      <TableHead className="w-[250px] whitespace-nowrap">Name</TableHead>
+                      <TableHead className="w-[80px] text-center px-0 whitespace-nowrap">Actions</TableHead>
+                      {columnVisibility.dob && <TableHead className="w-[120px] whitespace-nowrap">DOB / Age</TableHead>}
+                      {columnVisibility.lastVisit && <TableHead className="w-[110px] whitespace-nowrap">Last Visit</TableHead>}
+                      {columnVisibility.nextVisit && <TableHead className="w-[120px] whitespace-nowrap">Next Visit</TableHead>}
+                      {columnVisibility.balance && <TableHead className="w-[100px] whitespace-nowrap">Balance</TableHead>}
+                      {columnVisibility.plan && <TableHead className="w-[120px] whitespace-nowrap">Plan</TableHead>}
+                      {columnVisibility.tags && <TableHead className="w-auto min-w-[180px]">Status Tags</TableHead>}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -712,7 +712,7 @@ export default function PatientsPage() {
                           className="cursor-pointer hover:bg-gray-50"
                           onClick={() => navigateToPatient(patient.id)}
                         >
-                          <TableCell>
+                          <TableCell className="whitespace-nowrap">
                             <div className="flex items-center gap-3">
                               <Avatar className="h-8 w-8">
                                 <AvatarFallback style={{ backgroundColor: getAvatarColor(patient.fullName) }}>
@@ -726,7 +726,7 @@ export default function PatientsPage() {
                             </div>
                           </TableCell>
                           
-                          <TableCell>
+                          <TableCell className="text-center whitespace-nowrap px-0">
                             <div className="flex items-center justify-center space-x-1">
                               <Button 
                                 variant="ghost" 
@@ -748,18 +748,18 @@ export default function PatientsPage() {
                           </TableCell>
                           
                           {columnVisibility.dob && (
-                            <TableCell>
+                            <TableCell className="whitespace-nowrap">
                               <div>{formatDate(patient.dob)}</div>
                               <div className="text-xs text-gray-500">{patient.age} years</div>
                             </TableCell>
                           )}
                           
                           {columnVisibility.lastVisit && (
-                            <TableCell>{formatDate(patient.lastVisit)}</TableCell>
+                            <TableCell className="whitespace-nowrap">{formatDate(patient.lastVisit)}</TableCell>
                           )}
                           
                           {columnVisibility.nextVisit && (
-                            <TableCell>
+                            <TableCell className="whitespace-nowrap">
                               {patient.nextVisit ? (
                                 formatDate(patient.nextVisit)
                               ) : (
@@ -771,7 +771,7 @@ export default function PatientsPage() {
                           )}
                           
                           {columnVisibility.balance && (
-                            <TableCell>
+                            <TableCell className="whitespace-nowrap">
                               {patient.balance > 0 ? (
                                 <Badge variant="outline" className="bg-rose-50 text-rose-700 border-rose-200">
                                   ${patient.balance.toFixed(2)}
@@ -785,7 +785,7 @@ export default function PatientsPage() {
                           )}
                           
                           {columnVisibility.plan && (
-                            <TableCell>{patient.plan}</TableCell>
+                            <TableCell className="whitespace-nowrap">{patient.plan}</TableCell>
                           )}
                           
                           {columnVisibility.tags && (
