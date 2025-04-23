@@ -644,22 +644,123 @@ export default function DailyHuddlePage() {
                     
                     return (
                       <>
-                        {/* Metrics Row */}
+                        {/* Metrics Row with enhanced visuals */}
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
-                          {stepData.metrics.map((metric, idx) => (
-                            <div 
-                              key={idx} 
-                              className="bg-gray-50 p-3 rounded-md border border-gray-200"
-                            >
-                              <p className="text-sm text-gray-500">{metric.label}</p>
-                              <div className="flex items-end gap-2 mt-1">
-                                <span className="text-xl font-bold">{metric.value}</span>
-                                <span className={cn("text-sm", getStatusColor(metric.status))}>
-                                  (Target: {metric.target})
-                                </span>
+                          {stepData.metrics.map((metric, idx) => {
+                            // Determine icon based on metric label
+                            let MetricIcon: React.ElementType = TrendingUp;
+                            let badgeColor = "bg-gray-100 text-gray-800";
+                            let progressValue = 50; // Default progress value
+                            
+                            if (metric.label.includes("Production")) {
+                              MetricIcon = CreditCard;
+                              badgeColor = metric.status === 'above' 
+                                ? "bg-green-100 text-green-800" 
+                                : "bg-red-100 text-red-800";
+                              // Calculate progress against target
+                              progressValue = Math.round(
+                                (parseInt(metric.value.replace(/\D/g, '')) / 
+                                parseInt(metric.target.replace(/\D/g, ''))) * 100
+                              );
+                            } else if (metric.label.includes("Treatment")) {
+                              MetricIcon = FileText;
+                              badgeColor = metric.status === 'above' 
+                                ? "bg-green-100 text-green-800" 
+                                : "bg-amber-100 text-amber-800";
+                              progressValue = Math.round(
+                                (parseInt(metric.value) / parseInt(metric.target)) * 100
+                              );
+                            } else if (metric.label.includes("Patient") || metric.label.includes("Satisfaction")) {
+                              MetricIcon = UserMinus;
+                              badgeColor = metric.status === 'above' 
+                                ? "bg-green-100 text-green-800" 
+                                : "bg-red-100 text-red-800";
+                              progressValue = parseInt(metric.value.replace(/%/g, ''));
+                            } else if (metric.label.includes("Unconfirmed") || metric.label.includes("Schedule")) {
+                              MetricIcon = Calendar;
+                              badgeColor = metric.status === 'above' 
+                                ? "bg-green-100 text-green-800" 
+                                : "bg-amber-100 text-amber-800";
+                              // Inverse logic for unconfirmed (lower is better)
+                              progressValue = metric.label.includes("Unconfirmed")
+                                ? Math.max(0, 100 - parseInt(metric.value) * 20) // 0 unconfirmed = 100%
+                                : parseInt(metric.value.replace(/%/g, ''));
+                            } else if (metric.label.includes("Revenue") || metric.label.includes("Collection")) {
+                              MetricIcon = TrendingUp;
+                              badgeColor = metric.status === 'above' 
+                                ? "bg-green-100 text-green-800" 
+                                : "bg-red-100 text-red-800";
+                              progressValue = metric.label.includes("Revenue")
+                                ? Math.max(0, 100 - parseInt(metric.value.replace(/\D/g, '')) / 50) // $0 at risk = 100%
+                                : parseInt(metric.value.replace(/%/g, ''));
+                            } else if (metric.label.includes("Lab") || metric.label.includes("Cases")) {
+                              MetricIcon = Package;
+                              badgeColor = metric.status === 'neutral' 
+                                ? "bg-blue-100 text-blue-800" 
+                                : "bg-amber-100 text-amber-800";
+                              progressValue = parseInt(metric.value) === parseInt(metric.target) ? 100 : 75;
+                            } else if (metric.label.includes("Staff") || metric.label.includes("Attendance")) {
+                              MetricIcon = UserMinus;
+                              badgeColor = metric.status === 'above' 
+                                ? "bg-green-100 text-green-800" 
+                                : "bg-red-100 text-red-800";
+                              progressValue = parseInt(metric.value.replace(/%/g, ''));
+                            } else if (metric.label.includes("Supplies") || metric.label.includes("Equipment")) {
+                              MetricIcon = Package;
+                              badgeColor = metric.status === 'above' 
+                                ? "bg-green-100 text-green-800" 
+                                : "bg-amber-100 text-amber-800";
+                              progressValue = Math.max(0, 100 - parseInt(metric.value) * 50); // 0 issues = 100%
+                            } else if (metric.label.includes("Tasks") || metric.label.includes("Critical")) {
+                              MetricIcon = CheckCircle;
+                              badgeColor = metric.status === 'above' 
+                                ? "bg-green-100 text-green-800" 
+                                : "bg-amber-100 text-amber-800";
+                              progressValue = Math.max(0, 100 - parseInt(metric.value) * 33); // 0 tasks = 100%
+                            }
+                            
+                            // Ensure we don't get NaN or excessive values
+                            progressValue = isNaN(progressValue) ? 50 : Math.min(100, Math.max(0, progressValue));
+                            
+                            // Find status color for the progress bar
+                            const progressColor = metric.status === 'above' 
+                              ? "bg-green-500" 
+                              : metric.status === 'below' 
+                                ? "bg-red-500" 
+                                : "bg-blue-500";
+                                
+                            return (
+                              <div 
+                                key={idx} 
+                                className="bg-white p-4 rounded-md border border-gray-200 shadow-sm hover:shadow-md transition-shadow"
+                              >
+                                <div className="flex justify-between items-start mb-2">
+                                  <p className="text-sm font-medium text-gray-500">{metric.label}</p>
+                                  <div className={cn("p-1.5 rounded-full", badgeColor.replace('text-', 'bg-').replace('00', '500'))}>
+                                    <MetricIcon className="h-3.5 w-3.5 text-white" />
+                                  </div>
+                                </div>
+                                
+                                <div className="flex items-center gap-2 mb-2">
+                                  <span className="text-2xl font-bold">{metric.value}</span>
+                                  <Badge 
+                                    variant="outline" 
+                                    className={cn("ml-1 text-xs font-normal", badgeColor)}
+                                  >
+                                    Target: {metric.target}
+                                  </Badge>
+                                </div>
+                                
+                                {/* Progress bar */}
+                                <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
+                                  <div 
+                                    className={cn("h-2.5 rounded-full", progressColor)}
+                                    style={{ width: `${progressValue}%` }} 
+                                  ></div>
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                         
                         {/* Discussion Items Section */}
@@ -799,51 +900,48 @@ export default function DailyHuddlePage() {
                             {/* Add Item Form */}
                             {!editingItem && (
                               <div className="mt-6 pt-3 border-t border-gray-200">
-                                <div className="flex flex-col gap-3">
-                                  <h4 className="text-sm font-medium text-gray-700">Add custom discussion item:</h4>
-                                  <div className="flex gap-3">
-                                    <div className="flex-1">
-                                      <input
-                                        type="text"
-                                        placeholder="Enter a new discussion item..."
-                                        value={newItemText}
-                                        onChange={(e) => setNewItemText(e.target.value)}
-                                        className="w-full rounded-md border-gray-300 shadow-sm focus:border-primary focus:ring-primary px-3 py-2"
-                                        onKeyDown={(e) => {
-                                          if (e.key === 'Enter') {
-                                            addCustomItem(step.title);
-                                          }
-                                        }}
-                                      />
-                                    </div>
-                                    <Select
-                                      value={newItemColor}
-                                      onValueChange={setNewItemColor}
-                                    >
-                                      <SelectTrigger className="w-32">
-                                        <SelectValue placeholder="Priority" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        {colorOptions.map(option => (
-                                          <SelectItem 
-                                            key={option.value} 
-                                            value={option.value}
-                                            className={option.class}
-                                          >
-                                            {option.label}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                    <Button 
-                                      onClick={() => addCustomItem(step.title)}
-                                      variant="outline"
-                                      className="border-primary text-primary hover:bg-primary/5"
-                                    >
-                                      <Plus className="h-4 w-4 mr-1" />
-                                      Add Item
-                                    </Button>
+                                <div className="flex gap-3 items-center bg-gray-50 p-2 rounded-md border border-gray-200">
+                                  <div className="flex-1">
+                                    <input
+                                      type="text"
+                                      placeholder="+ Add new discussion item here..."
+                                      value={newItemText}
+                                      onChange={(e) => setNewItemText(e.target.value)}
+                                      className="w-full rounded-md border-gray-200 shadow-sm focus:border-primary focus:ring-primary px-3 py-2 bg-white"
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter') {
+                                          addCustomItem(step.title);
+                                        }
+                                      }}
+                                    />
                                   </div>
+                                  <Select
+                                    value={newItemColor}
+                                    onValueChange={setNewItemColor}
+                                  >
+                                    <SelectTrigger className="w-32 bg-white">
+                                      <SelectValue placeholder="Priority" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                      {colorOptions.map(option => (
+                                        <SelectItem 
+                                          key={option.value} 
+                                          value={option.value}
+                                          className={option.class}
+                                        >
+                                          {option.label}
+                                        </SelectItem>
+                                      ))}
+                                    </SelectContent>
+                                  </Select>
+                                  <Button 
+                                    onClick={() => addCustomItem(step.title)}
+                                    variant="default"
+                                    className="bg-primary hover:bg-primary/90"
+                                  >
+                                    <Plus className="h-4 w-4 mr-1" />
+                                    Add
+                                  </Button>
                                 </div>
                               </div>
                             )}
