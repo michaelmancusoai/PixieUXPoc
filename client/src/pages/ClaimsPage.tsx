@@ -881,15 +881,20 @@ export default function ClaimsPage() {
                 <CardTitle className="text-base font-medium">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
-                <div className="flex items-center justify-between">
-                  <Button className="h-9">
-                    <Plus className="h-4 w-4 mr-1" />
-                    New Claim
-                  </Button>
-                  <Button variant="outline" className="h-9">
-                    <Download className="h-4 w-4 mr-1" />
-                    Export Report
-                  </Button>
+                <div className="flex flex-col space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Create and manage claims</span>
+                  </div>
+                  <div className="flex items-center space-x-3">
+                    <Button className="h-9 flex-1">
+                      <Plus className="h-4 w-4 mr-1" />
+                      New Claim
+                    </Button>
+                    <Button variant="outline" className="h-9 flex-1">
+                      <Download className="h-4 w-4 mr-1" />
+                      Export Report
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -909,17 +914,14 @@ export default function ClaimsPage() {
                     <Send className="h-4 w-4 mr-1" />
                     Submit Selected
                   </Button>
-                  <Button variant="outline" size="sm" className="h-9">
-                    <Plus className="h-4 w-4 mr-1" />
-                    New Claim
-                  </Button>
-                  <Button variant="outline" size="sm" className="h-9">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-9"
+                    disabled={selectedClaims.length === 0}
+                  >
                     <Printer className="h-4 w-4 mr-1" />
-                    Print
-                  </Button>
-                  <Button variant="outline" size="sm" className="h-9">
-                    <Download className="h-4 w-4 mr-1" />
-                    Export
+                    Print Selected
                   </Button>
                 </div>
               </div>
