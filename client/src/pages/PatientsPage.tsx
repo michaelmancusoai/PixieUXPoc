@@ -236,7 +236,6 @@ export default function PatientsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDrawerOpen, setFilterDrawerOpen] = useState(false);
   const [columnMenuOpen, setColumnMenuOpen] = useState(false);
-  const [selectedRows, setSelectedRows] = useState([]);
   const [savedSegments, setSavedSegments] = useState(defaultSegments);
   const [activeSegment, setActiveSegment] = useState(null);
   
@@ -322,31 +321,9 @@ export default function PatientsPage() {
     setTagFilter([]);
   };
   
-  // Toggle row selection
-  const toggleRowSelection = (id) => {
-    setSelectedRows(prev => 
-      prev.includes(id) 
-        ? prev.filter(rowId => rowId !== id) 
-        : [...prev, id]
-    );
-  };
-  
-  // Handle select all rows
-  const handleSelectAll = () => {
-    if (selectedRows.length === filteredPatients.length) {
-      setSelectedRows([]);
-    } else {
-      setSelectedRows(filteredPatients.map(p => p.id));
-    }
-  };
-  
-  // Handle bulk SMS
-  const handleBulkSMS = () => {
-    if (selectedRows.length > 0) {
-      const selectedPatientsData = patients.filter(p => selectedRows.includes(p.id));
-      const names = selectedPatientsData.map(p => p.firstName).join(', ');
-      alert(`SMS draft created: "Hello ${names}, we have openings this week—shall we book?"`);
-    }
+  // Navigate to patient profile
+  const navigateToPatient = (id) => {
+    window.location.href = `/patients/profile/${id}`;
   };
   
   // Filter patients based on all criteria
@@ -563,16 +540,6 @@ export default function PatientsPage() {
               <div className="h-6 mx-1 border-l border-gray-300"></div>
 
               <Button 
-                size="sm" 
-                className="flex items-center gap-1"
-                onClick={handleBulkSMS}
-                disabled={selectedRows.length === 0}
-              >
-                <Send className="h-3.5 w-3.5 mr-1" />
-                Message
-              </Button>
-
-              <Button 
                 className="flex items-center gap-1"
                 size="sm"
               >
@@ -582,8 +549,8 @@ export default function PatientsPage() {
             </div>
           </div>
 
-          {/* Search and Bulk Selection */}
-          <div className="flex justify-between items-center gap-4">
+          {/* Search */}
+          <div className="flex items-center gap-4">
             <div className="relative w-full max-w-md">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
@@ -595,12 +562,6 @@ export default function PatientsPage() {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            
-            {selectedRows.length > 0 && (
-              <div className="text-sm text-gray-600">
-                {selectedRows.length} patient{selectedRows.length > 1 ? 's' : ''} selected
-              </div>
-            )}
           </div>
         </div>
 
@@ -734,16 +695,10 @@ export default function PatientsPage() {
                 </div>
               </div>
             ) : (
-              <div className="border rounded-md">
+              <div className="border rounded-md bg-white">
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="w-10">
-                        <Checkbox 
-                          checked={selectedRows.length > 0 && selectedRows.length === filteredPatients.length} 
-                          onCheckedChange={handleSelectAll}
-                        />
-                      </TableHead>
                       <TableHead>Name</TableHead>
                       {columnVisibility.dob && <TableHead>DOB / Age</TableHead>}
                       {columnVisibility.lastVisit && <TableHead>Last Visit</TableHead>}
@@ -759,14 +714,8 @@ export default function PatientsPage() {
                         <TableRow 
                           key={patient.id}
                           className="cursor-pointer hover:bg-gray-50"
-                          onClick={() => toggleRowSelection(patient.id)}
+                          onClick={() => navigateToPatient(patient.id)}
                         >
-                          <TableCell className="w-10" onClick={(e) => e.stopPropagation()}>
-                            <Checkbox 
-                              checked={selectedRows.includes(patient.id)} 
-                              onCheckedChange={() => toggleRowSelection(patient.id)}
-                            />
-                          </TableCell>
                           <TableCell>
                             <div className="flex items-center gap-3">
                               <Avatar className="h-8 w-8">
@@ -849,7 +798,7 @@ export default function PatientsPage() {
                       ))
                     ) : (
                       <TableRow>
-                        <TableCell colSpan={8} className="h-24 text-center">
+                        <TableCell colSpan={7} className="h-24 text-center">
                           No patients found matching your criteria
                         </TableCell>
                       </TableRow>
