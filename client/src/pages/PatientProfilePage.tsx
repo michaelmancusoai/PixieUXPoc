@@ -31,22 +31,22 @@ export default function PatientProfilePage() {
       <div className="min-h-screen bg-background">
         <Header />
         
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <main className="w-full px-4 sm:px-6 py-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* Column A: Snapshot Cards */}
-            <section className="col-span-1 lg:col-span-3 flex flex-col gap-6">
+            <section className="col-span-1 lg:col-span-3 xl:col-span-2 flex flex-col gap-6">
               <h2 className="sr-only">Patient Snapshot</h2>
               <PatientCard />
               <SnapshotCards />
             </section>
             
             {/* Column B: Activity Hub */}
-            <section className="col-span-1 lg:col-span-6">
+            <section className="col-span-1 lg:col-span-6 xl:col-span-7">
               <ActivityHub />
             </section>
             
             {/* Column C: Related Records */}
-            <section className="col-span-1 lg:col-span-3">
+            <section className="col-span-1 lg:col-span-3 xl:col-span-3">
               <RelatedRecords />
             </section>
           </div>

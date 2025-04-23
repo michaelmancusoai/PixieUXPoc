@@ -138,13 +138,27 @@ function PatientCard({ patient, columnColor }) {
   );
 }
 
+// FlowColumn component interface
+interface FlowColumnProps {
+  column: {
+    id: string;
+    title: string;
+    icon: React.ElementType;
+    color: string;
+    wipLimit: number;
+    role?: string;
+  };
+  patients: any[];
+  className?: string;
+}
+
 // FlowColumn component
-function FlowColumn({ column, patients }) {
+function FlowColumn({ column, patients, className }: FlowColumnProps) {
   const isOverWipLimit = patients.length > column.wipLimit;
   const Icon = column.icon;
   
   return (
-    <div className="min-w-[180px] flex flex-col h-full">
+    <div className={cn("min-w-[200px] w-full flex flex-col h-full", className)}>
       <div className={cn(
         "text-white px-3 py-2 rounded-t-md flex justify-between items-center",
         column.color
@@ -274,18 +288,19 @@ export default function MissionControlPage() {
         {/* Main Flow Board */}
         <div className="flex">
           {/* Flow Columns */}
-          <div className="flex overflow-x-auto pb-4 gap-3 flex-grow" style={{ minHeight: "calc(100vh - 300px)" }}>
-            {flowColumns.map((column) => (
+          <div className="flex overflow-x-auto pb-4 gap-4 flex-grow flex-1" style={{ minHeight: "calc(100vh - 300px)" }}>
+            {flowColumns.map((column, index) => (
               <FlowColumn 
                 key={column.id} 
                 column={column} 
                 patients={flowState[column.id] || []} 
+                className="flex-1"
               />
             ))}
           </div>
           
           {/* Exception Rail */}
-          <div className="w-60 ml-4 hidden lg:block">
+          <div className="w-72 ml-4 hidden lg:block">
             <div className="bg-gray-50 rounded-md p-3 space-y-4 h-full">
               <div>
                 <h3 className="text-sm font-semibold flex items-center text-amber-700 mb-2">
