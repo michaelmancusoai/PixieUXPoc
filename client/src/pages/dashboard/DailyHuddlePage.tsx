@@ -182,7 +182,7 @@ interface Metric {
   label: string;
   value: string;
   target: string;
-  status: string;
+  status: 'above' | 'slightly-below' | 'below' | 'neutral';
 }
 
 interface Highlight {
@@ -199,8 +199,8 @@ interface AgendaItemData {
 const agendaItemData: Record<string, AgendaItemData> = {
   'Celebrate Wins': {
     metrics: [
-      { label: 'Yesterday Production', value: '$4,120', target: '$5,000', status: 'below' },
-      { label: 'Completed Treatments', value: '14', target: '16', status: 'below' },
+      { label: 'Yesterday Production', value: '$4,120', target: '$5,000', status: 'slightly-below' },
+      { label: 'Completed Treatments', value: '14', target: '16', status: 'slightly-below' },
       { label: 'Patient Satisfaction', value: '96%', target: '90%', status: 'above' },
     ],
     highlights: [
@@ -212,7 +212,7 @@ const agendaItemData: Record<string, AgendaItemData> = {
   'Schedule Status': {
     metrics: [
       { label: 'Unconfirmed Appointments', value: '5', target: '0', status: 'below' },
-      { label: 'Schedule Utilization', value: '87%', target: '90%', status: 'below' },
+      { label: 'Schedule Utilization', value: '87%', target: '90%', status: 'slightly-below' },
       { label: 'Revenue at Risk', value: '$2,400', target: '$0', status: 'below' },
     ],
     highlights: [
@@ -224,7 +224,7 @@ const agendaItemData: Record<string, AgendaItemData> = {
   'Clinical Priorities': {
     metrics: [
       { label: 'Lab Cases Due', value: '2', target: '2', status: 'neutral' },
-      { label: 'Treatment Plans Pending', value: '7', target: '5', status: 'below' },
+      { label: 'Treatment Plans Pending', value: '7', target: '5', status: 'slightly-below' },
       { label: 'Follow-up Required', value: '3', target: '0', status: 'below' },
     ],
     highlights: [
@@ -235,9 +235,9 @@ const agendaItemData: Record<string, AgendaItemData> = {
   },
   'Resource Needs': {
     metrics: [
-      { label: 'Staff Attendance', value: '92%', target: '100%', status: 'below' },
-      { label: 'Supplies Below Par', value: '2', target: '0', status: 'below' },
-      { label: 'Equipment Maintenance', value: '1', target: '0', status: 'below' },
+      { label: 'Staff Attendance', value: '92%', target: '100%', status: 'slightly-below' },
+      { label: 'Supplies Below Par', value: '2', target: '0', status: 'slightly-below' },
+      { label: 'Equipment Maintenance', value: '1', target: '0', status: 'slightly-below' },
     ],
     highlights: [
       { text: 'Hygienist Maria called in sick - rescheduling required', type: 'negative' },
@@ -248,7 +248,7 @@ const agendaItemData: Record<string, AgendaItemData> = {
   'Action Items': {
     metrics: [
       { label: 'Critical Tasks', value: '3', target: '0', status: 'below' },
-      { label: 'Follow-ups Required', value: '5', target: '0', status: 'below' },
+      { label: 'Follow-ups Required', value: '5', target: '0', status: 'slightly-below' },
       { label: 'Team Assignments', value: '8', target: '8', status: 'neutral' },
     ],
     highlights: [
@@ -736,9 +736,11 @@ export default function DailyHuddlePage() {
                                   "p-4 rounded-md border-l-4 shadow-sm hover:shadow-md transition-shadow",
                                   metric.status === 'above' 
                                     ? "border-l-green-500 bg-gradient-to-r from-green-50 to-white" 
-                                    : metric.status === 'below' 
-                                      ? "border-l-red-500 bg-gradient-to-r from-red-50 to-white"
-                                      : "border-l-blue-500 bg-gradient-to-r from-blue-50 to-white"
+                                    : metric.status === 'slightly-below' 
+                                      ? "border-l-amber-500 bg-gradient-to-r from-amber-50 to-white"
+                                      : metric.status === 'below' 
+                                        ? "border-l-red-500 bg-gradient-to-r from-red-50 to-white"
+                                        : "border-l-blue-500 bg-gradient-to-r from-blue-50 to-white"
                                 )}
                               >
                                 <div className="flex justify-between items-start mb-3">
@@ -747,9 +749,11 @@ export default function DailyHuddlePage() {
                                       "p-2 rounded-full",
                                       metric.status === 'above' 
                                         ? "bg-green-100 text-green-600" 
-                                        : metric.status === 'below' 
-                                          ? "bg-red-100 text-red-600"
-                                          : "bg-blue-100 text-blue-600"
+                                        : metric.status === 'slightly-below' 
+                                          ? "bg-amber-100 text-amber-600"
+                                          : metric.status === 'below' 
+                                            ? "bg-red-100 text-red-600"
+                                            : "bg-blue-100 text-blue-600"
                                     )}>
                                       <MetricIcon className="h-4 w-4" />
                                     </div>
@@ -761,6 +765,11 @@ export default function DailyHuddlePage() {
                                     <div className="flex items-center gap-1 text-green-600 bg-green-50 px-2 py-1 rounded-full text-xs font-medium">
                                       <TrendingUp className="h-3 w-3" />
                                       <span>Above Target</span>
+                                    </div>
+                                  ) : metric.status === 'slightly-below' ? (
+                                    <div className="flex items-center gap-1 text-amber-600 bg-amber-50 px-2 py-1 rounded-full text-xs font-medium">
+                                      <AlertCircle className="h-3 w-3" />
+                                      <span>Slightly Below</span>
                                     </div>
                                   ) : metric.status === 'below' ? (
                                     <div className="flex items-center gap-1 text-red-600 bg-red-50 px-2 py-1 rounded-full text-xs font-medium">
@@ -788,9 +797,11 @@ export default function DailyHuddlePage() {
                                           "text-xs font-normal border-0",
                                           metric.status === 'above' 
                                             ? "bg-green-50 text-green-700" 
-                                            : metric.status === 'below' 
-                                              ? "bg-red-50 text-red-700"
-                                              : "bg-blue-50 text-blue-700"
+                                            : metric.status === 'slightly-below' 
+                                              ? "bg-amber-50 text-amber-700"
+                                              : metric.status === 'below' 
+                                                ? "bg-red-50 text-red-700"
+                                                : "bg-blue-50 text-blue-700"
                                         )}
                                       >
                                         Target: {metric.target}
@@ -804,22 +815,31 @@ export default function DailyHuddlePage() {
                                           "absolute top-0 left-0 h-full rounded-r-full",
                                           metric.status === 'above' 
                                             ? "bg-green-500" 
-                                            : metric.status === 'below' 
-                                              ? "bg-red-500"
-                                              : "bg-blue-500"
+                                            : metric.status === 'slightly-below' 
+                                              ? "bg-amber-500"
+                                              : metric.status === 'below' 
+                                                ? "bg-red-500"
+                                                : "bg-blue-500"
                                         )}
                                         style={{ width: `${progressValue}%` }} 
                                       />
                                       
-                                      {/* Target marker */}
+                                      {/* Target marker and status indicators */}
                                       {metric.status !== 'neutral' && (
-                                        <div 
-                                          className="absolute top-0 w-0.5 h-5 bg-gray-800 z-10"
-                                          style={{ 
-                                            left: `${metric.status === 'below' ? progressValue : 100}%`,
-                                            marginTop: '-1px' 
-                                          }}
-                                        />
+                                        <>
+                                          <div 
+                                            className="absolute top-0 w-0.5 h-5 bg-gray-800 z-10"
+                                            style={{ 
+                                              left: `${metric.status === 'below' || metric.status === 'slightly-below' ? progressValue : 100}%`,
+                                              marginTop: '-1px' 
+                                            }}
+                                          />
+                                          
+                                          {/* Status threshold ranges (for slightly-below) */}
+                                          {metric.status === 'slightly-below' && (
+                                            <div className="absolute bottom-0 h-1 bg-gradient-to-r from-red-400 via-amber-400 to-green-400 w-full opacity-30" />
+                                          )}
+                                        </>
                                       )}
                                     </div>
                                   </div>
@@ -829,9 +849,11 @@ export default function DailyHuddlePage() {
                                     "flex flex-col items-center justify-center rounded-lg p-2 min-w-[60px] text-center",
                                     metric.status === 'above' 
                                       ? "bg-green-100 text-green-700" 
-                                      : metric.status === 'below' 
-                                        ? "bg-red-100 text-red-700"
-                                        : "bg-blue-100 text-blue-700"
+                                      : metric.status === 'slightly-below' 
+                                        ? "bg-amber-100 text-amber-700"
+                                        : metric.status === 'below' 
+                                          ? "bg-red-100 text-red-700"
+                                          : "bg-blue-100 text-blue-700"
                                   )}>
                                     {/* Different visual indicators based on metric type */}
                                     {metric.label.includes("Production") || metric.label.includes("Revenue") ? (
