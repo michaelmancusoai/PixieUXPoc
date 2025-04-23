@@ -813,13 +813,13 @@ export default function DailyHuddlePage() {
                                       {/* Status threshold background zones */}
                                       <div className="absolute top-0 h-full w-full">
                                         {/* Red zone (0-80%) */}
-                                        <div className="absolute left-0 top-0 h-full w-[80%] bg-red-50" />
+                                        <div className="absolute left-0 top-0 h-full w-[80%] bg-red-100/40" />
                                         
                                         {/* Yellow zone (80-95%) */}
-                                        <div className="absolute left-[80%] top-0 h-full w-[15%] bg-amber-50" />
+                                        <div className="absolute left-[80%] top-0 h-full w-[15%] bg-amber-100/50" />
                                         
                                         {/* Green zone (95-100%) */}
-                                        <div className="absolute left-[95%] top-0 h-full w-[5%] bg-green-50" />
+                                        <div className="absolute left-[95%] top-0 h-full w-[5%] bg-green-100/60" />
                                       </div>
                                       
                                       {/* Progress bar */}
@@ -840,12 +840,12 @@ export default function DailyHuddlePage() {
                                       {/* Status threshold tick marks */}
                                       <div className="absolute top-0 h-full w-full">
                                         {/* Red zone (0-80%) */}
-                                        <div className="absolute left-[80%] top-0 h-full w-0.5 bg-gray-600 z-10" />
-                                        <div className="absolute left-[80%] top-0 text-[9px] text-gray-600 mt-3.5 ml-1">80%</div>
+                                        <div className="absolute left-[80%] top-0 h-full w-0.5 bg-gray-400 z-10" />
+                                        <div className="absolute left-[80%] top-0 text-[9px] text-gray-500 mt-3.5 ml-1">80%</div>
                                         
                                         {/* Yellow zone (80-95%) */}
-                                        <div className="absolute left-[95%] top-0 h-full w-0.5 bg-gray-600 z-10" />
-                                        <div className="absolute left-[95%] top-0 text-[9px] text-gray-600 mt-3.5 ml-1">95%</div>
+                                        <div className="absolute left-[95%] top-0 h-full w-0.5 bg-gray-400 z-10" />
+                                        <div className="absolute left-[95%] top-0 text-[9px] text-gray-500 mt-3.5 ml-1">95%</div>
                                       </div>
                                       
                                       {/* Target marker */}
@@ -886,8 +886,7 @@ export default function DailyHuddlePage() {
                                     ) : metric.label.includes("Unconfirmed") || metric.label.includes("Tasks") ? (
                                       <>
                                         <Clock className="h-5 w-5 mb-1" />
-                                        <span className="text-xs font-semibold">{Math.abs(parseInt(metric.value) - parseInt(metric.target))}</span>
-                                        <span className="text-xs">gap</span>
+                                        <span className="text-xs font-semibold whitespace-nowrap">{Math.abs(parseInt(metric.value) - parseInt(metric.target))} gap</span>
                                       </>
                                     ) : (
                                       <>
