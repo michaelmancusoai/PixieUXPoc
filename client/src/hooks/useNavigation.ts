@@ -5,9 +5,23 @@ import { navigationData, NavSection } from "@/lib/navigation-data";
 export function useNavigation() {
   const [location] = useLocation();
   
-  // Find the initial active section based on current location
-  const getCurrentNavSection = () => 
-    navigationData.find(item => location === item.href || location.startsWith(item.href + "/"));
+  // Find the initial active section based on current location with better path matching
+  const getCurrentNavSection = () => {
+    // Check for direct paths like /statements and /payments first
+    const directMatch = navigationData.find(item => {
+      for (const subItem of item.items) {
+        if (location === subItem.href || (subItem.directPath && location === subItem.directPath)) {
+          return true;
+        }
+      }
+      return location === item.href;
+    });
+    
+    if (directMatch) return directMatch;
+    
+    // Fall back to prefix matching
+    return navigationData.find(item => location.startsWith(item.href + "/"));
+  };
   
   const initialSection = getCurrentNavSection() || navigationData[0];
   const initialHasSubNav = initialSection.items.length > 0 && initialSection.showSubNav !== false;

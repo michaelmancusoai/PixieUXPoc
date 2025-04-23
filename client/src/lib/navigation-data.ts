@@ -42,6 +42,7 @@ export interface NavItem {
   title: string;
   href: string;
   icon: React.ElementType;
+  directPath?: string; // Additional path used for direct mapping
 }
 
 /**
@@ -213,16 +214,19 @@ export const navigationData: NavSection[] = [
         title: "Claims",
         href: "/billing/claims",
         icon: FileText,
+        directPath: "/claims", // Direct route mapping
       },
       {
         title: "Payments",
         href: "/billing/payments",
         icon: CreditCard,
+        directPath: "/payments", // Direct route mapping
       },
       {
         title: "Statements",
         href: "/billing/statements",
         icon: FileText,
+        directPath: "/statements", // Direct route mapping
       },
       {
         title: "Collections",

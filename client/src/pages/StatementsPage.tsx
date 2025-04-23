@@ -254,7 +254,7 @@ const mockStatements: Statement[] = [
 
 // Filter options
 const statementStatuses = [
-  "All",
+  "All Statuses",
   "Sent",
   "Draft",
   "Overdue",
@@ -262,7 +262,7 @@ const statementStatuses = [
 ];
 
 const deliveryMethods = [
-  "All",
+  "All Methods",
   "Email",
   "Mail",
   "Portal"
@@ -275,8 +275,8 @@ export default function StatementsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [filters, setFilters] = useState({
-    status: "All",
-    deliveryMethod: "All",
+    status: "All Statuses",
+    deliveryMethod: "All Methods",
   });
 
   // Get filtered statements
@@ -323,11 +323,11 @@ export default function StatementsPage() {
     }
 
     // Apply dropdown filters
-    if (filters.status !== "All") {
+    if (filters.status !== "All Statuses") {
       filtered = filtered.filter(statement => statement.status === filters.status);
     }
     
-    if (filters.deliveryMethod !== "All") {
+    if (filters.deliveryMethod !== "All Methods") {
       filtered = filtered.filter(statement => statement.deliveryMethod === filters.deliveryMethod);
     }
 
