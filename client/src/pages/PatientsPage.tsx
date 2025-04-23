@@ -694,7 +694,8 @@ export default function PatientsPage() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="min-w-[280px]">Name & Actions</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead className="w-[80px]">Actions</TableHead>
                       {columnVisibility.dob && <TableHead>DOB / Age</TableHead>}
                       {columnVisibility.lastVisit && <TableHead>Last Visit</TableHead>}
                       {columnVisibility.nextVisit && <TableHead>Next Visit</TableHead>}
@@ -718,30 +719,31 @@ export default function PatientsPage() {
                                   {getInitials(patient.fullName)}
                                 </AvatarFallback>
                               </Avatar>
-                              <div className="flex-1 flex justify-between items-center">
-                                <div>
-                                  <div className="font-medium">{patient.fullName}</div>
-                                  <div className="text-xs text-gray-500">MRN: {patient.chartNumber}</div>
-                                </div>
-                                <div className="flex items-center space-x-1">
-                                  <Button 
-                                    variant="ghost" 
-                                    size="icon" 
-                                    className="h-7 w-7" 
-                                    onClick={(e) => handleCallPatient(e, patient)}
-                                  >
-                                    <Phone className="h-4 w-4 text-green-600" />
-                                  </Button>
-                                  <Button 
-                                    variant="ghost" 
-                                    size="icon" 
-                                    className="h-7 w-7" 
-                                    onClick={(e) => handleMessagePatient(e, patient)}
-                                  >
-                                    <MessageSquare className="h-4 w-4 text-blue-600" />
-                                  </Button>
-                                </div>
+                              <div className="flex-1">
+                                <div className="font-medium">{patient.fullName}</div>
+                                <div className="text-xs text-gray-500">MRN: {patient.chartNumber}</div>
                               </div>
+                            </div>
+                          </TableCell>
+                          
+                          <TableCell>
+                            <div className="flex items-center justify-center space-x-1">
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-7 w-7" 
+                                onClick={(e) => handleCallPatient(e, patient)}
+                              >
+                                <Phone className="h-4 w-4 text-green-600" />
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="icon" 
+                                className="h-7 w-7" 
+                                onClick={(e) => handleMessagePatient(e, patient)}
+                              >
+                                <MessageSquare className="h-4 w-4 text-blue-600" />
+                              </Button>
                             </div>
                           </TableCell>
                           
