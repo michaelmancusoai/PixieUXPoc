@@ -250,8 +250,11 @@ export default function DailyHuddlePage() {
   
   // Select a specific agenda item
   const selectStep = (index: number) => {
-    setCurrentStep(index);
-    resetTimer();
+    // Only allow selection if huddle is active
+    if (huddleActive) {
+      setCurrentStep(index);
+      resetTimer();
+    }
   };
   
   // Reset timer
@@ -481,170 +484,173 @@ export default function DailyHuddlePage() {
           <div className="grid grid-cols-5 border-b border-gray-200">
             {agendaSteps.map((step, index) => {
               const StepIcon = step.icon;
-              const isActive = index === currentStep;
+              const isActive = huddleActive && index === currentStep;
               
               return (
-                <button
+                <div
                   key={index}
-                  disabled={!huddleActive}
-                  onClick={() => selectStep(index)}
                   className={cn(
                     "p-4 text-center border-r border-gray-200 last:border-r-0 flex flex-col items-center justify-center transition-colors",
                     isActive 
                       ? "bg-primary text-white" 
                       : huddleActive 
-                        ? "hover:bg-gray-50 bg-white text-gray-700"
-                        : "bg-gray-100 text-gray-400"
+                        ? "hover:bg-gray-50 bg-white text-gray-700 cursor-pointer"
+                        : "bg-gray-50 text-gray-700"
                   )}
+                  onClick={huddleActive ? () => selectStep(index) : undefined}
                 >
                   <StepIcon className={cn("h-5 w-5 mb-2", isActive ? "text-white" : "text-gray-500")} />
                   <span className="font-medium text-sm">{step.title}</span>
-                </button>
+                </div>
               );
             })}
           </div>
           
           {/* Agenda Content */}
-          {huddleActive ? (
-            <div className="p-4 bg-white">
-              <div className="space-y-6">
-                {/* Current Selection Indicator */}
-                {currentStep !== null && (
-                  <div className="bg-primary/10 p-3 rounded-md border border-primary/20">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-lg font-bold text-primary">Currently Discussing: {agendaSteps[currentStep].title}</h3>
-                      <p className="text-sm text-gray-500">{agendaSteps[currentStep].focus}</p>
-                    </div>
+          <div className="p-4 bg-white">
+            <div className="space-y-6">
+              {/* Current Selection Indicator */}
+              {huddleActive && currentStep !== null && (
+                <div className="bg-primary/10 p-3 rounded-md border border-primary/20">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-bold text-primary">Currently Discussing: {agendaSteps[currentStep].title}</h3>
+                    <p className="text-sm text-gray-500">{agendaSteps[currentStep].focus}</p>
                   </div>
-                )}
+                </div>
+              )}
+              
+              {/* Not Started Message */}
+              {!huddleActive && (
+                <div className="mb-6 bg-gray-50 p-4 rounded-md border border-gray-200 flex items-center gap-4">
+                  <PlayCircle className="h-8 w-8 text-primary/60" />
+                  <div>
+                    <h3 className="text-lg font-medium text-gray-900">Daily Huddle Preview</h3>
+                    <p className="text-sm text-gray-500">
+                      Review the agenda items below. Click "Start Huddle" when the team is ready to begin.
+                    </p>
+                  </div>
+                </div>
+              )}
+              
+              {/* All Agenda Items */}
+              {agendaSteps.map((step, stepIndex) => {
+                const stepData = agendaItemData[step.title];
+                const StepIcon = step.icon;
+                const isActive = huddleActive && stepIndex === currentStep;
                 
-                {/* All Agenda Items */}
-                {agendaSteps.map((step, stepIndex) => {
-                  const stepData = agendaItemData[step.title];
-                  const StepIcon = step.icon;
-                  const isActive = stepIndex === currentStep;
-                  
-                  return (
+                return (
+                  <div 
+                    key={stepIndex}
+                    className={cn(
+                      "border rounded-md overflow-hidden transition-all",
+                      isActive ? "ring-2 ring-primary ring-offset-2" : "",
+                      stepIndex === currentStep ? "" : "border-gray-200"
+                    )}
+                  >
+                    {/* Header */}
                     <div 
-                      key={stepIndex}
                       className={cn(
-                        "border rounded-md overflow-hidden transition-all",
-                        isActive ? "ring-2 ring-primary ring-offset-2" : "",
-                        stepIndex === currentStep ? "" : "border-gray-200"
+                        "p-3 flex items-center gap-3",
+                        isActive ? "bg-primary text-white" : "bg-gray-50",
+                        huddleActive && "cursor-pointer"
                       )}
+                      onClick={huddleActive ? () => selectStep(stepIndex) : undefined}
                     >
-                      {/* Header */}
-                      <div 
-                        className={cn(
-                          "p-3 flex items-center gap-3 cursor-pointer",
-                          isActive ? "bg-primary text-white" : "bg-gray-50"
-                        )}
-                        onClick={() => selectStep(stepIndex)}
-                      >
-                        <div className={cn(
-                          "p-2 rounded-full",
-                          isActive ? "bg-white/20" : "bg-primary/10"
-                        )}>
-                          <StepIcon className={cn(
-                            "h-5 w-5", 
-                            isActive ? "text-white" : "text-primary"
-                          )} />
-                        </div>
-                        <div>
-                          <h3 className={cn(
-                            "font-medium",
-                            isActive ? "text-white" : "text-gray-900"
-                          )}>{step.title}</h3>
-                          <p className={cn(
-                            "text-sm",
-                            isActive ? "text-white/80" : "text-gray-500"
-                          )}>{step.focus}</p>
-                        </div>
-                      </div>
-                      
-                      {/* Content */}
                       <div className={cn(
-                        "transition-all",
-                        isActive ? "p-4 border-t" : "px-4 py-3"
+                        "p-2 rounded-full",
+                        isActive ? "bg-white/20" : "bg-primary/10"
                       )}>
-                        {/* Metrics Row */}
-                        <div className={cn(
-                          "grid gap-3",
-                          isActive ? "grid-cols-3" : "grid-cols-1 md:grid-cols-3"
-                        )}>
-                          {stepData.metrics.map((metric, idx) => (
-                            <div 
-                              key={idx} 
-                              className={cn(
-                                "bg-gray-50 p-3 rounded-md border border-gray-200 flex items-center",
-                                isActive ? "" : "py-2"
-                              )}
-                            >
-                              <div className="flex-1">
-                                <p className="text-sm text-gray-500">{metric.label}</p>
-                                <div className="flex items-end gap-2 mt-1">
-                                  <span className={cn(
-                                    "font-bold",
-                                    isActive ? "text-xl" : "text-lg"
-                                  )}>{metric.value}</span>
-                                  <span className={cn("text-sm", getStatusColor(metric.status))}>
-                                    (Target: {metric.target})
-                                  </span>
-                                </div>
+                        <StepIcon className={cn(
+                          "h-5 w-5", 
+                          isActive ? "text-white" : "text-primary"
+                        )} />
+                      </div>
+                      <div>
+                        <h3 className={cn(
+                          "font-medium",
+                          isActive ? "text-white" : "text-gray-900"
+                        )}>{step.title}</h3>
+                        <p className={cn(
+                          "text-sm",
+                          isActive ? "text-white/80" : "text-gray-500"
+                        )}>{step.focus}</p>
+                      </div>
+                    </div>
+                    
+                    {/* Content */}
+                    <div className={cn(
+                      "transition-all",
+                      isActive ? "p-4 border-t" : "px-4 py-3"
+                    )}>
+                      {/* Metrics Row */}
+                      <div className={cn(
+                        "grid gap-3",
+                        isActive ? "grid-cols-3" : "grid-cols-1 md:grid-cols-3"
+                      )}>
+                        {stepData.metrics.map((metric, idx) => (
+                          <div 
+                            key={idx} 
+                            className={cn(
+                              "bg-gray-50 p-3 rounded-md border border-gray-200 flex items-center",
+                              isActive ? "" : "py-2"
+                            )}
+                          >
+                            <div className="flex-1">
+                              <p className="text-sm text-gray-500">{metric.label}</p>
+                              <div className="flex items-end gap-2 mt-1">
+                                <span className={cn(
+                                  "font-bold",
+                                  isActive ? "text-xl" : "text-lg"
+                                )}>{metric.value}</span>
+                                <span className={cn("text-sm", getStatusColor(metric.status))}>
+                                  (Target: {metric.target})
+                                </span>
                               </div>
                             </div>
-                          ))}
-                        </div>
-                        
-                        {/* Highlights/Issues */}
-                        <div className={cn(isActive ? "mt-4" : "mt-3")}>
-                          <h4 className="font-medium mb-2 text-sm">
-                            {isActive ? "Key Points:" : "Key Issues:"}
-                          </h4>
-                          <div className={cn(
-                            "space-y-2",
-                            !isActive && "text-xs"
-                          )}>
-                            {/* Show all highlights when active, otherwise only show warnings/negatives */}
-                            {stepData.highlights
-                              .filter(h => isActive || h.type === 'warning' || h.type === 'negative' || h.type === 'action')
-                              .slice(0, isActive ? undefined : 2)
-                              .map((highlight, idx) => (
-                                <div 
-                                  key={idx} 
-                                  className={cn(
-                                    "p-3 rounded-md border",
-                                    isActive ? "text-sm" : "text-xs p-2",
-                                    getHighlightColor(highlight.type)
-                                  )}
-                                >
-                                  {highlight.text}
-                                </div>
-                              ))}
-                            
-                            {/* Show "See more" if there are additional issues */}
-                            {!isActive && stepData.highlights.length > 2 && (
-                              <div className="text-xs text-primary font-medium">
-                                + {stepData.highlights.length - 2} more items...
-                              </div>
-                            )}
                           </div>
+                        ))}
+                      </div>
+                      
+                      {/* Highlights/Issues */}
+                      <div className={cn(isActive ? "mt-4" : "mt-3")}>
+                        <h4 className="font-medium mb-2 text-sm">
+                          {isActive ? "Key Points:" : "Key Issues:"}
+                        </h4>
+                        <div className={cn(
+                          "space-y-2",
+                          !isActive && "text-xs"
+                        )}>
+                          {/* Show all highlights when active, otherwise only show warnings/negatives */}
+                          {stepData.highlights
+                            .filter(h => isActive || h.type === 'warning' || h.type === 'negative' || h.type === 'action')
+                            .slice(0, isActive ? undefined : 2)
+                            .map((highlight, idx) => (
+                              <div 
+                                key={idx} 
+                                className={cn(
+                                  "p-3 rounded-md border",
+                                  isActive ? "text-sm" : "text-xs p-2",
+                                  getHighlightColor(highlight.type)
+                                )}
+                              >
+                                {highlight.text}
+                              </div>
+                            ))}
+                          
+                          {/* Show "See more" if there are additional issues */}
+                          {!isActive && stepData.highlights.length > 2 && (
+                            <div className="text-xs text-primary font-medium">
+                              + {stepData.highlights.length - 2} more items...
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
-                  );
-                })}
-              </div>
+                  </div>
+                );
+              })}
             </div>
-          ) : (
-            <div className="p-8 text-center bg-white">
-              <Calendar className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900">Daily Huddle Not Started</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Start the huddle to view agenda items and coordinate with your team for a successful day.
-              </p>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </NavigationWrapper>
