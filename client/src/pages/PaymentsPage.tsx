@@ -202,7 +202,7 @@ const mockPayments: Payment[] = [
 
 // Filter options
 const paymentMethods = [
-  "All",
+  "All Methods",
   "Credit Card",
   "Cash",
   "Check",
@@ -210,7 +210,7 @@ const paymentMethods = [
 ];
 
 const paymentStatuses = [
-  "All",
+  "All Statuses",
   "Completed",
   "Pending",
   "Failed",
@@ -218,7 +218,7 @@ const paymentStatuses = [
 ];
 
 const paymentTypes = [
-  "All",
+  "All Types",
   "Treatment",
   "Consultation",
   "Products",
@@ -233,9 +233,9 @@ export default function PaymentsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [dateRange, setDateRange] = useState<DateRange | undefined>();
   const [filters, setFilters] = useState({
-    paymentMethod: "All",
-    paymentStatus: "All",
-    paymentType: "All",
+    paymentMethod: "All Methods",
+    paymentStatus: "All Statuses",
+    paymentType: "All Types",
   });
 
   // Get filtered payments
@@ -282,15 +282,15 @@ export default function PaymentsPage() {
     }
 
     // Apply dropdown filters
-    if (filters.paymentMethod !== "All") {
+    if (filters.paymentMethod !== "All Methods") {
       filtered = filtered.filter(payment => payment.paymentMethod === filters.paymentMethod);
     }
     
-    if (filters.paymentStatus !== "All") {
+    if (filters.paymentStatus !== "All Statuses") {
       filtered = filtered.filter(payment => payment.status === filters.paymentStatus);
     }
     
-    if (filters.paymentType !== "All") {
+    if (filters.paymentType !== "All Types") {
       filtered = filtered.filter(payment => payment.paymentFor === filters.paymentType);
     }
 
