@@ -720,9 +720,14 @@ export default function CollectionsPage() {
                     <MessageSquare className="h-4 w-4 mr-1" />
                     Contact Selected
                   </Button>
-                  <Button variant="outline" size="sm" className="h-9">
-                    <Download className="h-4 w-4 mr-1" />
-                    Export
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="h-9"
+                    disabled={selectedAccounts.length === 0}
+                  >
+                    <Printer className="h-4 w-4 mr-1" />
+                    Print Selected
                   </Button>
                 </div>
               </div>
