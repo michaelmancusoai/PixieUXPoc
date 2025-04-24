@@ -68,6 +68,7 @@ export interface ActionItem {
   patientId?: number;
   patientName?: string;
   completed?: boolean;
+  delegated?: boolean; // Added delegated flag for Pixie AI tasks
   icon?: string;
   estimatedTimeMin?: number; // Estimated time to complete in minutes
 }

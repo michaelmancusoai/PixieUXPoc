@@ -104,6 +104,7 @@ const RoleDashboard: React.FC = () => {
   // Basic dashboard state
   const [currentRole, setCurrentRole] = useState<UserRole>('frontOffice');
   const [completedActions, setCompletedActions] = useState<Set<string>>(new Set());
+  const [delegatedActions, setDelegatedActions] = useState<Set<string>>(new Set());
   const [currentVariantIndex, setCurrentVariantIndex] = useState<number>(0);
   
   // Game state
@@ -141,6 +142,26 @@ const RoleDashboard: React.FC = () => {
       }
       return newSet;
     });
+  };
+  
+  // Function to delegate an action to Pixie AI
+  const handleDelegateAction = (id: string) => {
+    // Mark the task as delegated
+    setDelegatedActions((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(id);
+      return newSet;
+    });
+    
+    // Also mark it as completed since Pixie AI will handle it
+    setCompletedActions((prev) => {
+      const newSet = new Set(prev);
+      newSet.add(id);
+      return newSet;
+    });
+    
+    // Add this task to Pixie AI Agent as a win
+    // (Note: In a real application, this would be handled by the backend)
   };
   
   // Helper to cycle through prompt variants

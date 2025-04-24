@@ -30,7 +30,8 @@ import {
   Video,
   Activity,
   CircleCheck,
-  MessageCircle
+  MessageCircle,
+  Zap
 } from 'lucide-react';
 import { ActionItem as ActionItemType } from '../types';
 import { Button } from '@/components/ui/button';
