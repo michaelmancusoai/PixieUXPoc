@@ -1,76 +1,148 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 import { FlowCategory } from '../types';
+import { 
+  Activity, 
+  Check, 
+  ClipboardCheck, 
+  CreditCard, 
+  SmilePlus, 
+  Bell,
+  FileCheck,
+  Stethoscope
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface FlowRadarProps {
   categories: FlowCategory[];
   accentColor: string;
 }
 
+// Get icon component based on category ID
+const getCategoryIcon = (id: string) => {
+  switch (id) {
+    case 'checkedIn':
+      return ClipboardCheck;
+    case 'seated':
+      return Activity;
+    case 'preClinical':
+      return Stethoscope;
+    case 'doctorReady':
+      return Bell;
+    case 'inTreatment':
+      return SmilePlus;
+    case 'wrapUp':
+      return FileCheck;
+    case 'readyForCheckout':
+      return CreditCard;
+    case 'checkedOut':
+      return Check;
+    default:
+      return Activity;
+  }
+};
+
 const FlowRadar: React.FC<FlowRadarProps> = ({ categories, accentColor }) => {
-  const getAccentColorClass = () => {
-    switch (accentColor) {
-      case 'blue':
-        return 'text-blue-600';
-      case 'teal':
-        return 'text-teal-600';
-      case 'indigo':
-        return 'text-indigo-600';
-      case 'amber':
-        return 'text-amber-600';
-      case 'green':
-        return 'text-green-600';
+  const getColumnColor = (id: string, isBottleneck?: boolean) => {
+    if (isBottleneck) {
+      return 'bg-red-500';
+    }
+    
+    switch (id) {
+      case 'checkedIn':
+        return 'bg-blue-500';
+      case 'seated':
+        return 'bg-teal-500';
+      case 'preClinical':
+        return 'bg-indigo-500';
+      case 'doctorReady':
+        return 'bg-violet-500';
+      case 'inTreatment':
+        return 'bg-purple-500';
+      case 'wrapUp':
+        return 'bg-pink-500';
+      case 'readyForCheckout':
+        return 'bg-orange-500';
+      case 'checkedOut':
+        return 'bg-green-500';
       default:
-        return 'text-gray-600';
+        return `bg-${accentColor}-500`;
     }
   };
 
-  const getBackgroundColorClass = (isBottleneck: boolean = false) => {
-    if (isBottleneck) {
-      return 'bg-red-50 border-red-200';
-    }
-
-    switch (accentColor) {
-      case 'blue':
-        return 'bg-blue-50 border-blue-200';
-      case 'teal':
-        return 'bg-teal-50 border-teal-200';
-      case 'indigo':
-        return 'bg-indigo-50 border-indigo-200';
-      case 'amber':
-        return 'bg-amber-50 border-amber-200';
-      case 'green':
-        return 'bg-green-50 border-green-200';
+  // Mapping from simplified to complete category titles
+  const getCategoryTitle = (id: string, label: string) => {
+    switch (id) {
+      case 'checkedIn':
+        return 'Checked-In';
+      case 'seated':
+        return 'Seated';
+      case 'preClinical':
+        return 'Pre-Clinical';
+      case 'doctorReady':
+        return 'Doctor Ready';
+      case 'inTreatment':
+        return 'In Treatment';
+      case 'wrapUp':
+        return 'Clinical Wrap-Up';
+      case 'readyForCheckout':
+        return 'Ready for Checkout';
+      case 'checkedOut':
+        return 'Checked-Out';
       default:
-        return 'bg-gray-50 border-gray-200';
+        return label;
     }
   };
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className={`text-base ${getAccentColorClass()}`}>
-          Flow Radar
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {categories.map((category) => (
+    <div className="overflow-x-auto pb-2">
+      <div className="flex space-x-3 min-w-max">
+        {categories.map((category) => {
+          const Icon = getCategoryIcon(category.id);
+          const colorClass = getColumnColor(category.id, category.isBottleneck);
+          const fullTitle = getCategoryTitle(category.id, category.label);
+          
+          return (
             <div 
               key={category.id}
-              className={`${getBackgroundColorClass(category.isBottleneck)} 
-                          border rounded-md p-3 flex justify-between items-center`}
+              className="min-w-[140px] w-[180px] flex flex-col cursor-pointer"
             >
-              <span className="text-sm font-medium">{category.label}</span>
-              <div className={`${category.isBottleneck ? 'bg-red-200 text-red-800' : 'bg-gray-200 text-gray-800'} 
-                               rounded-full w-8 h-8 flex items-center justify-center font-medium`}>
-                {category.count}
+              <div className={cn(
+                "text-white px-3 py-2 rounded-t-md flex justify-between items-center",
+                colorClass
+              )}>
+                <div className="flex items-center">
+                  <Icon className="h-4 w-4 mr-1" />
+                  <h3 className="text-xs font-medium truncate">{fullTitle}</h3>
+                </div>
+                <Badge 
+                  variant="outline" 
+                  className={cn(
+                    "bg-white/20 hover:bg-white/20 text-white border-none text-xs",
+                    category.isBottleneck && "bg-red-300/30 hover:bg-red-300/30"
+                  )}
+                >
+                  {category.count}
+                </Badge>
+              </div>
+              
+              <div className="bg-white border border-t-0 border-muted rounded-b-md p-2 text-center h-14 flex items-center justify-center">
+                {category.count === 0 ? (
+                  <div className="text-muted-foreground text-xs">
+                    No patients
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center">
+                    <div className="text-sm font-medium">{category.count} Patient{category.count !== 1 ? 's' : ''}</div>
+                    <div className="text-xs text-muted-foreground">Click to view</div>
+                  </div>
+                )}
               </div>
             </div>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
+          );
+        })}
+      </div>
+    </div>
   );
 };
 

@@ -766,20 +766,23 @@ const RoleDashboard: React.FC = () => {
             </CardContent>
           </Card>
 
-          {/* Flow Radar */}
+          {/* Live Patient Flow - Mission Control Style */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className={`text-${roleConfig.accentColor}-600`}>
                 {currentRole === 'frontOffice' ? 'Live Patient Flow' : 'Patient Flow'}
               </CardTitle>
+              <p className="text-xs text-muted-foreground">
+                Real-time view of patient movement through the practice
+              </p>
             </CardHeader>
-            <CardContent className="pt-0">
+            <CardContent className="pt-0 px-2">
               <FlowRadar 
                 categories={dashboardData.flowCategories}
                 accentColor={roleConfig.accentColor}
               />
-              <p className="text-xs text-muted-foreground mt-2 text-center">
-                Click column to jump to those patients in Mission Control
+              <p className="text-xs text-muted-foreground mt-3 text-center">
+                Click any column to jump to those patients in Mission Control
               </p>
             </CardContent>
           </Card>

@@ -119,16 +119,42 @@ const frontOfficeData: DashboardData = {
     {
       id: 'checkedIn',
       label: 'Checked In',
-      count: 1,
+      count: 2,
     },
     {
       id: 'seated',
       label: 'Seated',
+      count: 3,
+    },
+    {
+      id: 'preClinical',
+      label: 'Pre-Clinical',
+      count: 1,
+    },
+    {
+      id: 'doctorReady',
+      label: 'Doctor Ready',
       count: 2,
+      isBottleneck: true,
+    },
+    {
+      id: 'inTreatment',
+      label: 'In Treatment',
+      count: 4,
+    },
+    {
+      id: 'wrapUp',
+      label: 'Clinical Wrap-Up',
+      count: 1,
     },
     {
       id: 'readyForCheckout',
       label: 'Ready for Checkout',
+      count: 2,
+    },
+    {
+      id: 'checkedOut',
+      label: 'Checked Out',
       count: 0,
     },
   ],
