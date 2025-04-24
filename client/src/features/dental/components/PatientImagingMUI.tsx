@@ -184,7 +184,7 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
             title={selectedImageObj?.title}
             subheader={
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, mt: 0.5 }}>
-                <CalendarIcon sx={{ height: 16, width: 16 }} />
+                <CalendarIcon sx={{ height: 16, width: 16, color: '#4f46e5' }} />
                 <Typography variant="body2">
                   {new Date(selectedImageObj?.date || '').toLocaleDateString()}
                 </Typography>
@@ -258,10 +258,28 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
                 Provider: {selectedImageObj?.provider}
               </Typography>
               <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button variant="outlined" size="small" startIcon={<DownloadIcon />}>
+                <Button 
+                  variant="outlined" 
+                  size="small" 
+                  startIcon={<DownloadIcon />}
+                  sx={{ 
+                    borderColor: '#4f46e5', 
+                    color: '#4f46e5',
+                    '&:hover': { borderColor: '#4338ca', bgcolor: 'rgba(79, 70, 229, 0.04)' }
+                  }}
+                >
                   Download
                 </Button>
-                <Button variant="outlined" size="small" startIcon={<ShareIcon />}>
+                <Button 
+                  variant="outlined" 
+                  size="small" 
+                  startIcon={<ShareIcon />}
+                  sx={{ 
+                    borderColor: '#4f46e5', 
+                    color: '#4f46e5',
+                    '&:hover': { borderColor: '#4338ca', bgcolor: 'rgba(79, 70, 229, 0.04)' }
+                  }}
+                >
                   Share
                 </Button>
               </Box>
@@ -291,7 +309,16 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
               ))}
             </Tabs>
             <Box sx={{ display: 'flex', gap: 1 }}>
-              <Button variant="outlined" size="small" startIcon={<SearchIcon />}>
+              <Button 
+                variant="outlined" 
+                size="small" 
+                startIcon={<SearchIcon />}
+                sx={{ 
+                  borderColor: '#4f46e5', 
+                  color: '#4f46e5',
+                  '&:hover': { borderColor: '#4338ca', bgcolor: 'rgba(79, 70, 229, 0.04)' }
+                }}
+              >
                 Search
               </Button>
               <Button 
@@ -343,7 +370,7 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
                               </Typography>
                               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                                 <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                                  <CalendarIcon sx={{ height: 12, width: 12, mr: 0.5 }} />
+                                  <CalendarIcon sx={{ height: 12, width: 12, mr: 0.5, color: '#4f46e5' }} />
                                   <Typography variant="caption" color="text.secondary">
                                     {new Date(image.date).toLocaleDateString()}
                                   </Typography>
@@ -352,7 +379,13 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
                                   label={category.label}
                                   variant="outlined"
                                   size="small"
-                                  sx={{ fontSize: '0.65rem', height: 20 }}
+                                  sx={{ 
+                                    fontSize: '0.65rem', 
+                                    height: 20, 
+                                    borderColor: '#c7d2fe',
+                                    color: '#4f46e5',
+                                    bgcolor: 'rgba(79, 70, 229, 0.04)'
+                                  }}
                                 />
                               </Box>
                             </CardContent>
@@ -371,7 +404,7 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
                         mt: 2 
                       }}
                     >
-                      <CloudIcon sx={{ width: 48, height: 48, margin: '0 auto', color: 'rgba(0,0,0,0.3)' }} />
+                      <CloudIcon sx={{ width: 48, height: 48, margin: '0 auto', color: 'rgba(79, 70, 229, 0.3)' }} />
                       <Typography variant="h6" sx={{ mt: 2, mb: 1 }}>
                         No {category.label} Available
                       </Typography>
