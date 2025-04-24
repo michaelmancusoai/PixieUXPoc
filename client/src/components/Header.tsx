@@ -396,9 +396,15 @@ export function Header() {
                   <span>See all results for "<strong>{searchQuery}</strong>"</span>
                 ) : null}
               </div>
-              <div className="flex items-center gap-2 text-gray-400">
-                <span>Press ENTER</span>
-                <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4 text-gray-400">
+                <div className="flex items-center gap-1">
+                  <div className="px-1.5 py-0.5 text-xs rounded bg-gray-100 text-gray-500">
+                    <span className="font-mono">ENTER</span>
+                  </div>
+                  <span>to search</span>
+                </div>
+                
+                <div className="flex items-center gap-1">
                   <div className="px-1.5 py-0.5 text-xs rounded bg-gray-100 text-gray-500">
                     <span className="font-mono">ESC</span>
                   </div>
