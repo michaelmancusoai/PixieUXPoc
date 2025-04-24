@@ -60,7 +60,7 @@ const PatientHeader = ({ onTabChange, currentTab = "toothChart", onStartExamMode
           <div className="flex space-x-2">
             <Button 
               size="sm" 
-              className="flex items-center gap-1 bg-green-600 hover:bg-green-700 text-white" 
+              className="flex items-center gap-1 bg-indigo-600 hover:bg-indigo-700 text-white" 
               onClick={handleStartExamMode}
               aria-label="Start Exam Mode"
             >

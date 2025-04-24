@@ -180,15 +180,15 @@ const ToothChart = ({ onTogglePalette, onNextTooth, onLastUsed, onToggleTreatmen
               <span>Caries</span>
             </div>
             <div className="flex items-center">
-              <div className="w-3 h-3 bg-blue-700 mr-1"></div>
+              <div className="w-3 h-3 bg-indigo-700 mr-1"></div>
               <span>Existing</span>
             </div>
             <div className="flex items-center">
-              <div className="w-3 h-3 border-2 border-green-600 mr-1"></div>
+              <div className="w-3 h-3 border-2 border-indigo-600 mr-1"></div>
               <span>Planned</span>
             </div>
             <div className="flex items-center">
-              <div className="w-3 h-3 bg-green-600 mr-1"></div>
+              <div className="w-3 h-3 bg-indigo-600 mr-1"></div>
               <span>Completed</span>
             </div>
           </div>
