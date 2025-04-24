@@ -416,9 +416,9 @@ const RoleDashboard: React.FC = () => {
               {/* Speech bubble next to pokemon */}
               <div className="flex-1">
                 <div className="nes-balloon from-left mt-0">
-                  <p className="text-base sm:text-lg font-medium">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
-                    <span className="text-blue-600 font-bold">{promptVariants[currentVariantIndex].benefit}</span>
+                  <p className="text-lg sm:text-xl font-medium leading-tight">
+                    "{promptVariants[currentVariantIndex].prompt}"<br/>
+                    <span className="text-blue-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
                   </p>
                 </div>
               </div>
@@ -504,9 +504,9 @@ const RoleDashboard: React.FC = () => {
               {/* Speech bubble next to pokemon */}
               <div className="flex-1">
                 <div className="nes-balloon from-left mt-0">
-                  <p className="text-base sm:text-lg font-medium">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
-                    <span className="text-amber-600 font-bold">{promptVariants[currentVariantIndex].benefit}</span>
+                  <p className="text-lg sm:text-xl font-medium leading-tight">
+                    "{promptVariants[currentVariantIndex].prompt}"<br/>
+                    <span className="text-amber-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
                   </p>
                 </div>
               </div>
@@ -563,9 +563,9 @@ const RoleDashboard: React.FC = () => {
               {/* Speech bubble next to pokemon */}
               <div className="flex-1">
                 <div className="nes-balloon from-left mt-0">
-                  <p className="text-base sm:text-lg font-medium">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
-                    <span className="text-orange-600 font-bold">{promptVariants[currentVariantIndex].benefit}</span>
+                  <p className="text-lg sm:text-xl font-medium leading-tight">
+                    "{promptVariants[currentVariantIndex].prompt}"<br/>
+                    <span className="text-orange-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
                   </p>
                 </div>
               </div>
