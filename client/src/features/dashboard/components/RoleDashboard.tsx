@@ -402,8 +402,13 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
+            {/* Coins at bottom */}
+            <div className="flex justify-end pr-10 mb-4">
+              {[0, 1, 2].map(index => renderCoin(index))}
+            </div>
+            
             {/* Main Content */}
-            <div className="flex items-start mb-8">
+            <div className="flex items-end">
               {/* Pokemon on left */}
               <div className="flex flex-col items-center mr-3">
                 <i className={promptVariants[currentVariantIndex].character || "nes-bulbasaur"}></i>
@@ -421,11 +426,6 @@ const RoleDashboard: React.FC = () => {
                   </p>
                 </div>
               </div>
-            </div>
-            
-            {/* Coins at bottom */}
-            <div className="flex justify-end pr-10">
-              {[0, 1, 2].map(index => renderCoin(index))}
             </div>
             
 
@@ -489,8 +489,13 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
+            {/* Coins at bottom */}
+            <div className="flex justify-end pr-10 mb-4">
+              {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
+            </div>
+            
             {/* Main Content */}
-            <div className="flex items-start mb-8">
+            <div className="flex items-end">
               {/* Pokemon on left */}
               <div className="flex flex-col items-center mr-3">
                 <i className={promptVariants[currentVariantIndex].character || "nes-charmander"}></i>
@@ -508,11 +513,6 @@ const RoleDashboard: React.FC = () => {
                   </p>
                 </div>
               </div>
-            </div>
-            
-            {/* Coins at bottom */}
-            <div className="flex justify-end pr-10">
-              {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
             </div>
             
 
@@ -547,8 +547,13 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
+            {/* Coins at bottom */}
+            <div className="flex justify-end pr-10 mb-4 flex-wrap gap-y-2">
+              {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
+            </div>
+            
             {/* Main Content */}
-            <div className="flex items-start mb-8">
+            <div className="flex items-end">
               {/* Pokemon on left */}
               <div className="flex flex-col items-center mr-3">
                 <i className={promptVariants[currentVariantIndex].character || "nes-charizard"}></i>
@@ -566,11 +571,6 @@ const RoleDashboard: React.FC = () => {
                   </p>
                 </div>
               </div>
-            </div>
-            
-            {/* Coins at bottom */}
-            <div className="flex justify-end pr-10 flex-wrap gap-y-2">
-              {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
             </div>
             
 
