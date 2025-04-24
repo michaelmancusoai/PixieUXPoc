@@ -141,13 +141,13 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
   // Show empty state when all wins are dismissed
   if (filteredWins.length === 0) {
     return (
-      <Card className="h-full flex flex-col">
+      <Card>
         <CardHeader className="pb-3">
           <CardTitle className={`text-base ${getAccentColorClass()}`}>
-            Win Feed
+            Pixie AI Agent
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0 flex-1 flex items-center justify-center">
+        <CardContent className="pt-0 pb-4">
           <div className="flex flex-col items-center justify-center text-center">
             <div className={`rounded-full p-3 ${getIconBgColor()} mb-2`}>
               <CheckCircle className="h-5 w-5" />
@@ -161,17 +161,17 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
   }
 
   return (
-    <Card className="h-full flex flex-col">
+    <Card>
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <CardTitle className={`text-base ${getAccentColorClass()}`}>
-          Win Feed
+          Pixie AI Agent
         </CardTitle>
         <div className="text-xs text-gray-500">
           {filteredWins.length} {filteredWins.length === 1 ? 'win' : 'wins'} today
         </div>
       </CardHeader>
-      <CardContent className="pt-0 pb-1 flex-1">
-        <div className="space-y-2 h-full overflow-y-auto pr-1">
+      <CardContent className="pt-0 pb-1">
+        <div className="space-y-2 pr-1">
           {filteredWins.map((win) => (
             <div 
               key={win.id} 
