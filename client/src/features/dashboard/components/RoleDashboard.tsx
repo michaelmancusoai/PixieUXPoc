@@ -693,13 +693,11 @@ const RoleDashboard: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Action Queue and Flow Radar */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Impact Queue */}
+          {/* Today's Action Items */}
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className={`text-${roleConfig.accentColor}-600`}>
-                {currentRole === 'frontOffice' ? 
-                  'Impact Queue — Highest-impact actions first' : 
-                  'Impact Queue'}
+                Today's Action Items
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
