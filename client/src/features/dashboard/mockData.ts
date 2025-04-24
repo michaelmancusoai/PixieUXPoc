@@ -17,7 +17,7 @@ if (currentHour < 12) {
 // Front Office Mock Data
 const frontOfficeData: DashboardData = {
   greeting: `Good ${timeOfDay}, Maria`,
-  greetingDetails: '9 patients left to confirm; AI booked 3 waitlist gaps overnight.',
+  greetingDetails: '9 patients left to confirm; AI already filled 3 wait-list gaps for you overnight.',
   kpis: [
     {
       label: 'Confirmed Today',

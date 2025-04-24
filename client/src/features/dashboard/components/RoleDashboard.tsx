@@ -66,10 +66,21 @@ const RoleDashboard: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:justify-between md:items-end">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Today Screen</h1>
-          <p className="text-muted-foreground">
-            Welcome to your personalized daily dashboard.
-          </p>
+          {currentRole === 'frontOffice' ? (
+            <>
+              <h1 className="text-2xl font-bold tracking-tight">Front Desk Command Centre</h1>
+              <p className="text-muted-foreground">
+                Your morning snapshot & next best moves.
+              </p>
+            </>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold tracking-tight">Today Screen</h1>
+              <p className="text-muted-foreground">
+                Welcome to your personalized daily dashboard.
+              </p>
+            </>
+          )}
         </div>
         <RoleSelector currentRole={currentRole} onRoleChange={setCurrentRole} />
       </div>
@@ -88,7 +99,7 @@ const RoleDashboard: React.FC = () => {
                   {currentRole === 'frontOffice' && (
                     <div className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full flex items-center">
                       <Activity className="h-3 w-3 mr-1" />
-                      4-day streak
+                      4-day streak of 95% confirmations – keep it alive!
                     </div>
                   )}
                 </h2>
@@ -156,11 +167,16 @@ const RoleDashboard: React.FC = () => {
         </Card>
       )}
 
-      {/* KPI Strip */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* KPI Progress Strip */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {dashboardData.kpis.map((kpi, index) => (
           <KPICard key={index} kpi={kpi} accentColor={roleConfig.accentColor} />
         ))}
+        {currentRole === 'frontOffice' && (
+          <div className="col-span-full text-xs text-center text-muted-foreground mt-0">
+            Progress updates every 2 min
+          </div>
+        )}
       </div>
 
       {/* Main Content Area */}
@@ -171,7 +187,9 @@ const RoleDashboard: React.FC = () => {
           <Card>
             <CardHeader className="pb-3">
               <CardTitle className={`text-${roleConfig.accentColor}-600`}>
-                Impact Queue
+                {currentRole === 'frontOffice' ? 
+                  'Impact Queue — Highest-impact actions first' : 
+                  'Impact Queue'}
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
@@ -188,14 +206,39 @@ const RoleDashboard: React.FC = () => {
                   />
                 ))}
               </div>
+              {/* Empty-Impact State */}
+              {dashboardData.actionItems.every(item => completedActions.has(item.id)) && (
+                <div className="mt-6 text-center p-6 bg-gray-50 rounded-lg border border-gray-100">
+                  <h3 className="text-lg font-semibold text-gray-800">You're ahead of the game! 🎉</h3>
+                  <p className="text-gray-600 mt-2">Take a breath or preview tomorrow's schedule.</p>
+                  <Button 
+                    variant="outline" 
+                    className="mt-4"
+                  >
+                    Open Tomorrow
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
 
           {/* Flow Radar */}
-          <FlowRadar 
-            categories={dashboardData.flowCategories}
-            accentColor={roleConfig.accentColor}
-          />
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className={`text-${roleConfig.accentColor}-600`}>
+                {currentRole === 'frontOffice' ? 'Live Patient Flow' : 'Patient Flow'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <FlowRadar 
+                categories={dashboardData.flowCategories}
+                accentColor={roleConfig.accentColor}
+              />
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                Click column to jump to those patients in Mission Control
+              </p>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Win Feed */}

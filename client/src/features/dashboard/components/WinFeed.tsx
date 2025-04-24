@@ -185,6 +185,7 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
                         size="sm" 
                         className="h-6 w-6 p-0 rounded-full hover:bg-gray-200"
                         onClick={(e) => handleUndo(win.id, e)}
+                        title="Undo this AI action"
                       >
                         <RotateCcw className="h-3 w-3 text-gray-500" />
                       </Button>
@@ -228,6 +229,11 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
             ))}
           </div>
         </ScrollArea>
+        {filteredWins.some(win => win.isAi) && (
+          <div className="pt-2 pb-1 px-6 text-xs text-center text-muted-foreground border-t mt-2">
+            Swipe left to undo any AI action within 12h
+          </div>
+        )}
       </CardContent>
     </Card>
   );

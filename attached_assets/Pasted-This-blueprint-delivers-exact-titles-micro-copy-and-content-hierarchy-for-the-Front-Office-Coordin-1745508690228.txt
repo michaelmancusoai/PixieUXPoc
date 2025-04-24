@@ -1,0 +1,218 @@
+This blueprint delivers exact titles, micro‑copy, and content hierarchy for the Front‑Office Coordinator’s personalised Today screen. No technical notes, only the words and structural cues that turn work into effortless flow.
+
+Page Header
+
+Element
+
+Copy
+
+Tone Note
+
+Page Title (H1)
+
+Front Desk Command Centre
+
+Elevates role; sense of control
+
+Sub‑tagline
+
+Your morning snapshot & next best moves.
+
+Clear promise
+
+Greeting Banner (Hero Card)
+
+Sub‑Element
+
+Copy Example
+
+Salutation
+
+Good morning, Maria.
+
+Motivator Line
+
+9 patients left to confirm; AI already filled 3 wait‑list gaps for you overnight.
+
+Streak Ribbon (small text)
+
+🟢 4‑day streak of 95 % confirmations – keep it alive!
+
+KPI Progress Strip (3 cards)
+
+Each card: metric left, progress bar centre, target right.
+
+Card Title
+
+Metric Copy
+
+Target Copy
+
+Success Copy (on hit)
+
+Confirmed Today
+
+83 % confirmed
+
+Target : 100 %
+
+All set! Enjoy a coffee ☕
+
+Gaps Filled
+
+3 gaps filled
+
+Target : 5
+
+Nothing left but smiles!
+
+Balance Collected
+
+$1,250 so far
+
+Target : $2,000
+
+Cash flow champ!
+
+Micro‑copy under strip: “Progress updates every 2 min.”
+
+Impact Queue (Ordered Task List)
+
+Section Title
+
+Impact Queue  — Highest‑impact actions first
+
+Column Headers
+
+left‑align
+
+right‑align
+
+Task
+
+Action
+
+Task Card Template
+
+Call Robert Garcia (crown)               P1   ⏲️  42 m
+Balance due **$520**                     📞  💬  💲
+
+Quick‑action icons legend:
+
+📞 Call
+
+💬 SMS (prefilled)
+
+💲 Collect (payment modal)
+
+Task Completion Toast: “Nice! That’s $520 fewer surprises later.”
+
+AI Nudge Card (below queue)
+
+Grey‑tinted, dismissible.
+
+⚡ **Quick Win** • Add card‑on‑file prompt to 4 patients today → estimated extra **$1,450** / year.    [Add prompts]
+
+Flow Radar Mini‑Kanban
+
+Title : Live Patient Flow
+
+Column
+
+Label Copy
+
+Empty State
+
+Checked‑In
+
+“Checked‑In 3”
+
+“Waiting room clear 🎉”
+
+Seated
+
+“Seated 2”
+
+“Op chairs open 🪑”
+
+Ready for Checkout
+
+“Ready to Checkout 1”
+
+“No one needs checkout yet”
+
+Tooltip on column: “Click to jump to those patients in Mission Control.”
+
+Win Feed Sidebar
+
+Title : AI Win Feed
+
+Time
+
+Event Copy
+
+7 : 30 AM
+
+Insurance verified for 4 patients.
+
+6 : 15 AM
+
+Appointments filled – AI booked 3 patients from wait‑list.
+
+5 : 00 AM
+
+Reminders sent to 12 patients.
+
+Footer copy: “Swipe left to undo any AI action within 12 h.”
+
+Empty‑Impact State Copy
+
+When all tasks complete:
+
+You’re ahead of the game!  🎉  Take a breath or preview tomorrow’s schedule.  [Open Tomorrow]
+
+Tooltip & Micro‑copy Library
+
+Element
+
+Tooltip Copy
+
+KPI progress bar
+
+“Confirmed = patients with YES reply or phone note.”
+
+Countdown timer
+
+“Time until scheduled start.”
+
+P‑priority badge
+
+“P1 = highest revenue or time risk.”
+
+Error & Edge Copy
+
+Scenario
+
+Copy
+
+Phone call fails
+
+“Line busy—want to send a quick SMS instead?”
+
+Payment declined
+
+“Card declined. Suggest cash or split payment?”
+
+AI action error
+
+“AI couldn’t verify Delta Dental—needs human touch.”
+
+Coach‑Tone Guidelines
+
+Verb‑first sentences (“Call Robert”, “Collect balance”).
+
+Loss‑avoidance framing for unpaid balances (“prevent surprises”).
+
+Celebratory micro‑praise ≤ 4 words (“Cash flow champ!”).
+
+End of Copy & Structure Blueprint for Front‑Office Today Screen
