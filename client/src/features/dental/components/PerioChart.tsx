@@ -195,26 +195,53 @@ const PerioChart = () => {
       {/* Header */}
       <div className="border-b p-4 flex justify-between items-center">
         <div className="flex items-center space-x-4">
-          <h2 className="text-xl font-semibold">Periodontal Chart</h2>
+          <h2 className="text-xl font-semibold text-indigo-900">Periodontal Chart</h2>
           <Tabs defaultValue="pocket" className="w-auto">
-            <TabsList>
-              <TabsTrigger value="pocket">Pocket Depths</TabsTrigger>
-              <TabsTrigger value="recession">Recession</TabsTrigger>
-              <TabsTrigger value="bleeding">Bleeding</TabsTrigger>
+            <TabsList className="bg-indigo-50">
+              <TabsTrigger 
+                value="pocket" 
+                className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white"
+              >
+                Pocket Depths
+              </TabsTrigger>
+              <TabsTrigger 
+                value="recession"
+                className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white"
+              >
+                Recession
+              </TabsTrigger>
+              <TabsTrigger 
+                value="bleeding"
+                className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white"
+              >
+                Bleeding
+              </TabsTrigger>
             </TabsList>
           </Tabs>
         </div>
         
         <div className="flex items-center space-x-2">
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="border-indigo-300 text-indigo-700 hover:bg-indigo-50"
+          >
             <Printer className="w-4 h-4 mr-1" />
             Print
           </Button>
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="border-indigo-300 text-indigo-700 hover:bg-indigo-50"
+          >
             <Download className="w-4 h-4 mr-1" />
             Export
           </Button>
-          <Button variant="default" size="sm">
+          <Button 
+            variant="default" 
+            size="sm"
+            className="bg-indigo-600 hover:bg-indigo-700"
+          >
             <Save className="w-4 h-4 mr-1" />
             Save
           </Button>
@@ -255,10 +282,10 @@ const PerioChart = () => {
             <div className="text-xs text-red-600">sites</div>
           </div>
           
-          <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
-            <div className="text-sm text-blue-700">Furcation</div>
-            <div className="text-2xl font-semibold text-blue-700">0</div>
-            <div className="text-xs text-blue-600">sites</div>
+          <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+            <div className="text-sm text-indigo-700">Furcation</div>
+            <div className="text-2xl font-semibold text-indigo-700">0</div>
+            <div className="text-xs text-indigo-600">sites</div>
           </div>
         </div>
         
@@ -267,14 +294,14 @@ const PerioChart = () => {
           <div className="flex space-x-2">
             <Button
               variant="outline"
-              className={`${currentQuadrant === 'upper' ? 'bg-blue-50 border-blue-200' : ''}`}
+              className={`${currentQuadrant === 'upper' ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'border-indigo-200 text-indigo-600 hover:bg-indigo-50'}`}
               onClick={() => setCurrentQuadrant('upper')}
             >
               Upper Arch
             </Button>
             <Button
               variant="outline"
-              className={`${currentQuadrant === 'lower' ? 'bg-blue-50 border-blue-200' : ''}`}
+              className={`${currentQuadrant === 'lower' ? 'bg-indigo-50 border-indigo-300 text-indigo-700' : 'border-indigo-200 text-indigo-600 hover:bg-indigo-50'}`}
               onClick={() => setCurrentQuadrant('lower')}
             >
               Lower Arch
@@ -284,7 +311,7 @@ const PerioChart = () => {
           <div className="flex space-x-2">
             <Button
               variant={voiceActive ? "default" : "outline"}
-              className={voiceActive ? "bg-blue-600 hover:bg-blue-700" : ""}
+              className={voiceActive ? "bg-indigo-600 hover:bg-indigo-700" : "border-indigo-300 text-indigo-700 hover:bg-indigo-50"}
               onClick={toggleVoiceRecognition}
               size="sm"
             >
@@ -294,7 +321,7 @@ const PerioChart = () => {
             
             <Button
               variant={footPedalActive ? "default" : "outline"}
-              className={footPedalActive ? "bg-green-600 hover:bg-green-700" : ""}
+              className={footPedalActive ? "bg-indigo-600 hover:bg-indigo-700" : "border-indigo-300 text-indigo-700 hover:bg-indigo-50"}
               onClick={toggleFootPedal}
               size="sm"
             >
