@@ -735,7 +735,7 @@ const RoleDashboard: React.FC = () => {
       {/* Card-on-File Daily Challenge Card - shown only for front office role */}
       {currentRole === 'frontOffice' && gameVisible && (
         <div className="relative">
-          <div className={`nes-container pixelated with-title is-rounded ${getLevelBackground()} hover:shadow-md transition-shadow duration-200 p-4 font-vt323`}>
+          <div className={`nes-container pixelated with-title is-rounded ${getLevelBackground()} hover:shadow-md transition-shadow duration-200 p-4 font-vt323 overflow-hidden`}>
             <p className="title bg-gray-800 text-white p-1 font-press-start">8-bit Challenge Quest</p>
             <div className="relative">
               {renderGameContent()}
