@@ -137,7 +137,7 @@ const RoleDashboard: React.FC = () => {
         </CardContent>
       </Card>
       
-      {/* AI Nudge Card - shown only for front office role */}
+      {/* Soft-Skills Nudge - shown only for front office role */}
       {currentRole === 'frontOffice' && (
         <Card className="border-dashed border-2 border-amber-300 bg-amber-50 hover:shadow-md transition-shadow duration-200">
           <CardContent className="p-4">
@@ -147,17 +147,16 @@ const RoleDashboard: React.FC = () => {
               </div>
               <div className="flex-1">
                 <h3 className="font-medium text-amber-800 flex items-center">
-                  💡 Quick Win
+                  💡 Soft-Skills Nudge
                 </h3>
                 <p className="text-sm text-amber-700 mt-1">
-                  Invite 3 of today's patients to <strong>save a card on file</strong>
-                  <br/>Potential + $1,320 a year in faster collections
+                  This afternoon's new patient, Jacob, marked "Anxious" on his form.
                 </p>
                 <div className="mt-2 bg-white p-2 rounded-md border border-amber-200 text-sm">
-                  <p className="text-gray-700 italic">
-                    "While I've got your card handy, would you like us to keep it securely on file?
-                    <br/>It means faster checkout next time, and we'll always text you before any charge."
+                  <p className="text-gray-700">
+                    <span className="font-medium">Try:</span> "We always explain costs before treatment so there are no surprises."
                   </p>
+                  <p className="text-gray-600 text-xs mt-1">Tiny words, huge trust.</p>
                 </div>
                 <div className="mt-3">
                   <Button 
@@ -165,7 +164,7 @@ const RoleDashboard: React.FC = () => {
                     size="sm"
                     className="bg-amber-100 hover:bg-amber-200 text-amber-800 border-amber-300"
                   >
-                    Mark as Done
+                    Mark Read
                   </Button>
                 </div>
               </div>
@@ -216,14 +215,22 @@ const RoleDashboard: React.FC = () => {
               {/* Empty-Impact State */}
               {dashboardData.actionItems.every(item => completedActions.has(item.id)) && (
                 <div className="mt-6 text-center p-6 bg-gray-50 rounded-lg border border-gray-100">
-                  <h3 className="text-lg font-semibold text-gray-800">You're ahead of the game! 🎉</h3>
-                  <p className="text-gray-600 mt-2">Take a breath or preview tomorrow's schedule.</p>
-                  <Button 
-                    variant="outline" 
-                    className="mt-4"
-                  >
-                    Open Tomorrow
-                  </Button>
+                  <h3 className="text-lg font-semibold text-gray-800">When the list is clear, your magic is invisible to patients</h3>
+                  <p className="text-gray-600 mt-2">— exactly as it should be.</p>
+                  <div className="mt-4 flex justify-center space-x-3">
+                    <Button 
+                      variant="outline" 
+                      className="bg-blue-50 text-blue-700 border-blue-200 hover:bg-blue-100"
+                    >
+                      Preview Tomorrow
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      className="bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100"
+                    >
+                      Grab a Coffee ☕
+                    </Button>
+                  </div>
                 </div>
               )}
             </CardContent>

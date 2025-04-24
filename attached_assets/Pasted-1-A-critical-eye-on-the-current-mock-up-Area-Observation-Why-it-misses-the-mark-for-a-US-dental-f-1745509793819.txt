@@ -1,0 +1,106 @@
+1 — A critical eye on the current mock-up
+
+Area	Observation	Why it misses the mark for a US dental front-desk team
+Impact-Queue task mix	“Process credit-card payment … patient waiting at front desk” is redundant—Maria will already be doing that face-to-face. Tasks should be pre-emptive (before the patient arrives) or follow-up (after they’ve left).	Front-desk work oscillates between bursts of face-to-face activity and catch-up admin between patients. Queue items must live in those admin gaps.
+	No tasks for insurance verification, benefits breakdown, or tomorrow’s pre-auths—the real time-sink of a US practice.	Verifying benefits the day before is the #1 predictor of on-time check-out and full payment.
+	“Balance collected” KPI is practice-owner language, not receptionist language.	Behavioural studies show front-desk staff are motivated by people helped and problems averted, not gross revenue.
+Progress KPIs	Bars use orange even when results are positive; colour should celebrate progress, not neutralise it.	Colour = emotion. Amber implies caution, undermining a half-finished success.
+Win Feed	Only shows system actions, not Maria’s wins.	Recognition fuels intrinsic motivation.
+Language tone	Priority “P1 / P2” reads like engineering jargon.	Natural language (“Do first”, “Later today”) removes cognitive translation.
+
+
+
+⸻
+
+2 — What really lives on a front-desk task list
+
+(validated with practice-operations checklists & job descriptions  ￼ ￼)
+	1.	Verify insurance eligibility for tomorrow’s patients.
+	2.	Request missing X-ray from referring practice (pre-auth dependency).
+	3.	Send hygiene recall texts to patients due next week.
+	4.	Confirm lab case arrival for Thursday’s crown seats.
+	5.	Reschedule failed confirmation gaps (tap wait-list).
+	6.	Print new-patient forms for afternoon arrivals.
+	7.	Prepare deposit slip & batch credit-card totals.
+	8.	Order burs & prophy paste (inventory alert).
+	9.	Scan and attach signed consents from morning patients.
+	10.	Return voicemail from Mrs Lopez about financing options.
+
+These are either before-visit prep or after-visit wrap-up—perfect for admin windows.
+
+⸻
+
+3 — Revised copy & structure for maximum behavioural punch
+
+Greeting Banner
+
+“Good morning, Maria — 8 smiles to greet, 6 phones to calm, 5 minutes ’til first arrival.”
+
+AI cleared 2 wait-list gaps overnight; let’s keep the chairs spinning.
+
+⸻
+
+KPI Strip (people-centric)
+
+Metric card	Live figure	Target line	Micro-copy when 100 %
+Patients Confirmed	14 / 18	Target: all by 8 AM	Fully confirmed — heroic!
+Insurances Verified	10 / 12	Target: all by noon	Zero surprises inbound.
+Recall Slots Filled	3 / 6	Target: 6 today	Hygiene schedule solid.
+
+
+
+⸻
+
+Impact Queue (sorted by when it saves future pain)
+
+Task card (verb-first)	When	Quick-help chips
+Verify eligibility — Jacob Lee (new pt, Cigna PPO)	⏲ 1 h 20 m	🖥 Portal  📞 Call
+Request missing X-ray — Sarah Johnson (crown seat Thu)	⏲ 2 h 45 m	✉ Fax  📩 Email
+Send recall texts — 6 hygiene patients next week	⏲ 3 h	💬 Send All
+Confirm lab arrival — Prime Dental Lab, case # 8342	⏲ End of day	☎ Call Lab
+Order burs & paste — stock ≤ 2 days	🚩 Low	🛒 Create PO
+Prepare deposit slip — yesterday totals	🕔 4 PM	💲 Print
+
+When a task’s timer < 15 m, the card border glows amber; at 0 m it pulses red.
+
+⸻
+
+Quick Win Card
+
+💡  Soft-Skills Nudge
+This afternoon’s new patient, Jacob, marked “Anxious” on his form.  
+Try: “We always explain costs before treatment so there are no surprises.”
+Tiny words, huge trust.
+[Mark read]
+
+
+
+⸻
+
+Live Patient Flow Snapshot
+
+Checked-In 1  Seated 2  Ready for Checkout 0
+Both ops on time – keep it flowing.
+
+⸻
+
+Win Feed (Maria’s wins first)
+	•	8 : 07 AM Maria confirmed Emily Anderson by SMS ✔︎
+	•	7 : 55 AM AI verified Cigna benefits for Michael Chen
+	•	7 : 15 AM AI sent 12 recall reminders (response 3 so far)
+
+⸻
+
+Empty-State copy
+
+“When the list is clear, your magic is invisible to patients — exactly as it should be.
+Preview tomorrow’s schedule or grab a coffee ☕.”
+
+⸻
+
+Tone guide:
+	•	Friendly coach, never corporate.
+	•	One insight per sentence, ≤ 14 words.
+	•	Positive reinforcement whenever progress crosses a threshold.
+
+Put these words in the pixels, and Maria’s screen will feel like the savvy co-worker she’s always wanted, not just a digital clipboard.
