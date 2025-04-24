@@ -104,65 +104,85 @@ const CompletedMedicalHistory: React.FC<CompletedMedicalHistoryProps> = ({ patie
   };
 
   return (
-    <div className="container mx-auto py-6">
-      <h2 className="text-2xl font-bold mb-6">Medical History: {patientName}</h2>
+    <div className="p-4">
+      <div className="flex items-center mb-6">
+        <Stethoscope className="h-6 w-6 text-indigo-600 mr-2" />
+        <h2 className="text-xl font-semibold">Medical History: {patientName}</h2>
+      </div>
       
-      <div className="space-y-8">
+      <div className="space-y-5">
         {/* Vitals Section */}
         <section>
-          <h3 className="text-xl font-semibold mb-4">Vitals</h3>
-          <Card>
-            <CardHeader>
-              <CardTitle>Patient Vitals</CardTitle>
-              <CardDescription>Last recorded: {new Date().toLocaleDateString()}</CardDescription>
-            </CardHeader>
-            <CardContent>
+          <Card className="transition-all hover:shadow-md">
+            <CardContent className="p-4">
+              <div className="flex items-center mb-3">
+                <div className="bg-indigo-100 rounded-full p-2 mr-3">
+                  <LineChart className="h-5 w-5 text-indigo-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-base font-medium mb-0">Patient Vitals</CardTitle>
+                  <div className="text-sm text-muted-foreground">Last recorded: {new Date().toLocaleDateString()}</div>
+                </div>
+              </div>
+            
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div className="bg-blue-50 rounded-md p-4 border border-blue-100 flex items-start">
-                  <LineChart className="w-10 h-10 text-blue-600 mr-3" />
+                <div className="bg-indigo-50 rounded-md p-3 border border-indigo-100 flex items-center">
+                  <div className="bg-indigo-100 rounded-full p-2 mr-3 flex-shrink-0">
+                    <LineChart className="h-4 w-4 text-indigo-600" />
+                  </div>
                   <div>
-                    <p className="text-xs text-blue-600 uppercase font-semibold">Blood Pressure</p>
-                    <p className="text-lg font-medium">{vitals.bloodPressure} mmHg</p>
+                    <p className="text-xs text-muted-foreground uppercase font-medium">Blood Pressure</p>
+                    <p className="text-sm font-medium">{vitals.bloodPressure} mmHg</p>
                   </div>
                 </div>
                 
-                <div className="bg-blue-50 rounded-md p-4 border border-blue-100 flex items-start">
-                  <Heart className="w-10 h-10 text-red-500 mr-3" />
+                <div className="bg-indigo-50 rounded-md p-3 border border-indigo-100 flex items-center">
+                  <div className="bg-red-100 rounded-full p-2 mr-3 flex-shrink-0">
+                    <Heart className="h-4 w-4 text-red-600" />
+                  </div>
                   <div>
-                    <p className="text-xs text-blue-600 uppercase font-semibold">Heart Rate</p>
-                    <p className="text-lg font-medium">{vitals.heartRate} bpm</p>
+                    <p className="text-xs text-muted-foreground uppercase font-medium">Heart Rate</p>
+                    <p className="text-sm font-medium">{vitals.heartRate} bpm</p>
                   </div>
                 </div>
                 
-                <div className="bg-blue-50 rounded-md p-4 border border-blue-100 flex items-start">
-                  <Gauge className="w-10 h-10 text-teal-500 mr-3" />
+                <div className="bg-indigo-50 rounded-md p-3 border border-indigo-100 flex items-center">
+                  <div className="bg-teal-100 rounded-full p-2 mr-3 flex-shrink-0">
+                    <Gauge className="h-4 w-4 text-teal-600" />
+                  </div>
                   <div>
-                    <p className="text-xs text-blue-600 uppercase font-semibold">Respiratory Rate</p>
-                    <p className="text-lg font-medium">{vitals.respiratoryRate} breaths/min</p>
+                    <p className="text-xs text-muted-foreground uppercase font-medium">Respiratory Rate</p>
+                    <p className="text-sm font-medium">{vitals.respiratoryRate} breaths/min</p>
                   </div>
                 </div>
                 
-                <div className="bg-blue-50 rounded-md p-4 border border-blue-100 flex items-start">
-                  <Thermometer className="w-10 h-10 text-orange-500 mr-3" />
+                <div className="bg-indigo-50 rounded-md p-3 border border-indigo-100 flex items-center">
+                  <div className="bg-orange-100 rounded-full p-2 mr-3 flex-shrink-0">
+                    <Thermometer className="h-4 w-4 text-orange-600" />
+                  </div>
                   <div>
-                    <p className="text-xs text-blue-600 uppercase font-semibold">Temperature</p>
-                    <p className="text-lg font-medium">{vitals.temperature} °F</p>
+                    <p className="text-xs text-muted-foreground uppercase font-medium">Temperature</p>
+                    <p className="text-sm font-medium">{vitals.temperature} °F</p>
                   </div>
                 </div>
                 
-                <div className="bg-blue-50 rounded-md p-4 border border-blue-100 flex items-start">
-                  <Droplets className="w-10 h-10 text-blue-400 mr-3" />
+                <div className="bg-indigo-50 rounded-md p-3 border border-indigo-100 flex items-center">
+                  <div className="bg-blue-100 rounded-full p-2 mr-3 flex-shrink-0">
+                    <Droplets className="h-4 w-4 text-blue-600" />
+                  </div>
                   <div>
-                    <p className="text-xs text-blue-600 uppercase font-semibold">Oxygen Saturation</p>
-                    <p className="text-lg font-medium">{vitals.oxygenSaturation}%</p>
+                    <p className="text-xs text-muted-foreground uppercase font-medium">Oxygen Saturation</p>
+                    <p className="text-sm font-medium">{vitals.oxygenSaturation}%</p>
                   </div>
                 </div>
                 
-                <div className="bg-blue-50 rounded-md p-4 border border-blue-100 flex items-start">
-                  <Scale className="w-10 h-10 text-purple-500 mr-3" />
+                <div className="bg-indigo-50 rounded-md p-3 border border-indigo-100 flex items-center">
+                  <div className="bg-purple-100 rounded-full p-2 mr-3 flex-shrink-0">
+                    <Scale className="h-4 w-4 text-purple-600" />
+                  </div>
                   <div>
-                    <p className="text-xs text-blue-600 uppercase font-semibold">Weight / Height / BMI</p>
-                    <p className="text-lg font-medium">{vitals.weight} lbs / {vitals.height} / {vitals.bmi}</p>
+                    <p className="text-xs text-muted-foreground uppercase font-medium">Weight / Height / BMI</p>
+                    <p className="text-sm font-medium">{vitals.weight} lbs / {vitals.height} / {vitals.bmi}</p>
                   </div>
                 </div>
               </div>
@@ -172,153 +192,174 @@ const CompletedMedicalHistory: React.FC<CompletedMedicalHistoryProps> = ({ patie
         
         {/* Medical History Section */}
         <section>
-          <h3 className="text-xl font-semibold mb-4">Medical Conditions</h3>
-          <Card>
-            <CardHeader>
-              <CardTitle>Medical Conditions</CardTitle>
-              <CardDescription>Patient's reported medical history</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Significant Medical Conditions */}
-              <div className="space-y-5">
-                {/* Cardiovascular */}
-                {Object.entries(medicalConditions.cardiovascular).some(([_, value]) => value) && (
-                  <div>
-                    <h5 className="text-base font-medium flex items-center mb-2">
-                      <Heart className="w-5 h-5 mr-2 text-red-600" />
-                      Cardiovascular
-                    </h5>
-                    <div className="flex flex-wrap gap-2">
-                      {Object.entries(medicalConditions.cardiovascular)
-                        .filter(([_, value]) => value)
-                        .map(([key, _]) => (
-                          <Badge key={key} variant="outline" className="bg-red-50 text-red-800">
-                            {formatConditionName(key)}
-                          </Badge>
-                        ))
-                      }
-                    </div>
-                  </div>
-                )}
-                
-                {/* Respiratory */}
-                {Object.entries(medicalConditions.respiratory).some(([_, value]) => value) && (
-                  <div>
-                    <h5 className="text-base font-medium flex items-center mb-2">
-                      <Gauge className="w-5 h-5 mr-2 text-blue-600" />
-                      Respiratory
-                    </h5>
-                    <div className="flex flex-wrap gap-2">
-                      {Object.entries(medicalConditions.respiratory)
-                        .filter(([_, value]) => value)
-                        .map(([key, _]) => (
-                          <Badge key={key} variant="outline" className="bg-blue-50 text-blue-800">
-                            {formatConditionName(key)}
-                          </Badge>
-                        ))
-                      }
-                    </div>
-                  </div>
-                )}
-                
-                {/* Endocrine */}
-                {Object.entries(medicalConditions.endocrine).some(([_, value]) => value) && (
-                  <div>
-                    <h5 className="text-base font-medium flex items-center mb-2">
-                      <Activity className="w-5 h-5 mr-2 text-green-600" />
-                      Endocrine
-                    </h5>
-                    <div className="flex flex-wrap gap-2">
-                      {Object.entries(medicalConditions.endocrine)
-                        .filter(([_, value]) => value)
-                        .map(([key, _]) => (
-                          <Badge key={key} variant="outline" className="bg-green-50 text-green-800">
-                            {formatConditionName(key)}
-                          </Badge>
-                        ))
-                      }
-                    </div>
-                  </div>
-                )}
-                
-                {/* Neurological/Psychiatric */}
-                {Object.entries(medicalConditions.neurologicalPsychiatric).some(([_, value]) => value) && (
-                  <div>
-                    <h5 className="text-base font-medium flex items-center mb-2">
-                      <Brain className="w-5 h-5 mr-2 text-purple-600" />
-                      Neurological/Psychiatric
-                    </h5>
-                    <div className="flex flex-wrap gap-2">
-                      {Object.entries(medicalConditions.neurologicalPsychiatric)
-                        .filter(([_, value]) => value)
-                        .map(([key, _]) => (
-                          <Badge key={key} variant="outline" className="bg-purple-50 text-purple-800">
-                            {formatConditionName(key)}
-                          </Badge>
-                        ))
-                      }
-                    </div>
-                  </div>
-                )}
-                
-                {/* General Health */}
-                {Object.entries(medicalConditions.generalHealth).some(([_, value]) => value) && (
-                  <div>
-                    <h5 className="text-base font-medium flex items-center mb-2">
-                      <Stethoscope className="w-5 h-5 mr-2 text-teal-600" />
-                      General Health
-                    </h5>
-                    <div className="flex flex-wrap gap-2">
-                      {Object.entries(medicalConditions.generalHealth)
-                        .filter(([_, value]) => value)
-                        .map(([key, _]) => (
-                          <Badge key={key} variant="outline" className="bg-teal-50 text-teal-800">
-                            {formatConditionName(key)}
-                          </Badge>
-                        ))
-                      }
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              {/* Medical Care Information */}
-              <div className="border-t pt-6">
-                <h4 className="text-base font-medium mb-3 flex items-center">
-                  <FileQuestion className="w-5 h-5 mr-2 text-blue-600" />
-                  Medical Care Information
-                </h4>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-blue-50 rounded-md p-3 border border-blue-100">
-                    <div className="text-xs text-blue-600 mb-1">Primary Care Physician</div>
-                    <div className="text-sm font-medium">
-                      {primaryPhysician}
-                    </div>
-                  </div>
-                  
-                  <div className="bg-blue-50 rounded-md p-3 border border-blue-100">
-                    <div className="text-xs text-blue-600 mb-1">Last Physical Exam</div>
-                    <div className="text-sm font-medium">
-                      {new Date(lastExamDate).toLocaleDateString()}
-                    </div>
-                  </div>
+          <Card className="transition-all hover:shadow-md">
+            <CardContent className="p-4">
+              <div className="flex items-center mb-3">
+                <div className="bg-red-100 rounded-full p-2 mr-3">
+                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-base font-medium mb-0">Medical Conditions</CardTitle>
+                  <div className="text-sm text-muted-foreground">Patient's reported medical history</div>
                 </div>
               </div>
               
-              {/* Notes */}
-              {notes && (
-                <div className="border-t pt-6">
-                  <h4 className="text-base font-medium mb-3 flex items-center">
-                    <FileText className="w-5 h-5 mr-2 text-gray-600" />
-                    Clinical Notes
+              <div className="space-y-4">
+                {/* Significant Medical Conditions */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {/* Cardiovascular */}
+                  {Object.entries(medicalConditions.cardiovascular).some(([_, value]) => value) && (
+                    <div className="bg-red-50 p-3 rounded-md border border-red-100">
+                      <h5 className="text-sm font-medium flex items-center mb-2">
+                        <div className="bg-red-100 rounded-full p-1.5 mr-2">
+                          <Heart className="w-3.5 h-3.5 text-red-600" />
+                        </div>
+                        Cardiovascular
+                      </h5>
+                      <div className="flex flex-wrap gap-1.5">
+                        {Object.entries(medicalConditions.cardiovascular)
+                          .filter(([_, value]) => value)
+                          .map(([key, _]) => (
+                            <Badge key={key} variant="outline" className="bg-white text-red-700 border-red-200 text-xs">
+                              {formatConditionName(key)}
+                            </Badge>
+                          ))
+                        }
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Respiratory */}
+                  {Object.entries(medicalConditions.respiratory).some(([_, value]) => value) && (
+                    <div className="bg-indigo-50 p-3 rounded-md border border-indigo-100">
+                      <h5 className="text-sm font-medium flex items-center mb-2">
+                        <div className="bg-indigo-100 rounded-full p-1.5 mr-2">
+                          <Gauge className="w-3.5 h-3.5 text-indigo-600" />
+                        </div>
+                        Respiratory
+                      </h5>
+                      <div className="flex flex-wrap gap-1.5">
+                        {Object.entries(medicalConditions.respiratory)
+                          .filter(([_, value]) => value)
+                          .map(([key, _]) => (
+                            <Badge key={key} variant="outline" className="bg-white text-indigo-700 border-indigo-200 text-xs">
+                              {formatConditionName(key)}
+                            </Badge>
+                          ))
+                        }
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Endocrine */}
+                  {Object.entries(medicalConditions.endocrine).some(([_, value]) => value) && (
+                    <div className="bg-green-50 p-3 rounded-md border border-green-100">
+                      <h5 className="text-sm font-medium flex items-center mb-2">
+                        <div className="bg-green-100 rounded-full p-1.5 mr-2">
+                          <Activity className="w-3.5 h-3.5 text-green-600" />
+                        </div>
+                        Endocrine
+                      </h5>
+                      <div className="flex flex-wrap gap-1.5">
+                        {Object.entries(medicalConditions.endocrine)
+                          .filter(([_, value]) => value)
+                          .map(([key, _]) => (
+                            <Badge key={key} variant="outline" className="bg-white text-green-700 border-green-200 text-xs">
+                              {formatConditionName(key)}
+                            </Badge>
+                          ))
+                        }
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Neurological/Psychiatric */}
+                  {Object.entries(medicalConditions.neurologicalPsychiatric).some(([_, value]) => value) && (
+                    <div className="bg-purple-50 p-3 rounded-md border border-purple-100">
+                      <h5 className="text-sm font-medium flex items-center mb-2">
+                        <div className="bg-purple-100 rounded-full p-1.5 mr-2">
+                          <Brain className="w-3.5 h-3.5 text-purple-600" />
+                        </div>
+                        Neurological/Psychiatric
+                      </h5>
+                      <div className="flex flex-wrap gap-1.5">
+                        {Object.entries(medicalConditions.neurologicalPsychiatric)
+                          .filter(([_, value]) => value)
+                          .map(([key, _]) => (
+                            <Badge key={key} variant="outline" className="bg-white text-purple-700 border-purple-200 text-xs">
+                              {formatConditionName(key)}
+                            </Badge>
+                          ))
+                        }
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* General Health */}
+                  {Object.entries(medicalConditions.generalHealth).some(([_, value]) => value) && (
+                    <div className="bg-teal-50 p-3 rounded-md border border-teal-100">
+                      <h5 className="text-sm font-medium flex items-center mb-2">
+                        <div className="bg-teal-100 rounded-full p-1.5 mr-2">
+                          <Stethoscope className="w-3.5 h-3.5 text-teal-600" />
+                        </div>
+                        General Health
+                      </h5>
+                      <div className="flex flex-wrap gap-1.5">
+                        {Object.entries(medicalConditions.generalHealth)
+                          .filter(([_, value]) => value)
+                          .map(([key, _]) => (
+                            <Badge key={key} variant="outline" className="bg-white text-teal-700 border-teal-200 text-xs">
+                              {formatConditionName(key)}
+                            </Badge>
+                          ))
+                        }
+                      </div>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Medical Care Information */}
+                <div className="border-t pt-4 mt-4">
+                  <h4 className="text-sm font-medium mb-3 flex items-center">
+                    <div className="bg-indigo-100 rounded-full p-1.5 mr-2">
+                      <FileQuestion className="w-3.5 h-3.5 text-indigo-600" />
+                    </div>
+                    Medical Care Information
                   </h4>
                   
-                  <div className="p-3 border rounded-md bg-gray-50">
-                    <p className="text-sm">{notes}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="bg-indigo-50 rounded-md p-3 border border-indigo-100">
+                      <div className="text-xs text-muted-foreground mb-1">Primary Care Physician</div>
+                      <div className="text-sm font-medium">
+                        {primaryPhysician}
+                      </div>
+                    </div>
+                    
+                    <div className="bg-indigo-50 rounded-md p-3 border border-indigo-100">
+                      <div className="text-xs text-muted-foreground mb-1">Last Physical Exam</div>
+                      <div className="text-sm font-medium">
+                        {new Date(lastExamDate).toLocaleDateString()}
+                      </div>
+                    </div>
                   </div>
                 </div>
-              )}
+                
+                {/* Notes */}
+                {notes && (
+                  <div className="border-t pt-4 mt-4">
+                    <h4 className="text-sm font-medium mb-3 flex items-center">
+                      <div className="bg-gray-100 rounded-full p-1.5 mr-2">
+                        <FileText className="w-3.5 h-3.5 text-gray-600" />
+                      </div>
+                      Clinical Notes
+                    </h4>
+                    
+                    <div className="p-3 border rounded-md bg-gray-50">
+                      <p className="text-sm">{notes}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </CardContent>
           </Card>
         </section>
