@@ -31,7 +31,7 @@ const PatientHeader = ({ onTabChange, currentTab = "toothChart", onStartExamMode
   
   return (
     <div className="bg-white shadow-md w-full" role="banner">
-      <div className="w-full px-4 py-2 flex items-center justify-between border-b">
+      <div className="w-full px-6 py-2 flex items-center justify-between border-b">
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
             <User className="text-primary h-5 w-5" />

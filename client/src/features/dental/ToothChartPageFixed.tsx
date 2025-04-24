@@ -99,14 +99,16 @@ const ToothChartPageFixed = () => {
   return (
     <>
       <NavigationWrapper>
-        {/* Patient Header - Full width and sticky to keep it visible during scrolling */}
-        <div className="w-full -mx-3 sm:-mx-5 mb-4 sticky top-0 z-10 bg-white">
+        {/* Patient Header - Full width edge-to-edge, sticky, and no gap with navigation */}
+        <div className="fixed top-[60px] left-0 right-0 w-full z-10 bg-white shadow-md">
           <PatientHeader 
             onTabChange={handleTabChange}
             currentTab={activeTab}
             onStartExamMode={toggleExamMode}
           />
         </div>
+        {/* Spacer to prevent content from appearing under the header */}
+        <div className="h-[88px] mb-4"></div>
         
         <div className="h-full flex flex-col">
           {examModeActive ? (
