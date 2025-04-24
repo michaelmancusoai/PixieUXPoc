@@ -1148,7 +1148,7 @@ export default function ClaimsPage() {
                         </div>
                         <div className="mt-4 bg-green-50 p-3 rounded-lg w-full">
                           <div className="text-center text-sm font-medium">Completed</div>
-                          <div className="text-center font-bold mt-1">${completedClaims.reduce((sum, claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                          <div className="text-center font-bold mt-1">${completedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
                           <div className="text-xs text-center text-muted-foreground mt-1">~21 days avg.</div>
                         </div>
                       </div>
