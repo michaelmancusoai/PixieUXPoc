@@ -1,4 +1,4 @@
-import { Bell, Cog, HelpCircle, Search, LayoutDashboard, Calendar, Users, Receipt, BarChart3 } from "lucide-react";
+import { Bell, Cog, HelpCircle, Search, LayoutDashboard, Calendar, Users, Receipt, BarChart3, Gamepad } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -60,11 +60,23 @@ export function Header() {
 
         {/* Action buttons and user menu */}
         <div className="flex items-center">
+          {/* Gamepad Button */}
+          <Link href="/today">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-full text-white hover:bg-primary-dark/30 hover:text-white"
+              aria-label="Daily Game"
+            >
+              <Gamepad className="h-5 w-5" />
+            </Button>
+          </Link>
+
           {/* Notification Bell */}
           <Button
             variant="ghost"
             size="icon"
-            className="rounded-full text-white hover:bg-primary-dark/30 hover:text-white"
+            className="ml-1 rounded-full text-white hover:bg-primary-dark/30 hover:text-white"
             aria-label="Notifications"
           >
             <Bell className="h-5 w-5" />
