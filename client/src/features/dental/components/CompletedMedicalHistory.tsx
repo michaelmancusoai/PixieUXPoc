@@ -14,7 +14,8 @@ import {
   LineChart,
   Scale, 
   Thermometer,
-  FileText
+  FileText,
+  AlertTriangle
 } from 'lucide-react';
 
 interface CompletedMedicalHistoryProps {
@@ -366,24 +367,31 @@ const CompletedMedicalHistory: React.FC<CompletedMedicalHistoryProps> = ({ patie
         
         {/* Risk Factors Section */}
         <section>
-          <h3 className="text-xl font-semibold mb-4">Risk Factors & Lifestyle</h3>
-          <Card>
-            <CardHeader>
-              <CardTitle>Risk Factors & Lifestyle</CardTitle>
-              <CardDescription>Health-related behaviors and risk factors</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <Card className="transition-all hover:shadow-md">
+            <CardContent className="p-4">
+              <div className="flex items-center mb-3">
+                <div className="bg-amber-100 rounded-full p-2 mr-3">
+                  <AlertTriangle className="h-5 w-5 text-amber-600" />
+                </div>
+                <div>
+                  <CardTitle className="text-base font-medium mb-0">Risk Factors & Lifestyle</CardTitle>
+                  <div className="text-sm text-muted-foreground">Health-related behaviors and risk factors</div>
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {/* Tobacco Use */}
-                <div className="bg-amber-50 rounded-lg border border-amber-100 p-4">
-                  <h5 className="text-base font-medium flex items-center mb-3">
-                    <PenTool className="w-5 h-5 mr-2 text-amber-600" />
+                <div className="bg-amber-50 rounded-md border border-amber-100 p-3">
+                  <h5 className="text-sm font-medium flex items-center mb-2">
+                    <div className="bg-amber-100 rounded-full p-1.5 mr-2">
+                      <PenTool className="w-3.5 h-3.5 text-amber-600" />
+                    </div>
                     Tobacco Use
                   </h5>
                   <div className="text-sm">
-                    <p className="mb-2"><span className="font-medium">Status:</span> {riskFactors.smoker === 'never' ? 'Never smoked' : riskFactors.smoker === 'former' ? 'Former smoker' : 'Current smoker'}</p>
+                    <p className="mb-1.5 text-sm"><span className="font-medium">Status:</span> {riskFactors.smoker === 'never' ? 'Never smoked' : riskFactors.smoker === 'former' ? 'Former smoker' : 'Current smoker'}</p>
                     {riskFactors.smoker !== 'never' && (
-                      <div className="pl-4 border-l-2 border-amber-200">
+                      <div className="pl-3 border-l-2 border-amber-200 text-xs">
                         <p className="text-amber-800">May have increased risk for oral cancer, periodontal disease, and delayed healing.</p>
                       </div>
                     )}
@@ -391,15 +399,17 @@ const CompletedMedicalHistory: React.FC<CompletedMedicalHistoryProps> = ({ patie
                 </div>
                 
                 {/* Alcohol Use */}
-                <div className="bg-purple-50 rounded-lg border border-purple-100 p-4">
-                  <h5 className="text-base font-medium flex items-center mb-3">
-                    <Droplets className="w-5 h-5 mr-2 text-purple-600" />
+                <div className="bg-purple-50 rounded-md border border-purple-100 p-3">
+                  <h5 className="text-sm font-medium flex items-center mb-2">
+                    <div className="bg-purple-100 rounded-full p-1.5 mr-2">
+                      <Droplets className="w-3.5 h-3.5 text-purple-600" />
+                    </div>
                     Alcohol Consumption
                   </h5>
                   <div className="text-sm">
-                    <p className="mb-2"><span className="font-medium">Level:</span> {riskFactors.alcoholUse.charAt(0).toUpperCase() + riskFactors.alcoholUse.slice(1)}</p>
+                    <p className="mb-1.5 text-sm"><span className="font-medium">Level:</span> {riskFactors.alcoholUse.charAt(0).toUpperCase() + riskFactors.alcoholUse.slice(1)}</p>
                     {(riskFactors.alcoholUse === 'moderate' || riskFactors.alcoholUse === 'heavy') && (
-                      <div className="pl-4 border-l-2 border-purple-200">
+                      <div className="pl-3 border-l-2 border-purple-200 text-xs">
                         <p className="text-purple-800">May contribute to dry mouth and increased risk of oral cancer.</p>
                       </div>
                     )}
@@ -407,15 +417,17 @@ const CompletedMedicalHistory: React.FC<CompletedMedicalHistoryProps> = ({ patie
                 </div>
                 
                 {/* Exercise */}
-                <div className="bg-green-50 rounded-lg border border-green-100 p-4">
-                  <h5 className="text-base font-medium flex items-center mb-3">
-                    <Activity className="w-5 h-5 mr-2 text-green-600" />
+                <div className="bg-green-50 rounded-md border border-green-100 p-3">
+                  <h5 className="text-sm font-medium flex items-center mb-2">
+                    <div className="bg-green-100 rounded-full p-1.5 mr-2">
+                      <Activity className="w-3.5 h-3.5 text-green-600" />
+                    </div>
                     Physical Activity
                   </h5>
                   <div className="text-sm">
-                    <p className="mb-2"><span className="font-medium">Exercise frequency:</span> {riskFactors.exerciseFrequency.charAt(0).toUpperCase() + riskFactors.exerciseFrequency.slice(1)}</p>
+                    <p className="mb-1.5 text-sm"><span className="font-medium">Exercise frequency:</span> {riskFactors.exerciseFrequency.charAt(0).toUpperCase() + riskFactors.exerciseFrequency.slice(1)}</p>
                     {riskFactors.exerciseFrequency === 'none' && (
-                      <div className="pl-4 border-l-2 border-green-200">
+                      <div className="pl-3 border-l-2 border-green-200 text-xs">
                         <p className="text-green-800">Sedentary lifestyle may increase inflammatory responses in the body.</p>
                       </div>
                     )}
@@ -423,30 +435,37 @@ const CompletedMedicalHistory: React.FC<CompletedMedicalHistoryProps> = ({ patie
                 </div>
                 
                 {/* Diet */}
-                <div className="bg-blue-50 rounded-lg border border-blue-100 p-4">
-                  <h5 className="text-base font-medium flex items-center mb-3">
-                    <FileText className="w-5 h-5 mr-2 text-blue-600" />
+                <div className="bg-indigo-50 rounded-md border border-indigo-100 p-3">
+                  <h5 className="text-sm font-medium flex items-center mb-2">
+                    <div className="bg-indigo-100 rounded-full p-1.5 mr-2">
+                      <FileText className="w-3.5 h-3.5 text-indigo-600" />
+                    </div>
                     Dietary Habits
                   </h5>
                   <div className="text-sm">
-                    <p className="mb-2"><span className="font-medium">Diet quality:</span> {riskFactors.diet.charAt(0).toUpperCase() + riskFactors.diet.slice(1)}</p>
+                    <p className="mb-1.5 text-sm"><span className="font-medium">Diet quality:</span> {riskFactors.diet.charAt(0).toUpperCase() + riskFactors.diet.slice(1)}</p>
                     {riskFactors.diet === 'poor' && (
-                      <div className="pl-4 border-l-2 border-blue-200">
-                        <p className="text-blue-800">Poor nutrition may impact oral health and healing capacity.</p>
+                      <div className="pl-3 border-l-2 border-indigo-200 text-xs">
+                        <p className="text-indigo-800">Poor nutrition may impact oral health and healing capacity.</p>
                       </div>
                     )}
                   </div>
                 </div>
               </div>
               
-              <div className="mt-6 pt-6 border-t">
-                <h4 className="text-base font-medium mb-3">Risk Assessment</h4>
-                <div className="bg-gray-50 p-4 rounded-md border">
-                  <div className="flex items-center mb-3">
-                    <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
-                    <span className="font-medium">Moderate Risk</span>
+              <div className="border-t pt-4 mt-4">
+                <h4 className="text-sm font-medium mb-3 flex items-center">
+                  <div className="bg-amber-100 rounded-full p-1.5 mr-2">
+                    <AlertTriangle className="w-3.5 h-3.5 text-amber-600" />
                   </div>
-                  <p className="text-sm text-gray-700">
+                  Risk Assessment
+                </h4>
+                <div className="bg-amber-50 p-3 rounded-md border border-amber-100">
+                  <div className="flex items-center mb-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-500 mr-2"></div>
+                    <span className="font-medium text-sm">Moderate Risk</span>
+                  </div>
+                  <p className="text-xs text-gray-700">
                     Based on the patient's medical history and lifestyle factors, they are at moderate risk for dental conditions including periodontal disease and decay. Regular 6-month recall appointments recommended.
                   </p>
                 </div>
