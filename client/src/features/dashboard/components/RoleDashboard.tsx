@@ -325,9 +325,9 @@ const RoleDashboard: React.FC = () => {
     if (level === GameLevel.BRIEFING_1) {
       return (
         <div className="text-center py-2 font-vt323">
-          <h3 className="font-press-start text-xl text-sky-800 mb-2">DAILY CHALLENGE!</h3>
+          <h3 className="font-press-start text-xl text-sky-800 mb-2">Ask 3 Patients To Save a Card on File.</h3>
           <p className="text-md text-sky-700 mb-3">
-            Collect 3 coins by asking patients to save a card on file.
+            Today's Daily Challenge.
           </p>
           
           <div className="flex justify-center my-3">
