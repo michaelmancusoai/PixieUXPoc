@@ -658,17 +658,7 @@ const RoleDashboard: React.FC = () => {
                 </h2>
                 <p className="text-gray-600">{dashboardData.greetingDetails}</p>
                 
-                {/* Coaching tip - conditionally shown for front office role */}
-                {currentRole === 'frontOffice' && (
-                  <div className="mt-2 text-sm bg-blue-50 border border-blue-200 rounded-md p-2 flex items-start">
-                    <div className="bg-blue-100 p-1 rounded-full mr-2 flex-shrink-0">
-                      <MessageCircle className="h-4 w-4 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="text-blue-800">Patients answer texts 3× faster before 8 a.m. — want to send now?</p>
-                    </div>
-                  </div>
-                )}
+                {/* Coaching tip has been removed */}
                 
                 {/* AI Overnight Wins - conditionally shown for front office role */}
                 {currentRole === 'frontOffice' && (
