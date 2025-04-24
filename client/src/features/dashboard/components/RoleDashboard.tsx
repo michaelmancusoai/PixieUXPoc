@@ -402,30 +402,29 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
-            {/* Main Content */}
-            <div className="flex items-start mb-6">
+            {/* Speech bubble at top */}
+            <div className="flex-1 pr-10 mb-6">
+              <div className="nes-balloon from-left mt-0 mb-0">
+                <p className="text-lg sm:text-xl font-medium leading-tight">
+                  "{promptVariants[currentVariantIndex].prompt}"<br/>
+                  <span className="text-blue-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex justify-between items-end">
               {/* Pokemon on left */}
-              <div className="flex flex-col items-center mr-3">
+              <div className="flex flex-col items-center">
                 <i className={promptVariants[currentVariantIndex].character || "nes-bulbasaur"}></i>
                 <div className="text-xs text-center text-blue-600 font-press-start mt-1 w-32 leading-tight">
                   {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
               
-              {/* Speech bubble next to pokemon */}
-              <div className="flex-1 pr-10">
-                <div className="nes-balloon from-left mt-0 mb-0">
-                  <p className="text-lg sm:text-xl font-medium leading-tight">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/>
-                    <span className="text-blue-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
-                  </p>
-                </div>
+              {/* Coins at right */}
+              <div className="flex justify-end pr-10">
+                {[0, 1, 2].map(index => renderCoin(index))}
               </div>
-            </div>
-            
-            {/* Coins at bottom */}
-            <div className="flex justify-end pr-10">
-              {[0, 1, 2].map(index => renderCoin(index))}
             </div>
             
 
@@ -489,30 +488,29 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
-            {/* Main Content */}
-            <div className="flex items-start mb-6">
+            {/* Speech bubble at top */}
+            <div className="flex-1 pr-10 mb-6">
+              <div className="nes-balloon from-left mt-0 mb-0">
+                <p className="text-lg sm:text-xl font-medium leading-tight">
+                  "{promptVariants[currentVariantIndex].prompt}"<br/>
+                  <span className="text-amber-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex justify-between items-end">
               {/* Pokemon on left */}
-              <div className="flex flex-col items-center mr-3">
+              <div className="flex flex-col items-center">
                 <i className={promptVariants[currentVariantIndex].character || "nes-charmander"}></i>
                 <div className="text-xs text-center text-amber-600 font-press-start mt-1 w-32 leading-tight">
                   {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
               
-              {/* Speech bubble next to pokemon */}
-              <div className="flex-1 pr-10">
-                <div className="nes-balloon from-left mt-0 mb-0">
-                  <p className="text-lg sm:text-xl font-medium leading-tight">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/>
-                    <span className="text-amber-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
-                  </p>
-                </div>
+              {/* Coins at right */}
+              <div className="flex justify-end pr-10">
+                {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
               </div>
-            </div>
-            
-            {/* Coins at bottom */}
-            <div className="flex justify-end pr-10">
-              {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
             </div>
             
 
@@ -547,30 +545,29 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
-            {/* Main Content */}
-            <div className="flex items-start mb-6">
+            {/* Speech bubble at top */}
+            <div className="flex-1 pr-10 mb-6">
+              <div className="nes-balloon from-left mt-0 mb-0">
+                <p className="text-lg sm:text-xl font-medium leading-tight">
+                  "{promptVariants[currentVariantIndex].prompt}"<br/>
+                  <span className="text-orange-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
+                </p>
+              </div>
+            </div>
+            
+            <div className="flex justify-between items-end">
               {/* Pokemon on left */}
-              <div className="flex flex-col items-center mr-3">
+              <div className="flex flex-col items-center">
                 <i className={promptVariants[currentVariantIndex].character || "nes-charizard"}></i>
                 <div className="text-xs text-center text-orange-600 font-press-start mt-1 w-32 leading-tight">
                   {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
               
-              {/* Speech bubble next to pokemon */}
-              <div className="flex-1 pr-10">
-                <div className="nes-balloon from-left mt-0 mb-0">
-                  <p className="text-lg sm:text-xl font-medium leading-tight">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/>
-                    <span className="text-orange-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
-                  </p>
-                </div>
+              {/* Coins at right */}
+              <div className="flex justify-end pr-10 flex-wrap gap-y-2">
+                {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
               </div>
-            </div>
-            
-            {/* Coins at bottom */}
-            <div className="flex justify-end pr-10 flex-wrap gap-y-2">
-              {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
             </div>
             
 
