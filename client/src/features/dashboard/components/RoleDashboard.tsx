@@ -660,15 +660,7 @@ const RoleDashboard: React.FC = () => {
                 
                 {/* Coaching tip has been removed */}
                 
-                {/* AI Overnight Wins - conditionally shown for front office role */}
-                {currentRole === 'frontOffice' && (
-                  <div className="mt-2 text-sm bg-green-50 border border-green-200 rounded-md p-1.5 flex items-center">
-                    <div className="bg-green-100 p-1 rounded-full mr-2 flex-shrink-0">
-                      <CheckCircle2 className="h-4 w-4 text-green-600" />
-                    </div>
-                    <span className="text-green-800 leading-tight">Booked 3 waitlist gaps worth $720 while you slept</span>
-                  </div>
-                )}
+                {/* AI Overnight Wins notification has been removed */}
               </div>
             </div>
           </div>
