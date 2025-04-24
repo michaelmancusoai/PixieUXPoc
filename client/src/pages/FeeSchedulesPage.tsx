@@ -27,6 +27,13 @@ import {
   TabsList,
   TabsTrigger
 } from '@/components/ui/tabs';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -332,9 +339,35 @@ export default function FeeSchedulesPage() {
     <NavigationWrapper>
       <div className="min-h-screen bg-muted">
         <div className="container mx-auto py-6">
-          <h1 className="text-2xl font-bold mb-6">Fee Schedules</h1>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">Fee Schedules</h1>
+            
+            {/* Quick Actions Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="h-9">
+                  Quick Actions <ChevronDown className="h-4 w-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem className="cursor-pointer">
+                  <FileCog className="h-4 w-4 mr-2" />
+                  Import UCR CSV
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Download className="h-4 w-4 mr-2" />
+                  Copy From Existing
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer">
+                  <Edit className="h-4 w-4 mr-2" />
+                  Bulk Update Fees
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
 
-          {/* KPI Cards - as defined in specification document */}
+          {/* KPI Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
@@ -377,22 +410,29 @@ export default function FeeSchedulesPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Quick Actions</CardTitle>
+                <CardTitle className="text-base font-medium">Fee Schedule Analysis</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
-                <div className="flex flex-col space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Update and analyze schedules</span>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-blue-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">PPO Average</div>
+                    <div className="text-xl font-bold text-blue-600">20%</div>
+                    <div className="text-xs text-blue-600">discount rate</div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Button className="h-9 flex-1">
-                      <FileCog className="h-4 w-4 mr-1" />
-                      Import UCR CSV
-                    </Button>
-                    <Button variant="outline" className="h-9 flex-1">
-                      <Download className="h-4 w-4 mr-1" />
-                      Copy From Existing
-                    </Button>
+                  <div className="bg-green-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">Preventive</div>
+                    <div className="text-xl font-bold text-green-600">At Par</div>
+                    <div className="text-xs text-green-600">with UCR</div>
+                  </div>
+                  <div className="bg-amber-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">Diagnostic</div>
+                    <div className="text-xl font-bold text-amber-600">Mid-tier</div>
+                    <div className="text-xs text-amber-600">market position</div>
+                  </div>
+                  <div className="bg-purple-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">Restorative</div>
+                    <div className="text-xl font-bold text-purple-600">5%</div>
+                    <div className="text-xs text-purple-600">below UCR</div>
                   </div>
                 </div>
               </CardContent>
