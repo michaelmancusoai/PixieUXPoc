@@ -34,17 +34,16 @@ export function Header() {
   return (
     <div className="flex flex-col combined-header">
       {/* Top Bar */}
-      <header className="bg-primary text-white py-3 px-4 flex items-center justify-between primary-header" style={{ backgroundColor: '#507286' }}>
+      <header className="bg-primary text-white py-4 px-4 flex items-center justify-between primary-header" style={{ backgroundColor: '#507286' }}>
         {/* Logo and Brand Name */}
         <div className="flex items-center">
           <Link href="/">
             <div className="flex items-center">
-              <div className="h-12 w-16 relative overflow-visible" style={{ marginLeft: '-16px' }}>
+              <div className="h-14 w-20 relative overflow-visible" style={{ marginLeft: '-20px' }}>
                 <img 
                   src={logoImage} 
                   alt="Pixie Dental Logo" 
-                  className="h-16 w-20 object-contain absolute -left-0 bottom-0 min-h-10" 
-                  style={{ transform: 'rotate(5deg)' }}
+                  className="h-24 w-28 object-contain absolute -left-0 bottom-0" 
                 />
               </div>
               <h1 className="text-lg md:text-xl font-semibold ml-3 text-white">
