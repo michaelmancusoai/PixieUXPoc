@@ -85,6 +85,7 @@ export interface WinItem {
   value?: number;
   savings?: number;
   icon?: string;
+  isAi?: boolean;
 }
 
 export interface DashboardData {

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { WinItem } from '../types';
 import {
@@ -13,11 +13,15 @@ import {
   FileCheck,
   FileText,
   Package,
+  RotateCcw,
   Send,
   TrendingDown,
   Video,
+  X,
   Zap
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface WinFeedProps {
   wins: WinItem[];
@@ -25,6 +29,22 @@ interface WinFeedProps {
 }
 
 const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
+  const [visibleWins, setVisibleWins] = useState<Set<string>>(new Set(wins.map(win => win.id)));
+  
+  const handleUndo = (winId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    
+    setVisibleWins(prevWins => {
+      const updatedWins = new Set(prevWins);
+      updatedWins.delete(winId);
+      return updatedWins;
+    });
+    
+    // Show undo notification (simulated here)
+    alert(`Undoing AI action: ${wins.find(w => w.id === winId)?.title}`);
+  };
+  
   const getAccentColorClass = () => {
     switch (accentColor) {
       case 'blue':
@@ -89,49 +109,125 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
         return 'bg-gray-100 text-gray-600';
     }
   };
+  
+  // Gets border color for AI-generated wins
+  const getBorderColor = (isAi?: boolean) => {
+    if (!isAi) return '';
+    
+    switch (accentColor) {
+      case 'blue':
+        return 'border-l-blue-400';
+      case 'teal':
+        return 'border-l-teal-400';
+      case 'indigo':
+        return 'border-l-indigo-400';
+      case 'amber':
+        return 'border-l-amber-400';
+      case 'green':
+        return 'border-l-green-400';
+      default:
+        return 'border-l-gray-400';
+    }
+  };
+  
+  const filteredWins = wins.filter(win => visibleWins.has(win.id));
+  
+  // Show empty state when all wins are dismissed
+  if (filteredWins.length === 0) {
+    return (
+      <Card>
+        <CardHeader className="pb-3">
+          <CardTitle className={`text-base ${getAccentColorClass()}`}>
+            AI Win Feed
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <div className="flex flex-col items-center justify-center py-8 text-center">
+            <div className={`rounded-full p-3 ${getIconBgColor()} mb-3`}>
+              <CheckCircle className="h-6 w-6" />
+            </div>
+            <h4 className="text-sm font-medium">All caught up!</h4>
+            <p className="text-sm text-gray-500 mt-1">You're ahead of schedule today.</p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <Card>
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <CardTitle className={`text-base ${getAccentColorClass()}`}>
           AI Win Feed
         </CardTitle>
+        <div className="text-xs text-gray-500">
+          {filteredWins.length} {filteredWins.length === 1 ? 'win' : 'wins'} today
+        </div>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="space-y-4">
-          {wins.map((win) => (
-            <div key={win.id} className="flex items-start space-x-3">
-              <div className={`rounded-full p-2 flex-shrink-0 ${getIconBgColor()}`}>
-                {getIcon(win.icon)}
-              </div>
-              
-              <div className="flex-1">
-                <h4 className="text-sm font-medium">{win.title}</h4>
-                {win.description && (
-                  <p className="text-sm text-gray-600">{win.description}</p>
-                )}
-                <div className="flex items-center mt-1 text-xs text-gray-500">
-                  <Clock className="h-3 w-3 mr-1" />
-                  <span>{win.timestamp}</span>
+      <CardContent className="pt-0 px-0">
+        <ScrollArea className="h-[220px] w-full">
+          <div className="px-6 space-y-3">
+            {filteredWins.map((win) => (
+              <div 
+                key={win.id} 
+                className={`flex items-start space-x-3 p-2 rounded-md border-l-4 ${getBorderColor(win.isAi)} hover:bg-gray-50`}
+              >
+                <div className={`rounded-full p-2 flex-shrink-0 ${getIconBgColor()}`}>
+                  {getIcon(win.icon)}
+                </div>
+                
+                <div className="flex-1">
+                  <div className="flex justify-between">
+                    <h4 className="text-sm font-medium">{win.title}</h4>
+                    {win.isAi && (
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-6 w-6 p-0 rounded-full hover:bg-gray-200"
+                        onClick={(e) => handleUndo(win.id, e)}
+                      >
+                        <RotateCcw className="h-3 w-3 text-gray-500" />
+                      </Button>
+                    )}
+                  </div>
                   
-                  {(win.value !== undefined || win.savings !== undefined) && (
-                    <>
-                      <span className="mx-2">•</span>
-                      <DollarSign className="h-3 w-3 mr-1" />
-                      <span>
-                        {win.value !== undefined 
-                          ? `$${win.value.toLocaleString()}` 
-                          : win.savings !== undefined 
-                            ? `Saved $${win.savings.toLocaleString()}` 
-                            : ''}
-                      </span>
-                    </>
+                  {win.description && (
+                    <p className="text-sm text-gray-600">{win.description}</p>
                   )}
+                  
+                  <div className="flex items-center mt-1 text-xs text-gray-500">
+                    <Clock className="h-3 w-3 mr-1" />
+                    <span>{win.timestamp}</span>
+                    
+                    {(win.value !== undefined || win.savings !== undefined) && (
+                      <>
+                        <span className="mx-2">•</span>
+                        <DollarSign className="h-3 w-3 mr-1" />
+                        <span>
+                          {win.value !== undefined 
+                            ? `$${win.value.toLocaleString()}` 
+                            : win.savings !== undefined 
+                              ? `Saved $${win.savings.toLocaleString()}` 
+                              : ''}
+                        </span>
+                      </>
+                    )}
+                    
+                    {/* Add an AI badge for AI-generated wins */}
+                    {win.isAi && (
+                      <>
+                        <span className="mx-2">•</span>
+                        <span className="bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full text-[10px]">
+                          AI
+                        </span>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   );

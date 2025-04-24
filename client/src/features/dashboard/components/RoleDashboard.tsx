@@ -15,9 +15,9 @@ import {
   Stethoscope, 
   Activity, 
   UserCheck, 
-  MessageCircle as MessageCircleIcon, 
+  MessageCircle, 
   CheckCircle2, 
-  LightbulbIcon,
+  Lightbulb,
   Plus 
 } from 'lucide-react';
 
@@ -132,7 +132,7 @@ const RoleDashboard: React.FC = () => {
           <CardContent className="p-4">
             <div className="flex items-start space-x-3">
               <div className="bg-amber-100 p-2 rounded-full flex-shrink-0">
-                <LightbulbIcon className="h-5 w-5 text-amber-600" />
+                <Lightbulb className="h-5 w-5 text-amber-600" />
               </div>
               <div className="flex-1">
                 <h3 className="font-medium text-amber-800 flex items-center">
