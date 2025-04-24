@@ -703,18 +703,54 @@ const RoleDashboard: React.FC = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="pt-0">
-              <div className="space-y-4">
-                {dashboardData.actionItems.map((item) => (
-                  <ActionItem
-                    key={item.id}
-                    item={{
-                      ...item,
-                      completed: completedActions.has(item.id),
-                    }}
-                    accentColor={roleConfig.accentColor}
-                    onComplete={handleActionComplete}
-                  />
-                ))}
+              {/* High Priority Group */}
+              <div className="mb-6">
+                <h3 className="text-sm font-medium text-gray-700 mb-3">High Priority</h3>
+                <div className="space-y-4">
+                  {dashboardData.actionItems
+                    .filter(item => item.priority === 1)
+                    .map((item) => (
+                      <ActionItem
+                        key={item.id}
+                        item={{
+                          ...item,
+                          completed: completedActions.has(item.id),
+                        }}
+                        accentColor={roleConfig.accentColor}
+                        onComplete={handleActionComplete}
+                      />
+                    ))}
+                </div>
+                {dashboardData.actionItems.filter(item => item.priority === 1).length === 0 && (
+                  <div className="text-sm text-gray-500 italic p-3 bg-gray-50 rounded-md text-center">
+                    No high priority items at the moment
+                  </div>
+                )}
+              </div>
+              
+              {/* What's Next Group */}
+              <div>
+                <h3 className="text-sm font-medium text-gray-700 mb-3">What's Next</h3>
+                <div className="space-y-4">
+                  {dashboardData.actionItems
+                    .filter(item => item.priority !== 1)
+                    .map((item) => (
+                      <ActionItem
+                        key={item.id}
+                        item={{
+                          ...item,
+                          completed: completedActions.has(item.id),
+                        }}
+                        accentColor={roleConfig.accentColor}
+                        onComplete={handleActionComplete}
+                      />
+                    ))}
+                </div>
+                {dashboardData.actionItems.filter(item => item.priority !== 1).length === 0 && (
+                  <div className="text-sm text-gray-500 italic p-3 bg-gray-50 rounded-md text-center">
+                    No upcoming items at the moment
+                  </div>
+                )}
               </div>
               {/* Empty-Impact State */}
               {dashboardData.actionItems.every(item => completedActions.has(item.id)) && (

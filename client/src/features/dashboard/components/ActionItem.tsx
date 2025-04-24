@@ -250,13 +250,6 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
                 )}
               </h3>
               <div className="flex space-x-2">
-                <Badge 
-                  variant="outline" 
-                  className={`text-xs ${getPriorityColor()}`}
-                >
-                  P{item.priority}
-                </Badge>
-                
                 {item.dueIn && (
                   <Badge 
                     variant="outline" 
