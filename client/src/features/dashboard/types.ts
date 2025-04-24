@@ -23,7 +23,7 @@ export const ROLE_CONFIGS: Record<UserRole, RoleConfig> = {
     title: 'Hygienist',
     description: 'Cleanings, preventive care, and patient education',
     accentColor: 'teal',
-    icon: 'Toothbrush',
+    icon: 'Activity',
   },
   provider: {
     title: 'Provider / Dentist',

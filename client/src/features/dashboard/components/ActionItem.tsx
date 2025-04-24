@@ -23,7 +23,7 @@ import {
   Phone,
   Send,
   Smile,
-  Tool,
+  Wrench,
   TrendingUp,
   UserPlus,
   BarChart2,
@@ -63,7 +63,7 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
       case 'FileText':
         return <FileText className="h-5 w-5" />;
       case 'Tool':
-        return <Tool className="h-5 w-5" />;
+        return <Wrench className="h-5 w-5" />;
       case 'Smile':
         return <Smile className="h-5 w-5" />;
       case 'FileSignature':

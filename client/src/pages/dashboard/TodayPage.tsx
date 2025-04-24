@@ -1,11 +1,13 @@
-import { Dashboard } from "@/components/Dashboard";
+import React from 'react';
 import { NavigationWrapper } from "@/components/NavigationWrapper";
+import RoleDashboard from '../../features/dashboard/components/RoleDashboard';
 
 export default function TodayPage() {
   return (
     <NavigationWrapper>
-      <h1 className="text-2xl font-bold mb-6">Today at a Glance</h1>
-      <Dashboard />
+      <div className="container mx-auto py-4">
+        <RoleDashboard />
+      </div>
     </NavigationWrapper>
   );
 }

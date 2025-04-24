@@ -13,7 +13,7 @@ import {
   Building,
   Receipt,
   Stethoscope,
-  Toothbrush,
+  Activity,
   UserCheck
 } from 'lucide-react';
 
@@ -29,7 +29,7 @@ const RoleSelector: React.FC<RoleSelectorProps> = ({ currentRole, onRoleChange }
       case 'frontOffice':
         return <UserCheck className="h-4 w-4 text-blue-600" />;
       case 'hygienist':
-        return <Toothbrush className="h-4 w-4 text-teal-600" />;
+        return <Activity className="h-4 w-4 text-teal-600" />;
       case 'provider':
         return <Stethoscope className="h-4 w-4 text-indigo-600" />;
       case 'billing':
