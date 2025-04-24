@@ -1090,91 +1090,151 @@ export default function ClaimsPage() {
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
                 <div className="flex items-center justify-between">
-                  <CardTitle className="text-base font-medium">Claim Aging</CardTitle>
+                  <CardTitle className="text-base font-medium">Claims Lifecycle and Aging</CardTitle>
                   <span className="text-xs text-muted-foreground">Total: ${(agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90).toFixed(0)}</span>
                 </div>
               </CardHeader>
               <CardContent className="p-5">
-                {/* Progress bar visualization */}
-                <div className="mb-5">
-                  <div className="flex h-2 rounded-full overflow-hidden bg-gray-100">
-                    {/* Calculate percentages */}
-                    {(() => {
-                      const total = agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90;
-                      const under30Pct = (agingBuckets.under30 / total) * 100;
-                      const days30to60Pct = (agingBuckets.days30to60 / total) * 100;
-                      const days60to90Pct = (agingBuckets.days60to90 / total) * 100;
-                      const over90Pct = (agingBuckets.over90 / total) * 100;
+                {/* Claims Status Flow */}
+                <div className="mb-6">
+                  <h4 className="text-sm font-medium mb-3">Claims Status Flow</h4>
+                  <div className="bg-muted/20 p-4 rounded-lg border">
+                    <div className="mb-4 flex items-center">
+                      <div className="flex-1 h-1 bg-gray-200 relative">
+                        {/* Status flow dots */}
+                        <div className="h-3 w-3 rounded-full absolute -top-1 left-0 bg-gray-100 border-2 border-gray-400"></div>
+                        <div className="h-3 w-3 rounded-full absolute -top-1 left-1/3 bg-blue-100 border-2 border-blue-400"></div>
+                        <div className="h-3 w-3 rounded-full absolute -top-1 left-2/3 bg-amber-100 border-2 border-amber-400"></div>
+                        <div className="h-3 w-3 rounded-full absolute -top-1 right-0 bg-green-100 border-2 border-green-400"></div>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-4 gap-0">
+                      {/* Not Sent */}
+                      <div className="flex flex-col items-center">
+                        <div className="text-xs font-medium text-center text-gray-700 mb-1">Not Submitted</div>
+                        <div className="text-lg font-bold text-gray-800 mb-1">14</div>
+                        <div className="text-xs text-gray-600 mb-1">$4,325</div>
+                        <div className="flex space-x-1 text-xs text-gray-500">
+                          <Clock className="h-3 w-3" />
+                          <span>Avg: 2d</span>
+                        </div>
+                      </div>
                       
-                      return (
-                        <>
-                          <div className="bg-green-500 h-full" style={{ width: `${under30Pct}%` }}></div>
-                          <div className="bg-blue-500 h-full" style={{ width: `${days30to60Pct}%` }}></div>
-                          <div className="bg-amber-500 h-full" style={{ width: `${days60to90Pct}%` }}></div>
-                          <div className="bg-red-500 h-full" style={{ width: `${over90Pct}%` }}></div>
-                        </>
-                      );
-                    })()}
-                  </div>
-                  
-                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                    <div>Current</div>
-                    <div>30 Days</div>
-                    <div>60 Days</div>
-                    <div>90+ Days</div>
+                      {/* Sent */}
+                      <div className="flex flex-col items-center">
+                        <div className="text-xs font-medium text-center text-blue-700 mb-1">Submitted</div>
+                        <div className="text-lg font-bold text-blue-800 mb-1">167</div>
+                        <div className="text-xs text-blue-600 mb-1">$52,180</div>
+                        <div className="flex space-x-1 text-xs text-blue-500">
+                          <Clock className="h-3 w-3" />
+                          <span>Avg: 1d</span>
+                        </div>
+                      </div>
+                      
+                      {/* Pending */}
+                      <div className="flex flex-col items-center">
+                        <div className="text-xs font-medium text-center text-amber-700 mb-1">EOBs in Progress</div>
+                        <div className="text-lg font-bold text-amber-800 mb-1">19</div>
+                        <div className="text-xs text-amber-600 mb-1">$6,845</div>
+                        <div className="flex space-x-1 text-xs text-amber-500">
+                          <Clock className="h-3 w-3" />
+                          <span>Avg: 14d</span>
+                        </div>
+                      </div>
+                      
+                      {/* Completed */}
+                      <div className="flex flex-col items-center">
+                        <div className="text-xs font-medium text-center text-green-700 mb-1">Completed</div>
+                        <div className="text-lg font-bold text-green-800 mb-1">7,986</div>
+                        <div className="text-xs text-green-600 mb-1">$2,476,325</div>
+                        <div className="flex space-x-1 text-xs text-green-500">
+                          <Clock className="h-3 w-3" />
+                          <span>Avg: 22d</span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 
-                {/* Aging buckets */}
-                <div className="grid grid-cols-4 gap-4">
-                  <div className="bg-green-50 p-3 rounded-lg border border-green-100">
-                    <div className="flex items-center">
-                      <div className="mr-2 h-3 w-3 rounded-full bg-green-500"></div>
-                      <div className="text-xs font-medium text-muted-foreground">0-30 Days</div>
-                    </div>
-                    <div className="mt-2">
-                      <div className="text-xl font-bold text-green-600">${agingBuckets.under30.toFixed(0)}</div>
-                      <div className="text-xs text-green-700">
-                        {agingBuckets.under30 > 0 ? ((agingBuckets.under30 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
-                      </div>
+                {/* Aging Section */}
+                <div>
+                  <h4 className="text-sm font-medium mb-3">Aging Analysis</h4>
+                  
+                  {/* Progress bar visualization */}
+                  <div className="mb-2">
+                    <div className="flex h-2 rounded-full overflow-hidden bg-gray-100">
+                      {/* Calculate percentages */}
+                      {(() => {
+                        const total = agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90;
+                        const under30Pct = (agingBuckets.under30 / total) * 100;
+                        const days30to60Pct = (agingBuckets.days30to60 / total) * 100;
+                        const days60to90Pct = (agingBuckets.days60to90 / total) * 100;
+                        const over90Pct = (agingBuckets.over90 / total) * 100;
+                        
+                        return (
+                          <>
+                            <div className="bg-green-500 h-full" style={{ width: `${under30Pct}%` }}></div>
+                            <div className="bg-blue-500 h-full" style={{ width: `${days30to60Pct}%` }}></div>
+                            <div className="bg-amber-500 h-full" style={{ width: `${days60to90Pct}%` }}></div>
+                            <div className="bg-red-500 h-full" style={{ width: `${over90Pct}%` }}></div>
+                          </>
+                        );
+                      })()}
                     </div>
                   </div>
                   
-                  <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
-                    <div className="flex items-center">
-                      <div className="mr-2 h-3 w-3 rounded-full bg-blue-500"></div>
-                      <div className="text-xs font-medium text-muted-foreground">30-60 Days</div>
-                    </div>
-                    <div className="mt-2">
-                      <div className="text-xl font-bold text-blue-600">${agingBuckets.days30to60.toFixed(0)}</div>
-                      <div className="text-xs text-blue-700">
-                        {agingBuckets.days30to60 > 0 ? ((agingBuckets.days30to60 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                  {/* Aging buckets */}
+                  <div className="grid grid-cols-4 gap-4">
+                    <div className="bg-green-50 p-3 rounded-lg border border-green-100">
+                      <div className="flex items-center">
+                        <div className="mr-2 h-3 w-3 rounded-full bg-green-500"></div>
+                        <div className="text-xs font-medium text-muted-foreground">0-30 Days</div>
+                      </div>
+                      <div className="mt-2">
+                        <div className="text-xl font-bold text-green-600">${agingBuckets.under30.toFixed(0)}</div>
+                        <div className="text-xs text-green-700">
+                          {agingBuckets.under30 > 0 ? ((agingBuckets.under30 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="bg-amber-50 p-3 rounded-lg border border-amber-100">
-                    <div className="flex items-center">
-                      <div className="mr-2 h-3 w-3 rounded-full bg-amber-500"></div>
-                      <div className="text-xs font-medium text-muted-foreground">60-90 Days</div>
-                    </div>
-                    <div className="mt-2">
-                      <div className="text-xl font-bold text-amber-600">${agingBuckets.days60to90.toFixed(0)}</div>
-                      <div className="text-xs text-amber-700">
-                        {agingBuckets.days60to90 > 0 ? ((agingBuckets.days60to90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                    
+                    <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                      <div className="flex items-center">
+                        <div className="mr-2 h-3 w-3 rounded-full bg-blue-500"></div>
+                        <div className="text-xs font-medium text-muted-foreground">30-60 Days</div>
+                      </div>
+                      <div className="mt-2">
+                        <div className="text-xl font-bold text-blue-600">${agingBuckets.days30to60.toFixed(0)}</div>
+                        <div className="text-xs text-blue-700">
+                          {agingBuckets.days30to60 > 0 ? ((agingBuckets.days30to60 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="bg-red-50 p-3 rounded-lg border border-red-100">
-                    <div className="flex items-center">
-                      <div className="mr-2 h-3 w-3 rounded-full bg-red-500"></div>
-                      <div className="text-xs font-medium text-muted-foreground">90+ Days</div>
+                    
+                    <div className="bg-amber-50 p-3 rounded-lg border border-amber-100">
+                      <div className="flex items-center">
+                        <div className="mr-2 h-3 w-3 rounded-full bg-amber-500"></div>
+                        <div className="text-xs font-medium text-muted-foreground">60-90 Days</div>
+                      </div>
+                      <div className="mt-2">
+                        <div className="text-xl font-bold text-amber-600">${agingBuckets.days60to90.toFixed(0)}</div>
+                        <div className="text-xs text-amber-700">
+                          {agingBuckets.days60to90 > 0 ? ((agingBuckets.days60to90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                        </div>
+                      </div>
                     </div>
-                    <div className="mt-2">
-                      <div className="text-xl font-bold text-red-600">${agingBuckets.over90.toFixed(0)}</div>
-                      <div className="text-xs text-red-700">
-                        {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                    
+                    <div className="bg-red-50 p-3 rounded-lg border border-red-100">
+                      <div className="flex items-center">
+                        <div className="mr-2 h-3 w-3 rounded-full bg-red-500"></div>
+                        <div className="text-xs font-medium text-muted-foreground">90+ Days</div>
+                      </div>
+                      <div className="mt-2">
+                        <div className="text-xl font-bold text-red-600">${agingBuckets.over90.toFixed(0)}</div>
+                        <div className="text-xs text-red-700">
+                          {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                        </div>
                       </div>
                     </div>
                   </div>
