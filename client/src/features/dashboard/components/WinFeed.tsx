@@ -6,14 +6,15 @@ import {
   BarChart2,
   Bell,
   Calendar,
+  Check,
   CheckCircle,
   Clock,
   CreditCard,
   DollarSign,
+  Eye,
   FileCheck,
   FileText,
   Package,
-  RotateCcw,
   Send,
   TrendingDown,
   Video,
@@ -21,7 +22,6 @@ import {
   Zap
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface WinFeedProps {
   wins: WinItem[];
@@ -31,7 +31,7 @@ interface WinFeedProps {
 const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
   const [visibleWins, setVisibleWins] = useState<Set<string>>(new Set(wins.map(win => win.id)));
   
-  const handleUndo = (winId: string, e: React.MouseEvent) => {
+  const handleDismiss = (winId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     e.preventDefault();
     
@@ -40,9 +40,14 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
       updatedWins.delete(winId);
       return updatedWins;
     });
+  };
+  
+  const handleViewDetails = (winId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
     
-    // Show undo notification (simulated here)
-    alert(`Undoing AI action: ${wins.find(w => w.id === winId)?.title}`);
+    // In a real app, this would open a modal or navigate to a detailed view
+    alert(`Viewing details for: ${wins.find(w => w.id === winId)?.title}`);
   };
   
   const getAccentColorClass = () => {
@@ -65,6 +70,7 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
   const getIcon = (iconName?: string) => {
     switch (iconName) {
       case 'CheckCircle':
+      case 'CheckCircle2':
         return <CheckCircle className="h-5 w-5" />;
       case 'Calendar':
         return <Calendar className="h-5 w-5" />;
@@ -138,7 +144,7 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className={`text-base ${getAccentColorClass()}`}>
-            AI Win Feed
+            Win Feed
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
@@ -158,15 +164,15 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
     <Card>
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <CardTitle className={`text-base ${getAccentColorClass()}`}>
-          AI Win Feed
+          Win Feed
         </CardTitle>
         <div className="text-xs text-gray-500">
           {filteredWins.length} {filteredWins.length === 1 ? 'win' : 'wins'} today
         </div>
       </CardHeader>
-      <CardContent className="pt-0 px-0">
-        <ScrollArea className="h-[220px] w-full">
-          <div className="px-6 space-y-3">
+      <CardContent className="pt-0">
+        <div className="max-h-[300px] overflow-y-auto pr-2">
+          <div className="space-y-3 px-2">
             {filteredWins.map((win) => (
               <div 
                 key={win.id} 
@@ -179,17 +185,26 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
                 <div className="flex-1">
                   <div className="flex justify-between">
                     <h4 className="text-sm font-medium">{win.title}</h4>
-                    {win.isAi && (
+                    <div className="flex items-center space-x-1">
                       <Button 
                         variant="ghost" 
                         size="sm" 
                         className="h-6 w-6 p-0 rounded-full hover:bg-gray-200"
-                        onClick={(e) => handleUndo(win.id, e)}
-                        title="Undo this AI action"
+                        onClick={(e) => handleViewDetails(win.id, e)}
+                        title="View details"
                       >
-                        <RotateCcw className="h-3 w-3 text-gray-500" />
+                        <Eye className="h-3 w-3 text-gray-500" />
                       </Button>
-                    )}
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="h-6 w-6 p-0 rounded-full hover:bg-gray-200"
+                        onClick={(e) => handleDismiss(win.id, e)}
+                        title="Clear notification"
+                      >
+                        <Check className="h-3 w-3 text-gray-500" />
+                      </Button>
+                    </div>
                   </div>
                   
                   {win.description && (
@@ -228,12 +243,7 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
               </div>
             ))}
           </div>
-        </ScrollArea>
-        {filteredWins.some(win => win.isAi) && (
-          <div className="pt-2 pb-1 px-6 text-xs text-center text-muted-foreground border-t mt-2">
-            Swipe left to undo any AI action within 12h
-          </div>
-        )}
+        </div>
       </CardContent>
     </Card>
   );
