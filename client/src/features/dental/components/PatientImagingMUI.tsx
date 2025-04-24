@@ -49,7 +49,6 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
     { id: 'xrays', label: 'X-Rays' },
     { id: 'intraoral', label: 'Intraoral Photos' },
     { id: 'extraoral', label: 'Extraoral Photos' },
-    { id: 'documents', label: 'Documents' },
   ];
   
   const mockImages = [
@@ -171,9 +170,12 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
   
   return (
     <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 3 }}>
-      <Typography variant="h4" gutterBottom>
-        Patient Imaging: {patientName}
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+        <ImageIcon sx={{ color: '#4f46e5', mr: 1.5, height: 24, width: 24 }} />
+        <Typography variant="h5" sx={{ fontWeight: 500 }}>
+          Patient Imaging: {patientName}
+        </Typography>
+      </Box>
       
       {selectedImage ? (
         // Image Viewer
@@ -190,13 +192,41 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
             }
             action={
               <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button variant="outlined" size="small" startIcon={<ZoomInIcon />}>
+                <Button 
+                  variant="outlined" 
+                  size="small" 
+                  startIcon={<ZoomInIcon />}
+                  sx={{ 
+                    borderColor: '#4f46e5', 
+                    color: '#4f46e5',
+                    '&:hover': { borderColor: '#4338ca', bgcolor: 'rgba(79, 70, 229, 0.04)' }
+                  }}
+                >
                   Zoom
                 </Button>
-                <Button variant="outlined" size="small" startIcon={<RotateRightIcon />}>
+                <Button 
+                  variant="outlined" 
+                  size="small" 
+                  startIcon={<RotateRightIcon />}
+                  sx={{ 
+                    borderColor: '#4f46e5', 
+                    color: '#4f46e5',
+                    '&:hover': { borderColor: '#4338ca', bgcolor: 'rgba(79, 70, 229, 0.04)' }
+                  }}
+                >
                   Rotate
                 </Button>
-                <Button variant="outlined" size="small" onClick={handleCloseImage} startIcon={<GridViewIcon />}>
+                <Button 
+                  variant="outlined" 
+                  size="small" 
+                  onClick={handleCloseImage} 
+                  startIcon={<GridViewIcon />}
+                  sx={{ 
+                    borderColor: '#4f46e5', 
+                    color: '#4f46e5',
+                    '&:hover': { borderColor: '#4338ca', bgcolor: 'rgba(79, 70, 229, 0.04)' }
+                  }}
+                >
                   Gallery
                 </Button>
               </Box>
@@ -246,6 +276,15 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
               value={tabValue} 
               onChange={handleTabChange}
               aria-label="image category tabs"
+              sx={{ 
+                '& .MuiTabs-indicator': { 
+                  backgroundColor: '#4f46e5' 
+                },
+                '& .Mui-selected': { 
+                  color: '#4f46e5 !important',
+                  fontWeight: 'bold'
+                }
+              }}
             >
               {imageCategories.map((category, index) => (
                 <Tab key={category.id} label={category.label} id={`image-tab-${index}`} />
@@ -255,7 +294,12 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
               <Button variant="outlined" size="small" startIcon={<SearchIcon />}>
                 Search
               </Button>
-              <Button variant="contained" size="small" color="primary" startIcon={<AddIcon />}>
+              <Button 
+                variant="contained" 
+                size="small" 
+                startIcon={<AddIcon />}
+                sx={{ bgcolor: '#4f46e5', '&:hover': { bgcolor: '#4338ca' } }}
+              >
                 Add Images
               </Button>
             </Box>
@@ -338,6 +382,7 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
                         variant="contained" 
                         size="small"
                         startIcon={<AddIcon />}
+                        sx={{ bgcolor: '#4f46e5', '&:hover': { bgcolor: '#4338ca' } }}
                       >
                         Add Images
                       </Button>

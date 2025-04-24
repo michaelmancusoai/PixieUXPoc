@@ -99,7 +99,7 @@ const PatientHeader = ({ onTabChange, currentTab = "toothChart", onStartExamMode
             value="images" 
             className="px-4 py-2 text-sm font-medium data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none"
           >
-            Images
+            Imaging
           </TabsTrigger>
         </TabsList>
         </div>
