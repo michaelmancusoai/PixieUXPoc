@@ -384,14 +384,16 @@ const RoleDashboard: React.FC = () => {
             
 
             
-            {/* Nav Buttons - Right Side */}
-            <div className="absolute right-2 top-1/3 flex flex-col space-y-2">
+            {/* Nav Buttons - Left and Right Sides */}
+            <div className="absolute left-2 top-1/3">
               <button 
                 className="nes-btn is-primary px-2 py-0"
                 onClick={prevVariant}
               >
                 ◀
               </button>
+            </div>
+            <div className="absolute right-2 top-1/3">
               <button 
                 className="nes-btn is-primary px-2 py-0"
                 onClick={nextVariant}
@@ -469,14 +471,16 @@ const RoleDashboard: React.FC = () => {
             
 
             
-            {/* Nav Buttons - Right Side */}
-            <div className="absolute right-2 top-1/3 flex flex-col space-y-2">
+            {/* Nav Buttons - Left and Right Sides */}
+            <div className="absolute left-2 top-1/3">
               <button 
                 className="nes-btn is-warning px-2 py-0"
                 onClick={prevVariant}
               >
                 ◀
               </button>
+            </div>
+            <div className="absolute right-2 top-1/3">
               <button 
                 className="nes-btn is-warning px-2 py-0"
                 onClick={nextVariant}
@@ -525,14 +529,16 @@ const RoleDashboard: React.FC = () => {
             
 
             
-            {/* Nav Buttons - Right Side */}
-            <div className="absolute right-2 top-1/3 flex flex-col space-y-2">
+            {/* Nav Buttons - Left and Right Sides */}
+            <div className="absolute left-2 top-1/3">
               <button 
                 className="nes-btn is-error px-2 py-0"
                 onClick={prevVariant}
               >
                 ◀
               </button>
+            </div>
+            <div className="absolute right-2 top-1/3">
               <button 
                 className="nes-btn is-error px-2 py-0"
                 onClick={nextVariant}
