@@ -385,8 +385,8 @@ const RoleDashboard: React.FC = () => {
     if (level === GameLevel.LEVEL_1) {
       return (
         <div className="py-2 font-vt323">
-          <div className="nes-container is-rounded with-title pixelated border-blue-500 bg-blue-100">
-            <p className="title bg-blue-500 text-white font-press-start text-xs">LEVEL 1: SKY QUEST</p>
+          <div className="nes-container is-rounded pixelated border-blue-500 bg-blue-100 overflow-hidden">
+            <div className="bg-blue-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 1: SKY QUEST</div>
             
             <div className="flex justify-between items-start mb-2">
               <div>
@@ -405,10 +405,10 @@ const RoleDashboard: React.FC = () => {
             </div>
             
             {/* Prompt Carousel */}
-            <div className="nes-container is-rounded with-title mt-2 mb-2 pixelated text-sm">
-              <p className="title bg-blue-500 text-white px-2 text-xs font-press-start">
+            <div className="nes-container is-rounded mt-2 mb-2 pixelated text-sm overflow-hidden">
+              <div className="bg-blue-500 text-white py-1 -mx-4 -mt-4 mb-2 text-xs font-press-start text-center">
                 {promptVariants[currentVariantIndex].name}
-              </p>
+              </div>
               
               <div className="message-list">
                 <div className="nes-balloon from-left">
@@ -453,8 +453,8 @@ const RoleDashboard: React.FC = () => {
     if (level === GameLevel.COMPLETED_2) {
       return (
         <div className="text-center py-2 font-vt323">
-          <div className="nes-container is-rounded is-warning with-title pixelated">
-            <p className="title font-press-start text-sm">LEVEL 2 COMPLETE!</p>
+          <div className="nes-container is-rounded is-warning pixelated overflow-hidden">
+            <div className="bg-yellow-500 font-press-start text-sm text-white py-1 -mx-4 -mt-4 mb-4">LEVEL 2 COMPLETE!</div>
             <i className="nes-icon medal is-large mb-2"></i>
             <p className="text-md mb-3">
               CHECKOUT SPEED +2<br/>
@@ -488,8 +488,8 @@ const RoleDashboard: React.FC = () => {
     if (level === GameLevel.LEVEL_2) {
       return (
         <div className="py-2 font-vt323">
-          <div className="nes-container is-rounded with-title pixelated border-amber-500 bg-amber-100">
-            <p className="title bg-amber-500 text-white font-press-start text-xs">LEVEL 2: DESERT QUEST</p>
+          <div className="nes-container is-rounded pixelated border-amber-500 bg-amber-100 overflow-hidden">
+            <div className="bg-amber-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 2: DESERT QUEST</div>
             
             <div className="flex justify-between items-start mb-2">
               <div>
@@ -508,10 +508,10 @@ const RoleDashboard: React.FC = () => {
             </div>
             
             {/* Prompt Carousel */}
-            <div className="nes-container is-rounded with-title mt-2 mb-2 pixelated text-sm">
-              <p className="title bg-amber-500 text-white px-2 text-xs font-press-start">
+            <div className="nes-container is-rounded mt-2 mb-2 pixelated text-sm overflow-hidden">
+              <div className="bg-amber-500 text-white py-1 -mx-4 -mt-4 mb-2 text-xs font-press-start text-center">
                 {promptVariants[currentVariantIndex].name}
-              </p>
+              </div>
               
               <div className="message-list">
                 <div className="nes-balloon from-left">
@@ -556,8 +556,8 @@ const RoleDashboard: React.FC = () => {
     if (level === GameLevel.LEVEL_FINAL) {
       return (
         <div className="py-2 font-vt323">
-          <div className="nes-container is-rounded with-title pixelated border-orange-500 bg-orange-100">
-            <p className="title bg-orange-600 text-white font-press-start text-xs">FINAL LEVEL: LAVA QUEST</p>
+          <div className="nes-container is-rounded pixelated border-orange-500 bg-orange-100 overflow-hidden">
+            <div className="bg-orange-600 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">FINAL LEVEL: LAVA QUEST</div>
             
             <div className="flex justify-between items-start mb-2">
               <div>
@@ -576,10 +576,10 @@ const RoleDashboard: React.FC = () => {
             </div>
             
             {/* Prompt Carousel */}
-            <div className="nes-container is-rounded with-title mt-2 mb-2 pixelated text-sm">
-              <p className="title bg-orange-600 text-white px-2 text-xs font-press-start">
+            <div className="nes-container is-rounded mt-2 mb-2 pixelated text-sm overflow-hidden">
+              <div className="bg-orange-600 text-white py-1 -mx-4 -mt-4 mb-2 text-xs font-press-start text-center">
                 {promptVariants[currentVariantIndex].name}
-              </p>
+              </div>
               
               <div className="message-list">
                 <div className="nes-balloon from-left">
@@ -624,8 +624,8 @@ const RoleDashboard: React.FC = () => {
     if (level === GameLevel.VICTORY) {
       return (
         <div className="text-center py-2 font-vt323">
-          <div className="nes-container is-rounded is-dark with-title pixelated">
-            <p className="title font-press-start text-sm text-white">VICTORY!</p>
+          <div className="nes-container is-rounded is-dark pixelated overflow-hidden">
+            <div className="font-press-start text-sm text-white bg-black py-1 -mx-4 -mt-4 mb-4">VICTORY!</div>
             <i className="nes-icon trophy is-large mb-3"></i>
             <p className="text-xl text-success mb-2">CHALLENGE CONQUERED!</p>
             <p className="text-md text-warning mb-3">10 COINS COLLECTED</p>
