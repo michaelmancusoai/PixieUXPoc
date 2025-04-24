@@ -416,7 +416,7 @@ const RoleDashboard: React.FC = () => {
               </div>
               
               {/* Speech bubble next to pokemon */}
-              <div className="flex-1">
+              <div className="flex-1 pr-10">
                 <div className="nes-balloon from-left mt-0">
                   <p className="text-lg sm:text-xl font-medium leading-tight">
                     "{promptVariants[currentVariantIndex].prompt}"<br/>
@@ -501,7 +501,7 @@ const RoleDashboard: React.FC = () => {
               </div>
               
               {/* Speech bubble next to pokemon */}
-              <div className="flex-1">
+              <div className="flex-1 pr-10">
                 <div className="nes-balloon from-left mt-0">
                   <p className="text-lg sm:text-xl font-medium leading-tight">
                     "{promptVariants[currentVariantIndex].prompt}"<br/>
@@ -557,7 +557,7 @@ const RoleDashboard: React.FC = () => {
               </div>
               
               {/* Speech bubble next to pokemon */}
-              <div className="flex-1">
+              <div className="flex-1 pr-10">
                 <div className="nes-balloon from-left mt-0">
                   <p className="text-lg sm:text-xl font-medium leading-tight">
                     "{promptVariants[currentVariantIndex].prompt}"<br/>
