@@ -146,19 +146,24 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
   // Show empty state when no AI wins are found
   if (filteredWins.length === 0) {
     return (
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className={`text-base ${getAccentColorClass()}`}>
-            Pixie AI Agent
-          </CardTitle>
+      <Card className="h-full">
+        <CardHeader className="pb-2">
+          <div className="flex items-center">
+            <Zap className="h-4 w-4 text-purple-600 mr-2" />
+            <CardTitle className={`text-base ${getAccentColorClass()}`}>
+              Pixie AI Agent
+            </CardTitle>
+          </div>
         </CardHeader>
         <CardContent className="pt-0 pb-4">
-          <div className="flex flex-col items-center justify-center text-center">
-            <div className="rounded-full p-3 bg-purple-100 text-purple-800 mb-2">
-              <Zap className="h-5 w-5" />
+          <div className="flex flex-col items-center justify-center text-center py-16">
+            <div className="rounded-full p-4 bg-purple-100 text-purple-800 mb-3">
+              <Zap className="h-6 w-6" />
             </div>
             <h4 className="text-sm font-medium">AI is analyzing your day</h4>
-            <p className="text-xs text-gray-500 mt-1">You'll see time-saving insights here soon.</p>
+            <p className="text-xs text-gray-500 mt-1 max-w-[220px]">
+              You'll see time-saving insights here soon.
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -166,26 +171,29 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-3">
-        <CardTitle className={`text-base ${getAccentColorClass()}`}>
-          Pixie AI Agent
-        </CardTitle>
+    <Card className="h-full">
+      <CardHeader className="pb-2">
+        <div className="flex items-center">
+          <Zap className="h-4 w-4 text-purple-600 mr-2" />
+          <CardTitle className={`text-base ${getAccentColorClass()}`}>
+            Pixie AI Agent
+          </CardTitle>
+        </div>
       </CardHeader>
       
-      <CardContent className="pt-0 pb-1">
-        <div className="space-y-2 pr-1">
+      <CardContent className="pt-0 pb-4">
+        <div className="space-y-3">
           {filteredWins.map((win) => (
             <div 
               key={win.id} 
-              className={`flex items-start space-x-3 p-2 rounded-md border-l-4 ${getBorderColor(win.isAi)} hover:bg-gray-50`}
+              className={`flex items-start space-x-3 p-3 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow ${getBorderColor(win.isAi)} hover:bg-gray-50`}
             >
               <div className={`rounded-full p-2 flex-shrink-0 ${getIconBgColor()}`}>
                 {getIcon(win.icon)}
               </div>
               
               <div className="flex-1">
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center">
                   <h4 className="text-sm font-medium">{win.title}</h4>
                   <div className="flex items-center space-x-1">
                     <Button 
@@ -210,16 +218,17 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
                 </div>
                 
                 {win.description && (
-                  <p className="text-sm text-gray-600">{win.description}</p>
+                  <p className="text-sm text-gray-600 mt-1">{win.description}</p>
                 )}
                 
-                <div className="flex items-center mt-1 text-xs text-gray-500">
-                  <Clock className="h-3 w-3 mr-1" />
-                  <span>{win.timestamp}</span>
+                <div className="flex flex-wrap items-center mt-2 text-xs text-gray-500">
+                  <div className="flex items-center">
+                    <Clock className="h-3 w-3 mr-1" />
+                    <span>{win.timestamp}</span>
+                  </div>
                   
                   {(win.value !== undefined || win.savings !== undefined) && (
-                    <>
-                      <span className="mx-2">•</span>
+                    <div className="flex items-center ml-3">
                       <DollarSign className="h-3 w-3 mr-1" />
                       <span>
                         {win.value !== undefined 
@@ -228,18 +237,15 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
                             ? `Saved $${win.savings.toLocaleString()}` 
                             : ''}
                       </span>
-                    </>
+                    </div>
                   )}
                   
                   {/* Display merged AI and time saved pill */}
                   {win.timeSavedMin !== undefined && (
-                    <>
-                      <span className="mx-2">•</span>
-                      <span className="bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full text-[10px] flex items-center">
-                        <Zap className="h-2.5 w-2.5 mr-1" />
-                        AI Saved ~{win.timeSavedMin} min
-                      </span>
-                    </>
+                    <span className="ml-3 bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full text-[10px] flex items-center">
+                      <Zap className="h-2.5 w-2.5 mr-1" />
+                      AI Saved ~{win.timeSavedMin} min
+                    </span>
                   )}
                 </div>
               </div>
@@ -248,9 +254,9 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
           
           {/* AI Time Saved Summary Banner - at the bottom */}
           {filteredWins.length > 0 && (
-            <div className="mt-4 p-2 bg-purple-50 rounded-md border border-purple-100 flex items-center">
-              <div className="bg-purple-100 p-1.5 rounded-full mr-2">
-                <Zap className="h-4 w-4 text-purple-600" />
+            <div className="mt-5 py-3 px-4 bg-purple-50 rounded-lg border border-purple-100 flex items-center justify-center">
+              <div className="bg-purple-100 p-2 rounded-full mr-3">
+                <Zap className="h-5 w-5 text-purple-600" />
               </div>
               <span className="text-sm font-medium text-purple-700">
                 Pixie AI Saved me {totalTimeSaved} min Today
