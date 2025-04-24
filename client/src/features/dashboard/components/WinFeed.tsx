@@ -176,21 +176,6 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
         </div>
       </CardHeader>
       
-      {/* AI Time Saved Summary Banner */}
-      <div className="mx-4 mb-3 p-2 bg-purple-50 rounded-md border border-purple-100 flex items-center justify-between">
-        <div className="flex items-center">
-          <div className="bg-purple-100 p-1.5 rounded-full mr-2">
-            <Zap className="h-4 w-4 text-purple-600" />
-          </div>
-          <span className="text-sm font-medium text-purple-700">
-            Pixie AI Saved me {totalTimeSaved} min Today
-          </span>
-        </div>
-        <div className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-medium">
-          {filteredWins.length} tasks
-        </div>
-      </div>
-      
       <CardContent className="pt-0 pb-1">
         <div className="space-y-2 pr-1">
           {filteredWins.map((win) => (
@@ -263,6 +248,23 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
               </div>
             </div>
           ))}
+          
+          {/* AI Time Saved Summary Banner - at the bottom */}
+          {filteredWins.length > 0 && (
+            <div className="mt-4 p-2 bg-purple-50 rounded-md border border-purple-100 flex items-center justify-between">
+              <div className="flex items-center">
+                <div className="bg-purple-100 p-1.5 rounded-full mr-2">
+                  <Zap className="h-4 w-4 text-purple-600" />
+                </div>
+                <span className="text-sm font-medium text-purple-700">
+                  Pixie AI Saved me {totalTimeSaved} min Today
+                </span>
+              </div>
+              <div className="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-medium">
+                {filteredWins.length} tasks
+              </div>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
