@@ -405,28 +405,30 @@ const RoleDashboard: React.FC = () => {
             </div>
             
             {/* Prompt Carousel */}
-            <div className="nes-container is-rounded mt-2 mb-2 pixelated text-sm overflow-hidden">
-              <div className="bg-blue-500 text-white py-1 -mx-4 -mt-4 mb-2 text-xs font-press-start text-center">
-                {promptVariants[currentVariantIndex].name}
+            <div className="flex items-start mt-2 mb-2">
+              <div className="mr-2">
+                <i className="nes-bulbasaur"></i>
               </div>
-              
-              <div className="message-list">
+              <div className="flex-1">
                 <div className="nes-balloon from-left">
-                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].prompt}"</p>
+                  <p className="text-sm sm:text-base font-medium">
+                    "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
+                    <span className="text-blue-600 font-bold">Benefit: </span>
+                    "{promptVariants[currentVariantIndex].benefit}"
+                  </p>
                 </div>
-                <div className="nes-balloon from-right">
-                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].benefit}"</p>
+                <div className="text-xs text-center text-blue-600 font-press-start mt-1">
+                  {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
               
-              <div className="flex justify-between mt-3">
+              <div className="flex flex-col justify-center space-y-2 ml-2">
                 <button 
                   className="nes-btn is-primary px-2 py-0"
                   onClick={prevVariant}
                 >
                   ◀
                 </button>
-                
                 <button 
                   className="nes-btn is-primary px-2 py-0"
                   onClick={nextVariant}
@@ -508,28 +510,30 @@ const RoleDashboard: React.FC = () => {
             </div>
             
             {/* Prompt Carousel */}
-            <div className="nes-container is-rounded mt-2 mb-2 pixelated text-sm overflow-hidden">
-              <div className="bg-amber-500 text-white py-1 -mx-4 -mt-4 mb-2 text-xs font-press-start text-center">
-                {promptVariants[currentVariantIndex].name}
+            <div className="flex items-start mt-2 mb-2">
+              <div className="mr-2">
+                <i className="nes-charmander"></i>
               </div>
-              
-              <div className="message-list">
+              <div className="flex-1">
                 <div className="nes-balloon from-left">
-                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].prompt}"</p>
+                  <p className="text-sm sm:text-base font-medium">
+                    "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
+                    <span className="text-amber-600 font-bold">Benefit: </span>
+                    "{promptVariants[currentVariantIndex].benefit}"
+                  </p>
                 </div>
-                <div className="nes-balloon from-right">
-                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].benefit}"</p>
+                <div className="text-xs text-center text-amber-600 font-press-start mt-1">
+                  {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
               
-              <div className="flex justify-between mt-3">
+              <div className="flex flex-col justify-center space-y-2 ml-2">
                 <button 
                   className="nes-btn is-warning px-2 py-0"
                   onClick={prevVariant}
                 >
                   ◀
                 </button>
-                
                 <button 
                   className="nes-btn is-warning px-2 py-0"
                   onClick={nextVariant}
@@ -576,28 +580,30 @@ const RoleDashboard: React.FC = () => {
             </div>
             
             {/* Prompt Carousel */}
-            <div className="nes-container is-rounded mt-2 mb-2 pixelated text-sm overflow-hidden">
-              <div className="bg-orange-600 text-white py-1 -mx-4 -mt-4 mb-2 text-xs font-press-start text-center">
-                {promptVariants[currentVariantIndex].name}
+            <div className="flex items-start mt-2 mb-2">
+              <div className="mr-2">
+                <i className="nes-charizard"></i>
               </div>
-              
-              <div className="message-list">
+              <div className="flex-1">
                 <div className="nes-balloon from-left">
-                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].prompt}"</p>
+                  <p className="text-sm sm:text-base font-medium">
+                    "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
+                    <span className="text-orange-600 font-bold">Benefit: </span>
+                    "{promptVariants[currentVariantIndex].benefit}"
+                  </p>
                 </div>
-                <div className="nes-balloon from-right">
-                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].benefit}"</p>
+                <div className="text-xs text-center text-orange-600 font-press-start mt-1">
+                  {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
               
-              <div className="flex justify-between mt-3">
+              <div className="flex flex-col justify-center space-y-2 ml-2">
                 <button 
                   className="nes-btn is-error px-2 py-0"
                   onClick={prevVariant}
                 >
                   ◀
                 </button>
-                
                 <button 
                   className="nes-btn is-error px-2 py-0"
                   onClick={nextVariant}
