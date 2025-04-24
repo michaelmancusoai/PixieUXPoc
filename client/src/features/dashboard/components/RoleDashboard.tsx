@@ -402,6 +402,16 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
+            {/* Speech bubble at top */}
+            <div className="flex-1 pr-10 mb-6">
+              <div className="nes-balloon from-left mt-0 mb-0">
+                <p className="text-lg sm:text-xl font-medium leading-tight">
+                  "{promptVariants[currentVariantIndex].prompt}"<br/>
+                  <span className="text-blue-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
+                </p>
+              </div>
+            </div>
+            
             <div className="flex justify-between items-end">
               {/* Pokemon on left */}
               <div className="flex flex-col items-center">
@@ -411,17 +421,7 @@ const RoleDashboard: React.FC = () => {
                 </div>
               </div>
               
-              {/* Speech bubble to right of character */}
-              <div className="flex-1 ml-2">
-                <div className="nes-balloon from-left mt-0 mb-0">
-                  <p className="text-lg sm:text-xl font-medium leading-tight">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/>
-                    <span className="text-blue-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
-                  </p>
-                </div>
-              </div>
-              
-              {/* Coins below */}
+              {/* Coins at right */}
               <div className="flex justify-end pr-2">
                 {[0, 1, 2].map(index => renderCoin(index))}
               </div>
@@ -488,22 +488,22 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
+            {/* Speech bubble at top */}
+            <div className="flex-1 pr-10 mb-6">
+              <div className="nes-balloon from-left mt-0 mb-0">
+                <p className="text-lg sm:text-xl font-medium leading-tight">
+                  "{promptVariants[currentVariantIndex].prompt}"<br/>
+                  <span className="text-amber-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
+                </p>
+              </div>
+            </div>
+            
             <div className="flex justify-between items-end">
               {/* Pokemon on left */}
               <div className="flex flex-col items-center">
                 <i className={promptVariants[currentVariantIndex].character || "nes-charmander"}></i>
                 <div className="text-xs text-center text-amber-600 font-press-start mt-1 w-32 leading-tight">
                   {promptVariants[currentVariantIndex].name}
-                </div>
-              </div>
-              
-              {/* Speech bubble to right of character */}
-              <div className="flex-1 ml-2">
-                <div className="nes-balloon from-left mt-0 mb-0">
-                  <p className="text-lg sm:text-xl font-medium leading-tight">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/>
-                    <span className="text-amber-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
-                  </p>
                 </div>
               </div>
               
@@ -545,22 +545,22 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
+            {/* Speech bubble at top */}
+            <div className="flex-1 pr-10 mb-6">
+              <div className="nes-balloon from-left mt-0 mb-0">
+                <p className="text-lg sm:text-xl font-medium leading-tight">
+                  "{promptVariants[currentVariantIndex].prompt}"<br/>
+                  <span className="text-orange-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
+                </p>
+              </div>
+            </div>
+            
             <div className="flex justify-between items-end">
               {/* Pokemon on left */}
               <div className="flex flex-col items-center">
                 <i className={promptVariants[currentVariantIndex].character || "nes-charizard"}></i>
                 <div className="text-xs text-center text-orange-600 font-press-start mt-1 w-32 leading-tight">
                   {promptVariants[currentVariantIndex].name}
-                </div>
-              </div>
-              
-              {/* Speech bubble to right of character */}
-              <div className="flex-1 ml-2">
-                <div className="nes-balloon from-left mt-0 mb-0">
-                  <p className="text-lg sm:text-xl font-medium leading-tight">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/>
-                    <span className="text-orange-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
-                  </p>
                 </div>
               </div>
               
