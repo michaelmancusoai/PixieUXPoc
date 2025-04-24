@@ -39,12 +39,13 @@ export function Header() {
         <div className="flex items-center">
           <Link href="/">
             <div className="flex items-center">
-              <img 
-                src="/assets/logo.png" 
-                alt="Pixie Dental Logo" 
-                className="h-10 object-contain" 
-                style={{ background: '#16304d' }}
-              />
+              <div className="h-10 w-12 flex items-center justify-center rounded-md overflow-hidden" style={{ background: '#16304d' }}>
+                <img 
+                  src={logoImage} 
+                  alt="Pixie Dental Logo" 
+                  className="h-9 w-10 object-contain" 
+                />
+              </div>
               <h1 className="text-lg md:text-xl font-semibold ml-3 text-white">
                 Pixie Dental
               </h1>
