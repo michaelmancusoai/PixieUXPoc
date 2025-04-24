@@ -382,8 +382,8 @@ const RoleDashboard: React.FC = () => {
           <div className="nes-container is-rounded pixelated border-blue-500 bg-blue-100 overflow-hidden">
             <div className="bg-blue-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 1: SKY QUEST</div>
             
-            {/* Coin Counter */}
-            <div className="absolute top-2 left-2">
+            {/* Coin Counter - Bottom Right */}
+            <div className="absolute bottom-2 right-2">
               <i className="nes-icon coin is-small"></i> <span className="text-blue-800 font-bold">{coins}/{targetCoins}</span>
             </div>
             
@@ -470,8 +470,8 @@ const RoleDashboard: React.FC = () => {
           <div className="nes-container is-rounded pixelated border-amber-500 bg-amber-100 overflow-hidden">
             <div className="bg-amber-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 2: DESERT QUEST</div>
             
-            {/* Coin Counter */}
-            <div className="absolute top-2 left-2">
+            {/* Coin Counter - Bottom Right */}
+            <div className="absolute bottom-2 right-2">
               <i className="nes-icon coin is-small"></i> <span className="text-amber-800 font-bold">{coins}/{targetCoins}</span>
             </div>
             
@@ -529,8 +529,8 @@ const RoleDashboard: React.FC = () => {
           <div className="nes-container is-rounded pixelated border-orange-500 bg-orange-100 overflow-hidden">
             <div className="bg-orange-600 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">FINAL LEVEL: LAVA QUEST</div>
             
-            {/* Coin Counter */}
-            <div className="absolute top-2 left-2">
+            {/* Coin Counter - Bottom Right */}
+            <div className="absolute bottom-2 right-2">
               <i className="nes-icon coin is-small"></i> <span className="text-orange-800 font-bold">{coins}/{targetCoins}</span>
             </div>
             
