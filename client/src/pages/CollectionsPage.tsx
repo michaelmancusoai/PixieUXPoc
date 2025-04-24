@@ -644,9 +644,35 @@ export default function CollectionsPage() {
     <NavigationWrapper>
       <div className="min-h-screen bg-muted">
         <div className="container mx-auto py-6">
-          <h1 className="text-2xl font-bold mb-6">Collections Management</h1>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">Collections Management</h1>
+            
+            {/* Quick Actions Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="h-9">
+                  Quick Actions <ChevronDown className="h-4 w-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem className="cursor-pointer">
+                  <Send className="h-4 w-4 mr-2" />
+                  Send Final Notice
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <PiggyBank className="h-4 w-4 mr-2" />
+                  Create Payment Plan
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Report
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
 
-          {/* KPI Cards - based on specification */}
+          {/* KPI Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
@@ -695,22 +721,29 @@ export default function CollectionsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Quick Actions</CardTitle>
+                <CardTitle className="text-base font-medium">Payment Plans Performance</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
-                <div className="flex flex-col space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-muted-foreground">Ultimate action or option</span>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-green-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">Adherence Rate</div>
+                    <div className="text-xl font-bold text-green-600">82%</div>
+                    <div className="text-xs text-green-600">payment plans</div>
                   </div>
-                  <div className="flex items-center space-x-3">
-                    <Button className="h-9 flex-1">
-                      <Send className="h-4 w-4 mr-1" />
-                      Send Final Notice
-                    </Button>
-                    <Button variant="outline" className="h-9 flex-1">
-                      <PiggyBank className="h-4 w-4 mr-1" />
-                      Create Payment Plan
-                    </Button>
+                  <div className="bg-blue-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">Contact Success</div>
+                    <div className="text-xl font-bold text-blue-600">68%</div>
+                    <div className="text-xs text-blue-600">phone calls</div>
+                  </div>
+                  <div className="bg-amber-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">Aging Accounts</div>
+                    <div className="text-xl font-bold text-amber-600">{mockCollectionAccounts.filter(a => a.agingBucket === "120+").length}</div>
+                    <div className="text-xs text-amber-600">over 120 days</div>
+                  </div>
+                  <div className="bg-purple-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">Recovery Rate</div>
+                    <div className="text-xl font-bold text-purple-600">43%</div>
+                    <div className="text-xs text-purple-600">of total owed</div>
                   </div>
                 </div>
               </CardContent>
