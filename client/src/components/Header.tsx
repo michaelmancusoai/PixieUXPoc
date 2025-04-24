@@ -99,7 +99,7 @@ export function Header() {
             <Search className="h-4 w-4 text-white/80 mr-2" />
             <div className="flex-1 text-white/80 text-sm">Search Pixie Dental</div>
             <div className="flex items-center ml-1 px-1.5 py-0.5 text-xs rounded bg-white/10 text-white/70">
-              <span className="font-mono">K</span>
+              <span className="font-mono">⌘K</span>
             </div>
           </div>
 
