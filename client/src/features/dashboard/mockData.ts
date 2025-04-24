@@ -56,6 +56,7 @@ const frontOfficeData: DashboardData = {
       patientName: 'Jacob Lee',
       completed: false,
       icon: 'FileText',
+      estimatedTimeMin: 5,
     },
     {
       id: '2',
@@ -68,6 +69,7 @@ const frontOfficeData: DashboardData = {
       patientName: 'Sarah Johnson',
       completed: false,
       icon: 'FileX',
+      estimatedTimeMin: 3,
     },
     {
       id: '3',
@@ -78,6 +80,7 @@ const frontOfficeData: DashboardData = {
       dueIn: '180 min',
       completed: false,
       icon: 'MessageSquare',
+      estimatedTimeMin: 10,
     },
     {
       id: '4',
@@ -88,6 +91,7 @@ const frontOfficeData: DashboardData = {
       dueIn: '240 min',
       completed: false,
       icon: 'Phone',
+      estimatedTimeMin: 2,
     },
     {
       id: '5',
@@ -97,6 +101,7 @@ const frontOfficeData: DashboardData = {
       description: 'Stock ≤ 2 days',
       completed: false,
       icon: 'Package',
+      estimatedTimeMin: 8,
     },
     {
       id: '6',
@@ -107,6 +112,7 @@ const frontOfficeData: DashboardData = {
       dueIn: '240 min',
       completed: false,
       icon: 'DollarSign',
+      estimatedTimeMin: 5,
     },
   ],
   flowCategories: [
@@ -134,6 +140,7 @@ const frontOfficeData: DashboardData = {
       timestamp: '8:07 AM',
       icon: 'CheckCircle2',
       isAi: false,
+      timeSavedMin: 2,
     },
     {
       id: 'win2',
@@ -142,6 +149,7 @@ const frontOfficeData: DashboardData = {
       timestamp: '7:55 AM',
       icon: 'FileText',
       isAi: true,
+      timeSavedMin: 8,
     },
     {
       id: 'win3',
@@ -150,6 +158,7 @@ const frontOfficeData: DashboardData = {
       timestamp: '7:15 AM',
       icon: 'Bell',
       isAi: true,
+      timeSavedMin: 25,
     },
     {
       id: 'win4',
@@ -158,6 +167,7 @@ const frontOfficeData: DashboardData = {
       timestamp: '8:30 AM',
       icon: 'Calendar',
       isAi: false,
+      timeSavedMin: 5,
     },
     {
       id: 'win5',
@@ -166,6 +176,7 @@ const frontOfficeData: DashboardData = {
       timestamp: '8:45 AM',
       icon: 'MessageCircle',
       isAi: false,
+      timeSavedMin: 4,
     },
   ],
 };
@@ -211,6 +222,7 @@ const hygienistData: DashboardData = {
       patientName: 'Jessica Kim',
       completed: false,
       icon: 'FileX',
+      estimatedTimeMin: 10,
     },
     {
       id: '2',
@@ -222,6 +234,7 @@ const hygienistData: DashboardData = {
       patientName: 'Michael Chen',
       completed: false,
       icon: 'Video',
+      estimatedTimeMin: 5,
     },
     {
       id: '3',
@@ -233,6 +246,7 @@ const hygienistData: DashboardData = {
       patientName: 'Lisa Thompson',
       completed: false,
       icon: 'Activity',
+      estimatedTimeMin: 7,
     },
     {
       id: '4',
@@ -244,6 +258,7 @@ const hygienistData: DashboardData = {
       patientName: 'David Brown',
       completed: false,
       icon: 'FileText',
+      estimatedTimeMin: 4,
     },
   ],
   flowCategories: [
@@ -267,6 +282,7 @@ const hygienistData: DashboardData = {
       timestamp: '7:45 AM',
       icon: 'FileText',
       isAi: true,
+      timeSavedMin: 15,
     },
     {
       id: 'win2',
@@ -275,6 +291,7 @@ const hygienistData: DashboardData = {
       timestamp: '7:30 AM',
       icon: 'FileCheck',
       isAi: false,
+      timeSavedMin: 4,
     },
     {
       id: 'win3',
@@ -283,6 +300,7 @@ const hygienistData: DashboardData = {
       timestamp: '7:15 AM',
       icon: 'Video',
       isAi: true,
+      timeSavedMin: 6,
     },
     {
       id: 'win4',
@@ -291,6 +309,7 @@ const hygienistData: DashboardData = {
       timestamp: '8:15 AM',
       icon: 'Activity',
       isAi: true,
+      timeSavedMin: 10,
     },
   ],
 };
@@ -393,6 +412,7 @@ const providerData: DashboardData = {
       icon: 'FileText',
       isAi: true,
       savings: 25,
+      timeSavedMin: 20,
     },
     {
       id: 'win2',
@@ -418,6 +438,7 @@ const providerData: DashboardData = {
       timestamp: '8:30 AM',
       icon: 'FileSearch',
       isAi: true,
+      timeSavedMin: 12,
     },
   ],
 };
@@ -522,6 +543,7 @@ const billingData: DashboardData = {
       icon: 'DollarSign',
       isAi: true,
       savings: 58,
+      timeSavedMin: 35,
     },
     {
       id: 'win2',
@@ -531,6 +553,7 @@ const billingData: DashboardData = {
       icon: 'Send',
       isAi: true,
       value: 3450,
+      timeSavedMin: 45,
     },
     {
       id: 'win3',
@@ -549,6 +572,7 @@ const billingData: DashboardData = {
       icon: 'AlertTriangle',
       isAi: true,
       savings: 42,
+      timeSavedMin: 18,
     },
     {
       id: 'win5',
@@ -557,6 +581,7 @@ const billingData: DashboardData = {
       timestamp: '4:30 AM',
       icon: 'FileCheck',
       isAi: true,
+      timeSavedMin: 25,
     },
   ],
 };
@@ -661,6 +686,7 @@ const ownerData: DashboardData = {
       timestamp: '6:00 AM',
       icon: 'Calendar',
       isAi: true,
+      timeSavedMin: 65,
     },
     {
       id: 'win2',
@@ -670,6 +696,7 @@ const ownerData: DashboardData = {
       timestamp: 'Yesterday',
       icon: 'Calendar',
       isAi: true,
+      timeSavedMin: 20,
     },
     {
       id: 'win3',
@@ -686,6 +713,7 @@ const ownerData: DashboardData = {
       timestamp: '5:30 AM',
       icon: 'Activity',
       isAi: true,
+      timeSavedMin: 30,
     },
     {
       id: 'win5',
@@ -695,6 +723,7 @@ const ownerData: DashboardData = {
       savings: 320,
       icon: 'Users',
       isAi: true,
+      timeSavedMin: 45,
     },
   ],
 };
