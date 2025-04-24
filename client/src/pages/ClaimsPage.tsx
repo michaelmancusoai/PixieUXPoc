@@ -1220,37 +1220,37 @@ export default function ClaimsPage() {
                               {/* Not Sent */}
                               <div className="flex flex-col items-center w-1/4">
                                 <div className="absolute -top-2 w-12 h-4 bg-gray-100 rounded-full flex items-center justify-center border">
-                                  <span className="text-xs">{notSentCount}</span>
+                                  <span className="text-xs">14</span>
                                 </div>
                                 <div className="mt-3 text-xs text-center text-muted-foreground">Not Sent</div>
-                                <div className="text-xs font-medium text-center">${notSentClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                                <div className="text-xs font-medium text-center">$4,325</div>
                               </div>
                               
                               {/* Sent/Resent */}
                               <div className="flex flex-col items-center w-1/4">
                                 <div className="absolute -top-2 w-12 h-4 bg-blue-100 rounded-full flex items-center justify-center border">
-                                  <span className="text-xs">{sentCount + resentCount}</span>
+                                  <span className="text-xs">167</span>
                                 </div>
                                 <div className="mt-3 text-xs text-center text-muted-foreground">Submitted</div>
-                                <div className="text-xs font-medium text-center">${submittedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                                <div className="text-xs font-medium text-center">$52,180</div>
                               </div>
                               
                               {/* Pending */}
                               <div className="flex flex-col items-center w-1/4">
                                 <div className="absolute -top-2 w-12 h-4 bg-amber-100 rounded-full flex items-center justify-center border">
-                                  <span className="text-xs">{pendingCount}</span>
+                                  <span className="text-xs">19</span>
                                 </div>
                                 <div className="mt-3 text-xs text-center text-muted-foreground">Pending</div>
-                                <div className="text-xs font-medium text-center">${pendingClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                                <div className="text-xs font-medium text-center">$6,845</div>
                               </div>
                               
                               {/* Completed */}
                               <div className="flex flex-col items-center w-1/4">
                                 <div className="absolute -top-2 w-12 h-4 bg-green-100 rounded-full flex items-center justify-center border">
-                                  <span className="text-xs">{completedCount}</span>
+                                  <span className="text-xs">7986</span>
                                 </div>
                                 <div className="mt-3 text-xs text-center text-muted-foreground">Completed</div>
-                                <div className="text-xs font-medium text-center">${completedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                                <div className="text-xs font-medium text-center">$2,476,325</div>
                               </div>
                             </div>
                           </div>
@@ -1311,16 +1311,16 @@ export default function ClaimsPage() {
                 <div className="border-b px-6 py-3">
                   <TabsList className="grid grid-cols-4 w-full sm:w-auto">
                     <TabsTrigger value="not-submitted" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      Not Submitted {renderTabBadge(notSentCount)}
+                      Not Submitted {renderTabBadge(14)}
                     </TabsTrigger>
                     <TabsTrigger value="submitted" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      Submitted {renderTabBadge(sentCount + resentCount)}
+                      Submitted {renderTabBadge(167)}
                     </TabsTrigger>
                     <TabsTrigger value="in-progress" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      EOBs in Progress {renderTabBadge(pendingCount)}
+                      EOBs in Progress {renderTabBadge(19)}
                     </TabsTrigger>
                     <TabsTrigger value="completed" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      Completed {renderTabBadge(completedCount)}
+                      Completed {renderTabBadge(7986)}
                     </TabsTrigger>
                   </TabsList>
                 </div>
