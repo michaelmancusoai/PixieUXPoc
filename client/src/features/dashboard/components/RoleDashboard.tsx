@@ -379,7 +379,7 @@ const RoleDashboard: React.FC = () => {
     if (level === GameLevel.LEVEL_1) {
       return (
         <div className="py-2 font-vt323">
-          <div className="nes-container is-rounded pixelated border-blue-500 bg-blue-100 overflow-hidden">
+          <div className="nes-container is-rounded pixelated border-blue-500 bg-blue-100 overflow-hidden h-[340px]">
             <div className="bg-blue-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 1: SKY QUEST</div>
             
 
@@ -465,7 +465,7 @@ const RoleDashboard: React.FC = () => {
     if (level === GameLevel.LEVEL_2) {
       return (
         <div className="py-2 font-vt323">
-          <div className="nes-container is-rounded pixelated border-amber-500 bg-amber-100 overflow-hidden">
+          <div className="nes-container is-rounded pixelated border-amber-500 bg-amber-100 overflow-hidden h-[340px]">
             <div className="bg-amber-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 2: DESERT QUEST</div>
             
 
@@ -522,7 +522,7 @@ const RoleDashboard: React.FC = () => {
     if (level === GameLevel.LEVEL_FINAL) {
       return (
         <div className="py-2 font-vt323">
-          <div className="nes-container is-rounded pixelated border-orange-500 bg-orange-100 overflow-hidden">
+          <div className="nes-container is-rounded pixelated border-orange-500 bg-orange-100 overflow-hidden h-[340px]">
             <div className="bg-orange-600 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">FINAL LEVEL: LAVA QUEST</div>
             
 
