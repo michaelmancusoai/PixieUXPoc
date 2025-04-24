@@ -1024,7 +1024,7 @@ export default function ClaimsPage() {
           </div>
           
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
                 <CardTitle className="text-base font-medium">Claims Summary</CardTitle>
@@ -1058,37 +1058,6 @@ export default function ClaimsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Claim Status</CardTitle>
-              </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <Clock className="h-8 w-8 mr-3 text-amber-500" />
-                  <div>
-                    <div className="text-2xl font-bold">${totalPending.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {pendingCount} pending claims
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t grid grid-cols-3 gap-2">
-                  <div>
-                    <div className="text-sm font-medium">{notSentCount}</div>
-                    <div className="text-xs text-muted-foreground">Not Sent</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">{sentCount + resentCount}</div>
-                    <div className="text-xs text-muted-foreground">Submitted</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">{completedCount}</div>
-                    <div className="text-xs text-muted-foreground">Completed</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-base font-medium">Claims Lifecycle and Aging</CardTitle>
                   <span className="text-xs text-muted-foreground">Total: ${(agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90).toFixed(0)}</span>
@@ -1098,23 +1067,26 @@ export default function ClaimsPage() {
                 {/* Claims Status Flow */}
                 <div className="mb-6">
                   <h4 className="text-sm font-medium mb-3">Claims Status Flow</h4>
-                  <div className="bg-muted/20 p-4 rounded-lg border">
-                    <div className="mb-4 flex items-center">
-                      <div className="flex-1 h-1 bg-gray-200 relative">
-                        {/* Status flow dots */}
-                        <div className="h-3 w-3 rounded-full absolute -top-1 left-0 bg-gray-100 border-2 border-gray-400"></div>
-                        <div className="h-3 w-3 rounded-full absolute -top-1 left-1/3 bg-blue-100 border-2 border-blue-400"></div>
-                        <div className="h-3 w-3 rounded-full absolute -top-1 left-2/3 bg-amber-100 border-2 border-amber-400"></div>
-                        <div className="h-3 w-3 rounded-full absolute -top-1 right-0 bg-green-100 border-2 border-green-400"></div>
+                  <div className="bg-muted/20 p-5 rounded-lg border">
+                    <div className="mb-5 flex items-center">
+                      <div className="flex-1 h-2 bg-gray-200 relative">
+                        {/* Status flow dots and connecting line */}
+                        <div className="absolute top-0 left-0 right-0 h-2">
+                          <div className="bg-gradient-to-r from-gray-300 via-blue-400 to-green-400 h-full rounded-full"></div>
+                        </div>
+                        <div className="h-5 w-5 rounded-full absolute -top-1.5 left-0 bg-gray-100 border-2 border-gray-400 z-10"></div>
+                        <div className="h-5 w-5 rounded-full absolute -top-1.5 left-1/3 bg-blue-100 border-2 border-blue-400 z-10"></div>
+                        <div className="h-5 w-5 rounded-full absolute -top-1.5 left-2/3 bg-amber-100 border-2 border-amber-400 z-10"></div>
+                        <div className="h-5 w-5 rounded-full absolute -top-1.5 right-0 bg-green-100 border-2 border-green-400 z-10"></div>
                       </div>
                     </div>
                     
-                    <div className="grid grid-cols-4 gap-0">
+                    <div className="grid grid-cols-4 gap-5">
                       {/* Not Sent */}
-                      <div className="flex flex-col items-center">
-                        <div className="text-xs font-medium text-center text-gray-700 mb-1">Not Submitted</div>
-                        <div className="text-lg font-bold text-gray-800 mb-1">14</div>
-                        <div className="text-xs text-gray-600 mb-1">$4,325</div>
+                      <div className="flex flex-col items-center bg-gray-50 p-4 rounded-lg border border-gray-100">
+                        <div className="text-sm font-medium text-center text-gray-700 mb-2">Not Submitted</div>
+                        <div className="text-2xl font-bold text-gray-800 mb-1">14</div>
+                        <div className="text-xs text-gray-600 mb-2">$4,325</div>
                         <div className="flex space-x-1 text-xs text-gray-500">
                           <Clock className="h-3 w-3" />
                           <span>Avg: 2d</span>
@@ -1122,10 +1094,10 @@ export default function ClaimsPage() {
                       </div>
                       
                       {/* Sent */}
-                      <div className="flex flex-col items-center">
-                        <div className="text-xs font-medium text-center text-blue-700 mb-1">Submitted</div>
-                        <div className="text-lg font-bold text-blue-800 mb-1">167</div>
-                        <div className="text-xs text-blue-600 mb-1">$52,180</div>
+                      <div className="flex flex-col items-center bg-blue-50 p-4 rounded-lg border border-blue-100">
+                        <div className="text-sm font-medium text-center text-blue-700 mb-2">Submitted</div>
+                        <div className="text-2xl font-bold text-blue-800 mb-1">167</div>
+                        <div className="text-xs text-blue-600 mb-2">$52,180</div>
                         <div className="flex space-x-1 text-xs text-blue-500">
                           <Clock className="h-3 w-3" />
                           <span>Avg: 1d</span>
@@ -1133,10 +1105,10 @@ export default function ClaimsPage() {
                       </div>
                       
                       {/* Pending */}
-                      <div className="flex flex-col items-center">
-                        <div className="text-xs font-medium text-center text-amber-700 mb-1">EOBs in Progress</div>
-                        <div className="text-lg font-bold text-amber-800 mb-1">19</div>
-                        <div className="text-xs text-amber-600 mb-1">$6,845</div>
+                      <div className="flex flex-col items-center bg-amber-50 p-4 rounded-lg border border-amber-100">
+                        <div className="text-sm font-medium text-center text-amber-700 mb-2">EOBs in Progress</div>
+                        <div className="text-2xl font-bold text-amber-800 mb-1">19</div>
+                        <div className="text-xs text-amber-600 mb-2">$6,845</div>
                         <div className="flex space-x-1 text-xs text-amber-500">
                           <Clock className="h-3 w-3" />
                           <span>Avg: 14d</span>
@@ -1144,10 +1116,10 @@ export default function ClaimsPage() {
                       </div>
                       
                       {/* Completed */}
-                      <div className="flex flex-col items-center">
-                        <div className="text-xs font-medium text-center text-green-700 mb-1">Completed</div>
-                        <div className="text-lg font-bold text-green-800 mb-1">7,986</div>
-                        <div className="text-xs text-green-600 mb-1">$2,476,325</div>
+                      <div className="flex flex-col items-center bg-green-50 p-4 rounded-lg border border-green-100">
+                        <div className="text-sm font-medium text-center text-green-700 mb-2">Completed</div>
+                        <div className="text-2xl font-bold text-green-800 mb-1">7,986</div>
+                        <div className="text-xs text-green-600 mb-2">$2,476,325</div>
                         <div className="flex space-x-1 text-xs text-green-500">
                           <Clock className="h-3 w-3" />
                           <span>Avg: 22d</span>
@@ -1162,8 +1134,8 @@ export default function ClaimsPage() {
                   <h4 className="text-sm font-medium mb-3">Aging Analysis</h4>
                   
                   {/* Progress bar visualization */}
-                  <div className="mb-2">
-                    <div className="flex h-2 rounded-full overflow-hidden bg-gray-100">
+                  <div className="mb-3">
+                    <div className="flex h-3 rounded-full overflow-hidden bg-gray-100">
                       {/* Calculate percentages */}
                       {(() => {
                         const total = agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90;
@@ -1181,6 +1153,13 @@ export default function ClaimsPage() {
                           </>
                         );
                       })()}
+                    </div>
+                    
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <div>0 Days</div>
+                      <div>30 Days</div>
+                      <div>60 Days</div>
+                      <div>90+ Days</div>
                     </div>
                   </div>
                   
