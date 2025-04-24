@@ -99,8 +99,8 @@ const ToothChartPageFixed = () => {
   return (
     <>
       <NavigationWrapper>
-        {/* Patient Header - Full width, sticky with proper positioning */}
-        <div className="w-full -mx-3 sm:-mx-5 mb-4">
+        {/* Patient Header - Full width and sticky to keep it visible during scrolling */}
+        <div className="w-full -mx-3 sm:-mx-5 mb-4 sticky top-0 z-10 bg-white">
           <PatientHeader 
             onTabChange={handleTabChange}
             currentTab={activeTab}
