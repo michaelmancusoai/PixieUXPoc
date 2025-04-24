@@ -406,42 +406,47 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
-            <div className="flex justify-center my-3">
-              {[0, 1, 2].map(index => renderCoin(index))}
-            </div>
-            
             {/* Prompt Carousel */}
-            <div className="flex items-start mt-2 mb-2">
-              <div className="mr-2 flex flex-col items-center">
-                <i className={promptVariants[currentVariantIndex].character || "nes-bulbasaur"}></i>
-                <div className="text-xs text-center text-blue-600 font-press-start mt-1 w-24 leading-tight">
-                  {promptVariants[currentVariantIndex].name}
+            <div className="flex flex-col mt-2 mb-4">
+              <div className="flex items-start mb-2">
+                <div className="flex-1">
+                  <div className="nes-balloon from-left">
+                    <p className="text-sm sm:text-base font-medium">
+                      "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
+                      <span className="text-blue-600 font-bold">Benefit: </span>
+                      "{promptVariants[currentVariantIndex].benefit}"
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex-1">
-                <div className="nes-balloon from-left">
-                  <p className="text-sm sm:text-base font-medium">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
-                    <span className="text-blue-600 font-bold">Benefit: </span>
-                    "{promptVariants[currentVariantIndex].benefit}"
-                  </p>
+                
+                <div className="flex flex-col justify-center space-y-2 ml-2">
+                  <button 
+                    className="nes-btn is-primary px-2 py-0"
+                    onClick={prevVariant}
+                  >
+                    ◀
+                  </button>
+                  <button 
+                    className="nes-btn is-primary px-2 py-0"
+                    onClick={nextVariant}
+                  >
+                    ▶
+                  </button>
                 </div>
               </div>
               
-              <div className="flex flex-col justify-center space-y-2 ml-2">
-                <button 
-                  className="nes-btn is-primary px-2 py-0"
-                  onClick={prevVariant}
-                >
-                  ◀
-                </button>
-                <button 
-                  className="nes-btn is-primary px-2 py-0"
-                  onClick={nextVariant}
-                >
-                  ▶
-                </button>
+              <div className="flex justify-center">
+                <div className="flex flex-col items-center">
+                  <i className={promptVariants[currentVariantIndex].character || "nes-bulbasaur"}></i>
+                  <div className="text-xs text-center text-blue-600 font-press-start mt-1 w-24 leading-tight">
+                    {promptVariants[currentVariantIndex].name}
+                  </div>
+                </div>
               </div>
+            </div>
+            
+            <div className="flex justify-center my-3">
+              {[0, 1, 2].map(index => renderCoin(index))}
             </div>
             
             <div className="mt-3 flex justify-between items-center">
@@ -511,42 +516,47 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
-            <div className="flex justify-center my-3 flex-wrap">
-              {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
-            </div>
-            
             {/* Prompt Carousel */}
-            <div className="flex items-start mt-2 mb-2">
-              <div className="mr-2 flex flex-col items-center">
-                <i className={promptVariants[currentVariantIndex].character || "nes-charmander"}></i>
-                <div className="text-xs text-center text-amber-600 font-press-start mt-1 w-24 leading-tight">
-                  {promptVariants[currentVariantIndex].name}
+            <div className="flex flex-col mt-2 mb-4">
+              <div className="flex items-start mb-2">
+                <div className="flex-1">
+                  <div className="nes-balloon from-left">
+                    <p className="text-sm sm:text-base font-medium">
+                      "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
+                      <span className="text-amber-600 font-bold">Benefit: </span>
+                      "{promptVariants[currentVariantIndex].benefit}"
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex-1">
-                <div className="nes-balloon from-left">
-                  <p className="text-sm sm:text-base font-medium">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
-                    <span className="text-amber-600 font-bold">Benefit: </span>
-                    "{promptVariants[currentVariantIndex].benefit}"
-                  </p>
+                
+                <div className="flex flex-col justify-center space-y-2 ml-2">
+                  <button 
+                    className="nes-btn is-warning px-2 py-0"
+                    onClick={prevVariant}
+                  >
+                    ◀
+                  </button>
+                  <button 
+                    className="nes-btn is-warning px-2 py-0"
+                    onClick={nextVariant}
+                  >
+                    ▶
+                  </button>
                 </div>
               </div>
               
-              <div className="flex flex-col justify-center space-y-2 ml-2">
-                <button 
-                  className="nes-btn is-warning px-2 py-0"
-                  onClick={prevVariant}
-                >
-                  ◀
-                </button>
-                <button 
-                  className="nes-btn is-warning px-2 py-0"
-                  onClick={nextVariant}
-                >
-                  ▶
-                </button>
+              <div className="flex justify-center">
+                <div className="flex flex-col items-center">
+                  <i className={promptVariants[currentVariantIndex].character || "nes-charmander"}></i>
+                  <div className="text-xs text-center text-amber-600 font-press-start mt-1 w-24 leading-tight">
+                    {promptVariants[currentVariantIndex].name}
+                  </div>
+                </div>
               </div>
+            </div>
+            
+            <div className="flex justify-center my-3 flex-wrap">
+              {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
             </div>
             
             <div className="mt-3 flex justify-between items-center">
@@ -581,42 +591,47 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
-            <div className="flex justify-center my-3 flex-wrap gap-y-2">
-              {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
-            </div>
-            
             {/* Prompt Carousel */}
-            <div className="flex items-start mt-2 mb-2">
-              <div className="mr-2 flex flex-col items-center">
-                <i className={promptVariants[currentVariantIndex].character || "nes-charizard"}></i>
-                <div className="text-xs text-center text-orange-600 font-press-start mt-1 w-24 leading-tight">
-                  {promptVariants[currentVariantIndex].name}
+            <div className="flex flex-col mt-2 mb-4">
+              <div className="flex items-start mb-2">
+                <div className="flex-1">
+                  <div className="nes-balloon from-left">
+                    <p className="text-sm sm:text-base font-medium">
+                      "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
+                      <span className="text-orange-600 font-bold">Benefit: </span>
+                      "{promptVariants[currentVariantIndex].benefit}"
+                    </p>
+                  </div>
                 </div>
-              </div>
-              <div className="flex-1">
-                <div className="nes-balloon from-left">
-                  <p className="text-sm sm:text-base font-medium">
-                    "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
-                    <span className="text-orange-600 font-bold">Benefit: </span>
-                    "{promptVariants[currentVariantIndex].benefit}"
-                  </p>
+                
+                <div className="flex flex-col justify-center space-y-2 ml-2">
+                  <button 
+                    className="nes-btn is-error px-2 py-0"
+                    onClick={prevVariant}
+                  >
+                    ◀
+                  </button>
+                  <button 
+                    className="nes-btn is-error px-2 py-0"
+                    onClick={nextVariant}
+                  >
+                    ▶
+                  </button>
                 </div>
               </div>
               
-              <div className="flex flex-col justify-center space-y-2 ml-2">
-                <button 
-                  className="nes-btn is-error px-2 py-0"
-                  onClick={prevVariant}
-                >
-                  ◀
-                </button>
-                <button 
-                  className="nes-btn is-error px-2 py-0"
-                  onClick={nextVariant}
-                >
-                  ▶
-                </button>
+              <div className="flex justify-center">
+                <div className="flex flex-col items-center">
+                  <i className={promptVariants[currentVariantIndex].character || "nes-charizard"}></i>
+                  <div className="text-xs text-center text-orange-600 font-press-start mt-1 w-24 leading-tight">
+                    {promptVariants[currentVariantIndex].name}
+                  </div>
+                </div>
               </div>
+            </div>
+            
+            <div className="flex justify-center my-3 flex-wrap gap-y-2">
+              {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
             </div>
             
             <div className="mt-3 flex justify-between items-center">
