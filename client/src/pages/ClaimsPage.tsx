@@ -1176,126 +1176,129 @@ export default function ClaimsPage() {
                     Insurance is estimated to cover ${totalInsuranceEstimate.toFixed(2)}.
                   </p>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-                    <div className="bg-white p-4 rounded-md border shadow-sm md:col-span-3">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
+                    <div className="col-span-2">
                       <h4 className="text-sm font-medium mb-3">Claims Process Analysis</h4>
-                      
-                      <div className="mt-2">
-                        <div className="flex justify-between items-center mb-2">
-                          <div className="text-xs text-muted-foreground">Claim Creation to Submission</div>
-                          <div className="text-xs font-medium">2 days</div>
+                      <div className="bg-white p-4 rounded-md border shadow-sm">
+                        <div className="mb-4">
+                          <div className="flex justify-between items-center mb-2">
+                            <div className="text-xs text-muted-foreground">Claim Creation to Submission</div>
+                            <div className="text-xs font-medium">2 days</div>
+                          </div>
+                          <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
+                            <div className="bg-green-500 h-full rounded-full" style={{ width: '10%' }}></div>
+                          </div>
                         </div>
-                        <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
-                          <div className="bg-green-500 h-full rounded-full" style={{ width: '10%' }}></div>
+                        
+                        <div className="mb-4">
+                          <div className="flex justify-between items-center mb-2">
+                            <div className="text-xs text-muted-foreground">Submission to Adjudication</div>
+                            <div className="text-xs font-medium">14 days</div>
+                          </div>
+                          <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
+                            <div className="bg-amber-500 h-full rounded-full" style={{ width: '60%' }}></div>
+                          </div>
                         </div>
-                      </div>
-                      
-                      <div className="mt-3">
-                        <div className="flex justify-between items-center mb-2">
-                          <div className="text-xs text-muted-foreground">Submission to Adjudication</div>
-                          <div className="text-xs font-medium">14 days</div>
+                        
+                        <div className="mb-4">
+                          <div className="flex justify-between items-center mb-2">
+                            <div className="text-xs text-muted-foreground">Adjudication to Payment</div>
+                            <div className="text-xs font-medium">7 days</div>
+                          </div>
+                          <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
+                            <div className="bg-blue-500 h-full rounded-full" style={{ width: '30%' }}></div>
+                          </div>
                         </div>
-                        <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
-                          <div className="bg-amber-500 h-full rounded-full" style={{ width: '60%' }}></div>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-3">
-                        <div className="flex justify-between items-center mb-2">
-                          <div className="text-xs text-muted-foreground">Adjudication to Payment</div>
-                          <div className="text-xs font-medium">7 days</div>
-                        </div>
-                        <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
-                          <div className="bg-blue-500 h-full rounded-full" style={{ width: '30%' }}></div>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-4 pt-4 border-t">
-                        <div className="text-sm font-medium mb-2">Value Stream Analysis</div>
-                        <div className="relative pt-2 px-1">
-                          <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200"></div>
-                          
-                          <div className="flex justify-between relative">
-                            {/* Not Sent */}
-                            <div className="flex flex-col items-center w-1/4">
-                              <div className="absolute -top-2 w-12 h-4 bg-gray-100 rounded-full flex items-center justify-center border">
-                                <span className="text-xs">{notSentCount}</span>
-                              </div>
-                              <div className="mt-3 text-xs text-center text-muted-foreground">Not Sent</div>
-                              <div className="text-xs font-medium text-center">${notSentClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
-                            </div>
+                        
+                        <div className="pt-3 border-t">
+                          <div className="text-sm font-medium mb-2">Value Stream Analysis</div>
+                          <div className="relative pt-2 px-1">
+                            <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200"></div>
                             
-                            {/* Sent/Resent */}
-                            <div className="flex flex-col items-center w-1/4">
-                              <div className="absolute -top-2 w-12 h-4 bg-blue-100 rounded-full flex items-center justify-center border">
-                                <span className="text-xs">{sentCount + resentCount}</span>
+                            <div className="flex justify-between relative">
+                              {/* Not Sent */}
+                              <div className="flex flex-col items-center w-1/4">
+                                <div className="absolute -top-2 w-12 h-4 bg-gray-100 rounded-full flex items-center justify-center border">
+                                  <span className="text-xs">{notSentCount}</span>
+                                </div>
+                                <div className="mt-3 text-xs text-center text-muted-foreground">Not Sent</div>
+                                <div className="text-xs font-medium text-center">${notSentClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
                               </div>
-                              <div className="mt-3 text-xs text-center text-muted-foreground">Submitted</div>
-                              <div className="text-xs font-medium text-center">${submittedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
-                            </div>
-                            
-                            {/* Pending */}
-                            <div className="flex flex-col items-center w-1/4">
-                              <div className="absolute -top-2 w-12 h-4 bg-amber-100 rounded-full flex items-center justify-center border">
-                                <span className="text-xs">{pendingCount}</span>
+                              
+                              {/* Sent/Resent */}
+                              <div className="flex flex-col items-center w-1/4">
+                                <div className="absolute -top-2 w-12 h-4 bg-blue-100 rounded-full flex items-center justify-center border">
+                                  <span className="text-xs">{sentCount + resentCount}</span>
+                                </div>
+                                <div className="mt-3 text-xs text-center text-muted-foreground">Submitted</div>
+                                <div className="text-xs font-medium text-center">${submittedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
                               </div>
-                              <div className="mt-3 text-xs text-center text-muted-foreground">Pending</div>
-                              <div className="text-xs font-medium text-center">${pendingClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
-                            </div>
-                            
-                            {/* Completed */}
-                            <div className="flex flex-col items-center w-1/4">
-                              <div className="absolute -top-2 w-12 h-4 bg-green-100 rounded-full flex items-center justify-center border">
-                                <span className="text-xs">{completedCount}</span>
+                              
+                              {/* Pending */}
+                              <div className="flex flex-col items-center w-1/4">
+                                <div className="absolute -top-2 w-12 h-4 bg-amber-100 rounded-full flex items-center justify-center border">
+                                  <span className="text-xs">{pendingCount}</span>
+                                </div>
+                                <div className="mt-3 text-xs text-center text-muted-foreground">Pending</div>
+                                <div className="text-xs font-medium text-center">${pendingClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
                               </div>
-                              <div className="mt-3 text-xs text-center text-muted-foreground">Completed</div>
-                              <div className="text-xs font-medium text-center">${completedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                              
+                              {/* Completed */}
+                              <div className="flex flex-col items-center w-1/4">
+                                <div className="absolute -top-2 w-12 h-4 bg-green-100 rounded-full flex items-center justify-center border">
+                                  <span className="text-xs">{completedCount}</span>
+                                </div>
+                                <div className="mt-3 text-xs text-center text-muted-foreground">Completed</div>
+                                <div className="text-xs font-medium text-center">${completedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                    <div>
                       <h4 className="text-sm font-medium mb-3">Recommended Actions</h4>
-                      <ul className="space-y-3">
-                        <li className="flex items-start">
-                          <div className="h-5 w-5 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mr-2 mt-0.5">
-                            <ArrowUpRight className="h-3 w-3" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-medium">Reduce adjudication lag time</p>
-                            <p className="text-xs text-muted-foreground">Follow up on claims pending over 10 days</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-2 mt-0.5">
-                            <Zap className="h-3 w-3" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-medium">Automate claim creation</p>
-                            <p className="text-xs text-muted-foreground">Enable auto-generation from completed encounters</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-2 mt-0.5">
-                            <FileCheck className="h-3 w-3" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-medium">Implement pre-submission checks</p>
-                            <p className="text-xs text-muted-foreground">Validate claims for common rejection reasons</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <div className="h-5 w-5 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-2 mt-0.5">
-                            <BarChart3 className="h-3 w-3" />
-                          </div>
-                          <div>
-                            <p className="text-xs font-medium">Review carrier performance</p>
-                            <p className="text-xs text-muted-foreground">Analyze adjudication times by insurance carrier</p>
-                          </div>
-                        </li>
-                      </ul>
+                      <div className="bg-white p-4 rounded-md border shadow-sm h-full">
+                        <ul className="space-y-3">
+                          <li className="flex items-start">
+                            <div className="h-5 w-5 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mr-2 mt-0.5">
+                              <ArrowUpRight className="h-3 w-3" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-medium">Reduce adjudication lag time</p>
+                              <p className="text-xs text-muted-foreground">Follow up on claims pending over 10 days</p>
+                            </div>
+                          </li>
+                          <li className="flex items-start">
+                            <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-2 mt-0.5">
+                              <Zap className="h-3 w-3" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-medium">Automate claim creation</p>
+                              <p className="text-xs text-muted-foreground">Enable auto-generation from completed encounters</p>
+                            </div>
+                          </li>
+                          <li className="flex items-start">
+                            <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-2 mt-0.5">
+                              <FileCheck className="h-3 w-3" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-medium">Implement pre-submission checks</p>
+                              <p className="text-xs text-muted-foreground">Validate claims for common rejection reasons</p>
+                            </div>
+                          </li>
+                          <li className="flex items-start">
+                            <div className="h-5 w-5 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-2 mt-0.5">
+                              <BarChart3 className="h-3 w-3" />
+                            </div>
+                            <div>
+                              <p className="text-xs font-medium">Review carrier performance</p>
+                              <p className="text-xs text-muted-foreground">Analyze adjudication times by insurance carrier</p>
+                            </div>
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </div>
                 </div>
