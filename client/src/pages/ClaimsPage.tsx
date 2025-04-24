@@ -1176,8 +1176,8 @@ export default function ClaimsPage() {
                     Insurance is estimated to cover ${totalInsuranceEstimate.toFixed(2)}.
                   </p>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                    <div className="bg-white p-4 rounded-md border shadow-sm md:col-span-3">
                       <h4 className="text-sm font-medium mb-3">Claims Process Analysis</h4>
                       
                       <div className="mt-2">
