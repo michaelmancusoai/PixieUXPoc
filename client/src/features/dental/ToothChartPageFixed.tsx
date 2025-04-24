@@ -175,4 +175,6 @@ const ToothChartPage = () => {
       </div>
     </NavigationWrapper>
   );
-}
+};
+
+export default ToothChartPage;

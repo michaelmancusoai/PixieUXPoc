@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, selectTooth, clearSelectedTeeth, selectSurface } from '../store/dentalSlice';
-import { Surface, ToothStatus } from '@/types';
+import { Surface, ToothStatus } from '@/types/dental';
 import { Button } from '@/components/ui/button';
 import Tooth from './Tooth';
 import { Eye, ArrowRight, ArrowLeft, Keyboard, Save } from 'lucide-react';

@@ -1,4 +1,4 @@
-import { Surface, Tooth as ToothType, ToothStatus } from '@/types';
+import { Surface, Tooth as ToothType, ToothStatus } from '@/types/dental';
 import { Box } from '@mui/material';
 import ToothSVG from './ToothSVG';
 import { useSelector } from 'react-redux';

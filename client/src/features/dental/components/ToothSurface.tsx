@@ -1,4 +1,4 @@
-import { Surface, ToothStatus } from '@/types';
+import { Surface, ToothStatus } from '@/types/dental';
 import { Box, Tooltip } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 

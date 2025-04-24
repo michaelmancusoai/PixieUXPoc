@@ -1,4 +1,4 @@
-import { Surface } from '@/types';
+import { Surface } from '@/types/dental';
 import { Button } from '@/components/ui/button';
 
 interface ToothChartSurfaceProps {

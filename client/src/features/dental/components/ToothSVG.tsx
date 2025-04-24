@@ -1,5 +1,5 @@
 import React from 'react';
-import { ToothStatus } from '@/types';
+import { ToothStatus } from '@/types/dental';
 
 export interface ToothSVGProps {
   number: number;

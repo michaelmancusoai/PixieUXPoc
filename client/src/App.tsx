@@ -22,6 +22,7 @@ import ReportsPage from "@/pages/ReportsPage";
 import SettingsPage from "@/pages/SettingsPage";
 import PatientProfilePage from "@/pages/PatientProfilePage";
 import ThemeSettingsPage from "@/pages/settings/ThemeSettingsPage";
+import ToothChartPage from "@/features/dental/ToothChartPageFixed";
 
 function Router() {
   return (
@@ -53,6 +54,7 @@ function Router() {
       <Route path="/settings" component={SettingsPage} />
       <Route path="/settings/theme" component={ThemeSettingsPage} />
       <Route path="/settings/:subpage" component={SettingsPage} />
+      <Route path="/patients/chart/:id" component={ToothChartPage} />
       <Route component={NotFound} />
     </Switch>
   );

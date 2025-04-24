@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState, updateTreatmentPlanItemStatus, reorderTreatmentPlanItems } from '../store/dentalSlice';
-import { TreatmentPlanItem, TreatmentPlanStatus, Surface } from '@/types';
+import { TreatmentPlanItem, TreatmentPlanStatus, Surface } from '@/types/dental';
 import { MoreVertical, ArrowUp, ArrowDown, CheckCircle, Clock, AlertTriangle, XCircle } from 'lucide-react';
 import {
   DropdownMenu,

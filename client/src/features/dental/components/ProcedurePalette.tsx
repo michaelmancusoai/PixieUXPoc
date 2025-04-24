@@ -6,7 +6,7 @@ import {
   setActiveProcedureCategory, 
   addTreatmentPlanItem
 } from '../store/dentalSlice';
-import { Procedure, ProcedureCategory, Surface } from '@/types';
+import { Procedure, ProcedureCategory, Surface } from '@/types/dental';
 import { Button } from '@/components/ui/button';
 import { PlusCircle, ChevronRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';

@@ -28,11 +28,10 @@ import {
   Folder as FolderIcon
 } from '@mui/icons-material';
 
+import { Patient } from '@/types/dental';
+
 interface PatientImagingProps {
-  patient?: {
-    id: string;
-    name: string;
-  };
+  patient: Patient;
 }
 
 const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
@@ -163,6 +162,7 @@ const PatientImagingMUI: React.FC<PatientImagingProps> = ({ patient }) => {
   
   const selectedImageObj = mockImages.find(img => img.id === selectedImage);
   const patientName = patient?.name || 'John Doe';
+  const patientId = patient?.id ? patient.id.toString() : '';
   
   return (
     <Box sx={{ maxWidth: 1200, margin: '0 auto', padding: 3 }}>

@@ -1,7 +1,7 @@
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { Tooth, ToothStatus } from '@/types';
+import { Tooth, ToothStatus } from '@/types/dental';
 import { useState } from 'react';
 
 interface ToothDetailsProps {
