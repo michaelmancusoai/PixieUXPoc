@@ -28,8 +28,8 @@ const TreatmentPlanTable = ({ planType }: TreatmentPlanTableProps) => {
   );
   
   // Format surfaces array into a string (e.g., "O-M-D")
-  const formatSurfaces = (surfaces: Surface[]) => {
-    if (surfaces.length === 0) return 'Full';
+  const formatSurfaces = (surfaces: Surface[] | undefined) => {
+    if (!surfaces || surfaces.length === 0) return 'Full';
     return surfaces.join('-');
   };
   
@@ -90,9 +90,12 @@ const TreatmentPlanTable = ({ planType }: TreatmentPlanTableProps) => {
     const item = items.find(item => item.id === itemId);
     if (!item) return;
     
+    // Convert priority to number for mathematical operations
+    const currentPriority = Number(item.priority);
+    
     const newPriority = direction === 'up' 
-      ? Math.max(1, item.priority - 1)
-      : Math.min(items.length, item.priority + 1);
+      ? Math.max(1, currentPriority - 1)
+      : Math.min(items.length, currentPriority + 1);
     
     dispatch(reorderTreatmentPlanItems({ itemId, newPriority }));
   };
@@ -137,8 +140,8 @@ const TreatmentPlanTable = ({ planType }: TreatmentPlanTableProps) => {
         <tbody className="bg-white divide-y divide-gray-200">
           {items.map((item) => {
             // Define conditional styles based on status
-            const isCompleted = item.status === TreatmentPlanStatus.Completed;
-            const isDenied = item.status === TreatmentPlanStatus.Denied;
+            const isCompleted = item.status === TreatmentPlanStatus.COMPLETED;
+            const isDenied = item.status === TreatmentPlanStatus.REJECTED;
             const bgColorClass = isCompleted ? 'hover:bg-green-50 bg-green-50/30' : 
                                 isDenied ? 'hover:bg-red-50 bg-red-50/30' : 
                                 'hover:bg-blue-50/40';
@@ -155,7 +158,7 @@ const TreatmentPlanTable = ({ planType }: TreatmentPlanTableProps) => {
                       <button 
                         className="text-gray-400 hover:text-blue-500 disabled:text-gray-200"
                         onClick={() => handleReorder(item.id, 'up')}
-                        disabled={item.priority === 1}
+                        disabled={Number(item.priority) === 1}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <polyline points="18 15 12 9 6 15"></polyline>
@@ -164,7 +167,7 @@ const TreatmentPlanTable = ({ planType }: TreatmentPlanTableProps) => {
                       <button 
                         className="text-gray-400 hover:text-blue-500 disabled:text-gray-200"
                         onClick={() => handleReorder(item.id, 'down')}
-                        disabled={item.priority === items.length}
+                        disabled={Number(item.priority) === items.length}
                       >
                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                           <polyline points="6 9 12 15 18 9"></polyline>
@@ -174,9 +177,9 @@ const TreatmentPlanTable = ({ planType }: TreatmentPlanTableProps) => {
                   </div>
                 </td>
                 <td className="px-3 py-2 text-sm font-medium">
-                  {item.toothNumber > 0 ? (
+                  {item.toothNumbers && item.toothNumbers.length > 0 ? (
                     <div className="flex items-center">
-                      <span className="bg-gray-100 px-1.5 py-0.5 rounded mr-1">{item.toothNumber}</span>
+                      <span className="bg-gray-100 px-1.5 py-0.5 rounded mr-1">{item.toothNumbers[0]}</span>
                       <span className="text-xs text-gray-500">{formatSurfaces(item.surfaces)}</span>
                     </div>
                   ) : 'UR'}
@@ -211,28 +214,28 @@ const TreatmentPlanTable = ({ planType }: TreatmentPlanTableProps) => {
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="w-48">
                       <DropdownMenuItem 
-                        onClick={() => handleChangeStatus(item.id, TreatmentPlanStatus.Approved)}
+                        onClick={() => handleChangeStatus(item.id, TreatmentPlanStatus.ACCEPTED)}
                         className="text-sm"
                       >
                         <CheckCircle className="mr-2 h-4 w-4 text-blue-500" />
                         <span>Mark Approved</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem 
-                        onClick={() => handleChangeStatus(item.id, TreatmentPlanStatus.Completed)}
+                        onClick={() => handleChangeStatus(item.id, TreatmentPlanStatus.COMPLETED)}
                         className="text-sm"
                       >
                         <CheckCircle className="mr-2 h-4 w-4 text-green-500" />
                         <span>Mark Completed</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem 
-                        onClick={() => handleChangeStatus(item.id, TreatmentPlanStatus.Pending)}
+                        onClick={() => handleChangeStatus(item.id, TreatmentPlanStatus.REFERRED)}
                         className="text-sm"
                       >
                         <Clock className="mr-2 h-4 w-4 text-amber-500" />
                         <span>Mark Pending Auth</span>
                       </DropdownMenuItem>
                       <DropdownMenuItem 
-                        onClick={() => handleChangeStatus(item.id, TreatmentPlanStatus.Denied)}
+                        onClick={() => handleChangeStatus(item.id, TreatmentPlanStatus.REJECTED)}
                         className="text-sm"
                       >
                         <XCircle className="mr-2 h-4 w-4 text-red-500" />
