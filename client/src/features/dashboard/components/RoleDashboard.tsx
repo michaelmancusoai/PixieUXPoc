@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { UserRole, ROLE_CONFIGS } from '../types';
 import { roleBasedData } from '../mockData';
 import RoleSelector from './RoleSelector';
@@ -161,8 +161,23 @@ const RoleDashboard: React.FC = () => {
     });
     
     // Add this task to Pixie AI Agent as a win
-    // (Note: In a real application, this would be handled by the backend)
+    // In a real application, this would be handled by the backend
+    // and would include additional logic to actually complete the task
   };
+  
+  // Create a map of delegated task IDs to their estimated time
+  const delegatedTasksMap = useMemo(() => {
+    const map = new Map<string, number>();
+    
+    // Add all delegated action items to the map with their estimated time
+    dashboardData.actionItems
+      .filter(item => delegatedActions.has(item.id))
+      .forEach(item => {
+        map.set(item.id, item.estimatedTimeMin || 5); // Default to 5 minutes if not specified
+      });
+      
+    return map;
+  }, [dashboardData.actionItems, delegatedActions]);
   
   // Helper to cycle through prompt variants
   const nextVariant = useCallback(() => {
@@ -815,7 +830,11 @@ const RoleDashboard: React.FC = () => {
 
         {/* Win Feed */}
         <div className="lg:col-span-1">
-          <WinFeed wins={dashboardData.wins} accentColor={roleConfig.accentColor} />
+          <WinFeed 
+            wins={dashboardData.wins} 
+            accentColor={roleConfig.accentColor} 
+            delegatedTasks={delegatedTasksMap}
+          />
         </div>
       </div>
     </div>

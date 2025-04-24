@@ -141,11 +141,39 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor, delegatedTasks = n
   // Only show AI-generated wins in the Pixie AI Agent
   const filteredWins = wins.filter(win => visibleWins.has(win.id) && win.isAi === true);
   
-  // Calculate total time saved by AI
-  const totalTimeSaved = filteredWins.reduce((total, win) => total + (win.timeSavedMin || 0), 0);
+  // Calculate time saved from delegated tasks
+  const delegatedTasksTime = Array.from(delegatedTasks.values()).reduce((sum, time) => sum + time, 0);
   
-  // Show empty state when no AI wins are found
-  if (filteredWins.length === 0) {
+  // Calculate total time saved by AI (existing wins + delegated tasks)
+  const winsTimeSaved = filteredWins.reduce((total, win) => total + (win.timeSavedMin || 0), 0);
+  const totalTimeSaved = winsTimeSaved + delegatedTasksTime;
+  
+  // Generate dynamic wins for delegated tasks
+  const delegatedTaskWins: WinItem[] = [];
+  if (delegatedTasks.size > 0) {
+    // Get the current timestamp in a readable format
+    const now = new Date();
+    const timestamp = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    
+    // Create a new win for each delegated task
+    Array.from(delegatedTasks.entries()).forEach(([taskId, time], index) => {
+      delegatedTaskWins.push({
+        id: `delegated-${taskId}`,
+        title: `Task delegated to Pixie AI`,
+        description: `Pixie is handling this task for you`,
+        timestamp: timestamp,
+        timeSavedMin: time,
+        isAi: true,
+        icon: 'Zap'
+      });
+    });
+  }
+  
+  // Combine existing AI wins with new delegated task wins
+  const allWins = [...filteredWins, ...delegatedTaskWins];
+  
+  // Show empty state when no AI wins or delegated tasks found
+  if (allWins.length === 0) {
     return (
       <Card className="h-full">
         <CardHeader className="pb-2">
@@ -184,7 +212,7 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor, delegatedTasks = n
       
       <CardContent className="pt-0 pb-4">
         <div className="space-y-3">
-          {filteredWins.map((win) => (
+          {allWins.map((win) => (
             <div 
               key={win.id} 
               className={`flex items-start space-x-3 p-3 rounded-lg border border-gray-100 shadow-sm hover:shadow-md transition-shadow ${getBorderColor(win.isAi)} hover:bg-gray-50`}
@@ -254,7 +282,7 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor, delegatedTasks = n
           ))}
           
           {/* AI Time Saved Summary Banner - at the bottom */}
-          {filteredWins.length > 0 && (
+          {(allWins.length > 0 || delegatedTasksTime > 0) && (
             <div className="mt-5 py-3 px-4 bg-purple-50 rounded-lg border border-purple-100 flex items-center justify-center">
               <div className="bg-purple-100 p-2 rounded-full mr-3">
                 <Zap className="h-5 w-5 text-purple-600" />
