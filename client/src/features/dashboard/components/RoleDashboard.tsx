@@ -726,9 +726,11 @@ const RoleDashboard: React.FC = () => {
                         item={{
                           ...item,
                           completed: completedActions.has(item.id),
+                          delegated: delegatedActions.has(item.id),
                         }}
                         accentColor={roleConfig.accentColor}
                         onComplete={handleActionComplete}
+                        onDelegate={handleDelegateAction}
                       />
                     ))}
                 </div>
@@ -751,9 +753,11 @@ const RoleDashboard: React.FC = () => {
                         item={{
                           ...item,
                           completed: completedActions.has(item.id),
+                          delegated: delegatedActions.has(item.id),
                         }}
                         accentColor={roleConfig.accentColor}
                         onComplete={handleActionComplete}
+                        onDelegate={handleDelegateAction}
                       />
                     ))}
                 </div>

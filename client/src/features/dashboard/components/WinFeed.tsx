@@ -27,9 +27,10 @@ import { Button } from '@/components/ui/button';
 interface WinFeedProps {
   wins: WinItem[];
   accentColor: string;
+  delegatedTasks?: Map<string, number>; // Map of delegated task IDs to their estimated time
 }
 
-const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
+const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor, delegatedTasks = new Map() }) => {
   const [visibleWins, setVisibleWins] = useState<Set<string>>(new Set(wins.map(win => win.id)));
   
   const handleDismiss = (winId: string, e: React.MouseEvent) => {
