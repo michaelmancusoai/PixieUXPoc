@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Card, 
   CardContent 
@@ -28,11 +28,20 @@ import {
   UserPlus,
   BarChart2,
   Video,
-  Activity
+  Activity,
+  CircleCheck,
+  MessageCircle
 } from 'lucide-react';
 import { ActionItem as ActionItemType } from '../types';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Progress } from "@/components/ui/progress";
 
 interface ActionItemProps {
   item: ActionItemType;
@@ -40,7 +49,40 @@ interface ActionItemProps {
   onComplete: (id: string) => void;
 }
 
+// Helper function to parse time string like "42 m" to minutes
+const parseTimeToMinutes = (timeStr: string): number => {
+  if (!timeStr) return 0;
+  const match = timeStr.match(/(\d+)\s*m/);
+  return match ? parseInt(match[1], 10) : 0;
+};
+
 const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }) => {
+  // For time-to-pain timer functionality
+  const [remainingMinutes, setRemainingMinutes] = useState<number>(() => {
+    return item.dueIn ? parseTimeToMinutes(item.dueIn) : 0;
+  });
+  
+  // Timer colors based on urgency
+  const getTimerColor = () => {
+    if (remainingMinutes <= 0) return 'bg-red-100 text-red-800 border-red-200';
+    if (remainingMinutes <= 15) return 'bg-amber-100 text-amber-800 border-amber-200';
+    return 'bg-blue-100 text-blue-800 border-blue-200';
+  };
+  
+  // Update timer every minute
+  useEffect(() => {
+    if (!item.dueIn || item.completed) return;
+    
+    const timer = setInterval(() => {
+      setRemainingMinutes(prev => {
+        if (prev <= 0) return 0;
+        return prev - 1;
+      });
+    }, 60000); // 1 minute interval
+    
+    return () => clearInterval(timer);
+  }, [item.dueIn, item.completed]);
+
   // Get the appropriate icon based on the item type
   const getIcon = () => {
     switch (item.icon) {
@@ -145,9 +187,44 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
     }
   };
 
+  // Simulate action handlers for inline macro buttons
+  const handleCall = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    alert(`Calling ${item.patientName}`);
+  };
+
+  const handleSMS = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    alert(`Sending SMS to ${item.patientName}`);
+  };
+
+  const handlePayment = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    alert(`Collecting payment of $${item.amount} from ${item.patientName}`);
+  };
+
+  // Render contextual hint based on type
+  const renderContextualHint = () => {
+    if (!item.type) return null;
+    
+    switch (item.type) {
+      case 'collection':
+        return item.description || "Try collecting this payment today";
+      case 'call':
+        return item.description || "Call to confirm appointment";
+      case 'reminder':
+        return item.description || "Send a friendly reminder";
+      default:
+        return item.description;
+    }
+  };
+
+  // Determine if clinical item
+  const isClinicalItem = item.type === 'clinical';
+  
   return (
     <Card 
-      className={`border ${item.completed ? 'bg-gray-50 opacity-70' : 'bg-white'}`}
+      className={`border ${item.completed ? 'bg-gray-50 opacity-70' : 'bg-white'} hover:shadow-md transition-shadow duration-200`}
     >
       <CardContent className="p-4">
         <div className="flex items-start space-x-4">
@@ -157,34 +234,43 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
           
           <div className="flex-1">
             <div className="flex items-center justify-between mb-1">
-              <h3 className={`font-medium ${item.completed ? 'line-through text-gray-500' : ''}`}>
+              <h3 className={`font-medium flex items-center ${item.completed ? 'line-through text-gray-500' : ''}`}>
                 {item.title}
+                {isClinicalItem && (
+                  <CircleCheck className="h-4 w-4 ml-1 text-indigo-500" />
+                )}
               </h3>
-              <Badge 
-                variant="outline" 
-                className={`text-xs ${getPriorityColor()}`}
-              >
-                P{item.priority}
-              </Badge>
+              <div className="flex space-x-2">
+                <Badge 
+                  variant="outline" 
+                  className={`text-xs ${getPriorityColor()}`}
+                >
+                  P{item.priority}
+                </Badge>
+                
+                {item.dueIn && (
+                  <Badge 
+                    variant="outline" 
+                    className={`text-xs flex items-center ${getTimerColor()}`}
+                  >
+                    <Clock className="h-3 w-3 mr-1" />
+                    {remainingMinutes} m
+                  </Badge>
+                )}
+              </div>
             </div>
             
-            {item.description && (
+            {renderContextualHint() && (
               <p className={`text-sm mb-2 ${item.completed ? 'text-gray-400' : 'text-gray-600'}`}>
-                {item.description}
+                {renderContextualHint()}
               </p>
             )}
             
-            <div className="flex items-center justify-between mt-2">
+            <div className="flex items-center justify-between mt-3">
               <div className="flex space-x-2">
                 {item.patientName && (
                   <Badge variant="outline" className="text-xs">
                     {item.patientName}
-                  </Badge>
-                )}
-                
-                {item.dueIn && (
-                  <Badge variant="outline" className="text-xs flex items-center">
-                    <Clock className="h-3 w-3 mr-1" />{item.dueIn}
                   </Badge>
                 )}
                 
@@ -195,19 +281,86 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
                 )}
               </div>
               
-              <Button
-                size="sm"
-                className={`${item.completed ? 'bg-gray-400' : getButtonColor()} text-white`}
-                onClick={() => onComplete(item.id)}
-                disabled={item.completed}
-              >
-                {item.completed ? (
-                  <CheckCircle2 className="h-4 w-4 mr-1" />
-                ) : (
-                  <Check className="h-4 w-4 mr-1" />
-                )}
-                {item.completed ? 'Completed' : 'Complete'}
-              </Button>
+              {!item.completed ? (
+                <div className="flex space-x-2">
+                  <TooltipProvider>
+                    {/* Only show call button for appropriate tasks */}
+                    {item.type === 'call' && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="w-9 h-9 p-0 rounded-full"
+                            onClick={handleCall}
+                          >
+                            <Phone className="h-4 w-4 text-blue-600" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Call patient</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                    
+                    {/* SMS button for contact tasks */}
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="w-9 h-9 p-0 rounded-full"
+                          onClick={handleSMS}
+                        >
+                          <MessageCircle className="h-4 w-4 text-teal-600" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Send SMS</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    
+                    {/* Payment button for financial tasks */}
+                    {item.amount && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="w-9 h-9 p-0 rounded-full"
+                            onClick={handlePayment}
+                          >
+                            <DollarSign className="h-4 w-4 text-green-600" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Collect payment</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                    
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          size="sm"
+                          className={`${getButtonColor()} text-white`}
+                          onClick={() => onComplete(item.id)}
+                        >
+                          <Check className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Mark complete</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              ) : (
+                <Badge variant="outline" className="text-xs bg-gray-100">
+                  <CheckCircle2 className="h-3 w-3 mr-1 text-green-600" />
+                  Completed
+                </Badge>
+              )}
             </div>
           </div>
         </div>

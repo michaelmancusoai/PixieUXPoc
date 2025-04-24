@@ -1,0 +1,59 @@
+Five design moves that would make the Front-Office Today screen feel like a personal command-centre rather than a polite to-do list
+
+#	Enhancement	Why it matters (behavioural lens)	Concrete example / micro-copy
+1	Progress-bar KPIs instead of static numbers	Numbers alone feel abstract; a bar that creeps toward a goal triggers goal-gradient motivation.	“Confirmed 83 % → 92 % target” becomes a slim turquoise bar that fills as confirmations roll in. When it tips into green a soft “Ping!” celebrates the win.
+2	Add “Time-to-Pain” timers to Impact-Queue items	Urgency is visceral when you see the fuse burning.	“Call Robert Garcia – balance $520 – due in 42 m” (timer counts down; turns amber at 15 m, red at 0).
+3	Inline macros on each task	Reduces activation energy—the single biggest cause of procrastination.	Hover a task → one-tap icons: 📞 auto-dial, 💬 opens pre-filled SMS, 💲 launches payment modal. Completing task instantly greys the chip and slides it into “Win Feed”.
+4	AI “Nudge Cards” that surface tiny but lucrative actions	Salience & reciprocity: front desk sees that the system is hunting money for them.	Card slides in beneath Impact Queue: “⚡ Add card-on-file prompt to four patients today → likely extra $1,450 this year.” CTA: Add prompt.
+5	Streak & Gamification ribbon	Sustained behavioural change thrives on visible momentum.	Small ribbon under greeting: “🟢 4-day streak ≥ 95 % confirmations – keep it alive!” Drops to amber if today’s pace threatens the streak.
+
+
+
+⸻
+
+Micro-tweaks to elements you already have
+	1.	Greeting Banner
+	•	Add a one-sentence coaching tip: “Patients answer texts 3× faster before 8 a.m.—want to send now?”
+	•	Display AI overnight wins inline (“Booked 3 waitlist gaps worth $720 while you slept”).
+	2.	Impact Queue ordering
+	•	Re-sort tasks by ROI × Time Sensitivity (display as P1, P2, P3 tags).
+	•	Allow drag to reorder so Maria can personalise her flow (a sense of control increases follow-through).
+	3.	Win Feed
+	•	Convert to a side-scrolling ticker so it never pushes critical tasks offscreen.
+	•	Include an Undo link for each AI action → gives confidence to trust automation.
+	4.	Flow Radar
+	•	Encode WIP limits with colour: grey (OK), amber (approaching), red (exceeded).
+	•	Clicking “Checked-In 3” jumps straight to Mission Control filtered to those patients.
+	5.	Empty States
+	•	When the Impact Queue clears, replace with a celebratory illustration + suggestion: “You’re ahead—preview tomorrow’s unconfirmed patients?”
+
+⸻
+
+Illustrative “before/after” for a single task row
+
+Element	Current	Enhanced
+Primary line	“Call Robert Garcia (crown)”	Same, plus small tooth icon 🦷
+Secondary	“Balance due $520”	“Balance $520 • Crowns often prepaid—cash today?”
+Badges	P1	P1 • Timer 42 m
+CTA	Complete	📞 Call  💬 SMS  💲 Collect
+
+
+
+⸻
+
+Copy tone for the front office
+
+Friendly coach, respectful of time:
+“Let’s tidy up those last three confirmations—your future self will thank you at 3 p.m.”
+
+Light humour rewards effort:
+“Balance collected! One less awkward conversation on tomorrow’s list.”
+
+⸻
+
+Next step for design team
+	1.	Prototype timer-badged tasks and progress-bar KPIs in Figma.
+	2.	Run a five-minute click-test with a real receptionist: measure “time to first action” and “tasks cleared in two minutes.”
+	3.	Iterate copy for warmth and brevity (aim ≤ 12 words per line).
+
+Craft the interface so Maria feels the software is her silent co-pilot—anticipating, nudging, and celebrating her every productive move.

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { KPI } from '../types';
-import { TrendingDown, TrendingUp } from 'lucide-react';
+import { Bell, TrendingDown, TrendingUp } from 'lucide-react';
+import { Progress } from "@/components/ui/progress";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface KPICardProps {
   kpi: KPI;
@@ -9,6 +11,51 @@ interface KPICardProps {
 }
 
 const KPICard: React.FC<KPICardProps> = ({ kpi, accentColor }) => {
+  // For progress bar animation
+  const [progress, setProgress] = useState(0);
+  const [showCelebration, setShowCelebration] = useState(false);
+  
+  // Calculate progress percentage for the bar if target exists
+  const getProgressPercentage = (): number => {
+    if (!kpi.target || typeof kpi.value !== 'number' || typeof kpi.target !== 'number') {
+      return 0;
+    }
+    
+    const percentage = (kpi.value / kpi.target) * 100;
+    return Math.min(percentage, 100); // Cap at 100%
+  };
+  
+  // Determine if we've hit/exceeded target
+  const isTargetReached = (): boolean => {
+    if (!kpi.target || typeof kpi.value !== 'number' || typeof kpi.target !== 'number') {
+      return false;
+    }
+    return kpi.value >= kpi.target;
+  };
+  
+  // Handle progress bar animation
+  useEffect(() => {
+    const progressValue = getProgressPercentage();
+    const timer = setTimeout(() => setProgress(progressValue), 500);
+    
+    // Celebration effect when reaching target
+    if (isTargetReached()) {
+      const celebrationTimer = setTimeout(() => {
+        setShowCelebration(true);
+        
+        // Hide celebration after 3 seconds
+        setTimeout(() => setShowCelebration(false), 3000);
+      }, 1000);
+      
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(celebrationTimer);
+      };
+    }
+    
+    return () => clearTimeout(timer);
+  }, [kpi.value, kpi.target]);
+  
   const getStatusColor = () => {
     switch (kpi.status) {
       case 'success':
@@ -36,6 +83,25 @@ const KPICard: React.FC<KPICardProps> = ({ kpi, accentColor }) => {
         return 'bg-green-50 border-green-200';
       default:
         return 'bg-gray-50 border-gray-200';
+    }
+  };
+  
+  const getProgressColor = () => {
+    if (isTargetReached()) return 'bg-green-600';
+    
+    switch (accentColor) {
+      case 'blue':
+        return 'bg-blue-600';
+      case 'teal':
+        return 'bg-teal-600';
+      case 'indigo':
+        return 'bg-indigo-600';
+      case 'amber':
+        return 'bg-amber-600';
+      case 'green':
+        return 'bg-green-600';
+      default:
+        return 'bg-gray-600';
     }
   };
 
@@ -67,7 +133,13 @@ const KPICard: React.FC<KPICardProps> = ({ kpi, accentColor }) => {
   };
 
   return (
-    <Card className={`${getBgColor()} border shadow-sm`}>
+    <Card className={`${getBgColor()} border shadow-sm relative overflow-hidden`}>
+      {showCelebration && (
+        <div className="absolute top-0 right-0 p-2 animate-bounce">
+          <Bell className="h-5 w-5 text-green-600" />
+        </div>
+      )}
+      
       <CardContent className="p-4">
         <div className="flex flex-col">
           <div className="text-sm text-gray-600 mb-1">{kpi.label}</div>
@@ -104,6 +176,30 @@ const KPICard: React.FC<KPICardProps> = ({ kpi, accentColor }) => {
               )}
             </div>
           </div>
+          
+          {/* Progress bar for goal-based KPIs */}
+          {kpi.target && typeof kpi.value === 'number' && typeof kpi.target === 'number' && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="mt-3">
+                    <Progress 
+                      value={progress} 
+                      className="h-2 bg-gray-200" 
+                      indicatorClassName={getProgressColor()}
+                    />
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {isTargetReached() 
+                      ? "Target reached! 🎉" 
+                      : `${progress.toFixed(1)}% to target`}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
       </CardContent>
     </Card>
