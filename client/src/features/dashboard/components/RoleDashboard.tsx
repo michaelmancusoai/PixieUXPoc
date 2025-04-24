@@ -416,10 +416,9 @@ const RoleDashboard: React.FC = () => {
               {/* Speech bubble next to pokemon */}
               <div className="flex-1">
                 <div className="nes-balloon from-left mt-0">
-                  <p className="text-sm sm:text-base font-medium">
+                  <p className="text-base sm:text-lg font-medium">
                     "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
-                    <span className="text-blue-600 font-bold">Benefit: </span>
-                    "{promptVariants[currentVariantIndex].benefit}"
+                    <span className="text-blue-600 font-bold">{promptVariants[currentVariantIndex].benefit}</span>
                   </p>
                 </div>
               </div>
@@ -505,10 +504,9 @@ const RoleDashboard: React.FC = () => {
               {/* Speech bubble next to pokemon */}
               <div className="flex-1">
                 <div className="nes-balloon from-left mt-0">
-                  <p className="text-sm sm:text-base font-medium">
+                  <p className="text-base sm:text-lg font-medium">
                     "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
-                    <span className="text-amber-600 font-bold">Benefit: </span>
-                    "{promptVariants[currentVariantIndex].benefit}"
+                    <span className="text-amber-600 font-bold">{promptVariants[currentVariantIndex].benefit}</span>
                   </p>
                 </div>
               </div>
@@ -565,10 +563,9 @@ const RoleDashboard: React.FC = () => {
               {/* Speech bubble next to pokemon */}
               <div className="flex-1">
                 <div className="nes-balloon from-left mt-0">
-                  <p className="text-sm sm:text-base font-medium">
+                  <p className="text-base sm:text-lg font-medium">
                     "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
-                    <span className="text-orange-600 font-bold">Benefit: </span>
-                    "{promptVariants[currentVariantIndex].benefit}"
+                    <span className="text-orange-600 font-bold">{promptVariants[currentVariantIndex].benefit}</span>
                   </p>
                 </div>
               </div>
