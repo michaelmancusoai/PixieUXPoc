@@ -6,9 +6,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { TooltipProvider, Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { 
   Calendar, MessageSquare, Phone, CreditCard, 
-  Paperclip, MoreHorizontal, ArrowLeft
+  Paperclip, MoreHorizontal, ArrowLeft, 
+  Activity, FilePlus, ClipboardList, FileText
 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation, useRoute } from "wouter";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const patientData = {
   name: "Sarah Johnson",
@@ -22,6 +30,9 @@ const patientData = {
 };
 
 export default function Header() {
+  const [, params] = useRoute("/patients/profile/:id");
+  const patientId = params?.id || "1";
+
   return (
     <header className="bg-white z-10 shadow-sm" role="banner">
       <div className="mx-auto w-full max-w-[97%] 2xl:max-w-[98%]">
@@ -36,10 +47,37 @@ export default function Header() {
           </div>
           
           <div>
-            <Button variant="outline" className="flex items-center">
-              Actions
-              <MoreHorizontal className="h-4 w-4 ml-1" />
-            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="flex items-center">
+                  Actions
+                  <MoreHorizontal className="h-4 w-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuItem className="cursor-pointer" asChild>
+                  <Link href={`/patients/chart/${patientId}`}>
+                    <div className="flex items-center w-full">
+                      <Activity className="mr-2 h-4 w-4" />
+                      <span>Dental Chart</span>
+                    </div>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <FilePlus className="mr-2 h-4 w-4" />
+                  <span>New Encounter</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer">
+                  <ClipboardList className="mr-2 h-4 w-4" />
+                  <span>Treatment Plan</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <FileText className="mr-2 h-4 w-4" />
+                  <span>Medical History</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </div>
