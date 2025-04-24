@@ -550,32 +550,30 @@ export default function StatementsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Delivery Methods</CardTitle>
+                <CardTitle className="text-base font-medium">Statement Metrics</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
                   <Mail className="h-8 w-8 mr-3 text-blue-500" />
                   <div>
-                    <div className="text-2xl font-bold">
-                      {filteredStatements.filter(s => s.deliveryMethod === "Email").length}
-                    </div>
+                    <div className="text-2xl font-bold">68%</div>
                     <div className="text-sm text-muted-foreground">
-                      Email statements
+                      E-statement adoption
                     </div>
                   </div>
                 </div>
                 <div className="mt-4 pt-4 border-t grid grid-cols-2 gap-4">
                   <div>
                     <div className="text-sm font-medium">
-                      {filteredStatements.filter(s => s.deliveryMethod === "Mail").length}
+                      7 days
                     </div>
-                    <div className="text-xs text-muted-foreground">Mailed</div>
+                    <div className="text-xs text-muted-foreground">Avg time to pay</div>
                   </div>
                   <div>
                     <div className="text-sm font-medium">
-                      {filteredStatements.filter(s => s.deliveryMethod === "Portal").length}
+                      85%
                     </div>
-                    <div className="text-xs text-muted-foreground">Portal</div>
+                    <div className="text-xs text-muted-foreground">Collection rate</div>
                   </div>
                   <div>
                     <div className="text-sm font-medium text-amber-500">
@@ -585,9 +583,9 @@ export default function StatementsPage() {
                   </div>
                   <div>
                     <div className="text-sm font-medium">
-                      {filteredStatements.filter(s => s.remindersSent && s.remindersSent > 0).length}
+                      ${totalOutstanding.toFixed(0)}
                     </div>
-                    <div className="text-xs text-muted-foreground">Reminders sent</div>
+                    <div className="text-xs text-muted-foreground">Total pending</div>
                   </div>
                 </div>
               </CardContent>
