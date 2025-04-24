@@ -355,6 +355,7 @@ const providerData: DashboardData = {
       patientName: 'Sarah Johnson',
       completed: false,
       icon: 'Tool',
+      estimatedTimeMin: 45,
     },
     {
       id: '2',
@@ -366,6 +367,7 @@ const providerData: DashboardData = {
       patientName: 'Jennifer Davis',
       completed: false,
       icon: 'Smile',
+      estimatedTimeMin: 20,
     },
     {
       id: '3',
@@ -377,6 +379,7 @@ const providerData: DashboardData = {
       patientName: 'Robert Garcia',
       completed: false,
       icon: 'FileSignature',
+      estimatedTimeMin: 2,
     },
     {
       id: '4',
@@ -388,6 +391,7 @@ const providerData: DashboardData = {
       patientName: 'Daniel Martinez',
       completed: false,
       icon: 'FileX',
+      estimatedTimeMin: 5,
     },
   ],
   flowCategories: [
@@ -421,6 +425,7 @@ const providerData: DashboardData = {
       timestamp: '6:30 AM',
       icon: 'Package',
       isAi: false,
+      timeSavedMin: 3,
     },
     {
       id: 'win3',
@@ -430,6 +435,7 @@ const providerData: DashboardData = {
       icon: 'LayoutTemplate',
       isAi: true,
       value: 5200,
+      timeSavedMin: 25,
     },
     {
       id: 'win4',
@@ -483,6 +489,7 @@ const billingData: DashboardData = {
       patientName: 'Angela White',
       completed: false,
       icon: 'AlertOctagon',
+      estimatedTimeMin: 15,
     },
     {
       id: '2',
@@ -492,6 +499,7 @@ const billingData: DashboardData = {
       description: '8 claims - 98% auto',
       completed: false,
       icon: 'FileCheck',
+      estimatedTimeMin: 10,
     },
     {
       id: '3',
@@ -504,6 +512,7 @@ const billingData: DashboardData = {
       patientName: 'Robert Garcia',
       completed: false,
       icon: 'Mail',
+      estimatedTimeMin: 5,
     },
     {
       id: '4',
@@ -513,6 +522,7 @@ const billingData: DashboardData = {
       description: '5 accounts > 60 days need attention',
       completed: false,
       icon: 'Clock',
+      estimatedTimeMin: 20,
     },
   ],
   flowCategories: [
@@ -634,6 +644,7 @@ const ownerData: DashboardData = {
       description: 'Hygiene gaps next month',
       completed: false,
       icon: 'UserPlus',
+      estimatedTimeMin: 10,
     },
     {
       id: '2',
@@ -643,6 +654,7 @@ const ownerData: DashboardData = {
       description: 'Review Payer Delta CA',
       completed: false,
       icon: 'TrendingUp',
+      estimatedTimeMin: 25,
     },
     {
       id: '3',
@@ -652,6 +664,7 @@ const ownerData: DashboardData = {
       description: 'New scanner ROI analysis',
       completed: false,
       icon: 'PackageCheck',
+      estimatedTimeMin: 30,
     },
     {
       id: '4',
@@ -661,6 +674,7 @@ const ownerData: DashboardData = {
       description: 'Prepare for team meeting tomorrow',
       completed: false,
       icon: 'BarChart2',
+      estimatedTimeMin: 45,
     },
   ],
   flowCategories: [
