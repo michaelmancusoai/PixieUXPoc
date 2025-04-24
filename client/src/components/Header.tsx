@@ -39,11 +39,12 @@ export function Header() {
         <div className="flex items-center">
           <Link href="/">
             <div className="flex items-center">
-              <div className="h-10 w-12 flex items-center justify-center rounded-md overflow-hidden" style={{ background: '#16304d' }}>
+              <div className="h-10 w-14 relative overflow-visible">
                 <img 
                   src={logoImage} 
                   alt="Pixie Dental Logo" 
-                  className="h-9 w-10 object-contain" 
+                  className="h-12 w-14 object-contain absolute -left-2 top-0" 
+                  style={{ transform: 'rotate(5deg)' }}
                 />
               </div>
               <h1 className="text-lg md:text-xl font-semibold ml-3 text-white">

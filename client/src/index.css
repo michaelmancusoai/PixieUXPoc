@@ -74,8 +74,8 @@ button {
   --card-foreground: 20 14.3% 4.1%;
   --border: 20 5.9% 90%;
   --input: 20 5.9% 90%;
-  --primary: 174 100% 24%;
-  --primary-dark: 174 100% 18%;
+  --primary: 199 23% 42%;  /* #507286 */
+  --primary-dark: 199 23% 32%;  /* Darker variant */
   --primary-foreground: 211 100% 99%;
   --secondary: 200 19% 33%;
   --secondary-foreground: 24 9.8% 10%;
@@ -87,21 +87,21 @@ button {
   --radius: 0.5rem;
 
   /* Chart colors */
-  --chart-1: 174 100% 24%;
-  --chart-2: 200 19% 33%;
-  --chart-3: 187 47% 55%;
-  --chart-4: 200 18% 46%;
-  --chart-5: 174 42% 65%;
+  --chart-1: 199 23% 42%;  /* #507286 - Primary */
+  --chart-2: 199 23% 52%;  /* Lighter variant */
+  --chart-3: 199 23% 32%;  /* Darker variant */
+  --chart-4: 199 23% 62%;  /* Very light variant */
+  --chart-5: 199 18% 26%;  /* Very dark variant */
 
   /* Sidebar Colors */
   --sidebar-background: 0 0% 100%;
   --sidebar-foreground: 20 14.3% 4.1%;
-  --sidebar-primary: 174 100% 24%;
+  --sidebar-primary: 199 23% 42%;  /* #507286 */
   --sidebar-primary-foreground: 211 100% 99%;
-  --sidebar-accent: 174 42% 95%;
-  --sidebar-accent-foreground: 174 100% 24%;
+  --sidebar-accent: 199 23% 95%;
+  --sidebar-accent-foreground: 199 23% 42%;  /* #507286 */
   --sidebar-border: 220 13% 91%;
-  --sidebar-ring: 174 100% 24%;
+  --sidebar-ring: 199 23% 42%;  /* #507286 */
 }
 
 .dark {
@@ -115,8 +115,8 @@ button {
   --card-foreground: 0 0% 98%;
   --border: 240 3.7% 15.9%;
   --input: 240 3.7% 15.9%;
-  --primary: 174 100% 24%;
-  --primary-dark: 174 100% 18%;
+  --primary: 199 23% 42%;  /* #507286 */
+  --primary-dark: 199 23% 32%;  /* Darker variant */
   --primary-foreground: 211 100% 99%;
   --secondary: 200 19% 33%;
   --secondary-foreground: 0 0% 98%;
