@@ -1179,7 +1179,7 @@ export default function ClaimsPage() {
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                     <div className="col-span-2">
                       <h4 className="text-sm font-medium mb-3">Claims Process Analysis</h4>
-                      <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <div className="bg-white p-4 rounded-md border shadow-sm h-64">
                         <div className="mb-4">
                           <div className="flex justify-between items-center mb-2">
                             <div className="text-xs text-muted-foreground">Claim Creation to Submission</div>
@@ -1259,7 +1259,7 @@ export default function ClaimsPage() {
                     
                     <div>
                       <h4 className="text-sm font-medium mb-3">Recommended Actions</h4>
-                      <div className="bg-white p-4 rounded-md border shadow-sm h-full">
+                      <div className="bg-white p-4 rounded-md border shadow-sm h-64 overflow-y-auto">
                         <ul className="space-y-3">
                           <li className="flex items-start">
                             <div className="h-5 w-5 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mr-2 mt-0.5">
