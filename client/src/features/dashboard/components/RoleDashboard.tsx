@@ -343,12 +343,6 @@ const RoleDashboard: React.FC = () => {
             >
               MISSION ACCEPTED
             </button>
-            <button 
-              className="nes-btn is-error font-press-start text-xs px-2 py-1"
-              onClick={surrenderGame}
-            >
-              SURRENDER
-            </button>
           </div>
         </div>
       );
@@ -375,12 +369,6 @@ const RoleDashboard: React.FC = () => {
                 onClick={acceptMission}
               >
                 CONTINUE QUEST
-              </button>
-              <button 
-                className="nes-btn is-error font-press-start text-xs px-2 py-1"
-                onClick={surrenderGame}
-              >
-                SURRENDER
               </button>
             </div>
           </div>
@@ -470,12 +458,6 @@ const RoleDashboard: React.FC = () => {
                 onClick={acceptMission}
               >
                 FINAL QUEST
-              </button>
-              <button 
-                className="nes-btn font-press-start text-xs px-2 py-1"
-                onClick={surrenderGame}
-              >
-                RETREAT
               </button>
             </div>
           </div>
