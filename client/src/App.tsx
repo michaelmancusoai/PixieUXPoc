@@ -10,6 +10,7 @@ import DashboardPage from "@/pages/DashboardPage";
 import TodayPage from "@/pages/dashboard/TodayPage";
 import DailyHuddlePage from "@/pages/dashboard/DailyHuddlePage";
 import MissionControlPage from "@/pages/dashboard/MissionControlPage";
+import OptimizedMissionControlPage from "@/pages/dashboard/OptimizedMissionControlPage";
 import SchedulePage from "@/pages/SchedulePage";
 import PatientsPage from "@/pages/PatientsPage";
 import BillingPage from "@/pages/BillingPage";
@@ -30,7 +31,8 @@ function Router() {
       <Route path="/dashboard" component={DashboardPage} />
       <Route path="/dashboard/today" component={TodayPage} />
       <Route path="/dashboard/daily-huddle" component={DailyHuddlePage} />
-      <Route path="/dashboard/mission-control" component={MissionControlPage} />
+      <Route path="/dashboard/mission-control" component={OptimizedMissionControlPage} />
+      <Route path="/dashboard/mission-control-original" component={MissionControlPage} />
       <Route path="/schedule" component={SchedulePage} />
       <Route path="/schedule/:subpage" component={SchedulePage} />
       <Route path="/patients" component={PatientsPage} />
