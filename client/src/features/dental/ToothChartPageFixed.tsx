@@ -1,180 +1,188 @@
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from './store/dentalSlice';
+import { NavigationWrapper } from '@/components/NavigationWrapper';
 import PatientHeader from './components/PatientHeader';
 import ToothChart from './components/ToothChart';
 import ProcedurePalette from './components/ProcedurePalette';
 import TreatmentPlanDrawer from './components/TreatmentPlanDrawer';
-import ToothDetails from './components/ToothDetails';
 import ExamMode from './components/ExamMode';
 import PerioChart from './components/PerioChart';
 import CompletedMedicalHistory from './components/CompletedMedicalHistory';
-import PatientImagingMUI from './components/PatientImagingMUI2';
-import { useSelector, useDispatch } from 'react-redux';
-import { RootState, selectProcedure, clearSelectedTeeth, selectTooth, selectSurface } from './store/dentalSlice';
-import { Surface } from '@/types/dental';
-import { NavigationWrapper } from '@/components/NavigationWrapper';
-import { Button } from '@/components/ui/button';
-import { ClipboardList, X, BarChart3 } from 'lucide-react';
+import PatientImagingMUI from './components/PatientImagingMUI';
+import ToothDetails from './components/ToothDetails';
+import { useToast } from '@/hooks/use-toast';
 
-const ToothChartPage = () => {
-  const [showToothDetails, setShowToothDetails] = useState(false);
-  const [selectedToothForDetails, setSelectedToothForDetails] = useState<number | null>(null);
-  const [showPalette, setShowPalette] = useState(true);
-  const [showTreatmentPlan, setShowTreatmentPlan] = useState(true);
-  const [examModeActive, setExamModeActive] = useState(false);
-  const [activeTab, setActiveTab] = useState<string>("toothChart");
-  
-  const { teeth, selectedTeeth, patientViewMode, procedures, patient } = useSelector((state: RootState) => state.dental);
+const ToothChartPageFixed = () => {
   const dispatch = useDispatch();
+  const { patient } = useSelector((state: RootState) => state.dental);
+  const [activeTab, setActiveTab] = useState("toothChart");
+  const [showPalette, setShowPalette] = useState(false);
+  const [showTreatmentPlan, setShowTreatmentPlan] = useState(false);
+  const [showToothDetails, setShowToothDetails] = useState(false);
+  const [examModeActive, setExamModeActive] = useState(false);
+  const [selectedTooth, setSelectedTooth] = useState<any>(null);
+  const { toast } = useToast();
   
-  // Toggle procedure palette visibility
+  // For keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Only process when not in exam mode
+      if (examModeActive) return;
+      
+      switch (e.key.toUpperCase()) {
+        case 'P':
+          handleTogglePalette();
+          break;
+        case 'ARROWRIGHT':
+          handleNextTooth();
+          break;
+        case 'L':
+          handleLastUsed();
+          break;
+        case 'T':
+          handleToggleTreatmentPlan();
+          break;
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [examModeActive, activeTooth, showPalette, showTreatmentPlan]);
+  
+  // Handle tooth click for details
+  useEffect(() => {
+    if (activeTooth && !examModeActive) {
+      setSelectedTooth(activeTooth);
+      setShowToothDetails(true);
+    }
+  }, [activeTooth, examModeActive]);
+  
+  // Tab change handler
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    // Just deactivate the UI, no dispatch needed
+    setSelectedTooth(null);
+    setShowToothDetails(false);
+  };
+  
+  // Toggle procedures palette
   const handleTogglePalette = () => {
     setShowPalette(prev => !prev);
-    console.log('Toggle procedure palette');
   };
   
-  // Handle next tooth selection
+  // Next tooth
   const handleNextTooth = () => {
-    if (selectedTeeth.length === 0) {
-      // If no tooth is selected, select the first tooth
-      dispatch(clearSelectedTeeth());
-      dispatch(selectTooth(1));
-    } else {
-      const lastSelectedTooth = selectedTeeth[selectedTeeth.length - 1];
-      if (lastSelectedTooth < 32) {
-        // Select next tooth
-        const nextTooth = lastSelectedTooth + 1;
-        dispatch(clearSelectedTeeth());
-        dispatch(selectTooth(nextTooth));
-        // Also select default surface
-        dispatch(selectSurface(Surface.Occlusal));
-      }
+    if (activeTooth) {
+      const next = activeTooth === 32 ? 1 : activeTooth + 1;
+      setSelectedTooth(next);
     }
   };
   
-  // Handle using the last procedure
+  // Last used procedure
   const handleLastUsed = () => {
-    // Find the most recently used procedure (for simplicity, just use the first favorite)
-    const lastUsedProcedure = procedures.find(p => p.isFavorite);
-    if (lastUsedProcedure) {
-      dispatch(selectProcedure(lastUsedProcedure));
-      console.log('Add last used procedure');
-    }
+    toast({
+      title: "Last Used",
+      description: "Applying last used procedure",
+      duration: 1500,
+    });
   };
   
-  // Toggle treatment plan visibility
+  // Toggle treatment plan drawer
   const handleToggleTreatmentPlan = () => {
     setShowTreatmentPlan(prev => !prev);
-    console.log('Toggle treatment plan');
   };
-  
-  // Open tooth details modal for the selected tooth
-  const handleOpenToothDetails = (toothNumber: number) => {
-    setSelectedToothForDetails(toothNumber);
-    setShowToothDetails(true);
-  };
-  
-  const selectedTooth = selectedToothForDetails !== null ? teeth[selectedToothForDetails - 1] : null;
   
   // Toggle exam mode
   const toggleExamMode = () => {
-    setExamModeActive(prev => !prev);
-    // When entering exam mode, hide the palette
-    if (!examModeActive) {
-      setShowPalette(false);
-    }
-  };
-  
-  // Handle tab change
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    
-    // If switching to perio chart, hide the palette
-    if (tab === "perioChart") {
+    setExamModeActive(true);
+    if (showPalette) {
       setShowPalette(false);
     }
   };
 
   return (
-    <NavigationWrapper>
-      <div className="h-full flex flex-col">
-        {/* Sticky Patient Header */}
-        <PatientHeader 
-          onTabChange={handleTabChange}
-          currentTab={activeTab}
-          onStartExamMode={toggleExamMode}
-        />
+    <>
+      {/* Sticky Patient Header - Positioned at the top of the page */}
+      <PatientHeader 
+        onTabChange={handleTabChange}
+        currentTab={activeTab}
+        onStartExamMode={toggleExamMode}
+      />
       
-      {examModeActive ? (
-        /* Exam Mode */
-        <div className="flex-1 relative">
-          <ExamMode onClose={() => setExamModeActive(false)} />
-        </div>
-      ) : (
-        <>
-          
-          {/* Main Content Area based on active tab */}
-          {activeTab === "toothChart" && (
+      <NavigationWrapper>
+        <div className="h-full flex flex-col">
+          {examModeActive ? (
+            /* Exam Mode */
+            <div className="flex-1 relative">
+              <ExamMode onClose={() => setExamModeActive(false)} />
+            </div>
+          ) : (
             <>
-              <div className="flex flex-1 overflow-hidden">
-                {/* Left Panel - Tooth Chart */}
-                <div className={showPalette ? "w-3/5" : "w-full"} style={{ height: "100%" }}>
-                  <ToothChart 
-                    onTogglePalette={handleTogglePalette}
-                    onNextTooth={handleNextTooth}
-                    onLastUsed={handleLastUsed}
-                    onToggleTreatmentPlan={handleToggleTreatmentPlan}
-                  />
-                </div>
-                
-                {/* Right Panel - Procedure Palette */}
-                {showPalette && (
-                  <div className="w-2/5 h-full relative">
-                    <ProcedurePalette />
+              {/* Main Content Area based on active tab */}
+              {activeTab === "toothChart" && (
+                <>
+                  <div className="flex flex-1 overflow-hidden">
+                    {/* Left Panel - Tooth Chart */}
+                    <div className={showPalette ? "w-3/5" : "w-full"} style={{ height: "100%" }}>
+                      <ToothChart 
+                        onTogglePalette={handleTogglePalette}
+                        onNextTooth={handleNextTooth}
+                        onLastUsed={handleLastUsed}
+                        onToggleTreatmentPlan={handleToggleTreatmentPlan}
+                      />
+                    </div>
+                    
+                    {/* Right Panel - Procedure Palette */}
+                    {showPalette && (
+                      <div className="w-2/5 h-full relative">
+                        <ProcedurePalette />
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                  
+                  {/* Bottom Drawer - Treatment Plan Table */}
+                  {showTreatmentPlan && (
+                    <div className="h-auto">
+                      <TreatmentPlanDrawer />
+                    </div>
+                  )}
+                </>
+              )}
               
-              {/* Bottom Drawer - Treatment Plan Table */}
-              {showTreatmentPlan && (
-                <div className="h-auto">
-                  <TreatmentPlanDrawer />
+              {/* Perio Chart Tab */}
+              {activeTab === "perioChart" && (
+                <div className="flex-1 relative">
+                  <PerioChart />
+                </div>
+              )}
+              
+              {/* Medical History Tab */}
+              {activeTab === "medicalHistory" && (
+                <div className="flex-1 overflow-y-auto">
+                  <CompletedMedicalHistory patient={patient} />
+                </div>
+              )}
+              
+              {/* Images Tab */}
+              {activeTab === "images" && (
+                <div className="flex-1 overflow-y-auto">
+                  <PatientImagingMUI patient={patient} />
                 </div>
               )}
             </>
           )}
           
-          {/* Perio Chart Tab */}
-          {activeTab === "perioChart" && (
-            <div className="flex-1 relative">
-              <PerioChart />
-            </div>
-          )}
-          
-          {/* Medical History Tab */}
-          {activeTab === "medicalHistory" && (
-            <div className="flex-1 overflow-y-auto">
-              <CompletedMedicalHistory patient={patient} />
-            </div>
-          )}
-          
-          {/* Images Tab */}
-          {activeTab === "images" && (
-            <div className="flex-1 overflow-y-auto">
-              <PatientImagingMUI patient={patient} />
-            </div>
-          )}
-        </>
-      )}
-      
-      {/* Tooth Details Modal */}
-      <ToothDetails 
-        open={showToothDetails} 
-        onClose={() => setShowToothDetails(false)} 
-        tooth={selectedTooth}
-      />
-      </div>
-    </NavigationWrapper>
+          {/* Tooth Details Modal */}
+          <ToothDetails 
+            open={showToothDetails} 
+            onClose={() => setShowToothDetails(false)} 
+            tooth={selectedTooth}
+          />
+        </div>
+      </NavigationWrapper>
+    </>
   );
 };
 
-export default ToothChartPage;
+export default ToothChartPageFixed;

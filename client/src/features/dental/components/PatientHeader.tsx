@@ -30,8 +30,8 @@ const PatientHeader = ({ onTabChange, currentTab = "toothChart", onStartExamMode
   };
   
   return (
-    <div className="bg-white shadow-md z-10 sticky top-0" role="banner">
-      <div className="px-4 py-2 flex items-center justify-between border-b">
+    <div className="bg-white shadow-md z-10 sticky top-0 w-full" role="banner">
+      <div className="container mx-auto px-4 py-2 flex items-center justify-between border-b">
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
             <User className="text-primary h-5 w-5" />
@@ -75,7 +75,8 @@ const PatientHeader = ({ onTabChange, currentTab = "toothChart", onStartExamMode
         onValueChange={(value) => onTabChange && onTabChange(value)}
         className="border-b"
       >
-        <TabsList className="bg-transparent h-auto p-0">
+        <div className="container mx-auto">
+          <TabsList className="bg-transparent h-auto p-0">
           <TabsTrigger 
             value="toothChart" 
             className="px-4 py-2 text-sm font-medium data-[state=active]:text-primary data-[state=active]:border-b-2 data-[state=active]:border-primary data-[state=active]:shadow-none rounded-none"
@@ -101,6 +102,7 @@ const PatientHeader = ({ onTabChange, currentTab = "toothChart", onStartExamMode
             Images
           </TabsTrigger>
         </TabsList>
+        </div>
       </Tabs>
     </div>
   );
