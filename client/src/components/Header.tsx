@@ -61,12 +61,12 @@ export function Header() {
         {/* Action buttons and user menu */}
         <div className="flex items-center">
           {/* Gamepad Button */}
-          <Link href="/today">
+          <Link href="/dashboard/planet-pixie">
             <Button
               variant="ghost"
               size="icon"
               className="rounded-full text-white hover:bg-primary-dark/30 hover:text-white"
-              aria-label="Daily Game"
+              aria-label="Planet Pixie Game"
             >
               <Gamepad className="h-5 w-5" />
             </Button>

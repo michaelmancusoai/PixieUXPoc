@@ -92,6 +92,241 @@ const PlanetPixiePage = () => {
     }
   };
 
+  // Additional state variables for game effects
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
+  const [showGrandFinale, setShowGrandFinale] = useState(false);
+  const [showWhiteFlag, setShowWhiteFlag] = useState(false);
+  
+  // Function to advance to next level
+  const advanceLevel = () => {
+    if (level === GameLevel.LEVEL_1) {
+      setLevel(GameLevel.LEVEL_2);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
+    } else if (level === GameLevel.LEVEL_2) {
+      setLevel(GameLevel.LEVEL_FINAL);
+      setShowFireworks(true);
+      setTimeout(() => setShowFireworks(false), 3000);
+    } else if (level === GameLevel.LEVEL_FINAL) {
+      setLevel(GameLevel.VICTORY);
+      setShowGrandFinale(true);
+      setStreak(streak + 1);
+    }
+  };
+  
+  // Function to surrender the game
+  const surrenderGame = () => {
+    setShowWhiteFlag(true);
+    setTimeout(() => {
+      setShowWhiteFlag(false);
+      setLevel(GameLevel.SURRENDERED);
+    }, 2000);
+  };
+  
+  // Function to restart the game
+  const restartGame = () => {
+    setLevel(GameLevel.LEVEL_1);
+    setCompletedCoins(new Set([0, 1]));
+  };
+  
+  // Accept mission - move to next level
+  const acceptMission = () => {
+    advanceLevel();
+  };
+  
+  // Render game content based on level
+  const renderGameContent = () => {
+    const currentVariant = promptVariants[currentVariantIndex];
+    
+    switch (level) {
+      case GameLevel.LEVEL_1:
+        return (
+          <div className="grid grid-cols-1 gap-4">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 relative overflow-hidden">
+              <h3 className="font-bold text-blue-800 text-lg mb-2">Capture the Cards</h3>
+              <p className="text-blue-600 mb-4 text-base">Level 1: Mastering Card Prompts</p>
+              
+              <div className="flex items-end gap-6 mt-6 relative">
+                {/* Character */}
+                <div className="flex-none">
+                  <i className={`${currentVariant.character} transform scale-150`}></i>
+                </div>
+                
+                {/* Speech bubble with prompt */}
+                <div className="ml-24 bg-white border-2 border-gray-800 rounded-xl p-3 relative before:content-[''] before:absolute before:left-[-10px] before:bottom-[20px] before:w-[0] before:h-[0] before:border-[10px] before:border-transparent before:border-r-gray-800">
+                  <p className="font-bold mb-1 text-lg">{currentVariant.name}</p>
+                  <p className="text-base mb-1">{currentVariant.prompt}</p>
+                  <p className="text-sm text-blue-600">{currentVariant.benefit}</p>
+                </div>
+              </div>
+              
+              {/* Coins at bottom */}
+              <div className="flex justify-end gap-2 mt-4">
+                {[...Array(3)].map((_, index) => renderCoin(index))}
+              </div>
+              
+              {/* Navigation controls */}
+              <div className="flex justify-between mt-4">
+                <Button variant="outline" size="sm" onClick={prevVariant} className="border-gray-500">
+                  <i className="nes-icon arrow-left is-small"></i>
+                </Button>
+                <Button variant="default" size="sm" onClick={acceptMission} className="bg-blue-600 hover:bg-blue-700">
+                  Accept Mission
+                </Button>
+                <Button variant="outline" size="sm" onClick={nextVariant} className="border-gray-500">
+                  <i className="nes-icon arrow-right is-small"></i>
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case GameLevel.LEVEL_2:
+        return (
+          <div className="grid grid-cols-1 gap-4">
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 relative overflow-hidden">
+              <h3 className="font-bold text-amber-800 text-lg mb-2">Capture the Cards</h3>
+              <p className="text-amber-600 mb-4 text-base">Level 2: Finding the Perfect Moment</p>
+              
+              <div className="flex items-end gap-6 mt-6 relative">
+                {/* Different character for level 2 */}
+                <div className="flex-none">
+                  <i className="nes-squirtle transform scale-150"></i>
+                </div>
+                
+                {/* Speech bubble with level 2 content */}
+                <div className="ml-24 bg-white border-2 border-gray-800 rounded-xl p-3 relative before:content-[''] before:absolute before:left-[-10px] before:bottom-[20px] before:w-[0] before:h-[0] before:border-[10px] before:border-transparent before:border-r-gray-800">
+                  <p className="font-bold mb-1 text-lg">Perfect Timing</p>
+                  <p className="text-base mb-1">Ask when the patient is happy—right after completing treatment or getting good news.</p>
+                  <p className="text-sm text-amber-600">Patients are 65% more likely to say yes when they're feeling good.</p>
+                </div>
+              </div>
+              
+              {/* Coins at bottom */}
+              <div className="flex justify-end gap-2 mt-4">
+                {[...Array(3)].map((_, index) => renderCoin(index + 3))}
+              </div>
+              
+              {/* Navigation controls */}
+              <div className="flex justify-between mt-4">
+                <Button variant="outline" size="sm" className="border-gray-500" disabled>
+                  <i className="nes-icon arrow-left is-small"></i>
+                </Button>
+                <Button variant="default" size="sm" onClick={acceptMission} className="bg-amber-600 hover:bg-amber-700">
+                  Accept Mission
+                </Button>
+                <Button variant="outline" size="sm" className="border-gray-500" disabled>
+                  <i className="nes-icon arrow-right is-small"></i>
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case GameLevel.LEVEL_FINAL:
+        return (
+          <div className="grid grid-cols-1 gap-4">
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 relative overflow-hidden">
+              <h3 className="font-bold text-orange-800 text-lg mb-2">Capture the Cards</h3>
+              <p className="text-orange-600 mb-4 text-base">Final Level: Security Reassurance</p>
+              
+              <div className="flex items-end gap-6 mt-6 relative">
+                {/* Character for final level */}
+                <div className="flex-none">
+                  <i className="nes-charmander transform scale-150"></i>
+                </div>
+                
+                {/* Speech bubble with final level content */}
+                <div className="ml-24 bg-white border-2 border-gray-800 rounded-xl p-3 relative before:content-[''] before:absolute before:left-[-10px] before:bottom-[20px] before:w-[0] before:h-[0] before:border-[10px] before:border-transparent before:border-r-gray-800">
+                  <p className="font-bold mb-1 text-lg">Security First</p>
+                  <p className="text-base mb-1">All card info is stored in our encrypted system. You can remove it anytime with one click.</p>
+                  <p className="text-sm text-orange-600">Mentioning security increases enrollment by 40%.</p>
+                </div>
+              </div>
+              
+              {/* Coins at bottom */}
+              <div className="flex justify-end gap-2 mt-4">
+                {[...Array(4)].map((_, index) => renderCoin(index + 6))}
+              </div>
+              
+              {/* Navigation controls */}
+              <div className="flex justify-between mt-4">
+                <Button variant="outline" size="sm" className="border-gray-500" disabled>
+                  <i className="nes-icon arrow-left is-small"></i>
+                </Button>
+                <Button variant="default" size="sm" onClick={acceptMission} className="bg-orange-600 hover:bg-orange-700">
+                  Complete Mission
+                </Button>
+                <Button variant="outline" size="sm" className="border-gray-500" disabled>
+                  <i className="nes-icon arrow-right is-small"></i>
+                </Button>
+              </div>
+            </div>
+          </div>
+        );
+      
+      case GameLevel.VICTORY:
+        return (
+          <div className="text-center py-8">
+            <i className="nes-icon trophy is-large"></i>
+            <h2 className="font-bold text-2xl text-green-600 mt-4">MISSION COMPLETE!</h2>
+            <p className="text-lg mb-6">You've conquered all levels of card capture training!</p>
+            <div className="nes-container is-rounded with-title is-centered">
+              <p className="title">REWARDS EARNED</p>
+              <div className="flex justify-center gap-4 mb-4">
+                <div className="flex items-center">
+                  <i className="nes-icon coin is-small mr-2"></i>
+                  <span className="font-bold">{completedCoins.size} Coins</span>
+                </div>
+                <div className="flex items-center">
+                  <i className="nes-icon star is-small mr-2"></i>
+                  <span className="font-bold">{streak} Day Streak</span>
+                </div>
+              </div>
+              <p className="text-sm mb-4">Your practice will see increased card collection rates by {completedCoins.size * 2}%!</p>
+              <Button onClick={restartGame} variant="default" className="mt-4">
+                Play Again
+              </Button>
+            </div>
+          </div>
+        );
+      
+      case GameLevel.SURRENDERED:
+        return (
+          <div className="text-center py-8">
+            <i className="nes-icon close is-large"></i>
+            <h2 className="font-bold text-2xl text-red-600 mt-4">MISSION ABANDONED</h2>
+            <p className="text-lg mb-6">You've surrendered this challenge.</p>
+            <div className="nes-container is-rounded with-title is-centered">
+              <p className="title">CURRENT STATUS</p>
+              <div className="flex justify-center gap-4 mb-4">
+                <div className="flex items-center">
+                  <i className="nes-icon coin is-small mr-2"></i>
+                  <span className="font-bold">{completedCoins.size} Coins</span>
+                </div>
+                <div className="flex items-center">
+                  <i className="nes-icon star is-small mr-2"></i>
+                  <span className="font-bold">{streak} Day Streak</span>
+                </div>
+              </div>
+              <p className="text-sm mb-4">Better luck tomorrow!</p>
+              <Button onClick={restartGame} variant="default" className="mt-4">
+                Try Again
+              </Button>
+            </div>
+          </div>
+        );
+      
+      default:
+        return (
+          <div className="text-center py-8">
+            <p>Loading challenge...</p>
+          </div>
+        );
+    }
+  };
+  
   return (
     <NavigationWrapper>
       <div className="container py-6 max-w-6xl mx-auto">
@@ -107,13 +342,13 @@ const PlanetPixiePage = () => {
               <div className="flex justify-between items-center px-1 mb-3">
                 {/* Office Rank - Left */}
                 <div className="bg-blue-100 rounded-md px-2 py-1">
-                  <span className="text-blue-800 font-press-start text-xs">OFFICE RANK: #{gameState.level === GameLevel.LEVEL_FINAL ? "1" : "2"}</span>
+                  <span className="text-blue-800 font-press-start text-xs">OFFICE RANK: #{level === GameLevel.LEVEL_FINAL ? "1" : "2"}</span>
                 </div>
                 
                 {/* Surrender Button - Only shown during active game levels (not in briefing, intro or victory screens) */}
-                {(gameState.level === GameLevel.LEVEL_1 || gameState.level === GameLevel.LEVEL_2 || gameState.level === GameLevel.LEVEL_FINAL) && 
-                  gameState.level !== GameLevel.VICTORY && 
-                  gameState.level !== GameLevel.BRIEFING_1 && (
+                {(level === GameLevel.LEVEL_1 || level === GameLevel.LEVEL_2 || level === GameLevel.LEVEL_FINAL) && 
+                  level !== GameLevel.VICTORY && 
+                  level !== GameLevel.BRIEFING_1 && (
                   <button 
                     onClick={surrenderGame}
                     className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
@@ -218,11 +453,11 @@ const PlanetPixiePage = () => {
               </div>
               
               {/* Status bar at bottom of main container */}
-              {(gameState.level === GameLevel.LEVEL_1 || gameState.level === GameLevel.LEVEL_2 || gameState.level === GameLevel.LEVEL_FINAL) && (
+              {(level === GameLevel.LEVEL_1 || level === GameLevel.LEVEL_2 || level === GameLevel.LEVEL_FINAL) && (
                 <div className="flex justify-between items-center mt-2">
                   <div className="text-xs text-gray-700 font-bold">
                     <i className="nes-icon star is-small"></i>
-                    STREAK: {gameState.streak} DAYS
+                    STREAK: {streak} DAYS
                   </div>
                   <div className="text-xs text-gray-700 font-bold">
                     <i className="nes-icon heart is-small"></i>
