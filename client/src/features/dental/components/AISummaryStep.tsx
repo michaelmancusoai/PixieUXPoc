@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/dentalSlice';
 import { Button } from '@/components/ui/button';
@@ -88,7 +88,11 @@ const generateAISummary = (teeth: any[], riskFactors: string[] = []) => {
   return `FINDINGS: ${clinicalFindings}\n\n${assessment}\n\n${plan}`;
 };
 
-const AISummaryStep = () => {
+interface AISummaryStepProps {
+  onSummaryChange?: (summary: string) => void;
+}
+
+const AISummaryStep = ({ onSummaryChange }: AISummaryStepProps) => {
   const { teeth } = useSelector((state: RootState) => state.dental);
   const { toast } = useToast();
   
@@ -103,6 +107,13 @@ const AISummaryStep = () => {
   
   // State for edited summary
   const [editedSummary, setEditedSummary] = useState(summary);
+  
+  // Send summary to parent component when it changes
+  useEffect(() => {
+    if (onSummaryChange) {
+      onSummaryChange(summary);
+    }
+  }, [summary, onSummaryChange]);
   
   // Toggle edit mode
   const toggleEditMode = () => {

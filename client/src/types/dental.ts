@@ -182,6 +182,15 @@ export interface PatientImage {
   toothNumbers?: number[];
 }
 
+export interface ExamNote {
+  id: string;
+  patientId: number;
+  content: string;
+  type: 'exam' | 'procedure' | 'other';
+  createdAt: string;
+  createdBy: string;
+}
+
 export interface Patient {
   id: number;
   name: string;
@@ -200,6 +209,7 @@ export interface Patient {
   perioMeasurements?: PerioMeasurements[];
   treatmentPlans?: TreatmentPlan[];
   images?: PatientImage[];
+  notes?: ExamNote[];
   balance?: number;
   nextAppointment?: string;
 }

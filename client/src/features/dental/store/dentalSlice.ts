@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction, configureStore } from '@reduxjs/toolkit';
-import { Tooth, ToothStatus, Surface, SurfaceStatus, Procedure, TreatmentPlan, TreatmentPlanItem, Patient, TreatmentPlanStatus } from '@/types/dental';
+import { Tooth, ToothStatus, Surface, SurfaceStatus, Procedure, TreatmentPlan, TreatmentPlanItem, Patient, TreatmentPlanStatus, ExamNote } from '@/types/dental';
 
 // Mock data for patient
 const patientData: Patient = {

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { RootState } from '../store/dentalSlice';
+import { RootState, addNote } from '../store/dentalSlice';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { 
@@ -9,7 +9,9 @@ import {
   Check, 
   CheckCircle2, 
   XCircle,
-  ClipboardCheck
+  ClipboardCheck,
+  Clipboard,
+  FileText
 } from 'lucide-react';
 import PerioChartingStep from './PerioChartingStep';
 import RiskFactorsStep from './RiskFactorsStep';
@@ -18,6 +20,7 @@ import MedicationsAllergiesStep from './MedicationsAllergiesStep';
 import VitalsStep from './VitalsStep';
 import ConsolidatedFindingsStep from './ConsolidatedFindingsStep';
 import MedicalHistoryStep from './MedicalHistoryStep';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 
 // Step interface
 interface ExamStep {
@@ -39,6 +42,10 @@ const ExamMode = ({ onClose }: ExamModeProps) => {
   
   // State for tracking current step
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
+  // State for completion dialog
+  const [showCompletionDialog, setShowCompletionDialog] = useState(false);
+  // State for AI summary to save as a note
+  const [aiSummary, setAiSummary] = useState("");
   
   // Pre-check step component
   const PreCheckStep = () => {
@@ -237,7 +244,7 @@ const ExamMode = ({ onClose }: ExamModeProps) => {
       id: 'ai-summary',
       title: 'AI Summary',
       description: 'Auto-generated findings summary',
-      component: <AISummaryStep />,
+      component: <AISummaryStep onSummaryChange={(summary) => setAiSummary(summary)} />,
       isCompleted: false
     }
   ];
