@@ -197,7 +197,7 @@ function FlowColumn({ column, patients, className, style }: FlowColumnProps) {
   const Icon = column.icon;
   
   return (
-    <div className={cn("min-w-[200px] w-full flex flex-col h-full", className)} style={style}>
+    <div className={cn("min-w-[280px] w-full flex flex-col h-full", className)} style={style}>
       <div className={cn(
         "text-white px-3 py-2 rounded-t-md flex justify-between items-center",
         column.color
@@ -318,8 +318,8 @@ interface FlowState {
 type LayoutMode = 'standard' | 'compact' | 'expanded';
 type FlowViewMode = 'kanban' | 'list' | 'grid';
 
-// Optimized Mission Control Page
-export default function OptimizedMissionControlPage() {
+// Mission Control Page
+export default function MissionControlPage() {
   const [flowState, setFlowState] = useState<FlowState>(initialFlowDistribution);
   const [activeTab, setActiveTab] = useState('flow');
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('standard');
