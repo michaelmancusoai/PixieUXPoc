@@ -218,6 +218,15 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
         return item.description;
     }
   };
+  
+  // Get time-to-pain message based on remaining minutes
+  const getTimeToPainMessage = () => {
+    if (remainingMinutes <= 0) return "Over time! Patient frustrated";
+    if (remainingMinutes <= 5) return "Critical! Patient nearly upset";
+    if (remainingMinutes <= 15) return "Urgent! Patient awareness high";
+    if (remainingMinutes <= 30) return "Waiting becomes noticed";
+    return null;
+  };
 
   // Determine if clinical item
   const isClinicalItem = item.type === 'clinical';
@@ -288,6 +297,19 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
+                
+                {/* Time-to-pain message */}
+                {getTimeToPainMessage() && (
+                  <div className={`mt-1 text-xs font-medium ${
+                    remainingMinutes <= 5 
+                      ? 'text-red-600' 
+                      : remainingMinutes <= 15 
+                        ? 'text-amber-600' 
+                        : 'text-blue-600'
+                  }`}>
+                    {getTimeToPainMessage()}
+                  </div>
+                )}
               </div>
             )}
             
