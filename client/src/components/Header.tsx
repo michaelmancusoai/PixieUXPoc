@@ -26,8 +26,10 @@ export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
+  const [searchBarRect, setSearchBarRect] = useState<DOMRect | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const searchModalRef = useRef<HTMLDivElement>(null);
+  const searchBarRef = useRef<HTMLDivElement>(null);
   
   const {
     navigationData,
@@ -38,6 +40,14 @@ export function Header() {
     handleNavClick,
     setActiveSubNav
   } = useNavigation();
+  
+  // Store the search bar position when opening modal
+  const openSearchModal = () => {
+    if (searchBarRef.current) {
+      setSearchBarRect(searchBarRef.current.getBoundingClientRect());
+    }
+    setSearchOpen(true);
+  };
   
   // Focus search input when modal opens
   useEffect(() => {
@@ -54,7 +64,7 @@ export function Header() {
       // CMD/CTRL + K to open search
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        setSearchOpen(true);
+        openSearchModal();
       }
       
       // ESC to close search
@@ -93,8 +103,9 @@ export function Header() {
 
           {/* Search on larger screens - HubSpot inspired */}
           <div 
+            ref={searchBarRef}
             className="hidden md:flex items-center px-3 py-1.5 rounded-md bg-primary-dark/30 border border-white/20 w-80 mx-4 shadow-inner cursor-pointer group hover:bg-primary-dark/40 transition-colors"
-            onClick={() => setSearchOpen(true)}
+            onClick={openSearchModal}
           >
             <Search className="h-4 w-4 text-white/80 mr-2" />
             <div className="flex-1 text-white/80 text-sm">Search Pixie Dental</div>
@@ -220,13 +231,21 @@ export function Header() {
         )}
       </div>
 
-      {/* HubSpot-style Search Modal */}
+      {/* HubSpot-style Search Modal with animated expansion from search bar */}
       {searchOpen && (
-        <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 px-4 bg-black/25 backdrop-blur-sm" onClick={() => setSearchOpen(false)}>
+        <div 
+          className="fixed inset-0 z-50 flex items-start justify-center bg-black/25 backdrop-blur-sm animate-in fade-in duration-200" 
+          onClick={() => setSearchOpen(false)}
+        >
           <div 
             ref={searchModalRef}
-            className="w-full max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden" 
+            className="w-full max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden animate-in zoom-in-90 duration-200" 
             onClick={(e) => e.stopPropagation()}
+            style={{
+              // Position the modal based on search bar location
+              marginTop: searchBarRect ? searchBarRect.top : '4rem',
+              transformOrigin: searchBarRect ? 'center top' : 'center center',
+            }}
           >
             {/* Search Input Header */}
             <div className="flex items-center px-4 py-3 border-b">
