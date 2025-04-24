@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { UserRole, ROLE_CONFIGS } from '../types';
 import { roleBasedData } from '../mockData';
 import RoleSelector from './RoleSelector';
@@ -19,16 +19,67 @@ import {
   Lightbulb,
   Plus,
   Check,
-  PartyPopper
+  PartyPopper,
+  Award,
+  Target,
+  Trophy,
+  Star,
+  Zap,
+  CreditCard,
+  ArrowLeft,
+  ArrowRight,
+  Clock,
+  Medal,
+  Sparkles,
+  Wallet
 } from 'lucide-react';
+
+// Define prompt variants for the daily challenge card
+interface PromptVariant {
+  name: string;
+  prompt: string;
+  benefit: string;
+}
+
+const promptVariants: PromptVariant[] = [
+  {
+    name: "Membership Club Feel",
+    prompt: "We offer a 'Fast-Track Checkout'—store a card once and skip the desk dash every visit. Shall I enrol you?",
+    benefit: "Think express lane, but for happy smiles."
+  },
+  {
+    name: "Friendly Concierge",
+    prompt: "While I'm running your card, would you like us to keep it on file for next time?",
+    benefit: "It means a faster checkout—no wallet hunt."
+  },
+  {
+    name: "Time-Saver Angle",
+    prompt: "We can store this card securely so your future visits take about 30 seconds to pay—shall I do that for you?",
+    benefit: "You'll still get a text before any charge."
+  },
+  {
+    name: "Stress-Reducer",
+    prompt: "Most patients let us keep a card on record so they never worry about bills stacking up—okay to add yours?",
+    benefit: "It only runs after your insurance pays."
+  },
+  {
+    name: "Contactless Convenience",
+    prompt: "If you prefer touch-free payments, I can tokenise this card now—want me to switch that on?",
+    benefit: "It's encrypted, and you just tap 'okay' on your phone next time."
+  }
+];
 
 const RoleDashboard: React.FC = () => {
   const [currentRole, setCurrentRole] = useState<UserRole>('frontOffice');
   const [completedActions, setCompletedActions] = useState<Set<string>>(new Set());
-  const [completedCards, setCompletedCards] = useState<Set<number>>(new Set());
+  const [completedCards, setCompletedCards] = useState<Set<number>>(new Set([1])); // Start with one already checked
+  const [cardsToShow, setCardsToShow] = useState<number>(3); // Initial count of circles to show
   const [extraCompletedCards, setExtraCompletedCards] = useState<number>(0);
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
-  const [quickWinVisible, setQuickWinVisible] = useState<boolean>(true);
+  const [showFireworks, setShowFireworks] = useState<boolean>(false);
+  const [showGrandFinale, setShowGrandFinale] = useState<boolean>(false);
+  const [challengeVisible, setChallengeVisible] = useState<boolean>(true);
+  const [currentVariantIndex, setCurrentVariantIndex] = useState<number>(0);
 
   // Get the dashboard data for the current role
   const dashboardData = roleBasedData[currentRole];
@@ -49,6 +100,15 @@ const RoleDashboard: React.FC = () => {
     });
   };
   
+  // Helper to cycle through prompt variants
+  const nextVariant = useCallback(() => {
+    setCurrentVariantIndex((prev) => (prev + 1) % promptVariants.length);
+  }, []);
+  
+  const prevVariant = useCallback(() => {
+    setCurrentVariantIndex((prev) => (prev - 1 + promptVariants.length) % promptVariants.length);
+  }, []);
+  
   // Function to mark a card-on-file action as complete
   const handleCardComplete = (cardNumber: number) => {
     setCompletedCards((prev) => {
@@ -62,16 +122,32 @@ const RoleDashboard: React.FC = () => {
       // Add the new card
       newSet.add(cardNumber);
       
-      // Check if all 3 are now complete
-      if (newSet.size === 3 && !showConfetti) {
-        setShowConfetti(true);
-        // Hide confetti after 3 seconds
-        setTimeout(() => {
-          setShowConfetti(false);
-        }, 3000);
+      // If this completes all currently shown cards
+      if (newSet.size === cardsToShow) {
+        // Show appropriate celebration based on progress
+        if (newSet.size === 5) {
+          // Special fireworks for 5th completion
+          setShowFireworks(true);
+          setTimeout(() => setShowFireworks(false), 3000);
+        } else if (newSet.size === 10) {
+          // Grand finale for 10th completion
+          setShowGrandFinale(true);
+          setTimeout(() => setShowGrandFinale(false), 5000);
+        } else {
+          // Regular confetti for other milestones
+          setShowConfetti(true);
+          setTimeout(() => setShowConfetti(false), 2000);
+        }
+        
+        // Add a new circle if we haven't reached 10 yet
+        if (newSet.size < 10) {
+          setTimeout(() => {
+            setCardsToShow(prevCount => prevCount + 1);
+          }, 1000);
+        }
       }
       
-      // If more than 3 cards are completed
+      // Update extra cards count (purely visual for showing +N more)
       if (newSet.size > 3) {
         setExtraCompletedCards(newSet.size - 3);
       }
@@ -80,9 +156,9 @@ const RoleDashboard: React.FC = () => {
     });
   };
   
-  // Handle dismissing the quick win card
-  const handleDismissQuickWin = () => {
-    setQuickWinVisible(false);
+  // Handle dismissing the challenge card
+  const handleDismissChallenge = () => {
+    setChallengeVisible(false);
   };
 
   // Get the appropriate icon for the role
@@ -176,93 +252,182 @@ const RoleDashboard: React.FC = () => {
         </CardContent>
       </Card>
       
-      {/* Quick Win Card - shown only for front office role */}
-      {currentRole === 'frontOffice' && quickWinVisible && (
-        <Card className="border-dashed border-2 border-amber-300 bg-amber-50 hover:shadow-md transition-shadow duration-200">
+      {/* Daily Challenge Card - shown only for front office role */}
+      {currentRole === 'frontOffice' && challengeVisible && (
+        <Card className="border-dashed border-2 border-indigo-300 bg-indigo-50 hover:shadow-md transition-shadow duration-200 relative overflow-hidden">
           <CardContent className="p-4">
             <div className="flex items-start space-x-3">
-              <div className="bg-amber-100 p-2 rounded-full flex-shrink-0">
-                <Lightbulb className="h-5 w-5 text-amber-600" />
+              <div className="bg-indigo-100 p-2 rounded-full flex-shrink-0">
+                <Trophy className="h-5 w-5 text-indigo-600" />
               </div>
               <div className="flex-1">
                 <div className="flex justify-between items-start">
-                  <h3 className="font-medium text-amber-800 flex items-center">
-                    💡 Quick Win
+                  <h3 className="font-medium text-indigo-800 flex items-center">
+                    Daily Challenge
                   </h3>
                   <Button 
                     variant="ghost"
                     size="sm"
                     className="text-gray-500 hover:text-gray-700 h-6 p-0 px-2"
-                    onClick={handleDismissQuickWin}
+                    onClick={handleDismissChallenge}
                   >
                     Dismiss
                   </Button>
                 </div>
-                <p className="text-sm text-amber-700 mt-1">
-                  Invite 3 patients today to <strong>store a card on file</strong>
+                <p className="text-sm text-indigo-700 mt-1">
+                  Invite patients today to <strong>store a card on file</strong>
                 </p>
-                <p className="text-xs text-amber-600 mt-0.5">
+                <p className="text-xs text-indigo-600 mt-0.5">
                   → unlock faster check-outs & fewer billing calls
                 </p>
-                <div className="mt-2 bg-white p-2 rounded-md border border-amber-200 text-sm">
-                  <p className="text-gray-700">
-                    <span className="font-medium">Try saying:</span> "While I'm processing this, would you like us to keep the card on file? It's encrypted, and we always text you before any charge."
-                  </p>
-                </div>
-                <div className="mt-3 flex justify-between items-center">
-                  <div className="flex items-center space-x-2">
-                    {/* Progress circles */}
-                    {[1, 2, 3].map((item) => (
-                      <button 
-                        key={item}
-                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                          completedCards.has(item) 
-                            ? 'border-amber-500 bg-amber-100' 
-                            : 'border-amber-400 bg-white hover:bg-amber-50'
-                        }`}
-                        title={`Mark patient ${item} ${completedCards.has(item) ? 'incomplete' : 'complete'}`}
-                        onClick={() => handleCardComplete(item)}
-                      >
-                        {completedCards.has(item) && <Check className="h-3 w-3 text-amber-600" />}
-                      </button>
-                    ))}
-                    
-                    {/* Show count if more than 3 are completed */}
-                    {extraCompletedCards > 0 && (
-                      <div className="text-xs font-semibold text-amber-700">
-                        +{extraCompletedCards} more
-                      </div>
-                    )}
+                
+                {/* Prompt Carousel */}
+                <div className="mt-2 bg-white p-3 rounded-md border border-indigo-200 text-sm relative">
+                  <div className="absolute -top-2 left-3 bg-indigo-100 text-indigo-700 px-2 py-0.5 text-xs rounded-full">
+                    {promptVariants[currentVariantIndex].name}
                   </div>
                   
-                  {/* Confetti celebration */}
-                  {showConfetti && (
-                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
-                      <div className="relative">
-                        <PartyPopper className="h-8 w-8 text-amber-500 animate-bounce" />
-                        {/* Simulated confetti particles */}
-                        <div className="absolute top-1/2 left-1/2">
-                          {Array.from({ length: 20 }).map((_, i) => (
-                            <div 
-                              key={i}
-                              className={`absolute w-2 h-2 rounded-full bg-${
-                                ['amber', 'blue', 'green', 'pink', 'purple'][i % 5]
-                              }-500 animate-ping`}
-                              style={{ 
-                                top: `${Math.random() * 100 - 50}px`, 
-                                left: `${Math.random() * 100 - 50}px`,
-                                animationDuration: `${0.5 + Math.random()}s`,
-                                animationDelay: `${Math.random() * 0.5}s`
-                              }}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
+                  <p className="text-gray-700 mt-1">
+                    <span className="font-medium block">Prompt Line:</span> 
+                    "{promptVariants[currentVariantIndex].prompt}"
+                  </p>
+                  
+                  <p className="text-gray-700 mt-2">
+                    <span className="font-medium block">Benefit:</span> 
+                    "{promptVariants[currentVariantIndex].benefit}"
+                  </p>
+                  
+                  <div className="flex justify-between mt-3">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="h-8 w-8 p-0 text-indigo-600"
+                      onClick={prevVariant}
+                    >
+                      <ArrowLeft className="h-4 w-4" />
+                    </Button>
+                    
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      className="h-8 w-8 p-0 text-indigo-600"
+                      onClick={nextVariant}
+                    >
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+                
+                {/* Progress Circles */}
+                <div className="mt-3 flex justify-between items-center">
+                  <div className="flex items-center space-x-2 flex-wrap">
+                    {/* Show circles based on current progress - start with initial 3, then add more as they're completed */}
+                    {Array.from({ length: cardsToShow }).map((_, index) => (
+                      <button 
+                        key={index + 1}
+                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                          completedCards.has(index + 1) 
+                            ? 'border-indigo-500 bg-indigo-100' 
+                            : 'border-indigo-400 bg-white hover:bg-indigo-50'
+                        }`}
+                        title={`Mark patient ${index + 1} ${completedCards.has(index + 1) ? 'incomplete' : 'complete'}`}
+                        onClick={() => handleCardComplete(index + 1)}
+                      >
+                        {completedCards.has(index + 1) && <Check className="h-3 w-3 text-indigo-600" />}
+                      </button>
+                    ))}
+                  </div>
+                  
+                  {/* Progress indicator */}
+                  <div className="text-xs text-indigo-700 font-medium">
+                    {completedCards.size}/10 saved
+                  </div>
                 </div>
               </div>
             </div>
+            
+            {/* Celebrations */}
+            {/* Regular confetti celebration */}
+            {showConfetti && (
+              <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
+                <div className="relative">
+                  <PartyPopper className="h-8 w-8 text-indigo-500 animate-bounce" />
+                  {/* Simulated confetti particles */}
+                  <div className="absolute top-1/2 left-1/2">
+                    {Array.from({ length: 20 }).map((_, i) => (
+                      <div 
+                        key={i}
+                        className={`absolute w-2 h-2 rounded-full bg-${
+                          ['indigo', 'blue', 'green', 'pink', 'purple'][i % 5]
+                        }-500 animate-ping`}
+                        style={{ 
+                          top: `${Math.random() * 100 - 50}px`, 
+                          left: `${Math.random() * 100 - 50}px`,
+                          animationDuration: `${0.5 + Math.random()}s`,
+                          animationDelay: `${Math.random() * 0.5}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Special fireworks for 5th completion */}
+            {showFireworks && (
+              <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
+                <div className="relative">
+                  <Sparkles className="h-12 w-12 text-yellow-500 animate-pulse" />
+                  {/* More elaborate fireworks effect */}
+                  <div className="absolute top-1/2 left-1/2">
+                    {Array.from({ length: 40 }).map((_, i) => (
+                      <div 
+                        key={i}
+                        className={`absolute w-3 h-3 rounded-full bg-${
+                          ['indigo', 'yellow', 'green', 'pink', 'red', 'blue'][i % 6]
+                        }-500 animate-ping`}
+                        style={{ 
+                          top: `${Math.random() * 200 - 100}px`, 
+                          left: `${Math.random() * 200 - 100}px`,
+                          animationDuration: `${0.3 + Math.random()}s`,
+                          animationDelay: `${Math.random() * 0.5}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+            
+            {/* Grand finale for 10th completion */}
+            {showGrandFinale && (
+              <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none z-50 bg-black/30">
+                <div className="relative">
+                  <Star className="h-16 w-16 text-yellow-500 animate-bounce" />
+                  {/* Huge celebration effect */}
+                  <div className="absolute top-1/2 left-1/2">
+                    {Array.from({ length: 100 }).map((_, i) => (
+                      <div 
+                        key={i}
+                        className={`absolute w-4 h-4 rounded-full bg-${
+                          ['yellow', 'indigo', 'green', 'pink', 'red', 'blue', 'purple', 'orange'][i % 8]
+                        }-500 animate-ping`}
+                        style={{ 
+                          top: `${Math.random() * 400 - 200}px`, 
+                          left: `${Math.random() * 400 - 200}px`,
+                          animationDuration: `${0.2 + Math.random() * 2}s`,
+                          animationDelay: `${Math.random() * 0.8}s`
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white/80 p-3 rounded-lg shadow-lg text-center">
+                    <h3 className="text-xl font-bold text-indigo-700">Challenge Complete!</h3>
+                    <p className="text-indigo-600">You've saved 10 cards on file! Amazing work! 🏆</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
