@@ -422,7 +422,7 @@ const RoleDashboard: React.FC = () => {
               </div>
               
               {/* Coins at right */}
-              <div className="flex justify-end pr-10">
+              <div className="flex justify-end pr-2">
                 {[0, 1, 2].map(index => renderCoin(index))}
               </div>
             </div>
@@ -508,7 +508,7 @@ const RoleDashboard: React.FC = () => {
               </div>
               
               {/* Coins at right */}
-              <div className="flex justify-end pr-10">
+              <div className="flex justify-end pr-2">
                 {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
               </div>
             </div>
@@ -565,7 +565,7 @@ const RoleDashboard: React.FC = () => {
               </div>
               
               {/* Coins at right */}
-              <div className="flex justify-end pr-10 flex-wrap gap-y-2">
+              <div className="flex justify-end pr-2 flex-wrap gap-y-2">
                 {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
               </div>
             </div>
