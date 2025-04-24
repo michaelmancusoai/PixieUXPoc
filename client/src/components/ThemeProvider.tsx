@@ -81,16 +81,16 @@ const defaultTheme: ThemeSettings = {
   cardForeground: "20 14.3% 4.1%",
   border: "20 5.9% 90%",
   input: "20 5.9% 90%",
-  primary: "174 100% 24%",
-  primaryDark: "174 100% 18%",
-  primaryForeground: "211 100% 99%",
-  secondary: "200 19% 33%",
+  primary: "202 25% 42%",
+  primaryDark: "202 25% 36%",
+  primaryForeground: "0 0% 100%",
+  secondary: "202 15% 60%",
   secondaryForeground: "24 9.8% 10%",
-  accent: "60 4.8% 95.9%",
+  accent: "202 25% 95%",
   accentForeground: "24 9.8% 10%",
   destructive: "0 84.2% 60.2%",
   destructiveForeground: "60 9.1% 97.8%",
-  ring: "20 14.3% 4.1%",
+  ring: "202 25% 42%",
   
   // Typography
   fontFamily: "'Inter', sans-serif",
@@ -119,21 +119,21 @@ const defaultTheme: ThemeSettings = {
   transitionTimingOut: "cubic-bezier(0.4, 0, 1, 1)",
   
   // Chart Colors
-  chart1: "174 100% 24%",
-  chart2: "200 19% 33%",
-  chart3: "187 47% 55%",
-  chart4: "200 18% 46%",
-  chart5: "174 42% 65%",
+  chart1: "202 25% 42%",
+  chart2: "202 15% 60%",
+  chart3: "217 47% 55%",
+  chart4: "187 18% 46%",
+  chart5: "202 42% 65%",
   
   // Sidebar
   sidebarBackground: "0 0% 100%",
   sidebarForeground: "20 14.3% 4.1%",
-  sidebarPrimary: "174 100% 24%",
-  sidebarPrimaryForeground: "211 100% 99%",
-  sidebarAccent: "174 42% 95%",
-  sidebarAccentForeground: "174 100% 24%",
+  sidebarPrimary: "202 25% 42%",
+  sidebarPrimaryForeground: "0 0% 100%",
+  sidebarAccent: "202 25% 95%",
+  sidebarAccentForeground: "202 25% 42%",
   sidebarBorder: "220 13% 91%",
-  sidebarRing: "174 100% 24%",
+  sidebarRing: "202 25% 42%",
 }
 
 // Define dark theme values
@@ -149,10 +149,10 @@ const defaultDarkTheme: ThemeSettings = {
   cardForeground: "0 0% 98%",
   border: "240 3.7% 15.9%",
   input: "240 3.7% 15.9%",
-  primary: "174 100% 24%",
-  primaryDark: "174 100% 18%",
-  primaryForeground: "211 100% 99%",
-  secondary: "200 19% 33%",
+  primary: "202 25% 42%",
+  primaryDark: "202 25% 36%",
+  primaryForeground: "0 0% 100%",
+  secondary: "202 15% 60%",
   secondaryForeground: "0 0% 98%",
   accent: "240 3.7% 15.9%",
   accentForeground: "0 0% 98%",
@@ -187,21 +187,21 @@ const defaultDarkTheme: ThemeSettings = {
   transitionTimingOut: "cubic-bezier(0.4, 0, 1, 1)",
   
   // Chart Colors
-  chart1: "174 100% 24%",
-  chart2: "200 19% 33%",
-  chart3: "187 47% 55%",
-  chart4: "200 18% 46%",
-  chart5: "174 42% 65%",
+  chart1: "202 25% 42%",
+  chart2: "202 15% 60%",
+  chart3: "217 47% 55%",
+  chart4: "187 18% 46%",
+  chart5: "202 42% 65%",
   
   // Sidebar
   sidebarBackground: "240 10% 3.9%",
   sidebarForeground: "0 0% 98%",
-  sidebarPrimary: "174 100% 24%",
-  sidebarPrimaryForeground: "211 100% 99%",
+  sidebarPrimary: "202 25% 42%",
+  sidebarPrimaryForeground: "0 0% 100%",
   sidebarAccent: "240 3.7% 15.9%",
-  sidebarAccentForeground: "174 100% 24%",
+  sidebarAccentForeground: "202 25% 42%",
   sidebarBorder: "240 3.7% 15.9%",
-  sidebarRing: "174 100% 24%",
+  sidebarRing: "202 25% 42%",
 }
 
 interface ThemeContextType {
