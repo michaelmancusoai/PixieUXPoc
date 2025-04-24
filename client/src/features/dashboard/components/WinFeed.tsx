@@ -170,79 +170,77 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
           {filteredWins.length} {filteredWins.length === 1 ? 'win' : 'wins'} today
         </div>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="max-h-[300px] overflow-y-auto pr-2">
-          <div className="space-y-3 px-2">
-            {filteredWins.map((win) => (
-              <div 
-                key={win.id} 
-                className={`flex items-start space-x-3 p-2 rounded-md border-l-4 ${getBorderColor(win.isAi)} hover:bg-gray-50`}
-              >
-                <div className={`rounded-full p-2 flex-shrink-0 ${getIconBgColor()}`}>
-                  {getIcon(win.icon)}
+      <CardContent className="pt-0 max-h-[300px] overflow-y-auto">
+        <div className="space-y-3 pr-2">
+          {filteredWins.map((win) => (
+            <div 
+              key={win.id} 
+              className={`flex items-start space-x-3 p-2 rounded-md border-l-4 ${getBorderColor(win.isAi)} hover:bg-gray-50`}
+            >
+              <div className={`rounded-full p-2 flex-shrink-0 ${getIconBgColor()}`}>
+                {getIcon(win.icon)}
+              </div>
+              
+              <div className="flex-1">
+                <div className="flex justify-between">
+                  <h4 className="text-sm font-medium">{win.title}</h4>
+                  <div className="flex items-center space-x-1">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-6 w-6 p-0 rounded-full hover:bg-gray-200"
+                      onClick={(e) => handleViewDetails(win.id, e)}
+                      title="View details"
+                    >
+                      <Eye className="h-3 w-3 text-gray-500" />
+                    </Button>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="h-6 w-6 p-0 rounded-full hover:bg-gray-200"
+                      onClick={(e) => handleDismiss(win.id, e)}
+                      title="Clear notification"
+                    >
+                      <Check className="h-3 w-3 text-gray-500" />
+                    </Button>
+                  </div>
                 </div>
                 
-                <div className="flex-1">
-                  <div className="flex justify-between">
-                    <h4 className="text-sm font-medium">{win.title}</h4>
-                    <div className="flex items-center space-x-1">
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-6 w-6 p-0 rounded-full hover:bg-gray-200"
-                        onClick={(e) => handleViewDetails(win.id, e)}
-                        title="View details"
-                      >
-                        <Eye className="h-3 w-3 text-gray-500" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="h-6 w-6 p-0 rounded-full hover:bg-gray-200"
-                        onClick={(e) => handleDismiss(win.id, e)}
-                        title="Clear notification"
-                      >
-                        <Check className="h-3 w-3 text-gray-500" />
-                      </Button>
-                    </div>
-                  </div>
+                {win.description && (
+                  <p className="text-sm text-gray-600">{win.description}</p>
+                )}
+                
+                <div className="flex items-center mt-1 text-xs text-gray-500">
+                  <Clock className="h-3 w-3 mr-1" />
+                  <span>{win.timestamp}</span>
                   
-                  {win.description && (
-                    <p className="text-sm text-gray-600">{win.description}</p>
+                  {(win.value !== undefined || win.savings !== undefined) && (
+                    <>
+                      <span className="mx-2">•</span>
+                      <DollarSign className="h-3 w-3 mr-1" />
+                      <span>
+                        {win.value !== undefined 
+                          ? `$${win.value.toLocaleString()}` 
+                          : win.savings !== undefined 
+                            ? `Saved $${win.savings.toLocaleString()}` 
+                            : ''}
+                      </span>
+                    </>
                   )}
                   
-                  <div className="flex items-center mt-1 text-xs text-gray-500">
-                    <Clock className="h-3 w-3 mr-1" />
-                    <span>{win.timestamp}</span>
-                    
-                    {(win.value !== undefined || win.savings !== undefined) && (
-                      <>
-                        <span className="mx-2">•</span>
-                        <DollarSign className="h-3 w-3 mr-1" />
-                        <span>
-                          {win.value !== undefined 
-                            ? `$${win.value.toLocaleString()}` 
-                            : win.savings !== undefined 
-                              ? `Saved $${win.savings.toLocaleString()}` 
-                              : ''}
-                        </span>
-                      </>
-                    )}
-                    
-                    {/* Add an AI badge for AI-generated wins */}
-                    {win.isAi && (
-                      <>
-                        <span className="mx-2">•</span>
-                        <span className="bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full text-[10px]">
-                          AI
-                        </span>
-                      </>
-                    )}
-                  </div>
+                  {/* Add an AI badge for AI-generated wins */}
+                  {win.isAi && (
+                    <>
+                      <span className="mx-2">•</span>
+                      <span className="bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full text-[10px]">
+                        AI
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>
