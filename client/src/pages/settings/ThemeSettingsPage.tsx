@@ -138,7 +138,7 @@ function ColorPicker({ label, value, onChange }: ColorPickerProps) {
   return (
     <div className="space-y-4 mb-6">
       <div className="flex items-center justify-between">
-        <Label>{label}</Label>
+        {label && <Label>{label}</Label>}
         <div className="flex items-center gap-2">
           <div 
             className="w-8 h-8 rounded-md border" 
@@ -205,6 +205,47 @@ function ColorPicker({ label, value, onChange }: ColorPickerProps) {
   );
 }
 
+// Function to derive secondary colors from primary
+function deriveThemeColors(primaryColor: string, secondaryColor: string): Partial<ThemeSettings> {
+  const primary = parseHslValue(primaryColor);
+  const secondary = parseHslValue(secondaryColor);
+  
+  const derived: Partial<ThemeSettings> = {
+    primary: primaryColor,
+    secondary: secondaryColor,
+    
+    // Derive primary variations
+    primaryDark: formatHslValue(primary.h, primary.s, Math.max(0, primary.l - 6)),
+    primaryForeground: formatHslValue(primary.h, Math.min(10, primary.s), 99),
+    
+    // Derive secondary variations
+    secondaryForeground: formatHslValue(secondary.h, Math.min(10, secondary.s), 10),
+    
+    // Derive accent
+    accent: formatHslValue(primary.h, Math.min(100, primary.s), 95),
+    accentForeground: formatHslValue(primary.h, Math.min(100, primary.s), 10),
+    
+    // Chart colors - create a palette based on primary and secondary
+    chart1: primaryColor,
+    chart2: secondaryColor,
+    chart3: formatHslValue((primary.h + 15) % 360, Math.min(85, primary.s), Math.min(70, primary.l + 15)),
+    chart4: formatHslValue((secondary.h + 20) % 360, Math.min(80, secondary.s), Math.min(75, secondary.l + 5)),
+    chart5: formatHslValue((primary.h + 30) % 360, Math.min(90, primary.s), Math.min(65, primary.l + 10)),
+    
+    // Sidebar colors
+    sidebarPrimary: primaryColor,
+    sidebarPrimaryForeground: formatHslValue(primary.h, Math.min(10, primary.s), 99),
+    sidebarAccent: formatHslValue(primary.h, Math.min(50, primary.s), 95),
+    sidebarAccentForeground: primaryColor,
+    sidebarRing: primaryColor,
+    
+    // Ring based on primary
+    ring: primaryColor,
+  };
+  
+  return derived;
+}
+
 export default function ThemeSettingsPage() {
   const [, setLocation] = useLocation();
   const { theme, darkMode, setTheme, setDarkMode, resetTheme } = useTheme();
@@ -234,6 +275,17 @@ export default function ThemeSettingsPage() {
 
   const handlePropertyChange = (key: keyof ThemeSettings, value: string) => {
     setLocalTheme(prev => ({ ...prev, [key]: value }));
+  }
+  
+  // Handle primary and secondary color change with derivation
+  const handlePrimaryColorChange = (value: string) => {
+    const derivedColors = deriveThemeColors(value, localTheme.secondary);
+    setLocalTheme(prev => ({ ...prev, ...derivedColors }));
+  }
+  
+  const handleSecondaryColorChange = (value: string) => {
+    const derivedColors = deriveThemeColors(localTheme.primary, value);
+    setLocalTheme(prev => ({ ...prev, ...derivedColors }));
   };
 
   return (
@@ -273,26 +325,91 @@ export default function ThemeSettingsPage() {
           </div>
         </div>
         
-        <div className="flex items-center justify-between p-4 bg-muted/40 rounded-lg">
-          <div className="flex items-center gap-3">
-            <div className="bg-primary/10 p-2 rounded-md">
-              {previewDarkMode ? (
-                <Moon className="h-5 w-5 text-primary" />
-              ) : (
-                <Sun className="h-5 w-5 text-primary" />
-              )}
+        {/* Quick Theme Configuration Section */}
+        <Card className="bg-muted/10 mb-6">
+          <CardContent className="p-6">
+            <div className="flex flex-col space-y-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-lg font-medium">Quick Theme Generator</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Set your primary and secondary colors to automatically configure your entire theme palette
+                  </p>
+                </div>
+                
+                <div className="flex items-center space-x-4">
+                  <div className="bg-primary/10 p-2 rounded-md">
+                    {previewDarkMode ? (
+                      <Moon className="h-5 w-5 text-primary" />
+                    ) : (
+                      <Sun className="h-5 w-5 text-primary" />
+                    )}
+                  </div>
+                  <Switch
+                    checked={previewDarkMode}
+                    onCheckedChange={setPreviewDarkMode}
+                  />
+                </div>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <div className="mb-4">
+                    <Label className="text-base">Primary Color</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Used for buttons, links, and primary UI elements
+                    </p>
+                  </div>
+                  <ColorPicker
+                    label=""
+                    value={localTheme.primary}
+                    onChange={handlePrimaryColorChange}
+                  />
+                </div>
+                
+                <div>
+                  <div className="mb-4">
+                    <Label className="text-base">Secondary Color</Label>
+                    <p className="text-sm text-muted-foreground">
+                      Used for accents, highlights, and secondary UI elements
+                    </p>
+                  </div>
+                  <ColorPicker
+                    label=""
+                    value={localTheme.secondary}
+                    onChange={handleSecondaryColorChange}
+                  />
+                </div>
+              </div>
+              
+              <div className="pt-4 flex items-center justify-center">
+                <div className="grid grid-cols-5 gap-3">
+                  {Array.from({length: 5}).map((_, i) => (
+                    <div key={i} className="flex flex-col items-center">
+                      <div 
+                        className="w-8 h-8 rounded-full border"
+                        style={{ 
+                          backgroundColor: `hsl(${i === 0 
+                            ? localTheme.primary 
+                            : i === 1 
+                              ? localTheme.secondary 
+                              : i === 2 
+                                ? localTheme.chart3 
+                                : i === 3 
+                                  ? localTheme.chart4 
+                                  : localTheme.chart5})` 
+                        }}
+                      />
+                      <span className="text-xs mt-1 text-muted-foreground">
+                        {i === 0 ? 'Primary' : i === 1 ? 'Secondary' : `Color ${i+1}`}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
-            <div>
-              <h3 className="font-medium">Appearance Mode</h3>
-              <p className="text-sm text-muted-foreground">Switch between light and dark themes</p>
-            </div>
-          </div>
-          
-          <Switch
-            checked={previewDarkMode}
-            onCheckedChange={setPreviewDarkMode}
-          />
-        </div>
+          </CardContent>
+        </Card>
         
         <Card>
           <CardContent className="p-6">
