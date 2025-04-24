@@ -90,11 +90,6 @@ export const navigationData: NavSection[] = [
         href: "/dashboard/mission-control",
         icon: Activity,
       },
-      {
-        title: "Mission Control (Original)",
-        href: "/dashboard/mission-control-original",
-        icon: ActivitySquare,
-      },
     ],
   },
   // Schedule section with appointments and calendar management

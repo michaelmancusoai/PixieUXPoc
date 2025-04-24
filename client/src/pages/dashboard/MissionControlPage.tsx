@@ -197,7 +197,7 @@ function FlowColumn({ column, patients, className, style }: FlowColumnProps) {
   const Icon = column.icon;
   
   return (
-    <div className={cn("min-w-[220px] w-full flex flex-col h-full", className)} style={style}>
+    <div className={cn("min-w-[200px] w-full flex flex-col h-full", className)} style={style}>
       <div className={cn(
         "text-white px-3 py-2 rounded-t-md flex justify-between items-center",
         column.color
@@ -299,7 +299,7 @@ function ExceptionCard({ patient, type }: ExceptionCardProps) {
         {patient.balance && (
           <div className="flex justify-between items-center mt-1">
             <p className="text-xs text-red-600">${patient.balance}</p>
-            <Button variant="ghost" size="xs" className="h-5 text-xs px-2">
+            <Button variant="ghost" size="sm" className="h-5 text-xs px-2">
               Send Statement
             </Button>
           </div>
@@ -314,122 +314,423 @@ interface FlowState {
   [key: string]: PatientData[];
 }
 
-export default function MissionControlPage() {
-  const [flowState, setFlowState] = useState<FlowState>(initialFlowDistribution);
+// Layout mode options
+type LayoutMode = 'standard' | 'compact' | 'expanded';
+type FlowViewMode = 'kanban' | 'list' | 'grid';
 
+// Optimized Mission Control Page
+export default function OptimizedMissionControlPage() {
+  const [flowState, setFlowState] = useState<FlowState>(initialFlowDistribution);
+  const [activeTab, setActiveTab] = useState('flow');
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>('standard');
+  const [flowViewMode, setFlowViewMode] = useState<FlowViewMode>('kanban');
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  
   return (
     <NavigationWrapper>
-      <div className="space-y-4">
-        {/* Header with KPIs */}
-        <div className="bg-white pb-4">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-4">
-            <div>
+      <div className="space-y-2">
+        {/* Header with KPIs and Controls */}
+        <div className="bg-white pb-2">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 mb-2">
+            <div className="flex items-center">
               <h1 className="text-2xl font-bold">Mission Control</h1>
+              <div className="flex ml-4 gap-1">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className={`h-8 ${layoutMode === 'compact' ? 'bg-muted' : ''}`}
+                  onClick={() => setLayoutMode('compact')}
+                  title="Compact view"
+                >
+                  <Minimize2 className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className={`h-8 ${layoutMode === 'standard' ? 'bg-muted' : ''}`}
+                  onClick={() => setLayoutMode('standard')}
+                  title="Standard view"
+                >
+                  <LayoutDashboard className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className={`h-8 ${layoutMode === 'expanded' ? 'bg-muted' : ''}`}
+                  onClick={() => setLayoutMode('expanded')}
+                  title="Expanded view"
+                >
+                  <Maximize2 className="h-4 w-4" />
+                </Button>
+                <Separator orientation="vertical" className="mx-2 h-8" />
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="h-8"
+                  onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                  title={sidebarCollapsed ? "Show sidebar" : "Hide sidebar"}
+                >
+                  {sidebarCollapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
+                </Button>
+              </div>
+            </div>
+            
+            <div className="flex flex-wrap gap-1 items-center mt-2 lg:mt-0">
+              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 py-1 px-2">
+                <span className="font-normal mr-1">Today:</span> April 22, 2025
+              </Badge>
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 py-1 px-2">
+                <span className="font-normal mr-1">Wait-to-Seat:</span> 4.2 min
+              </Badge>
+              <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 py-1 px-2">
+                <span className="font-normal mr-1">Seat-to-Doctor:</span> 7.5 min
+              </Badge>
+              <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 py-1 px-2">
+                <span className="font-normal mr-1">Throughput:</span> 14/24
+              </Badge>
+              <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 py-1 px-2">
+                <span className="font-normal mr-1">Utilization:</span> 87%
+              </Badge>
             </div>
           </div>
           
-          {/* KPI Header Row */}
-          <div className="flex flex-wrap gap-2 items-center">
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 py-1 px-3">
-              <span className="font-normal mr-1">Today:</span> April 22, 2025
-            </Badge>
-            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 py-1 px-3">
-              <span className="font-normal mr-1">Wait-to-Seat:</span> 4.2 min
-            </Badge>
-            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200 py-1 px-3">
-              <span className="font-normal mr-1">Seat-to-Doctor:</span> 7.5 min
-            </Badge>
-            <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 py-1 px-3">
-              <span className="font-normal mr-1">Throughput:</span> 14/24
-            </Badge>
-            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200 py-1 px-3">
-              <span className="font-normal mr-1">Utilization:</span> 87%
-            </Badge>
-            <div className="flex-grow"></div>
-          </div>
-          
-          <Separator className="my-4" />
-        </div>
-        
-        {/* Main Flow Board */}
-        <div className="flex">
-          {/* Flow Columns - adjust column proportions to allocate more space to last columns */}
-          <div className="flex overflow-x-auto pb-4 gap-3 flex-grow flex-1" style={{ minHeight: "calc(100vh - 300px)" }}>
-            {flowColumns.map((column, index) => {
-              // Adjust flex proportions based on column index
-              let flexProportion = "1";
-              if (index === 0) {
-                // First column less width
-                flexProportion = "0.75";
-              } else if (index === flowColumns.length - 1 || index === flowColumns.length - 2) {
-                // Last two columns more width
-                flexProportion = "1.25";
-              }
+          <Tabs 
+            defaultValue="flow" 
+            className="mt-4" 
+            value={activeTab} 
+            onValueChange={setActiveTab}
+          >
+            <div className="flex justify-between items-center border-b">
+              <TabsList>
+                <TabsTrigger value="flow" className="flex items-center gap-1">
+                  <Activity className="h-4 w-4" />
+                  <span>Patient Flow</span>
+                </TabsTrigger>
+                <TabsTrigger value="insights" className="flex items-center gap-1">
+                  <ArrowUpRight className="h-4 w-4" />
+                  <span>Insights</span>
+                </TabsTrigger>
+                <TabsTrigger value="exceptions" className="flex items-center gap-1">
+                  <AlertCircle className="h-4 w-4" />
+                  <span>Exceptions</span>
+                </TabsTrigger>
+              </TabsList>
               
-              return (
-                <FlowColumn 
-                  key={column.id} 
-                  column={column} 
-                  patients={flowState[column.id] || []} 
-                  className={`flex-${flexProportion}`}
-                  style={{ flex: flexProportion }}
-                />
-              );
-            })}
-          </div>
-          
-          {/* Exception Rail - wider for better visibility */}
-          <div className="w-96 ml-3 hidden lg:block">
-            <div className="bg-gray-50 rounded-md p-3 space-y-3 h-full">
-              <div>
-                <h3 className="text-sm font-semibold flex items-center text-amber-700 mb-2">
-                  <Clock className="h-4 w-4 mr-1" />
-                  Late ({exceptionData.late.length})
-                </h3>
-                <div className="space-y-2">
-                  {exceptionData.late.map(patient => (
-                    <ExceptionCard key={patient.id} patient={patient} type="late" />
-                  ))}
+              {activeTab === 'flow' && (
+                <div className="flex items-center gap-1 mr-2">
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className={`h-8 px-2 ${flowViewMode === 'kanban' ? 'bg-muted' : ''}`}
+                    onClick={() => setFlowViewMode('kanban')}
+                  >
+                    <LayoutGrid className="h-4 w-4" />
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className={`h-8 px-2 ${flowViewMode === 'list' ? 'bg-muted' : ''}`}
+                    onClick={() => setFlowViewMode('list')}
+                  >
+                    <List className="h-4 w-4" />
+                  </Button>
                 </div>
-              </div>
-              
-              <div>
-                <h3 className="text-sm font-semibold flex items-center text-red-700 mb-2">
-                  <X className="h-4 w-4 mr-1" />
-                  No-Show ({exceptionData.noShow.length})
-                </h3>
-                <div className="space-y-2">
-                  {exceptionData.noShow.map(patient => (
-                    <ExceptionCard key={patient.id} patient={patient} type="noShow" />
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-sm font-semibold flex items-center text-gray-700 mb-2">
-                  <FileText className="h-4 w-4 mr-1" />
-                  Cancelled ({exceptionData.cancelled.length})
-                </h3>
-                <div className="space-y-2">
-                  {exceptionData.cancelled.map(patient => (
-                    <ExceptionCard key={patient.id} patient={patient} type="cancelled" />
-                  ))}
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-sm font-semibold flex items-center text-amber-800 mb-2">
-                  <AlertCircle className="h-4 w-4 mr-1" />
-                  Walk-Out ({exceptionData.walkOut.length})
-                </h3>
-                <div className="space-y-2">
-                  {exceptionData.walkOut.map(patient => (
-                    <ExceptionCard key={patient.id} patient={patient} type="walkOut" />
-                  ))}
-                </div>
-              </div>
+              )}
             </div>
-          </div>
+            
+            <div className="mt-4">
+              <TabsContent value="flow" className="m-0">
+                <div className={`flex ${layoutMode === 'compact' ? 'gap-1' : 'gap-3'}`}>
+                  {/* Main Flow Board */}
+                  <div 
+                    className={`flex overflow-x-auto pb-2 ${layoutMode === 'compact' ? 'gap-1' : 'gap-3'} flex-grow flex-1`} 
+                    style={{ minHeight: layoutMode === 'compact' ? "calc(100vh - 260px)" : "calc(100vh - 300px)" }}
+                  >
+                    {flowColumns.map((column, index) => {
+                      // Adjust flex proportions based on column index
+                      let flexProportion = "1";
+                      if (index === 0) {
+                        // First column less width
+                        flexProportion = "0.75";
+                      } else if (index === flowColumns.length - 1 || index === flowColumns.length - 2) {
+                        // Last two columns more width
+                        flexProportion = "1.25";
+                      }
+                      
+                      return (
+                        <FlowColumn 
+                          key={column.id} 
+                          column={column} 
+                          patients={flowState[column.id] || []} 
+                          className={`flex-${flexProportion}`}
+                          style={{ flex: flexProportion }}
+                        />
+                      );
+                    })}
+                  </div>
+                  
+                  {/* Exception Rail - Collapsible */}
+                  {!sidebarCollapsed && (
+                    <div className={`${layoutMode === 'compact' ? 'w-80' : 'w-96'} ml-2 hidden lg:block`}>
+                      <Accordion 
+                        type="multiple" 
+                        defaultValue={['exceptions']} 
+                        className="bg-gray-50 rounded-md p-2 h-full"
+                      >
+                        <AccordionItem value="exceptions" className="border-b-0">
+                          <AccordionTrigger className="py-2 px-1">
+                            <div className="flex items-center text-sm font-semibold">
+                              <AlertCircle className="h-4 w-4 mr-1 text-amber-600" />
+                              <span>Exceptions ({exceptionData.late.length + exceptionData.noShow.length + exceptionData.cancelled.length + exceptionData.walkOut.length})</span>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent className="pt-2 pb-0 space-y-2">
+                            <div>
+                              <h3 className="text-xs font-semibold flex items-center text-amber-700 mb-1">
+                                <Clock className="h-3 w-3 mr-1" />
+                                Late ({exceptionData.late.length})
+                              </h3>
+                              <div className="space-y-1">
+                                {exceptionData.late.map(patient => (
+                                  <ExceptionCard key={patient.id} patient={patient} type="late" />
+                                ))}
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <h3 className="text-xs font-semibold flex items-center text-red-700 mb-1">
+                                <X className="h-3 w-3 mr-1" />
+                                No-Show ({exceptionData.noShow.length})
+                              </h3>
+                              <div className="space-y-1">
+                                {exceptionData.noShow.map(patient => (
+                                  <ExceptionCard key={patient.id} patient={patient} type="noShow" />
+                                ))}
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <h3 className="text-xs font-semibold flex items-center text-gray-700 mb-1">
+                                <FileText className="h-3 w-3 mr-1" />
+                                Cancelled ({exceptionData.cancelled.length})
+                              </h3>
+                              <div className="space-y-1">
+                                {exceptionData.cancelled.map(patient => (
+                                  <ExceptionCard key={patient.id} patient={patient} type="cancelled" />
+                                ))}
+                              </div>
+                            </div>
+                            
+                            <div>
+                              <h3 className="text-xs font-semibold flex items-center text-amber-700 mb-1">
+                                <ArrowUpRight className="h-3 w-3 mr-1" />
+                                Walk-Out ({exceptionData.walkOut.length})
+                              </h3>
+                              <div className="space-y-1">
+                                {exceptionData.walkOut.map(patient => (
+                                  <ExceptionCard key={patient.id} patient={patient} type="walkOut" />
+                                ))}
+                              </div>
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      </Accordion>
+                    </div>
+                  )}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="insights" className="m-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm">Patient Flow Analytics</CardTitle>
+                      <CardDescription>Average time spent in each status</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>Check-in to Seated</span>
+                            <span className="font-medium">4.2 min</span>
+                          </div>
+                          <Progress value={42} className="h-2" />
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>Seated to Doctor</span>
+                            <span className="font-medium">7.5 min</span>
+                          </div>
+                          <Progress value={75} className="h-2" />
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>Treatment Duration</span>
+                            <span className="font-medium">32.1 min</span>
+                          </div>
+                          <Progress value={66} className="h-2" />
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-sm mb-1">
+                            <span>Checkout Process</span>
+                            <span className="font-medium">5.8 min</span>
+                          </div>
+                          <Progress value={58} className="h-2" />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm">Operatory Utilization</CardTitle>
+                      <CardDescription>Current status by room</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm">Op 1</span>
+                          <Badge className="bg-purple-500">In Treatment</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm">Op 2</span>
+                          <Badge className="bg-purple-500">In Treatment</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm">Op 3</span>
+                          <Badge className="bg-violet-500">Doctor Ready</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm">Op 4</span>
+                          <Badge className="bg-teal-500">Seated</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm">Op 5</span>
+                          <Badge className="bg-green-600">Available</Badge>
+                        </div>
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm">Hyg 1</span>
+                          <Badge className="bg-blue-500">Checked-In</Badge>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="text-sm">Provider Status</CardTitle>
+                      <CardDescription>Current workload by provider</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm">Dr. Carter</span>
+                            <span className="text-sm font-medium">3 patients</span>
+                          </div>
+                          <Progress value={75} className="h-2" />
+                        </div>
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm">Dr. Smith</span>
+                            <span className="text-sm font-medium">2 patients</span>
+                          </div>
+                          <Progress value={50} className="h-2" />
+                        </div>
+                        <div>
+                          <div className="flex justify-between mb-1">
+                            <span className="text-sm">Lisa R. (Hygienist)</span>
+                            <span className="text-sm font-medium">1 patient</span>
+                          </div>
+                          <Progress value={25} className="h-2" />
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="exceptions" className="m-0">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center">
+                        <Clock className="h-4 w-4 mr-2 text-amber-600" />
+                        <span>Late Patients</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {exceptionData.late.map(patient => (
+                          <ExceptionCard key={patient.id} patient={patient} type="late" />
+                        ))}
+                        {exceptionData.late.length === 0 && (
+                          <div className="text-sm text-muted-foreground text-center py-4">No late patients</div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center">
+                        <X className="h-4 w-4 mr-2 text-red-600" />
+                        <span>No-Shows</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {exceptionData.noShow.map(patient => (
+                          <ExceptionCard key={patient.id} patient={patient} type="noShow" />
+                        ))}
+                        {exceptionData.noShow.length === 0 && (
+                          <div className="text-sm text-muted-foreground text-center py-4">No missed appointments</div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center">
+                        <FileText className="h-4 w-4 mr-2 text-gray-600" />
+                        <span>Cancelled Appointments</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {exceptionData.cancelled.map(patient => (
+                          <ExceptionCard key={patient.id} patient={patient} type="cancelled" />
+                        ))}
+                        {exceptionData.cancelled.length === 0 && (
+                          <div className="text-sm text-muted-foreground text-center py-4">No cancelled appointments</div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
+                  <Card>
+                    <CardHeader className="pb-2">
+                      <CardTitle className="flex items-center">
+                        <ArrowUpRight className="h-4 w-4 mr-2 text-amber-600" />
+                        <span>Walk-Outs</span>
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="space-y-2">
+                        {exceptionData.walkOut.map(patient => (
+                          <ExceptionCard key={patient.id} patient={patient} type="walkOut" />
+                        ))}
+                        {exceptionData.walkOut.length === 0 && (
+                          <div className="text-sm text-muted-foreground text-center py-4">No walk-outs</div>
+                        )}
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              </TabsContent>
+            </div>
+          </Tabs>
         </div>
       </div>
     </NavigationWrapper>
