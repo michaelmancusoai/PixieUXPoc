@@ -1,0 +1,190 @@
+Below is a **fully-self-contained design artifact**—updated to remove all audio cues, fill every surrender/resume edge-case, and retain the 8-bit quest spirit. Treat this as the single spec your designers will consult.
+
+---
+
+## 1 · Theme & Visual Tone  
+Retro-arcade quest—pixel clouds, pixel coins, pixel fireworks—without naming any specific franchise.
+
+| Level | Palette cue | Mood |
+|-------|-------------|------|
+| 1 | Sky blue + white clouds | Friendly tutorial |
+| 2 | Warm desert tan | Adventurer’s trail |
+| 3 | Lava-orange on dark brick | Final showdown |
+
+---
+
+## 2 ·  Feature: “Card-on-File Daily Challenge”
+
+### Gherkin Scenarios (plain-English BDD)  
+
+```gherkin
+Feature: Front-Desk Daily Challenge – Card on File
+  Goal: Encourage staff to ask patients to store a payment card, via a fun 8-bit mini-game.
+
+  Background:
+    Given Maria is logged in as Front-Office Coordinator
+    And the Daily Challenge card is visible below the Impact Queue
+
+############################################
+# LEVEL 1 — THREE COINS
+############################################
+
+  Scenario: First load briefing
+    When the component loads for the first time today
+    Then show a blue card containing:
+      | title      | "Daily Challenge!" |
+      | objective  | "Collect 3 coins by asking patients to save a card on file." |
+      | icons      | ○ ○ ○ (three hollow coins) |
+      | buttons    | Mission Accepted (primary) · Quit Game (secondary) |
+
+  Scenario: Mission accepted
+    When Maria taps "Mission Accepted"
+    Then hide the briefing prompt and leave the three hollow coins
+    And show a tiny red “Cancel Quest” link in the card header
+
+  Scenario: Coin earned
+    Given a patient agrees to store their card
+    When the event is logged
+    Then flip the left-most hollow coin to a shimmering gold coin
+    And update tooltip to "Great! 2 coins to go."
+
+  Scenario: Level-1 completion
+    Given all three coins are gold
+    Then overlay pixel-confetti for 1.5 s
+    And replace card content with:
+      | headline | "Level 1 complete! Checkout just got faster." |
+      | prompt   | "Ready to tackle **Level 2** and collect 5 coins?" |
+      | buttons  | Mission Accepted · I Surrender |
+
+############################################
+# LEVEL 2 — FIVE COINS
+############################################
+
+  Scenario: Level-2 briefing
+    When Maria accepts Level 2
+    Then switch card palette to desert tan
+    And render five hollow coins ○○○○○
+    And show red "Cancel Quest" link
+
+  Scenario: Level-2 play
+    Repeat Coin earned logic until 5 gold coins
+
+  Scenario: Level-2 completion
+    When 5 coins turn gold
+    Then overlay larger pixel-fireworks for 2 s
+    And prompt: "Too easy… Dare to face the Final Level for 10 coins?"
+    And buttons: Mission Accepted · I Surrender
+
+############################################
+# FINAL LEVEL — TEN COINS
+############################################
+
+  Scenario: Final-level briefing
+    When Maria accepts Final Level
+    Then change palette to lava-orange on dark brick
+    And display ten hollow coins
+
+  Scenario: Winning the game
+    When all ten coins are gold
+    Then overlay full-screen pixel-fireworks for 3 s
+    And drop a golden trophy icon onto the card
+    And auto-collapse card to a “Victory Bar” showing:
+      | trophy   | 🏆 |
+      | text     | "Challenge conquered! 10 coins collected." |
+      | streak   | "Streak: N days" |
+      | button   | disabled "Resume game tomorrow" |
+
+############################################
+# SURRENDER & RESUME (ALL LEVELS)
+############################################
+
+  Scenario: User surrenders mid-level
+    When Maria taps "I Surrender" or "Quit Game"
+    Then animate a small white flag rising
+    And fold the card vertically into a slim bar showing:
+      | text   | "Paused: {goldCoins}/target coins banked." |
+      | button | "Resume Game" |
+      | teaser | "Do you dare to resume your quest?" |
+
+  Scenario: Resuming after surrender
+    When Maria taps "Resume Game"
+    Then restore card to the last in-progress state
+    And keep previously earned gold coins intact
+
+  Scenario: Cancel Quest link
+    When Maria clicks "Cancel Quest"
+    Then trigger the same surrender flow
+
+############################################
+# STREAK & DAILY RESET
+############################################
+
+  Rule: Streak counter
+    • Increment streak when Level 1 is completed  
+    • Reset streak if no level completed by 11:59 PM
+
+  Rule: Streak-in-peril nudge
+    If 0 coins earned by 12:00 PM
+    Then badge the card header with amber "Streak in peril – collect a coin!"
+
+  Scenario: New day reset
+    At 4:00 AM local time
+    Then restore blue Level-1 briefing with fresh hollow coins
+    And keep streak number visible
+```
+
+---
+
+## 3 ·  Micro-copy Library  
+
+| Context                | Copy text                                                 |
+|------------------------|-----------------------------------------------------------|
+| Coin earned toast      | “Coin collected! One less billing call tomorrow.”         |
+| Level clear headline   | “Level X complete! Checkout speed +1.”                   |
+| Streak in peril badge  | “Streak in peril – collect a coin!”                       |
+| Surrender collapsed    | “Paused: 2/5 coins banked.”                               |
+| Resume button          | “Resume Game”                                             |
+| Victory bar subtitle   | “🏆 Challenge conquered! 10 coins collected.”             |
+| Disabled next-day btn  | “Resume game tomorrow” (greyed)                           |
+
+---
+
+## 4 ·  Office Leaderboard (social proof)
+
+```gherkin
+Feature: Daily Game Leaderboard
+  Purpose: Friendly competition and recognition across roles.
+
+  Scenario: Display leaderboard
+    Given the user opens "Leaderboard"
+    Then show ranked list with columns:
+      | Rank | Name | Role | Coins Today | Streak |
+    And break ties on streak length
+    And top rank has a tiny pixel crown
+
+  Scenario: End-of-day archive
+    At 11:59 PM
+    Then save today’s leaderboard to history
+    And reset daily coin counts to zero
+```
+
+Leaderboard copy:
+
+- Heading : “🏆 Today’s Arcade Champs”
+- Sub-line : “Coins first, streaks break ties — keep the quest alive!”
+
+---
+
+## 5 ·  Motion & Accessibility (designers only)  
+
+- **Motion**  
+  - Coins spin once clockwise when earned  
+  - Pixel-confetti/fireworks use 2-colour bursts, max 3 s  
+  - Card fold animation ≤ 400 ms  
+
+- **No audio cues** — celebrate solely via motion & colour.  
+- **Colour-blind support** — use distinct shapes (hollow vs. filled coins) and text labels.  
+
+---
+
+Everything the designer needs—states, visuals, copy, surrender logic, streak rules, and leaderboard mechanics—is captured here. No technical jargon, no hidden gaps.

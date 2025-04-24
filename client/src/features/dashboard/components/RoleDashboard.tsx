@@ -31,10 +31,35 @@ import {
   Clock,
   Medal,
   Sparkles,
-  Wallet
+  Wallet,
+  Flag
 } from 'lucide-react';
 
-// Define prompt variants for the daily challenge card
+// Define game state and levels for the daily challenge card
+enum GameLevel {
+  BRIEFING_1 = 'BRIEFING_1',
+  LEVEL_1 = 'LEVEL_1',
+  COMPLETED_1 = 'COMPLETED_1',
+  BRIEFING_2 = 'BRIEFING_2',
+  LEVEL_2 = 'LEVEL_2',
+  COMPLETED_2 = 'COMPLETED_2',
+  BRIEFING_FINAL = 'BRIEFING_FINAL',
+  LEVEL_FINAL = 'LEVEL_FINAL',
+  VICTORY = 'VICTORY',
+  SURRENDERED = 'SURRENDERED'
+}
+
+interface GameState {
+  level: GameLevel;
+  coins: number;
+  targetCoins: number;
+  streak: number;
+  surrendered: boolean;
+  lastCompletedLevel: GameLevel | null;
+  streakInPeril: boolean;
+}
+
+// Card on file prompting options for staff
 interface PromptVariant {
   name: string;
   prompt: string;
@@ -42,11 +67,6 @@ interface PromptVariant {
 }
 
 const promptVariants: PromptVariant[] = [
-  {
-    name: "Membership Club Feel",
-    prompt: "We offer a 'Fast-Track Checkout'—store a card once and skip the desk dash every visit. Shall I enrol you?",
-    benefit: "Think express lane, but for happy smiles."
-  },
   {
     name: "Friendly Concierge",
     prompt: "While I'm running your card, would you like us to keep it on file for next time?",
@@ -66,20 +86,37 @@ const promptVariants: PromptVariant[] = [
     name: "Contactless Convenience",
     prompt: "If you prefer touch-free payments, I can tokenise this card now—want me to switch that on?",
     benefit: "It's encrypted, and you just tap 'okay' on your phone next time."
+  },
+  {
+    name: "Membership Club Feel",
+    prompt: "We offer a 'Fast-Track Checkout'—store a card once and skip the desk dash every visit. Shall I enrol you?",
+    benefit: "Think express lane, but for happy smiles."
   }
 ];
 
 const RoleDashboard: React.FC = () => {
+  // Basic dashboard state
   const [currentRole, setCurrentRole] = useState<UserRole>('frontOffice');
   const [completedActions, setCompletedActions] = useState<Set<string>>(new Set());
-  const [completedCards, setCompletedCards] = useState<Set<number>>(new Set([1])); // Start with one already checked
-  const [cardsToShow, setCardsToShow] = useState<number>(3); // Initial count of circles to show
-  const [extraCompletedCards, setExtraCompletedCards] = useState<number>(0);
+  const [currentVariantIndex, setCurrentVariantIndex] = useState<number>(0);
+  
+  // Game state
+  const [gameState, setGameState] = useState<GameState>({
+    level: GameLevel.BRIEFING_1,
+    coins: 0,
+    targetCoins: 3, // Level 1 starts with 3 coins target
+    streak: 4, // Initial streak
+    surrendered: false,
+    lastCompletedLevel: null,
+    streakInPeril: false
+  });
+  
+  // Animation states
   const [showConfetti, setShowConfetti] = useState<boolean>(false);
   const [showFireworks, setShowFireworks] = useState<boolean>(false);
   const [showGrandFinale, setShowGrandFinale] = useState<boolean>(false);
-  const [challengeVisible, setChallengeVisible] = useState<boolean>(true);
-  const [currentVariantIndex, setCurrentVariantIndex] = useState<number>(0);
+  const [showWhiteFlag, setShowWhiteFlag] = useState<boolean>(false);
+  const [gameVisible, setGameVisible] = useState<boolean>(true);
 
   // Get the dashboard data for the current role
   const dashboardData = roleBasedData[currentRole];
@@ -108,57 +145,115 @@ const RoleDashboard: React.FC = () => {
   const prevVariant = useCallback(() => {
     setCurrentVariantIndex((prev) => (prev - 1 + promptVariants.length) % promptVariants.length);
   }, []);
-  
-  // Function to mark a card-on-file action as complete
-  const handleCardComplete = (cardNumber: number) => {
-    setCompletedCards((prev) => {
-      const newSet = new Set(prev);
+
+  // Game action handlers
+  const handleCoinCollected = () => {
+    setGameState(prev => {
+      // Don't increment if we've already hit the target
+      if (prev.coins >= prev.targetCoins) return prev;
       
-      // If already completed, do nothing
-      if (newSet.has(cardNumber)) {
-        return newSet;
-      }
+      const newCoins = prev.coins + 1;
+      const levelCompleted = newCoins >= prev.targetCoins;
       
-      // Add the new card
-      newSet.add(cardNumber);
+      let newLevel = prev.level;
+      let newLastCompletedLevel = prev.lastCompletedLevel;
       
-      // If this completes all currently shown cards
-      if (newSet.size === cardsToShow) {
-        // Show appropriate celebration based on progress
-        if (newSet.size === 5) {
-          // Special fireworks for 5th completion
-          setShowFireworks(true);
-          setTimeout(() => setShowFireworks(false), 3000);
-        } else if (newSet.size === 10) {
-          // Grand finale for 10th completion
-          setShowGrandFinale(true);
-          setTimeout(() => setShowGrandFinale(false), 5000);
-        } else {
-          // Regular confetti for other milestones
+      // Check if we've completed a level
+      if (levelCompleted) {
+        if (prev.level === GameLevel.LEVEL_1) {
+          newLevel = GameLevel.COMPLETED_1;
+          newLastCompletedLevel = GameLevel.LEVEL_1;
+          // Show confetti animation
           setShowConfetti(true);
-          setTimeout(() => setShowConfetti(false), 2000);
-        }
-        
-        // Add a new circle if we haven't reached 10 yet
-        if (newSet.size < 10) {
-          setTimeout(() => {
-            setCardsToShow(prevCount => prevCount + 1);
-          }, 1000);
+          setTimeout(() => setShowConfetti(false), 1500);
+        } else if (prev.level === GameLevel.LEVEL_2) {
+          newLevel = GameLevel.COMPLETED_2;
+          newLastCompletedLevel = GameLevel.LEVEL_2;
+          // Show fireworks animation
+          setShowFireworks(true);
+          setTimeout(() => setShowFireworks(false), 2000);
+        } else if (prev.level === GameLevel.LEVEL_FINAL) {
+          newLevel = GameLevel.VICTORY;
+          newLastCompletedLevel = GameLevel.LEVEL_FINAL;
+          // Show grand finale animation
+          setShowGrandFinale(true);
+          setTimeout(() => setShowGrandFinale(false), 3000);
         }
       }
       
-      // Update extra cards count (purely visual for showing +N more)
-      if (newSet.size > 3) {
-        setExtraCompletedCards(newSet.size - 3);
-      }
-      
-      return newSet;
+      return {
+        ...prev,
+        coins: newCoins,
+        level: newLevel,
+        lastCompletedLevel: newLastCompletedLevel,
+        streakInPeril: false
+      };
     });
   };
-  
-  // Handle dismissing the challenge card
-  const handleDismissChallenge = () => {
-    setChallengeVisible(false);
+
+  const acceptMission = () => {
+    setGameState(prev => {
+      let newLevel = prev.level;
+      let newTargetCoins = prev.targetCoins;
+      
+      if (prev.level === GameLevel.BRIEFING_1) {
+        newLevel = GameLevel.LEVEL_1;
+      } else if (prev.level === GameLevel.COMPLETED_1) {
+        newLevel = GameLevel.LEVEL_2;
+        newTargetCoins = 5; // Level 2 has 5 coins target
+      } else if (prev.level === GameLevel.COMPLETED_2) {
+        newLevel = GameLevel.LEVEL_FINAL;
+        newTargetCoins = 10; // Final level has 10 coins target
+      } else if (prev.level === GameLevel.SURRENDERED) {
+        // Resume from where we left off
+        if (prev.lastCompletedLevel === GameLevel.LEVEL_1) {
+          newLevel = GameLevel.LEVEL_2;
+          newTargetCoins = 5;
+        } else if (prev.lastCompletedLevel === GameLevel.LEVEL_2) {
+          newLevel = GameLevel.LEVEL_FINAL;
+          newTargetCoins = 10;
+        } else {
+          newLevel = GameLevel.LEVEL_1;
+          newTargetCoins = 3;
+        }
+      }
+      
+      return {
+        ...prev,
+        level: newLevel,
+        targetCoins: newTargetCoins,
+        surrendered: false
+      };
+    });
+  };
+
+  const surrenderGame = () => {
+    // Show white flag animation
+    setShowWhiteFlag(true);
+    setTimeout(() => {
+      setShowWhiteFlag(false);
+      // Update game state to surrendered
+      setGameState(prev => ({
+        ...prev,
+        surrendered: true,
+        level: GameLevel.SURRENDERED
+      }));
+    }, 1000);
+  };
+
+  // Get the appropriate level background color
+  const getLevelBackground = () => {
+    const { level } = gameState;
+    if (level === GameLevel.BRIEFING_1 || level === GameLevel.LEVEL_1 || level === GameLevel.COMPLETED_1) {
+      return 'bg-sky-50 border-sky-200'; // Sky blue for level 1
+    } else if (level === GameLevel.BRIEFING_2 || level === GameLevel.LEVEL_2 || level === GameLevel.COMPLETED_2) {
+      return 'bg-amber-50 border-amber-200'; // Desert tan for level 2
+    } else if (level === GameLevel.BRIEFING_FINAL || level === GameLevel.LEVEL_FINAL || level === GameLevel.VICTORY) {
+      return 'bg-orange-50 border-orange-200'; // Lava-orange for final level
+    } else if (level === GameLevel.SURRENDERED) {
+      return 'bg-gray-50 border-gray-200'; // Gray for surrendered
+    }
+    return 'bg-sky-50 border-sky-200'; // Default
   };
 
   // Get the appropriate icon for the role
@@ -177,6 +272,399 @@ const RoleDashboard: React.FC = () => {
       default:
         return null;
     }
+  };
+
+  // Render game coin
+  const renderCoin = (index: number) => {
+    const { coins } = gameState;
+    const isFilled = index < coins;
+    
+    return (
+      <button 
+        key={index}
+        className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all ${
+          isFilled 
+            ? 'border-yellow-500 bg-yellow-100 hover:bg-yellow-200' 
+            : 'border-gray-300 bg-white hover:bg-gray-50'
+        }`}
+        title={isFilled ? "Coin collected!" : "Collect a coin by storing a card on file"}
+        onClick={handleCoinCollected}
+      >
+        {isFilled && (
+          <div className="w-6 h-6 rounded-full bg-yellow-400 shadow-inner flex items-center justify-center">
+            <CreditCard className="h-3 w-3 text-yellow-800" />
+          </div>
+        )}
+      </button>
+    );
+  };
+
+  // Render game card content based on current state
+  const renderGameContent = () => {
+    const { level, coins, targetCoins, streak, surrendered } = gameState;
+    
+    if (surrendered) {
+      return (
+        <div className="text-center py-2">
+          <div className="flex justify-center mb-2">
+            <Flag className="h-5 w-5 text-gray-500" />
+          </div>
+          <p className="text-gray-700 font-medium">Paused: {coins}/{targetCoins} coins banked.</p>
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="mt-2 bg-blue-50 text-blue-700 border-blue-200"
+            onClick={acceptMission}
+          >
+            Resume Game
+          </Button>
+          <p className="text-xs text-gray-500 mt-1">Do you dare to resume your quest?</p>
+        </div>
+      );
+    }
+    
+    if (level === GameLevel.BRIEFING_1) {
+      return (
+        <div className="text-center py-2">
+          <h3 className="font-medium text-sky-800">Daily Challenge!</h3>
+          <p className="text-sm text-sky-700 mt-1">
+            Collect 3 coins by asking patients to save a card on file.
+          </p>
+          
+          <div className="flex justify-center space-x-2 my-3">
+            {[0, 1, 2].map(index => (
+              <div 
+                key={index}
+                className="w-8 h-8 rounded-full border-2 border-gray-300 bg-white"
+              />
+            ))}
+          </div>
+          
+          <div className="space-x-2">
+            <Button 
+              variant="default" 
+              size="sm"
+              className="bg-sky-600 hover:bg-sky-700"
+              onClick={acceptMission}
+            >
+              Mission Accepted
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="text-gray-600"
+              onClick={surrenderGame}
+            >
+              Quit Game
+            </Button>
+          </div>
+        </div>
+      );
+    }
+    
+    if (level === GameLevel.COMPLETED_1) {
+      return (
+        <div className="text-center py-2">
+          <h3 className="font-medium text-sky-800">Level 1 complete! Checkout speed +1.</h3>
+          <p className="text-sm text-sky-700 mt-1">
+            Ready to tackle <strong>Level 2</strong> and collect 5 coins?
+          </p>
+          
+          <div className="flex justify-center space-x-2 my-3">
+            {[0, 1, 2].map(index => renderCoin(index))}
+          </div>
+          
+          <div className="space-x-2">
+            <Button 
+              variant="default" 
+              size="sm"
+              className="bg-amber-600 hover:bg-amber-700"
+              onClick={acceptMission}
+            >
+              Mission Accepted
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="text-gray-600"
+              onClick={surrenderGame}
+            >
+              I Surrender
+            </Button>
+          </div>
+        </div>
+      );
+    }
+    
+    if (level === GameLevel.LEVEL_1) {
+      return (
+        <div className="py-2">
+          <div className="flex justify-between items-start">
+            <h3 className="font-medium text-sky-800">Level 1: First 3 Cards</h3>
+            <button 
+              onClick={surrenderGame}
+              className="text-xs text-red-500 hover:text-red-700"
+            >
+              Cancel Quest
+            </button>
+          </div>
+          
+          <div className="flex justify-center space-x-2 my-3">
+            {[0, 1, 2].map(index => renderCoin(index))}
+          </div>
+          
+          {/* Prompt Carousel */}
+          <div className="mt-2 bg-white p-3 rounded-md border border-sky-200 text-sm relative">
+            <div className="absolute -top-2 left-3 bg-sky-100 text-sky-700 px-2 py-0.5 text-xs rounded-full">
+              {promptVariants[currentVariantIndex].name}
+            </div>
+            
+            <p className="text-gray-700 mt-1 text-sm">
+              <span className="font-medium block">Prompt Line:</span> 
+              "{promptVariants[currentVariantIndex].prompt}"
+            </p>
+            
+            <p className="text-gray-700 mt-2 text-sm">
+              <span className="font-medium block">Benefit:</span> 
+              "{promptVariants[currentVariantIndex].benefit}"
+            </p>
+            
+            <div className="flex justify-between mt-3">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="h-8 w-8 p-0 text-sky-600"
+                onClick={prevVariant}
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="h-8 w-8 p-0 text-sky-600"
+                onClick={nextVariant}
+              >
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          
+          <div className="mt-3 flex justify-between items-center">
+            <span className="text-xs text-sky-700 font-medium">
+              <Clock className="h-3 w-3 inline mr-1" />
+              Streak: {streak} days
+            </span>
+            <span className="text-xs text-sky-700 font-medium">
+              {coins}/{targetCoins} coins
+            </span>
+          </div>
+        </div>
+      );
+    }
+    
+    if (level === GameLevel.COMPLETED_2) {
+      return (
+        <div className="text-center py-2">
+          <h3 className="font-medium text-amber-800">Level 2 complete! Checkout speed +1.</h3>
+          <p className="text-sm text-amber-700 mt-1">
+            Too easy... Dare to face the <strong>Final Level</strong> for 10 coins?
+          </p>
+          
+          <div className="flex justify-center space-x-2 my-3 flex-wrap">
+            {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
+          </div>
+          
+          <div className="space-x-2">
+            <Button 
+              variant="default" 
+              size="sm"
+              className="bg-orange-600 hover:bg-orange-700"
+              onClick={acceptMission}
+            >
+              Mission Accepted
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="text-gray-600"
+              onClick={surrenderGame}
+            >
+              I Surrender
+            </Button>
+          </div>
+        </div>
+      );
+    }
+    
+    if (level === GameLevel.LEVEL_2) {
+      return (
+        <div className="py-2">
+          <div className="flex justify-between items-start">
+            <h3 className="font-medium text-amber-800">Level 2: Desert Trail</h3>
+            <button 
+              onClick={surrenderGame}
+              className="text-xs text-red-500 hover:text-red-700"
+            >
+              Cancel Quest
+            </button>
+          </div>
+          
+          <div className="flex justify-center space-x-2 my-3 flex-wrap">
+            {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
+          </div>
+          
+          {/* Prompt Carousel */}
+          <div className="mt-2 bg-white p-3 rounded-md border border-amber-200 text-sm relative">
+            <div className="absolute -top-2 left-3 bg-amber-100 text-amber-700 px-2 py-0.5 text-xs rounded-full">
+              {promptVariants[currentVariantIndex].name}
+            </div>
+            
+            <p className="text-gray-700 mt-1 text-sm">
+              <span className="font-medium block">Prompt Line:</span> 
+              "{promptVariants[currentVariantIndex].prompt}"
+            </p>
+            
+            <p className="text-gray-700 mt-2 text-sm">
+              <span className="font-medium block">Benefit:</span> 
+              "{promptVariants[currentVariantIndex].benefit}"
+            </p>
+            
+            <div className="flex justify-between mt-3">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="h-8 w-8 p-0 text-amber-600"
+                onClick={prevVariant}
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="h-8 w-8 p-0 text-amber-600"
+                onClick={nextVariant}
+              >
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          
+          <div className="mt-3 flex justify-between items-center">
+            <span className="text-xs text-amber-700 font-medium">
+              <Clock className="h-3 w-3 inline mr-1" />
+              Streak: {streak} days
+            </span>
+            <span className="text-xs text-amber-700 font-medium">
+              {coins}/{targetCoins} coins
+            </span>
+          </div>
+        </div>
+      );
+    }
+    
+    if (level === GameLevel.LEVEL_FINAL) {
+      return (
+        <div className="py-2">
+          <div className="flex justify-between items-start">
+            <h3 className="font-medium text-orange-800">Final Level: Lava Challenge</h3>
+            <button 
+              onClick={surrenderGame}
+              className="text-xs text-red-500 hover:text-red-700"
+            >
+              Cancel Quest
+            </button>
+          </div>
+          
+          <div className="flex justify-center space-x-2 my-3 flex-wrap gap-y-2">
+            {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
+          </div>
+          
+          {/* Prompt Carousel */}
+          <div className="mt-2 bg-white p-3 rounded-md border border-orange-200 text-sm relative">
+            <div className="absolute -top-2 left-3 bg-orange-100 text-orange-700 px-2 py-0.5 text-xs rounded-full">
+              {promptVariants[currentVariantIndex].name}
+            </div>
+            
+            <p className="text-gray-700 mt-1 text-sm">
+              <span className="font-medium block">Prompt Line:</span> 
+              "{promptVariants[currentVariantIndex].prompt}"
+            </p>
+            
+            <p className="text-gray-700 mt-2 text-sm">
+              <span className="font-medium block">Benefit:</span> 
+              "{promptVariants[currentVariantIndex].benefit}"
+            </p>
+            
+            <div className="flex justify-between mt-3">
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="h-8 w-8 p-0 text-orange-600"
+                onClick={prevVariant}
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              
+              <Button 
+                variant="ghost" 
+                size="sm"
+                className="h-8 w-8 p-0 text-orange-600"
+                onClick={nextVariant}
+              >
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+          
+          <div className="mt-3 flex justify-between items-center">
+            <span className="text-xs text-orange-700 font-medium">
+              <Clock className="h-3 w-3 inline mr-1" />
+              Streak: {streak} days
+            </span>
+            <span className="text-xs text-orange-700 font-medium">
+              {coins}/{targetCoins} coins
+            </span>
+          </div>
+        </div>
+      );
+    }
+    
+    if (level === GameLevel.VICTORY) {
+      return (
+        <div className="text-center py-2">
+          <div className="flex items-center justify-center mb-2">
+            <Trophy className="h-6 w-6 text-yellow-500 mr-2" />
+            <h3 className="font-medium text-orange-800">Challenge conquered!</h3>
+          </div>
+          <p className="text-sm text-orange-700">10 coins collected</p>
+          
+          <div className="flex items-center justify-center mt-2">
+            <div className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs flex items-center">
+              <Medal className="h-3 w-3 mr-1" />
+              Streak: {streak} days
+            </div>
+          </div>
+          
+          <Button 
+            variant="outline" 
+            size="sm"
+            className="mt-3 text-gray-400 border-gray-200"
+            disabled
+          >
+            Resume game tomorrow
+          </Button>
+        </div>
+      );
+    }
+    
+    // Default fallback
+    return (
+      <div className="text-center py-2">
+        <p className="text-sm text-gray-700">Loading challenge...</p>
+      </div>
+    );
   };
 
   return (
@@ -247,187 +735,109 @@ const RoleDashboard: React.FC = () => {
                 )}
               </div>
             </div>
-
           </div>
         </CardContent>
       </Card>
       
-      {/* Daily Challenge Card - shown only for front office role */}
-      {currentRole === 'frontOffice' && challengeVisible && (
-        <Card className="border-dashed border-2 border-indigo-300 bg-indigo-50 hover:shadow-md transition-shadow duration-200 relative overflow-hidden">
+      {/* Card-on-File Daily Challenge Card - shown only for front office role */}
+      {currentRole === 'frontOffice' && gameVisible && (
+        <Card className={`border-dashed border-2 ${getLevelBackground()} hover:shadow-md transition-shadow duration-200 relative overflow-hidden`}>
           <CardContent className="p-4">
-            <div className="flex items-start space-x-3">
-              <div className="bg-indigo-100 p-2 rounded-full flex-shrink-0">
-                <Trophy className="h-5 w-5 text-indigo-600" />
-              </div>
-              <div className="flex-1">
-                <div className="flex justify-between items-start">
-                  <h3 className="font-medium text-indigo-800 flex items-center">
-                    Daily Challenge
-                  </h3>
-                  <Button 
-                    variant="ghost"
-                    size="sm"
-                    className="text-gray-500 hover:text-gray-700 h-6 p-0 px-2"
-                    onClick={handleDismissChallenge}
-                  >
-                    Dismiss
-                  </Button>
-                </div>
-                <p className="text-sm text-indigo-700 mt-1">
-                  Invite patients today to <strong>store a card on file</strong>
-                </p>
-                <p className="text-xs text-indigo-600 mt-0.5">
-                  → unlock faster check-outs & fewer billing calls
-                </p>
-                
-                {/* Prompt Carousel */}
-                <div className="mt-2 bg-white p-3 rounded-md border border-indigo-200 text-sm relative">
-                  <div className="absolute -top-2 left-3 bg-indigo-100 text-indigo-700 px-2 py-0.5 text-xs rounded-full">
-                    {promptVariants[currentVariantIndex].name}
-                  </div>
-                  
-                  <p className="text-gray-700 mt-1">
-                    <span className="font-medium block">Prompt Line:</span> 
-                    "{promptVariants[currentVariantIndex].prompt}"
-                  </p>
-                  
-                  <p className="text-gray-700 mt-2">
-                    <span className="font-medium block">Benefit:</span> 
-                    "{promptVariants[currentVariantIndex].benefit}"
-                  </p>
-                  
-                  <div className="flex justify-between mt-3">
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className="h-8 w-8 p-0 text-indigo-600"
-                      onClick={prevVariant}
-                    >
-                      <ArrowLeft className="h-4 w-4" />
-                    </Button>
-                    
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className="h-8 w-8 p-0 text-indigo-600"
-                      onClick={nextVariant}
-                    >
-                      <ArrowRight className="h-4 w-4" />
-                    </Button>
+            <div className="relative">
+              {renderGameContent()}
+              
+              {/* Celebrations */}
+              {/* Regular confetti celebration */}
+              {showConfetti && (
+                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
+                  <div className="relative">
+                    <PartyPopper className="h-8 w-8 text-sky-500 animate-bounce" />
+                    {/* Simulated confetti particles */}
+                    <div className="absolute top-1/2 left-1/2">
+                      {Array.from({ length: 20 }).map((_, i) => (
+                        <div 
+                          key={i}
+                          className={`absolute w-2 h-2 rounded-full bg-${
+                            ['sky', 'blue', 'indigo', 'teal', 'cyan'][i % 5]
+                          }-500 animate-ping`}
+                          style={{ 
+                            top: `${Math.random() * 100 - 50}px`, 
+                            left: `${Math.random() * 100 - 50}px`,
+                            animationDuration: `${0.5 + Math.random()}s`,
+                            animationDelay: `${Math.random() * 0.5}s`
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
-                
-                {/* Progress Circles */}
-                <div className="mt-3 flex justify-between items-center">
-                  <div className="flex items-center space-x-2 flex-wrap">
-                    {/* Show circles based on current progress - start with initial 3, then add more as they're completed */}
-                    {Array.from({ length: cardsToShow }).map((_, index) => (
-                      <button 
-                        key={index + 1}
-                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
-                          completedCards.has(index + 1) 
-                            ? 'border-indigo-500 bg-indigo-100' 
-                            : 'border-indigo-400 bg-white hover:bg-indigo-50'
-                        }`}
-                        title={`Mark patient ${index + 1} ${completedCards.has(index + 1) ? 'incomplete' : 'complete'}`}
-                        onClick={() => handleCardComplete(index + 1)}
-                      >
-                        {completedCards.has(index + 1) && <Check className="h-3 w-3 text-indigo-600" />}
-                      </button>
-                    ))}
-                  </div>
-                  
-                  {/* Progress indicator */}
-                  <div className="text-xs text-indigo-700 font-medium">
-                    {completedCards.size}/10 saved
+              )}
+              
+              {/* Level 2 fireworks celebration */}
+              {showFireworks && (
+                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
+                  <div className="relative">
+                    <Sparkles className="h-12 w-12 text-amber-500 animate-pulse" />
+                    {/* More elaborate fireworks effect */}
+                    <div className="absolute top-1/2 left-1/2">
+                      {Array.from({ length: 40 }).map((_, i) => (
+                        <div 
+                          key={i}
+                          className={`absolute w-3 h-3 rounded-full bg-${
+                            ['amber', 'yellow', 'orange', 'red', 'pink', 'rose'][i % 6]
+                          }-500 animate-ping`}
+                          style={{ 
+                            top: `${Math.random() * 200 - 100}px`, 
+                            left: `${Math.random() * 200 - 100}px`,
+                            animationDuration: `${0.3 + Math.random()}s`,
+                            animationDelay: `${Math.random() * 0.5}s`
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
+              
+              {/* Grand finale for completing all levels */}
+              {showGrandFinale && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none z-50 bg-black/30">
+                  <div className="relative">
+                    <Star className="h-16 w-16 text-yellow-500 animate-bounce" />
+                    {/* Huge celebration effect */}
+                    <div className="absolute top-1/2 left-1/2">
+                      {Array.from({ length: 100 }).map((_, i) => (
+                        <div 
+                          key={i}
+                          className={`absolute w-4 h-4 rounded-full bg-${
+                            ['yellow', 'orange', 'red', 'pink', 'purple', 'indigo', 'blue', 'cyan'][i % 8]
+                          }-500 animate-ping`}
+                          style={{ 
+                            top: `${Math.random() * 400 - 200}px`, 
+                            left: `${Math.random() * 400 - 200}px`,
+                            animationDuration: `${0.2 + Math.random() * 2}s`,
+                            animationDelay: `${Math.random() * 0.8}s`
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white/80 p-3 rounded-lg shadow-lg text-center">
+                      <h3 className="text-xl font-bold text-orange-700">Challenge Complete!</h3>
+                      <p className="text-orange-600">You've saved 10 cards on file! Amazing work! 🏆</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* White flag surrender animation */}
+              {showWhiteFlag && (
+                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
+                  <div className="relative">
+                    <Flag className="h-10 w-10 text-white animate-bounce" />
+                  </div>
+                </div>
+              )}
             </div>
-            
-            {/* Celebrations */}
-            {/* Regular confetti celebration */}
-            {showConfetti && (
-              <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
-                <div className="relative">
-                  <PartyPopper className="h-8 w-8 text-indigo-500 animate-bounce" />
-                  {/* Simulated confetti particles */}
-                  <div className="absolute top-1/2 left-1/2">
-                    {Array.from({ length: 20 }).map((_, i) => (
-                      <div 
-                        key={i}
-                        className={`absolute w-2 h-2 rounded-full bg-${
-                          ['indigo', 'blue', 'green', 'pink', 'purple'][i % 5]
-                        }-500 animate-ping`}
-                        style={{ 
-                          top: `${Math.random() * 100 - 50}px`, 
-                          left: `${Math.random() * 100 - 50}px`,
-                          animationDuration: `${0.5 + Math.random()}s`,
-                          animationDelay: `${Math.random() * 0.5}s`
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            {/* Special fireworks for 5th completion */}
-            {showFireworks && (
-              <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
-                <div className="relative">
-                  <Sparkles className="h-12 w-12 text-yellow-500 animate-pulse" />
-                  {/* More elaborate fireworks effect */}
-                  <div className="absolute top-1/2 left-1/2">
-                    {Array.from({ length: 40 }).map((_, i) => (
-                      <div 
-                        key={i}
-                        className={`absolute w-3 h-3 rounded-full bg-${
-                          ['indigo', 'yellow', 'green', 'pink', 'red', 'blue'][i % 6]
-                        }-500 animate-ping`}
-                        style={{ 
-                          top: `${Math.random() * 200 - 100}px`, 
-                          left: `${Math.random() * 200 - 100}px`,
-                          animationDuration: `${0.3 + Math.random()}s`,
-                          animationDelay: `${Math.random() * 0.5}s`
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            {/* Grand finale for 10th completion */}
-            {showGrandFinale && (
-              <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none z-50 bg-black/30">
-                <div className="relative">
-                  <Star className="h-16 w-16 text-yellow-500 animate-bounce" />
-                  {/* Huge celebration effect */}
-                  <div className="absolute top-1/2 left-1/2">
-                    {Array.from({ length: 100 }).map((_, i) => (
-                      <div 
-                        key={i}
-                        className={`absolute w-4 h-4 rounded-full bg-${
-                          ['yellow', 'indigo', 'green', 'pink', 'red', 'blue', 'purple', 'orange'][i % 8]
-                        }-500 animate-ping`}
-                        style={{ 
-                          top: `${Math.random() * 400 - 200}px`, 
-                          left: `${Math.random() * 400 - 200}px`,
-                          animationDuration: `${0.2 + Math.random() * 2}s`,
-                          animationDelay: `${Math.random() * 0.8}s`
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white/80 p-3 rounded-lg shadow-lg text-center">
-                    <h3 className="text-xl font-bold text-indigo-700">Challenge Complete!</h3>
-                    <p className="text-indigo-600">You've saved 10 cards on file! Amazing work! 🏆</p>
-                  </div>
-                </div>
-              </div>
-            )}
           </CardContent>
         </Card>
       )}
