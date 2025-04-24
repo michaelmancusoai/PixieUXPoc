@@ -22,13 +22,38 @@
   margin: 0 auto;
 }
 
+/* Override the NES.css cursor for the entire application */
+html, body, #root, * {
+  cursor: default !important;
+}
+
+button, a, [role="button"], input[type="submit"], input[type="button"], .clickable {
+  cursor: pointer !important;
+}
+
+/* Specifically target and override NES.css cursor styles */
+.nes-btn,
+.nes-btn::after,
+.nes-btn::before,
+.nes-btn:hover,
+.nes-btn:active,
+.nes-btn.is-primary,
+.nes-btn.is-success,
+.nes-btn.is-warning,
+.nes-btn.is-error,
+.nes-btn.is-disabled,
+[type=button],
+button {
+  cursor: pointer !important;
+}
+
 .game-container .nes-container {
-  cursor: default;
+  cursor: default !important;
 }
 
 /* Default cursor for buttons inside the game container */
 .game-container .nes-container button {
-  cursor: pointer;
+  cursor: pointer !important;
 }
 
 /* Removing fixed height to allow content to flow properly */

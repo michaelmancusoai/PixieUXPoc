@@ -310,5 +310,19 @@ export const PixelStyles = () => (
       border: 4px solid transparent;
       opacity: 0.3;
     }
+    
+    /* Override NES.css cursor styles */
+    html body, html body * {
+      cursor: default !important;
+    }
+    
+    html body button, 
+    html body a, 
+    html body [role="button"], 
+    html body input[type="submit"], 
+    html body input[type="button"], 
+    html body .clickable {
+      cursor: pointer !important;
+    }
   ` }} />
 );
