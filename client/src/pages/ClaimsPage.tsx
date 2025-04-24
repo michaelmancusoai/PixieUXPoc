@@ -1024,38 +1024,7 @@ export default function ClaimsPage() {
           </div>
           
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Claims Summary</CardTitle>
-              </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <CreditCard className="h-8 w-8 mr-3 text-blue-500" />
-                  <div>
-                    <div className="text-2xl font-bold">${totalClaimAmount.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {filteredClaims.length} claims
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t flex justify-between items-center">
-                  <div>
-                    <div className="text-sm font-medium">${avgClaimValue.toFixed(0)}</div>
-                    <div className="text-xs text-muted-foreground">Avg. claim</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">${totalInsuranceEstimate.toFixed(0)}</div>
-                    <div className="text-xs text-muted-foreground">Insurance est.</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">${totalPatientEstimate.toFixed(0)}</div>
-                    <div className="text-xs text-muted-foreground">Patient est.</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
+          <div className="mb-6">
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
                 <div className="flex items-center justify-between">
@@ -1275,79 +1244,104 @@ export default function ClaimsPage() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                     <div className="col-span-2">
-                      <h4 className="text-sm font-medium mb-3">Value Stream Analysis</h4>
-                      <div className="bg-white p-4 rounded-md border shadow-sm h-64">
-                        <div className="mb-4">
-                          <div className="flex justify-between items-center mb-2">
-                            <div className="text-xs text-muted-foreground">Claim Creation to Submission</div>
-                            <div className="text-xs font-medium">2 days</div>
-                          </div>
-                          <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
-                            <div className="bg-green-500 h-full rounded-full" style={{ width: '10%' }}></div>
-                          </div>
-                        </div>
-                        
-                        <div className="mb-4">
-                          <div className="flex justify-between items-center mb-2">
-                            <div className="text-xs text-muted-foreground">Submission to Adjudication</div>
-                            <div className="text-xs font-medium">14 days</div>
-                          </div>
-                          <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
-                            <div className="bg-amber-500 h-full rounded-full" style={{ width: '60%' }}></div>
-                          </div>
-                        </div>
-                        
-                        <div className="mb-4">
-                          <div className="flex justify-between items-center mb-2">
-                            <div className="text-xs text-muted-foreground">Adjudication to Payment</div>
-                            <div className="text-xs font-medium">7 days</div>
-                          </div>
-                          <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
-                            <div className="bg-blue-500 h-full rounded-full" style={{ width: '30%' }}></div>
-                          </div>
-                        </div>
-                        
-                        <div className="pt-3 border-t">
-                          <div className="text-sm font-medium mb-2">Claims Flow</div>
-                          <div className="relative pt-2 px-1">
-                            <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200"></div>
-                            
-                            <div className="flex justify-between relative">
-                              {/* Not Sent */}
-                              <div className="flex flex-col items-center w-1/4">
-                                <div className="absolute -top-2 w-12 h-4 bg-gray-100 rounded-full flex items-center justify-center border">
-                                  <span className="text-xs">14</span>
+                      <h4 className="text-sm font-medium mb-3">Claims Lifecycle and Aging</h4>
+                      <div className="bg-white p-4 rounded-md border shadow-sm">
+                        {/* Claims Status Flow */}
+                        <div className="mb-6">
+                          <h4 className="text-sm font-medium mb-3">Claims Status Flow</h4>
+                          <div className="bg-muted/20 p-4 rounded-lg border">
+                            <div className="mb-4 flex items-center">
+                              <div className="flex-1 h-2 bg-gray-200 relative">
+                                {/* Status flow dots and connecting line */}
+                                <div className="absolute top-0 left-0 right-0 h-2">
+                                  <div className="bg-gradient-to-r from-gray-300 via-blue-400 to-green-400 h-full rounded-full"></div>
                                 </div>
-                                <div className="mt-3 text-xs text-center text-muted-foreground">Not Sent</div>
-                                <div className="text-xs font-medium text-center">$4,325</div>
+                                <div className="h-5 w-5 rounded-full absolute -top-1.5 left-0 bg-gray-100 border-2 border-gray-400 z-10"></div>
+                                <div className="h-5 w-5 rounded-full absolute -top-1.5 left-1/3 bg-blue-100 border-2 border-blue-400 z-10"></div>
+                                <div className="h-5 w-5 rounded-full absolute -top-1.5 left-2/3 bg-amber-100 border-2 border-amber-400 z-10"></div>
+                                <div className="h-5 w-5 rounded-full absolute -top-1.5 right-0 bg-green-100 border-2 border-green-400 z-10"></div>
+                              </div>
+                            </div>
+                            
+                            <div className="grid grid-cols-4 gap-3">
+                              {/* Not Sent */}
+                              <div className="flex flex-col items-center bg-gray-50 p-3 rounded-lg border border-gray-100">
+                                <div className="text-xs font-medium text-center text-gray-700 mb-1">Not Submitted</div>
+                                <div className="text-sm font-bold text-gray-800 mb-1">14</div>
+                                <div className="text-xs text-gray-600 mb-1">$4,325</div>
+                                <div className="flex space-x-1 text-xs text-gray-500">
+                                  <Clock className="h-3 w-3" />
+                                  <span>Avg: 2d</span>
+                                </div>
                               </div>
                               
-                              {/* Sent/Resent */}
-                              <div className="flex flex-col items-center w-1/4">
-                                <div className="absolute -top-2 w-12 h-4 bg-blue-100 rounded-full flex items-center justify-center border">
-                                  <span className="text-xs">167</span>
+                              {/* Sent */}
+                              <div className="flex flex-col items-center bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                <div className="text-xs font-medium text-center text-blue-700 mb-1">Submitted</div>
+                                <div className="text-sm font-bold text-blue-800 mb-1">167</div>
+                                <div className="text-xs text-blue-600 mb-1">$52,180</div>
+                                <div className="flex space-x-1 text-xs text-blue-500">
+                                  <Clock className="h-3 w-3" />
+                                  <span>Avg: 1d</span>
                                 </div>
-                                <div className="mt-3 text-xs text-center text-muted-foreground">Submitted</div>
-                                <div className="text-xs font-medium text-center">$52,180</div>
                               </div>
                               
                               {/* Pending */}
-                              <div className="flex flex-col items-center w-1/4">
-                                <div className="absolute -top-2 w-12 h-4 bg-amber-100 rounded-full flex items-center justify-center border">
-                                  <span className="text-xs">19</span>
+                              <div className="flex flex-col items-center bg-amber-50 p-3 rounded-lg border border-amber-100">
+                                <div className="text-xs font-medium text-center text-amber-700 mb-1">EOBs in Progress</div>
+                                <div className="text-sm font-bold text-amber-800 mb-1">19</div>
+                                <div className="text-xs text-amber-600 mb-1">$6,845</div>
+                                <div className="flex space-x-1 text-xs text-amber-500">
+                                  <Clock className="h-3 w-3" />
+                                  <span>Avg: 14d</span>
                                 </div>
-                                <div className="mt-3 text-xs text-center text-muted-foreground">Pending</div>
-                                <div className="text-xs font-medium text-center">$6,845</div>
                               </div>
                               
                               {/* Completed */}
-                              <div className="flex flex-col items-center w-1/4">
-                                <div className="absolute -top-2 w-12 h-4 bg-green-100 rounded-full flex items-center justify-center border">
-                                  <span className="text-xs">7986</span>
+                              <div className="flex flex-col items-center bg-green-50 p-3 rounded-lg border border-green-100">
+                                <div className="text-xs font-medium text-center text-green-700 mb-1">Completed</div>
+                                <div className="text-sm font-bold text-green-800 mb-1">7,986</div>
+                                <div className="text-xs text-green-600 mb-1">$2,476,325</div>
+                                <div className="flex space-x-1 text-xs text-green-500">
+                                  <Clock className="h-3 w-3" />
+                                  <span>Avg: 22d</span>
                                 </div>
-                                <div className="mt-3 text-xs text-center text-muted-foreground">Completed</div>
-                                <div className="text-xs font-medium text-center">$2,476,325</div>
                               </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        {/* Aging Section */}
+                        <div>
+                          <h4 className="text-sm font-medium mb-3">Aging Analysis</h4>
+                          
+                          {/* Progress bar visualization */}
+                          <div className="mb-2">
+                            <div className="flex h-2 rounded-full overflow-hidden bg-gray-100">
+                              {/* Calculate percentages */}
+                              {(() => {
+                                const total = agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90;
+                                const under30Pct = (agingBuckets.under30 / total) * 100;
+                                const days30to60Pct = (agingBuckets.days30to60 / total) * 100;
+                                const days60to90Pct = (agingBuckets.days60to90 / total) * 100;
+                                const over90Pct = (agingBuckets.over90 / total) * 100;
+                                
+                                return (
+                                  <>
+                                    <div className="bg-green-500 h-full" style={{ width: `${under30Pct}%` }}></div>
+                                    <div className="bg-blue-500 h-full" style={{ width: `${days30to60Pct}%` }}></div>
+                                    <div className="bg-amber-500 h-full" style={{ width: `${days60to90Pct}%` }}></div>
+                                    <div className="bg-red-500 h-full" style={{ width: `${over90Pct}%` }}></div>
+                                  </>
+                                );
+                              })()}
+                            </div>
+                            
+                            <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                              <div>0 Days</div>
+                              <div>30 Days</div>
+                              <div>60 Days</div>
+                              <div>90+ Days</div>
                             </div>
                           </div>
                         </div>
