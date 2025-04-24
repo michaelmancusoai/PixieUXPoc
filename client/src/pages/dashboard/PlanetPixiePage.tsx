@@ -143,7 +143,7 @@ const PlanetPixiePage = () => {
       case GameLevel.LEVEL_1:
         return (
           <div className="grid grid-cols-1 gap-4">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 relative overflow-hidden">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 relative overflow-hidden level-container">
               <h3 className="font-bold text-blue-800 text-lg mb-2">Capture the Cards</h3>
               <p className="text-blue-600 mb-4 text-base">Level 1: Mastering Card Prompts</p>
               
@@ -185,7 +185,7 @@ const PlanetPixiePage = () => {
       case GameLevel.LEVEL_2:
         return (
           <div className="grid grid-cols-1 gap-4">
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 relative overflow-hidden">
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 relative overflow-hidden level-container">
               <h3 className="font-bold text-amber-800 text-lg mb-2">Capture the Cards</h3>
               <p className="text-amber-600 mb-4 text-base">Level 2: Finding the Perfect Moment</p>
               
@@ -227,7 +227,7 @@ const PlanetPixiePage = () => {
       case GameLevel.LEVEL_FINAL:
         return (
           <div className="grid grid-cols-1 gap-4">
-            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 relative overflow-hidden">
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 relative overflow-hidden level-container">
               <h3 className="font-bold text-orange-800 text-lg mb-2">Capture the Cards</h3>
               <p className="text-orange-600 mb-4 text-base">Final Level: Security Reassurance</p>
               
@@ -268,7 +268,7 @@ const PlanetPixiePage = () => {
       
       case GameLevel.VICTORY:
         return (
-          <div className="text-center py-8">
+          <div className="text-center py-8 level-container">
             <i className="nes-icon trophy is-large"></i>
             <h2 className="font-bold text-2xl text-green-600 mt-4">MISSION COMPLETE!</h2>
             <p className="text-lg mb-6">You've conquered all levels of card capture training!</p>
@@ -294,7 +294,7 @@ const PlanetPixiePage = () => {
       
       case GameLevel.SURRENDERED:
         return (
-          <div className="text-center py-8">
+          <div className="text-center py-8 level-container">
             <i className="nes-icon close is-large"></i>
             <h2 className="font-bold text-2xl text-red-600 mt-4">MISSION ABANDONED</h2>
             <p className="text-lg mb-6">You've surrendered this challenge.</p>
@@ -333,8 +333,8 @@ const PlanetPixiePage = () => {
         <h1 className="text-2xl font-bold tracking-tight mb-6">Planet Pixie: Daily Challenge</h1>
         <p className="text-muted-foreground mb-8">Capture cards and collect coins to boost your practice efficiency!</p>
 
-        <div className="max-w-3xl mx-auto">
-          <div className="relative game-container">
+        <div className="game-container">
+          <div className="relative">
             <div className={`nes-container pixelated is-rounded ${getLevelBackground()} hover:shadow-md transition-shadow duration-200 p-4 font-vt323 overflow-hidden`}>
               <div className="bg-gray-800 text-white p-1 font-press-start text-center mb-3 -mx-3 -mt-3 rounded-t">Planet Pixie: Daily Challenge</div>
               

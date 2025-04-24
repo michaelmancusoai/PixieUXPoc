@@ -16,8 +16,22 @@
 }
 
 /* Custom NES.css overrides for game UI */
+.game-container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
 .game-container .nes-container {
   cursor: default;
+  min-height: 320px;
+}
+
+/* Fixed-height containers for game levels to prevent layout shifts */
+.level-container {
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Default cursor for buttons inside the game container */

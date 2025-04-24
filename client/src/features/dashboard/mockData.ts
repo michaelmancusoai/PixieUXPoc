@@ -16,7 +16,7 @@ if (currentHour < 12) {
 
 // Front Office Mock Data
 const frontOfficeData: DashboardData = {
-  greeting: `Good morning, Maria — 8 smiles to greet, 6 phones to calm, 5 minutes 'til first arrival`,
+  greeting: `Good morning, Maria`,
   greetingDetails: "AI cleared 2 wait-list gaps overnight; let's keep the chairs spinning.",
   kpis: [
     {
