@@ -18,7 +18,7 @@
 /* Custom NES.css overrides for game UI */
 .game-container {
   width: 100%;
-  max-width: 380px;
+  max-width: 1500px;
   margin: 0 auto;
 }
 
