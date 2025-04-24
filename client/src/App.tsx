@@ -12,6 +12,7 @@ import TodayPage from "@/pages/dashboard/TodayPage";
 import DailyHuddlePage from "@/pages/dashboard/DailyHuddlePage";
 import MissionControlPage from "@/pages/dashboard/MissionControlPage";
 import LeaderboardPage from "@/pages/dashboard/LeaderboardPage";
+import PlanetPixiePage from "@/pages/dashboard/PlanetPixiePage";
 import SchedulePage from "@/pages/SchedulePage";
 import PatientsPage from "@/pages/PatientsPage";
 import BillingPage from "@/pages/BillingPage";
@@ -35,6 +36,7 @@ function Router() {
       <Route path="/dashboard/daily-huddle" component={DailyHuddlePage} />
       <Route path="/dashboard/mission-control" component={MissionControlPage} />
       <Route path="/dashboard/leaderboard" component={LeaderboardPage} />
+      <Route path="/dashboard/planet-pixie" component={PlanetPixiePage} />
       <Route path="/schedule" component={SchedulePage} />
       <Route path="/schedule/:subpage" component={SchedulePage} />
       <Route path="/patients" component={PatientsPage} />
