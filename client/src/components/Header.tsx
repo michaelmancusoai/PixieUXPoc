@@ -253,7 +253,7 @@ export function Header() {
       {searchOpen && (
         <div 
           className={cn(
-            "fixed inset-0 z-50 flex items-start justify-center bg-black/15 backdrop-blur-[2px] transition-all duration-200",
+            "fixed inset-0 z-50 flex items-start justify-center bg-black/10 backdrop-blur-[1px] transition-all duration-200",
             searchClosing ? "opacity-0" : "opacity-100"
           )}
           onClick={closeSearchModal}
@@ -261,7 +261,7 @@ export function Header() {
           <div 
             ref={searchModalRef}
             className={cn(
-              "w-full max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden transition-all duration-200",
+              "w-full max-w-3xl bg-white rounded-lg shadow-2xl ring-1 ring-black/5 overflow-hidden transition-all duration-200",
               searchClosing ? "opacity-0 scale-95" : "opacity-100 scale-100"
             )}
             onClick={(e) => e.stopPropagation()}
