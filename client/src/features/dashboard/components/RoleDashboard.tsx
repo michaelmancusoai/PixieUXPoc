@@ -394,25 +394,8 @@ const RoleDashboard: React.FC = () => {
           <div className="nes-container is-rounded pixelated border-blue-500 bg-blue-100 overflow-hidden">
             <div className="bg-blue-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 1: SKY QUEST</div>
             
-            {/* Office Ranking - Top Left */}
-            <div className="absolute top-2 left-2">
-              <div className="bg-blue-100 rounded-md px-2 py-1">
-                <span className="text-blue-800 font-press-start text-xs">OFFICE RANK: #2</span>
-              </div>
-            </div>
-
-            {/* Surrender Button Top Right */}
-            <div className="absolute top-2 right-2">
-              <button 
-                onClick={surrenderGame}
-                className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
-              >
-                SURRENDER
-              </button>
-            </div>
-
             {/* Coin Counter */}
-            <div className="absolute top-12 left-2">
+            <div className="absolute top-2 left-2">
               <i className="nes-icon coin is-small"></i> <span className="text-blue-800 font-bold">{coins}/{targetCoins}</span>
             </div>
             
@@ -506,25 +489,8 @@ const RoleDashboard: React.FC = () => {
           <div className="nes-container is-rounded pixelated border-amber-500 bg-amber-100 overflow-hidden">
             <div className="bg-amber-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 2: DESERT QUEST</div>
             
-            {/* Office Ranking - Top Left */}
-            <div className="absolute top-2 left-2">
-              <div className="bg-amber-100 rounded-md px-2 py-1">
-                <span className="text-amber-800 font-press-start text-xs">OFFICE RANK: #2</span>
-              </div>
-            </div>
-
-            {/* Surrender Button Top Right */}
-            <div className="absolute top-2 right-2">
-              <button 
-                onClick={surrenderGame}
-                className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
-              >
-                SURRENDER
-              </button>
-            </div>
-
             {/* Coin Counter */}
-            <div className="absolute top-12 left-2">
+            <div className="absolute top-2 left-2">
               <i className="nes-icon coin is-small"></i> <span className="text-amber-800 font-bold">{coins}/{targetCoins}</span>
             </div>
             
@@ -583,25 +549,8 @@ const RoleDashboard: React.FC = () => {
           <div className="nes-container is-rounded pixelated border-orange-500 bg-orange-100 overflow-hidden">
             <div className="bg-orange-600 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">FINAL LEVEL: LAVA QUEST</div>
             
-            {/* Office Ranking - Top Left */}
-            <div className="absolute top-2 left-2">
-              <div className="bg-orange-100 rounded-md px-2 py-1">
-                <span className="text-orange-800 font-press-start text-xs">OFFICE RANK: #1</span>
-              </div>
-            </div>
-
-            {/* Surrender Button Top Right */}
-            <div className="absolute top-2 right-2">
-              <button 
-                onClick={surrenderGame}
-                className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
-              >
-                SURRENDER
-              </button>
-            </div>
-
             {/* Coin Counter */}
-            <div className="absolute top-12 left-2">
+            <div className="absolute top-2 left-2">
               <i className="nes-icon coin is-small"></i> <span className="text-orange-800 font-bold">{coins}/{targetCoins}</span>
             </div>
             
@@ -769,7 +718,24 @@ const RoleDashboard: React.FC = () => {
       {currentRole === 'frontOffice' && gameVisible && (
         <div className="relative game-container">
           <div className={`nes-container pixelated is-rounded ${getLevelBackground()} hover:shadow-md transition-shadow duration-200 p-4 font-vt323 overflow-hidden`}>
-            <div className="bg-gray-800 text-white p-1 font-press-start text-center mb-3 -mx-3 -mt-3 rounded-t">8-bit Challenge Quest</div>
+            <div className="bg-gray-800 text-white p-1 font-press-start text-center mb-3 -mx-3 -mt-3 rounded-t">Planet Pixie: Capture the Cards</div>
+            
+            {/* Game Header with Office Rank and Surrender */}
+            <div className="flex justify-between items-center px-1 mb-3">
+              {/* Office Rank - Left */}
+              <div className="bg-blue-100 rounded-md px-2 py-1">
+                <span className="text-blue-800 font-press-start text-xs">OFFICE RANK: #{gameState.level === GameLevel.LEVEL_FINAL ? "1" : "2"}</span>
+              </div>
+              
+              {/* Surrender Button - Right */}
+              <button 
+                onClick={surrenderGame}
+                className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
+              >
+                SURRENDER
+              </button>
+            </div>
+            
             <div className="relative mb-4">
               {renderGameContent()}
               
