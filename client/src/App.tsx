@@ -4,6 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { PixelStyles } from "@/features/dashboard/components/RetroGame";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import DashboardPage from "@/pages/DashboardPage";
@@ -66,6 +67,7 @@ function App() {
       <ThemeProvider>
         <TooltipProvider>
           <Toaster />
+          <PixelStyles />
           <Router />
         </TooltipProvider>
       </ThemeProvider>

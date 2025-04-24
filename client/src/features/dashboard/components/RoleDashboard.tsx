@@ -282,19 +282,11 @@ const RoleDashboard: React.FC = () => {
     return (
       <button 
         key={index}
-        className={`w-10 h-10 rounded-full border-2 flex items-center justify-center transition-all ${
-          isFilled 
-            ? 'border-yellow-500 bg-yellow-100 hover:bg-yellow-200' 
-            : 'border-gray-300 bg-white hover:bg-gray-50'
-        }`}
+        className={`transition-all mx-1 ${isFilled ? '' : 'opacity-60'}`}
         title={isFilled ? "Coin collected!" : "Collect a coin by storing a card on file"}
         onClick={handleCoinCollected}
       >
-        {isFilled && (
-          <div className="w-6 h-6 rounded-full bg-yellow-400 shadow-inner flex items-center justify-center">
-            <CreditCard className="h-3 w-3 text-yellow-800" />
-          </div>
-        )}
+        <i className={`nes-icon coin ${isFilled ? 'is-medium' : 'is-medium is-transparent'}`}></i>
       </button>
     );
   };
@@ -325,38 +317,31 @@ const RoleDashboard: React.FC = () => {
     
     if (level === GameLevel.BRIEFING_1) {
       return (
-        <div className="text-center py-2">
-          <h3 className="font-medium text-sky-800">Daily Challenge!</h3>
-          <p className="text-sm text-sky-700 mt-1">
+        <div className="text-center py-2 font-vt323">
+          <h3 className="font-press-start text-xl text-sky-800 mb-2">DAILY CHALLENGE!</h3>
+          <p className="text-md text-sky-700 mb-3">
             Collect 3 coins by asking patients to save a card on file.
           </p>
           
-          <div className="flex justify-center space-x-2 my-3">
+          <div className="flex justify-center my-3">
             {[0, 1, 2].map(index => (
-              <div 
-                key={index}
-                className="w-8 h-8 rounded-full border-2 border-gray-300 bg-white"
-              />
+              <i key={index} className="nes-icon coin is-medium is-transparent mx-1"></i>
             ))}
           </div>
           
-          <div className="space-x-2">
-            <Button 
-              variant="default" 
-              size="sm"
-              className="bg-sky-600 hover:bg-sky-700"
+          <div className="flex justify-center mt-4 space-x-4">
+            <button 
+              className="nes-btn is-primary font-press-start text-xs px-2 py-1"
               onClick={acceptMission}
             >
-              Mission Accepted
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="text-gray-600"
+              MISSION ACCEPTED
+            </button>
+            <button 
+              className="nes-btn is-error font-press-start text-xs px-2 py-1"
               onClick={surrenderGame}
             >
-              Quit Game
-            </Button>
+              QUIT GAME
+            </button>
           </div>
         </div>
       );
@@ -741,8 +726,9 @@ const RoleDashboard: React.FC = () => {
       
       {/* Card-on-File Daily Challenge Card - shown only for front office role */}
       {currentRole === 'frontOffice' && gameVisible && (
-        <Card className={`border-dashed border-2 ${getLevelBackground()} hover:shadow-md transition-shadow duration-200 relative overflow-hidden`}>
-          <CardContent className="p-4">
+        <div className="relative">
+          <div className={`nes-container pixelated with-title is-rounded ${getLevelBackground()} hover:shadow-md transition-shadow duration-200 p-4 font-vt323`}>
+            <p className="title bg-gray-800 text-white p-1 font-press-start">8-bit Challenge Quest</p>
             <div className="relative">
               {renderGameContent()}
               
@@ -751,18 +737,17 @@ const RoleDashboard: React.FC = () => {
               {showConfetti && (
                 <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
                   <div className="relative">
-                    <PartyPopper className="h-8 w-8 text-sky-500 animate-bounce" />
+                    <i className="nes-icon coin is-large animate-bounce"></i>
                     {/* Simulated confetti particles */}
                     <div className="absolute top-1/2 left-1/2">
                       {Array.from({ length: 20 }).map((_, i) => (
                         <div 
                           key={i}
-                          className={`absolute w-2 h-2 rounded-full bg-${
-                            ['sky', 'blue', 'indigo', 'teal', 'cyan'][i % 5]
-                          }-500 animate-ping`}
+                          className="absolute w-2 h-2 pixelated rounded-none animate-ping"
                           style={{ 
                             top: `${Math.random() * 100 - 50}px`, 
                             left: `${Math.random() * 100 - 50}px`,
+                            backgroundColor: ['#5E9CEA', '#FFCD4D', '#78E067', '#FF6868', '#9C8AFF'][i % 5],
                             animationDuration: `${0.5 + Math.random()}s`,
                             animationDelay: `${Math.random() * 0.5}s`
                           }}
@@ -777,18 +762,17 @@ const RoleDashboard: React.FC = () => {
               {showFireworks && (
                 <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
                   <div className="relative">
-                    <Sparkles className="h-12 w-12 text-amber-500 animate-pulse" />
+                    <i className="nes-icon star is-large animate-pulse"></i>
                     {/* More elaborate fireworks effect */}
                     <div className="absolute top-1/2 left-1/2">
                       {Array.from({ length: 40 }).map((_, i) => (
                         <div 
                           key={i}
-                          className={`absolute w-3 h-3 rounded-full bg-${
-                            ['amber', 'yellow', 'orange', 'red', 'pink', 'rose'][i % 6]
-                          }-500 animate-ping`}
+                          className="absolute w-3 h-3 pixelated rounded-none animate-ping"
                           style={{ 
                             top: `${Math.random() * 200 - 100}px`, 
                             left: `${Math.random() * 200 - 100}px`,
+                            backgroundColor: ['#FFB627', '#FFF054', '#FF8A54', '#FF6B6B', '#FF54A4', '#FF7EB9'][i % 6],
                             animationDuration: `${0.3 + Math.random()}s`,
                             animationDelay: `${Math.random() * 0.5}s`
                           }}
@@ -803,27 +787,27 @@ const RoleDashboard: React.FC = () => {
               {showGrandFinale && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none z-50 bg-black/30">
                   <div className="relative">
-                    <Star className="h-16 w-16 text-yellow-500 animate-bounce" />
+                    <i className="nes-icon trophy is-large animate-bounce"></i>
                     {/* Huge celebration effect */}
                     <div className="absolute top-1/2 left-1/2">
                       {Array.from({ length: 100 }).map((_, i) => (
                         <div 
                           key={i}
-                          className={`absolute w-4 h-4 rounded-full bg-${
-                            ['yellow', 'orange', 'red', 'pink', 'purple', 'indigo', 'blue', 'cyan'][i % 8]
-                          }-500 animate-ping`}
+                          className="absolute w-4 h-4 pixelated rounded-none animate-ping"
                           style={{ 
                             top: `${Math.random() * 400 - 200}px`, 
                             left: `${Math.random() * 400 - 200}px`,
+                            backgroundColor: ['#FFD700', '#FF8C00', '#FF0000', '#FF69B4', '#8A2BE2', '#4169E1', '#1E90FF', '#00FFFF'][i % 8],
                             animationDuration: `${0.2 + Math.random() * 2}s`,
                             animationDelay: `${Math.random() * 0.8}s`
                           }}
                         />
                       ))}
                     </div>
-                    <div className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-white/80 p-3 rounded-lg shadow-lg text-center">
-                      <h3 className="text-xl font-bold text-orange-700">Challenge Complete!</h3>
-                      <p className="text-orange-600">You've saved 10 cards on file! Amazing work! 🏆</p>
+                    <div className="absolute top-20 left-1/2 transform -translate-x-1/2 nes-container is-dark with-title p-3 text-center pixelated">
+                      <p className="title">VICTORY!</p>
+                      <p className="nes-text is-success">10 COINS COLLECTED!</p>
+                      <i className="nes-icon is-large heart"></i>
                     </div>
                   </div>
                 </div>
@@ -833,13 +817,13 @@ const RoleDashboard: React.FC = () => {
               {showWhiteFlag && (
                 <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
                   <div className="relative">
-                    <Flag className="h-10 w-10 text-white animate-bounce" />
+                    <i className="nes-icon close is-large animate-bounce"></i>
                   </div>
                 </div>
               )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       )}
 
       {/* KPI Progress Strip */}
