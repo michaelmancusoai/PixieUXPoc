@@ -1084,7 +1084,7 @@ export default function ClaimsPage() {
               </CardContent>
             </Card>
             
-            <Card className="shadow-sm col-span-2">
+            <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
                 <CardTitle className="text-base font-medium">Claim Aging</CardTitle>
               </CardHeader>
