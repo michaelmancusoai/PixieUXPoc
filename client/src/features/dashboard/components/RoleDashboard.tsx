@@ -860,11 +860,11 @@ const RoleDashboard: React.FC = () => {
             </div>
             
             {/* Status bar at bottom of main container */}
-            {(level === GameLevel.LEVEL_1 || level === GameLevel.LEVEL_2 || level === GameLevel.LEVEL_FINAL) && (
+            {(gameState.level === GameLevel.LEVEL_1 || gameState.level === GameLevel.LEVEL_2 || gameState.level === GameLevel.LEVEL_FINAL) && (
               <div className="flex justify-between items-center border-t-2 border-gray-200 pt-2 mt-2">
                 <div className="text-xs text-gray-700 font-bold">
                   <i className="nes-icon star is-small"></i>
-                  STREAK: {streak} DAYS
+                  STREAK: {gameState.streak} DAYS
                 </div>
                 <div className="text-xs text-gray-700 font-bold">
                   <i className="nes-icon heart is-small"></i>
