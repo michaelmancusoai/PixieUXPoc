@@ -252,7 +252,7 @@ const AISummaryStep = () => {
                 </div>
               </li>
               <li className="flex items-start">
-                <div className="rounded-full bg-blue-100 text-blue-800 p-1 mr-2 mt-0.5">
+                <div className="rounded-full bg-indigo-100 text-indigo-800 p-1 mr-2 mt-0.5">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M8.8 20v-4.1l1.9.2a2.3 2.3 0 0 0 2.164-2.1V9.643c0-.698-.456-1.3-1.152-1.5a2.3 2.3 0 0 0-2.664.786L8.8 9.2"></path>
                     <path d="M6 12a2 2 0 1 0 4 0 2 2 0 0 0-4 0Z"></path>
