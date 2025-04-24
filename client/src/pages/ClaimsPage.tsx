@@ -856,6 +856,12 @@ export default function ClaimsPage() {
     const pendingCount = filteredClaims.filter(claim => claim.claimStatus === "Pending").length;
     const completedCount = filteredClaims.filter(claim => claim.claimStatus === "Completed").length;
     
+    // Filter claims by status for the value stream view
+    const notSentClaims = filteredClaims.filter(claim => claim.claimStatus === "Not Sent");
+    const submittedClaims = filteredClaims.filter(claim => claim.claimStatus === "Sent" || claim.claimStatus === "Resent");
+    const pendingClaims = filteredClaims.filter(claim => claim.claimStatus === "Pending");
+    const completedClaims = filteredClaims.filter(claim => claim.claimStatus === "Completed");
+    
     // Calculate carrier statistics
     const carrierStats = filteredClaims.reduce((acc, claim) => {
       const carrier = claim.insuranceCarrier;
@@ -942,7 +948,13 @@ export default function ClaimsPage() {
       secondaryInsuranceEstimate,
       agingBuckets,
       totalClaimAmount,
-      avgClaimValue
+      avgClaimValue,
+      notSentClaims,
+      submittedClaims,
+      pendingClaims,
+      completedClaims,
+      primaryClaims,
+      secondaryClaims
     };
   };
 
@@ -963,7 +975,13 @@ export default function ClaimsPage() {
     secondaryInsuranceEstimate,
     agingBuckets,
     totalClaimAmount,
-    avgClaimValue
+    avgClaimValue,
+    notSentClaims,
+    submittedClaims,
+    pendingClaims,
+    completedClaims,
+    primaryClaims,
+    secondaryClaims
   } = calculateMetrics();
 
   return (
@@ -1094,7 +1112,7 @@ export default function ClaimsPage() {
                         </div>
                         <div className="mt-4 bg-gray-100 p-3 rounded-lg w-full">
                           <div className="text-center text-sm font-medium">Not Sent</div>
-                          <div className="text-center font-bold mt-1">${notSentClaims.reduce((sum, claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                          <div className="text-center font-bold mt-1">${notSentClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
                           <div className="text-xs text-center text-muted-foreground mt-1">0 days avg.</div>
                         </div>
                       </div>
@@ -1106,7 +1124,7 @@ export default function ClaimsPage() {
                         </div>
                         <div className="mt-4 bg-blue-50 p-3 rounded-lg w-full">
                           <div className="text-center text-sm font-medium">Submitted</div>
-                          <div className="text-center font-bold mt-1">${submittedClaims.reduce((sum, claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                          <div className="text-center font-bold mt-1">${submittedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
                           <div className="text-xs text-center text-muted-foreground mt-1">~2 days avg.</div>
                         </div>
                       </div>
@@ -1118,7 +1136,7 @@ export default function ClaimsPage() {
                         </div>
                         <div className="mt-4 bg-amber-50 p-3 rounded-lg w-full">
                           <div className="text-center text-sm font-medium">Pending</div>
-                          <div className="text-center font-bold mt-1">${pendingClaims.reduce((sum, claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                          <div className="text-center font-bold mt-1">${pendingClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
                           <div className="text-xs text-center text-muted-foreground mt-1">~14 days avg.</div>
                         </div>
                       </div>
