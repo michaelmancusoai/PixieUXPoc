@@ -7,7 +7,6 @@ import ActionItem from './ActionItem';
 import FlowRadar from './FlowRadar';
 import WinFeed from './WinFeed';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { 
   Building, 
@@ -130,9 +129,7 @@ const RoleDashboard: React.FC = () => {
                 )}
               </div>
             </div>
-            <Badge className={`mt-4 md:mt-0 bg-${roleConfig.accentColor}-100 text-${roleConfig.accentColor}-800 border-${roleConfig.accentColor}-200`}>
-              {roleConfig.title}
-            </Badge>
+
           </div>
         </CardContent>
       </Card>
