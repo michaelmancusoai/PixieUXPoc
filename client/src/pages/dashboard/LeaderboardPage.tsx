@@ -1,9 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Trophy, Medal, User, Star } from "lucide-react";
+import { Trophy } from "lucide-react";
 import { NavigationWrapper } from "@/components/NavigationWrapper";
-
-// Using the existing pixel styles from the app
 
 interface LeaderboardEntry {
   id: number;
@@ -102,112 +100,13 @@ export default function LeaderboardPage() {
   return (
     <NavigationWrapper>
       <div className="container mx-auto py-8">
-        <div className="mb-6">
+        <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Office Leaderboard</h1>
           <p className="text-muted-foreground">
             Track your team's performance and celebrate top achievers.
           </p>
         </div>
 
-        {/* Retro Game Styled Leaderboard */}
-        <div className="mb-6 relative font-press-start">
-          <div className="border-4 border-blue-600 rounded-md overflow-hidden">
-            {/* Header Bar */}
-            <div className="bg-blue-600 text-white p-2 text-center text-sm">
-              Planet Pixie: Leaderboard
-            </div>
-            
-            {/* Leaderboard Content */}
-            <div className="bg-blue-100 p-4">
-              {/* Rank Bar */}
-              <div className="flex justify-between items-center mb-4">
-                <div className="bg-blue-200 rounded-md px-2 py-1 border-2 border-blue-600">
-                  <span className="text-blue-800 text-xs">OFFICE RANK: #2</span>
-                </div>
-                <div className="bg-yellow-200 rounded-md px-2 py-1 border-2 border-yellow-600">
-                  <span className="text-yellow-800 text-xs">YOUR SCORE: 835</span>
-                </div>
-              </div>
-              
-              {/* Top Players */}
-              <div className="bg-white border-4 border-blue-600 rounded-md p-4 mb-4">
-                <div className="text-blue-800 font-bold mb-3 text-sm">TOP PLAYERS:</div>
-                <div className="space-y-2">
-                  {leaderboardData.slice(0, 5).map((entry) => (
-                    <div key={entry.id} className="flex justify-between items-center p-2 border-b-2 border-blue-200">
-                      <div className="flex items-center">
-                        <div className={`w-6 h-6 flex items-center justify-center text-xs ${
-                          entry.rank === 1 ? 'bg-yellow-300 text-yellow-800' : 
-                          entry.rank === 2 ? 'bg-gray-300 text-gray-800' : 
-                          entry.rank === 3 ? 'bg-amber-300 text-amber-800' : 
-                          'bg-blue-200 text-blue-800'
-                        } mr-2`}>
-                          {entry.rank}
-                        </div>
-                        <div className="text-xs">{entry.name}</div>
-                      </div>
-                      <div className="text-xs">
-                        {entry.score} pts
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              
-              {/* Your Stats */}
-              <div className="flex justify-between gap-4">
-                <div className="bg-white border-4 border-blue-600 rounded-md p-3 flex-1">
-                  <div className="text-blue-800 font-bold mb-2 text-xs">YOUR ACHIEVEMENTS:</div>
-                  <div className="grid grid-cols-3 gap-2">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <div key={i} className="flex flex-col items-center">
-                        <div className="w-10 h-10 bg-yellow-200 flex items-center justify-center mb-1 border-2 border-yellow-600">
-                          <Trophy className="h-4 w-4 text-yellow-800" />
-                        </div>
-                        <div className="text-[8px] text-center">Badge {i + 1}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="bg-white border-4 border-blue-600 rounded-md p-3 flex-1">
-                  <div className="text-blue-800 font-bold mb-2 text-xs">YOUR STATS:</div>
-                  <div className="grid grid-cols-2 gap-2">
-                    <div className="bg-blue-200 p-2 text-center border-2 border-blue-600">
-                      <div className="text-xs font-bold text-blue-800">5</div>
-                      <div className="text-[8px] text-blue-800">Rank</div>
-                    </div>
-                    <div className="bg-purple-200 p-2 text-center border-2 border-purple-600">
-                      <div className="text-xs font-bold text-purple-800">12</div>
-                      <div className="text-[8px] text-purple-800">Challenges</div>
-                    </div>
-                    <div className="bg-amber-200 p-2 text-center border-2 border-amber-600">
-                      <div className="text-xs font-bold text-amber-800">28</div>
-                      <div className="text-[8px] text-amber-800">Day Streak</div>
-                    </div>
-                    <div className="bg-green-200 p-2 text-center border-2 border-green-600">
-                      <div className="text-xs font-bold text-green-800">94%</div>
-                      <div className="text-[8px] text-green-800">Success Rate</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Bottom status bar */}
-              <div className="flex justify-between items-center mt-4">
-                <div className="text-xs text-blue-800 font-bold flex items-center">
-                  <Star className="h-3 w-3 mr-1 text-yellow-500" />
-                  STREAK: 28 DAYS
-                </div>
-                <div className="text-xs text-blue-800 font-bold">
-                  UPDATED: 3 MIN AGO
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Modern UI Cards - These provide alternative view for users who prefer modern UI */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Top Performers Card */}
           <div className="lg:col-span-2">
