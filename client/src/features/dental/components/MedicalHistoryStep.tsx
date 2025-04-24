@@ -240,6 +240,86 @@ const MedicalHistoryStep = ({ onComplete }: MedicalHistoryStepProps) => {
         </Badge>
       </div>
       
+      {/* Summary Section - Always Visible */}
+      <Card className="mb-4">
+        <CardContent className="pt-6 pb-4">
+          <h4 className="text-base font-medium mb-3 flex items-center">
+            <AlertCircle className="w-5 h-5 mr-2 text-indigo-600" />
+            Medical History Summary
+          </h4>
+          
+          {countPositiveResponses() > 0 ? (
+            <div className="space-y-3">
+              {/* Cardiovascular */}
+              {Object.entries(cardiovascular).some(([_, value]) => value) && (
+                <div className="bg-red-50 p-2 rounded-md border border-red-100">
+                  <h5 className="text-sm font-medium flex items-center mb-1">
+                    <Heart className="w-4 h-4 mr-1 text-red-600" />
+                    Cardiovascular
+                  </h5>
+                  <div className="flex flex-wrap gap-1.5">
+                    {Object.entries(cardiovascular)
+                      .filter(([_, value]) => value)
+                      .map(([key, _]) => (
+                        <Badge key={key} variant="outline" className="bg-white text-red-700 border-red-200 text-xs">
+                          {key.replace(/([A-Z])/g, ' $1').trim()}
+                        </Badge>
+                      ))
+                    }
+                  </div>
+                </div>
+              )}
+              
+              {/* Respiratory */}
+              {Object.entries(respiratory).some(([_, value]) => value) && (
+                <div className="bg-blue-50 p-2 rounded-md border border-blue-100">
+                  <h5 className="text-sm font-medium flex items-center mb-1">
+                    <Gauge className="w-4 h-4 mr-1 text-blue-600" />
+                    Respiratory
+                  </h5>
+                  <div className="flex flex-wrap gap-1.5">
+                    {Object.entries(respiratory)
+                      .filter(([_, value]) => value)
+                      .map(([key, _]) => (
+                        <Badge key={key} variant="outline" className="bg-white text-blue-700 border-blue-200 text-xs">
+                          {key.replace(/([A-Z])/g, ' $1').trim()}
+                        </Badge>
+                      ))
+                    }
+                  </div>
+                </div>
+              )}
+              
+              {/* Endocrine */}
+              {Object.entries(endocrine).some(([_, value]) => value) && (
+                <div className="bg-green-50 p-2 rounded-md border border-green-100">
+                  <h5 className="text-sm font-medium flex items-center mb-1">
+                    <Activity className="w-4 h-4 mr-1 text-green-600" />
+                    Endocrine
+                  </h5>
+                  <div className="flex flex-wrap gap-1.5">
+                    {Object.entries(endocrine)
+                      .filter(([_, value]) => value)
+                      .map(([key, _]) => (
+                        <Badge key={key} variant="outline" className="bg-white text-green-700 border-green-200 text-xs">
+                          {key.replace(/([A-Z])/g, ' $1').trim()}
+                        </Badge>
+                      ))
+                    }
+                  </div>
+                </div>
+              )}
+              
+              {/* Other categories can be expanded here */}
+            </div>
+          ) : (
+            <div className="text-sm text-muted-foreground italic">
+              No medical conditions have been selected yet. Use the sections below to record patient's medical history.
+            </div>
+          )}
+        </CardContent>
+      </Card>
+      
       <Tabs defaultValue="categories">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="categories">By Category</TabsTrigger>

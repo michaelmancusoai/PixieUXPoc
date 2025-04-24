@@ -206,6 +206,13 @@ const ExamMode = ({ onClose }: ExamModeProps) => {
       isCompleted: false
     },
     {
+      id: 'risk-factors',
+      title: 'Risk Factors',
+      description: 'Smoking, diabetes, bruxism, medications',
+      component: <RiskFactorsStep />,
+      isCompleted: false
+    },
+    {
       id: 'medical-history',
       title: 'Medical History',
       description: 'Record patient medical conditions and health factors',
@@ -231,13 +238,6 @@ const ExamMode = ({ onClose }: ExamModeProps) => {
       title: 'Perio Charting',
       description: '6-pt probing, bleeding on probing, recession',
       component: <PerioChartingStep />,
-      isCompleted: false
-    },
-    {
-      id: 'risk-factors',
-      title: 'Risk Factors',
-      description: 'Smoking, diabetes, bruxism, medications',
-      component: <RiskFactorsStep />,
       isCompleted: false
     },
     {
