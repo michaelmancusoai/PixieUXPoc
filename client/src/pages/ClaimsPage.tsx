@@ -1089,36 +1089,93 @@ export default function ClaimsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Claim Aging</CardTitle>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="text-base font-medium">Claim Aging</CardTitle>
+                  <span className="text-xs text-muted-foreground">Total: ${(agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90).toFixed(0)}</span>
+                </div>
               </CardHeader>
-              <CardContent className="p-0">
-                <div className="grid grid-cols-4 gap-0 divide-x">
-                  <div className="flex flex-col items-center justify-center py-5 px-2">
-                    <div className="text-xs text-muted-foreground mb-1">0-30 Days</div>
-                    <div className="text-2xl font-bold text-green-600">${agingBuckets.under30.toFixed(0)}</div>
-                    <div className="text-xs text-green-700">
-                      {agingBuckets.under30 > 0 ? ((agingBuckets.under30 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+              <CardContent className="p-5">
+                {/* Progress bar visualization */}
+                <div className="mb-5">
+                  <div className="flex h-2 rounded-full overflow-hidden bg-gray-100">
+                    {/* Calculate percentages */}
+                    {(() => {
+                      const total = agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90;
+                      const under30Pct = (agingBuckets.under30 / total) * 100;
+                      const days30to60Pct = (agingBuckets.days30to60 / total) * 100;
+                      const days60to90Pct = (agingBuckets.days60to90 / total) * 100;
+                      const over90Pct = (agingBuckets.over90 / total) * 100;
+                      
+                      return (
+                        <>
+                          <div className="bg-green-500 h-full" style={{ width: `${under30Pct}%` }}></div>
+                          <div className="bg-blue-500 h-full" style={{ width: `${days30to60Pct}%` }}></div>
+                          <div className="bg-amber-500 h-full" style={{ width: `${days60to90Pct}%` }}></div>
+                          <div className="bg-red-500 h-full" style={{ width: `${over90Pct}%` }}></div>
+                        </>
+                      );
+                    })()}
+                  </div>
+                  
+                  <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                    <div>Current</div>
+                    <div>30 Days</div>
+                    <div>60 Days</div>
+                    <div>90+ Days</div>
+                  </div>
+                </div>
+                
+                {/* Aging buckets */}
+                <div className="grid grid-cols-4 gap-4">
+                  <div className="bg-green-50 p-3 rounded-lg border border-green-100">
+                    <div className="flex items-center">
+                      <div className="mr-2 h-3 w-3 rounded-full bg-green-500"></div>
+                      <div className="text-xs font-medium text-muted-foreground">0-30 Days</div>
+                    </div>
+                    <div className="mt-2">
+                      <div className="text-xl font-bold text-green-600">${agingBuckets.under30.toFixed(0)}</div>
+                      <div className="text-xs text-green-700">
+                        {agingBuckets.under30 > 0 ? ((agingBuckets.under30 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                      </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center py-5 px-2">
-                    <div className="text-xs text-muted-foreground mb-1">30-60 Days</div>
-                    <div className="text-2xl font-bold text-blue-600">${agingBuckets.days30to60.toFixed(0)}</div>
-                    <div className="text-xs text-blue-700">
-                      {agingBuckets.days30to60 > 0 ? ((agingBuckets.days30to60 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                  
+                  <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                    <div className="flex items-center">
+                      <div className="mr-2 h-3 w-3 rounded-full bg-blue-500"></div>
+                      <div className="text-xs font-medium text-muted-foreground">30-60 Days</div>
+                    </div>
+                    <div className="mt-2">
+                      <div className="text-xl font-bold text-blue-600">${agingBuckets.days30to60.toFixed(0)}</div>
+                      <div className="text-xs text-blue-700">
+                        {agingBuckets.days30to60 > 0 ? ((agingBuckets.days30to60 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                      </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center py-5 px-2">
-                    <div className="text-xs text-muted-foreground mb-1">60-90 Days</div>
-                    <div className="text-2xl font-bold text-amber-600">${agingBuckets.days60to90.toFixed(0)}</div>
-                    <div className="text-xs text-amber-700">
-                      {agingBuckets.days60to90 > 0 ? ((agingBuckets.days60to90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                  
+                  <div className="bg-amber-50 p-3 rounded-lg border border-amber-100">
+                    <div className="flex items-center">
+                      <div className="mr-2 h-3 w-3 rounded-full bg-amber-500"></div>
+                      <div className="text-xs font-medium text-muted-foreground">60-90 Days</div>
+                    </div>
+                    <div className="mt-2">
+                      <div className="text-xl font-bold text-amber-600">${agingBuckets.days60to90.toFixed(0)}</div>
+                      <div className="text-xs text-amber-700">
+                        {agingBuckets.days60to90 > 0 ? ((agingBuckets.days60to90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                      </div>
                     </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center py-5 px-2">
-                    <div className="text-xs text-muted-foreground mb-1">90+ Days</div>
-                    <div className="text-2xl font-bold text-red-600">${agingBuckets.over90.toFixed(0)}</div>
-                    <div className="text-xs text-red-700">
-                      {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                  
+                  <div className="bg-red-50 p-3 rounded-lg border border-red-100">
+                    <div className="flex items-center">
+                      <div className="mr-2 h-3 w-3 rounded-full bg-red-500"></div>
+                      <div className="text-xs font-medium text-muted-foreground">90+ Days</div>
+                    </div>
+                    <div className="mt-2">
+                      <div className="text-xl font-bold text-red-600">${agingBuckets.over90.toFixed(0)}</div>
+                      <div className="text-xs text-red-700">
+                        {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                      </div>
                     </div>
                   </div>
                 </div>
