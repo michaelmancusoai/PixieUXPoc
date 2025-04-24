@@ -402,13 +402,8 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
-            {/* Coins at top */}
-            <div className="flex justify-center my-3 mb-8">
-              {[0, 1, 2].map(index => renderCoin(index))}
-            </div>
-            
             {/* Main Content */}
-            <div className="flex items-start">
+            <div className="flex items-start mb-8">
               {/* Pokemon on left */}
               <div className="flex flex-col items-center mr-3">
                 <i className={promptVariants[currentVariantIndex].character || "nes-bulbasaur"}></i>
@@ -419,13 +414,18 @@ const RoleDashboard: React.FC = () => {
               
               {/* Speech bubble next to pokemon */}
               <div className="flex-1 pr-10">
-                <div className="nes-balloon from-left mt-0">
+                <div className="nes-balloon from-left mt-0 mb-0">
                   <p className="text-lg sm:text-xl font-medium leading-tight">
                     "{promptVariants[currentVariantIndex].prompt}"<br/>
                     <span className="text-blue-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
                   </p>
                 </div>
               </div>
+            </div>
+            
+            {/* Coins at bottom */}
+            <div className="flex justify-end pr-10">
+              {[0, 1, 2].map(index => renderCoin(index))}
             </div>
             
 
@@ -489,13 +489,8 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
-            {/* Coins at top */}
-            <div className="flex justify-center my-3 mb-8">
-              {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
-            </div>
-            
             {/* Main Content */}
-            <div className="flex items-start">
+            <div className="flex items-start mb-8">
               {/* Pokemon on left */}
               <div className="flex flex-col items-center mr-3">
                 <i className={promptVariants[currentVariantIndex].character || "nes-charmander"}></i>
@@ -506,13 +501,18 @@ const RoleDashboard: React.FC = () => {
               
               {/* Speech bubble next to pokemon */}
               <div className="flex-1 pr-10">
-                <div className="nes-balloon from-left mt-0">
+                <div className="nes-balloon from-left mt-0 mb-0">
                   <p className="text-lg sm:text-xl font-medium leading-tight">
                     "{promptVariants[currentVariantIndex].prompt}"<br/>
                     <span className="text-amber-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
                   </p>
                 </div>
               </div>
+            </div>
+            
+            {/* Coins at bottom */}
+            <div className="flex justify-end pr-10">
+              {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
             </div>
             
 
@@ -547,13 +547,8 @@ const RoleDashboard: React.FC = () => {
               </button>
             </div>
             
-            {/* Coins at top */}
-            <div className="flex justify-center my-3 mb-8 flex-wrap gap-y-2">
-              {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
-            </div>
-            
             {/* Main Content */}
-            <div className="flex items-start">
+            <div className="flex items-start mb-8">
               {/* Pokemon on left */}
               <div className="flex flex-col items-center mr-3">
                 <i className={promptVariants[currentVariantIndex].character || "nes-charizard"}></i>
@@ -564,13 +559,18 @@ const RoleDashboard: React.FC = () => {
               
               {/* Speech bubble next to pokemon */}
               <div className="flex-1 pr-10">
-                <div className="nes-balloon from-left mt-0">
+                <div className="nes-balloon from-left mt-0 mb-0">
                   <p className="text-lg sm:text-xl font-medium leading-tight">
                     "{promptVariants[currentVariantIndex].prompt}"<br/>
                     <span className="text-orange-600 font-bold mt-1 block">{promptVariants[currentVariantIndex].benefit}</span>
                   </p>
                 </div>
               </div>
+            </div>
+            
+            {/* Coins at bottom */}
+            <div className="flex justify-end pr-10 flex-wrap gap-y-2">
+              {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
             </div>
             
 
