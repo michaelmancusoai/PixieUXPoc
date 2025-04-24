@@ -35,7 +35,7 @@
 .nes-container.pixelated.border-blue-500,
 .nes-container.pixelated.border-amber-500,
 .nes-container.pixelated.border-orange-500 {
-  height: 340px;
+  height: 640px;
   overflow: hidden;
 }
 
