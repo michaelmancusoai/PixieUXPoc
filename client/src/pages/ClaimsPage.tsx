@@ -59,6 +59,9 @@ import {
   BadgePercent,
   ArrowUpRight,
   ScrollText,
+  Zap,
+  FileCheck,
+  BarChart3,
 } from "lucide-react";
 
 // Types
@@ -1203,8 +1206,8 @@ export default function ClaimsPage() {
                       )}
                     </div>
                     
-                    <div className="bg-white p-4 rounded-md border shadow-sm col-span-2">
-                      <h4 className="text-sm font-medium mb-3">Claims Process Bottlenecks</h4>
+                    <div className="bg-white p-4 rounded-md border shadow-sm md:col-span-2">
+                      <h4 className="text-sm font-medium mb-3">Claims Process Analysis</h4>
                       
                       <div className="mt-2">
                         <div className="flex justify-between items-center mb-2">
@@ -1280,6 +1283,48 @@ export default function ClaimsPage() {
                           </div>
                         </div>
                       </div>
+                    </div>
+                    
+                    <div className="bg-white p-4 rounded-md border shadow-sm">
+                      <h4 className="text-sm font-medium mb-3">Recommended Actions</h4>
+                      <ul className="space-y-3">
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mr-2 mt-0.5">
+                            <ArrowUpRight className="h-3 w-3" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium">Reduce adjudication lag time</p>
+                            <p className="text-xs text-muted-foreground">Follow up on claims pending over 10 days</p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-2 mt-0.5">
+                            <Zap className="h-3 w-3" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium">Automate claim creation</p>
+                            <p className="text-xs text-muted-foreground">Enable auto-generation from completed encounters</p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 mr-2 mt-0.5">
+                            <FileCheck className="h-3 w-3" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium">Implement pre-submission checks</p>
+                            <p className="text-xs text-muted-foreground">Validate claims for common rejection reasons</p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <div className="h-5 w-5 rounded-full bg-purple-100 flex items-center justify-center text-purple-600 mr-2 mt-0.5">
+                            <BarChart3 className="h-3 w-3" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-medium">Review carrier performance</p>
+                            <p className="text-xs text-muted-foreground">Analyze adjudication times by insurance carrier</p>
+                          </div>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </div>
