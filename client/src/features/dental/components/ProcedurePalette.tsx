@@ -498,7 +498,7 @@ const ProcedurePalette = () => {
           </Button>
           <Button
             size="sm"
-            className="flex-1 bg-blue-500 hover:bg-blue-600 text-xs h-9"
+            className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-xs h-9"
             onClick={handleAddToTreatmentPlan}
             disabled={selectedTeeth.length === 0 || !selectedProcedure}
           >

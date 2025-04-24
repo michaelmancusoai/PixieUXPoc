@@ -56,7 +56,7 @@ const ToothSVG: React.FC<ToothSVGProps> = ({
       case ToothStatus.Caries:
         return 'white';
       case ToothStatus.ExistingRestoration:
-        return '#1565c0'; // Blue
+        return '#4f46e5'; // Indigo
       case ToothStatus.Planned:
         return 'white';
       case ToothStatus.Completed:
@@ -119,7 +119,7 @@ const ToothSVG: React.FC<ToothSVGProps> = ({
       <path
         d={getToothPath()}
         fill={getFill()}
-        stroke={isSelected ? '#3b82f6' : getStroke()}
+        stroke={isSelected ? '#4f46e5' : getStroke()}
         strokeWidth={isSelected ? 2 : getStrokeWidth()}
         strokeLinejoin="round"
       />

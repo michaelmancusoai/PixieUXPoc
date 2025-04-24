@@ -72,7 +72,7 @@ const ToothComponent = ({ tooth, isSelected, onSelect, onSurfaceSelect, selected
         
         {isSelected && selectedSurface && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <div className="text-xs font-bold bg-blue-500 text-white px-1.5 py-0.5 rounded-sm shadow-sm">
+            <div className="text-xs font-bold bg-indigo-600 text-white px-1.5 py-0.5 rounded-sm shadow-sm">
               {selectedSurface}
             </div>
           </div>
