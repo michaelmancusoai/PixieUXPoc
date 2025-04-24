@@ -1,0 +1,119 @@
+# Tooth Chart & Treatment Plan Page – Draft 1 (US‑Localised)
+
+> _“A clinical chart is not art; yet if it **looks** like art, clinicians find what they need faster, and patients trust it more.”_ — Rory Sutherland
+
+This specification outlines a psychologically optimised, Lean‑friendly design for a **Tooth Chart + Treatment Plan** page, refining the baseline UI in the screenshot provided. It integrates quick‑action nudges, status clarity, and Material‑UI implementation cues.
+
+---
+
+## 0. Jobs‑to‑Be‑Done
+| Persona | JTBD | Success KPI | Behavioural Lever |
+|---------|------|------------|--------------------|
+| Dentist / Hygienist | Record findings & create plan in ≤ 3 min | Chart complete before patient dismiss | *Implementation Intention* |
+| Treatment Coordinator | Present plan clearly, collect acceptance | ≥ 80 % acceptance on “today” plans | *Anchoring & Framing* |
+| Patient | Understand what & why | Patient repeats treatment in own words | *Simplicity & Visual Metaphor* |
+
+---
+
+## 1. Global Layout (12‑col Grid)
+| Zone | Span | Purpose | MUI Skeleton |
+|------|------|---------|--------------|
+| **Sticky Patient Header** | 12 | Name · Age · Alerts · Insurance · Quick actions | existing `<AppBar>` |
+| **Left Panel – Tooth Chart** | 7 | Visual charting canvas | SVG inside `<Box>` |
+| **Right Panel – Procedure Palette** | 5 | Select & add procedures | `<Stack>` of quick‑pick buttons |
+| **Bottom Drawer – Treatment Plan Table** | 12 | Master, Alternate, Archived tabs | `<DataGrid>` Pro |
+
+The right panel can be collapsed (`width: 0`) via hotkey **P** to enlarge chart when presenting to patients.
+
+---
+
+## 2. Tooth Chart Canvas
+### 2.1 Visual Conventions
+| Condition | Colour | Symbol Overlay | Tooltip |
+|-----------|--------|---------------|---------|
+| Caries | Red outline | Spot shade | ICD/ADA code on hover |
+| Existing Restoration | Blue fill | Hatch pattern if amalgam | Restoration type + date |
+| Planned Procedure | Green outline | Procedure icon | “Planned: Crown (D2740)” |
+| Completed Today | Solid green fill | ✓ icon | “Completed: Extraction (D7140)” |
+
+Colour choices align with ADA standard chart colours; icon + tooltip ensures colour‑blind support.
+
+### 2.2 Interaction Model
+1. **Click Tooth →** quadrant menu (Existing • Caries • Restoration • Fracture • Implant).  
+2. **Drag Select** multiple teeth; procedure applies to all.  
+3. **Undo (⌘/Ctrl+Z)** reversible; audit trail captured.
+
+Live micro‑copy bottom left: “Selected: Teeth 3, 14 (Occlusal)” keeps user oriented.
+
+---
+
+## 3. Procedure Palette (Right Panel)
+| Section | Quick‑Select Chips | Rationale |
+|---------|-------------------|-----------|
+| Category Tabs | Common, Restorative, Surgery, Perio, Endo, Imaging | Reduces scrolling |
+| Favourites Row | Top 8 codes per provider | *Recognition over recall* |
+| “Smart Suggest” | Chips based on selected teeth & findings | *Default‑effect* |
+
+Selecting a chip auto‑fills CDT code; Fee & Insurance estimate preview below.
+
+---
+
+## 4. Treatment Plan Drawer
+Tabs: **Master TP** (active) · Alternate · Archived.  
+Columns: Priority · Tooth/Surface · CDT · Description · Provider · Fee · InsAmt · PtAmt · Pre‑Auth Status.
+
+### Table Behaviours
+- Row drag to reprioritise.  
+- Bulk select → “Add to Alternate”.  
+- Status colour chips: Approved green, Pending amber, Denied red.
+
+Above grid: **$ Total** chips (Insurance vs Patient). Patients see *Patient* total first (loss aversion: smaller number).^‑
+
+---
+
+## 5. Micro‑Copy & Nudges
+| Moment | Copy / Visual | Behavioural Aim |
+|--------|--------------|-----------------|
+| Adding High‑Cost Item | Toast: “This crown qualifies for 12‑month financing. Add?” | Reduces price shock |
+| Switching Tabs | Smooth slide animation | *Progress illusion* |
+| Presenting Plan | “Save & Show Patient” button opens patient‑view mode (larger teeth, simpler terms). | Tailors language |
+
+---
+
+## 6. Shortcuts & Efficiency
+| Action | Shortcut |
+|--------|----------|
+| Toggle Procedure Palette | **P** |
+| Toggle Perio Chart | **O** |
+| Next Tooth | **→** |
+| Previous Tooth | **←** |
+| Add Last Used Procedure | **L** |
+
+---
+
+## 7. Accessibility
+- SVG teeth tagged with `role="img" aria-label="Upper right first molar"`.  
+- Keyboard: Tab moves across teeth numerically.  
+- High‑contrast mode swaps colours via CSS variables.
+
+---
+
+## 8. Implementation Notes
+- Teeth as individual `<path>` elements in `<svg viewBox>`, ids `tooth-1` … `tooth-32`.  
+- State machine per tooth: `status: healthy | finding | planned | completed`.  
+- Redux slice: `chart[{ toothNo, surfaces: {O, M, D, B, L}, state } ]`.  
+- Canvas re‑renders diff only; use memoised React component for perf.
+
+---
+
+## 9. Deliverables Checklist
+- [ ] Build SVG chart component with colour schemas.  
+- [ ] Procedure palette with dynamic favourites & smart suggest.  
+- [ ] Treatment plan drawer with drag reorder & cost totals.  
+- [ ] “Patient‑view” presentation mode.  
+- [ ] Keyboard nav & WCAG compliance.
+
+---
+
+_End of Tooth Chart Page Draft 1 – feedback welcome on visual semantics or flow optimisations_
+

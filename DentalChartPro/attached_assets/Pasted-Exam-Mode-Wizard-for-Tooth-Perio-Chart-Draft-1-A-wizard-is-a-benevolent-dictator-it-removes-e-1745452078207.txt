@@ -1,0 +1,327 @@
+Exam Mode Wizard for Tooth & Perio Chart – Draft 1
+
+“A wizard is a benevolent dictator: it removes every decision except the next obvious one.” — Rory Sutherland
+
+This document defines a step‑by‑step Exam Mode that guides dentists or hygienists through a comprehensive charting session—combining tooth findings, periodontal metrics, and risk assessments—while capturing all data needed for planning, billing, and patient education.
+
+0. Objectives & Success Metrics
+
+Persona
+
+Exam JTBD
+
+KPI
+
+Behavioural Lever
+
+Dentist
+
+Record complete chart quickly
+
+< 5 min average time
+
+Goal‑gradient progress bar
+
+Hygienist
+
+Capture 6‑point perio metrics hands‑free
+
+≥ 98 % sites recorded
+
+Voice + foot‑pedal
+
+Assistant
+
+Pre‑load vitals, X‑ray, photos
+
+100 % assets attached
+
+Implementation intention checklist
+
+1. Wizard Architecture
+
+Step #
+
+Title
+
+Purpose
+
+Completion Rule
+
+Data Objects
+
+0
+
+Pre‑Check
+
+Verify vitals, insurance, X‑rays present
+
+All checkboxes ✓
+
+Vitals, Payer, Xray files
+
+1
+
+Findings (Quadrant A)
+
+Mark caries, fractures, existing work for UR
+
+At least one action OR Skip
+
+Tooth.foundings[]
+
+2
+
+Findings (Quadrant B)
+
+Same for UL
+
+–
+
+–
+
+3
+
+Findings (Quadrant C)
+
+LL
+
+–
+
+–
+
+4
+
+Findings (Quadrant D)
+
+LR
+
+–
+
+–
+
+5
+
+Perio Charting
+
+6‑pt probing, BOP, recession
+
+≥ 85 % sites
+
+PerioSite[]
+
+6
+
+Risk Factors
+
+Smoke, diabetes, bruxism, medications
+
+All toggles answered
+
+RiskProfile
+
+7
+
+AI Summary
+
+Auto‑generated findings summary
+
+Accept / Edit
+
+Draft notes
+
+8
+
+Treatment Plan Draft
+
+Auto‑suggest + manual add
+
+Save plan
+
+Plan[]
+
+9
+
+Patient Review Mode
+
+Large icons, lay terms
+
+“Understand?” checkbox
+
+–
+
+10
+
+Sign & Close
+
+e‑signature & timestamp
+
+Signature captured
+
+Audit log
+
+Wizard built with <Stepper> vertical; allows back/next; step labels clickable (if completed).
+
+Progress bar at top shows % complete (×10 steps).
+
+2. Step UI Details
+
+2.1 Findings Step (Per Quadrant)
+
+Viewport zooms to quadrant; other teeth greyed.
+
+Hotspots surfaces highlight on hover; click to mark finding.
+
+Floating Palette (right) shows last three used codes for quick re‑apply.
+
+Auto‑Advance to next tooth after marking finding; sound click for confirmation.
+
+Keyboard Shortcuts
+
+Key
+
+Action
+
+1‑5
+
+Select surface (O, M, D, B, L)
+
+C
+
+Toggle Caries
+
+R
+
+Toggle Restoration
+
+F
+
+Toggle Fracture
+
+Space
+
+Next tooth
+
+2.2 Perio Charting Step
+
+Screen splits: tooth cartoon left, data grid right.
+
+Voice capture live transcripts numbers; mis‑recognition phrase “Undo” rolls back last site.
+
+Foot pedal felt state (down = capture, up = pause).
+
+Large red badge counts remaining uncharted sites.
+
+2.3 Risk Factors Step
+
+Grid of toggle cards (Smoking, Diabetes, Xerostomia…). Each card flip reveals risk explanation for patient education.
+
+3. Smart Automation & AI
+
+Trigger
+
+Automation
+
+Benefit
+
+Caries on O + existing amalgam
+
+Suggest “Replace amalgam with composite”
+
+Saves clicks
+
+≥ 4 sites ≥ 5 mm
+
+Auto-draft Moderate Periodontitis diagnosis
+
+ADA compliance
+
+Diabetes risk = Yes
+
+Pop “Consider 3‑month recall” banner
+
+Personalised care
+
+4. Behavioural Nudges
+
+Scenario
+
+Nudge
+
+Implementation
+
+Long time on a step
+
+Toast “One tooth to go in this quadrant”
+
+Encourages completion
+
+Skip step
+
+Confirmation modal “Skipping may reduce diagnostic accuracy”
+
+Loss framing
+
+Finish early
+
+Confetti mini‑animation (subtle)
+
+Positive reinforcement
+
+5. Accessibility & Multi‑User Collaboration
+
+Real‑time edits via Yjs show second cursor if assistant pre‑loads.
+
+ARIA labels for every interactive control.
+
+Voice prompts repeat last heard value (“You said five millimetres, confirm?”).
+
+6. Technical Component Map
+
+Component
+
+Library
+
+Key Props
+
+Wizard
+
+<Stepper orientation="vertical">
+
+activeStep, completed
+
+Quadrant SVG
+
+<svg>
+
+filtered tooth set
+
+Foot Pedal Hook
+
+custom
+
+listens to HID device
+
+Voice Capture
+
+@speechly/react-client
+
+commands grammar
+
+AI Summary
+
+OpenAI call
+
+send findings, perio
+
+7. Data Persistence & Audit
+
+Local draft saved every 5 s; server commit per step complete.
+
+Final signature locks record; edits open amended entry, keeping legal audit trail.
+
+8. Deliverables Checklist
+
+
+
+End of Exam Mode Wizard Draft 1 – clinicians to validate step order & metrics thresholds

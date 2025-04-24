@@ -1,0 +1,116 @@
+Below is an “everything-you’ll-ever-need” quick-select catalogue that still fits nicely in a right-side drawer.
+
+Column 1 shows the compact category label you’ll display in the picker.
+Column 2 lists button names (≤ 18 characters each).
+Column 3 shows the CDT code(s) that fire when a user taps a button.
+Indented blocks (— Direct, — Fixed, etc.) are optional micro-groups: collapse or show them with a tiny chevron ▸ if space is tight.
+**Tip **Store each button as a JSON object ({label:"", codes:["Dxxxx","Dyyyy"]}) so you can add or retire items without UI work.
+
+Cat	Quick-Select Buttons	CDT payload
+Diag / Img	Comp Exam + FMX	D0150 · D0210
+Periodic + BW4	D0120 · D0274
+Limited + PA	D0140 · D0220
+FMX Only	D0210
+Pano	D0330
+BW 4-Films	D0274
+BW 2-Films	D0272
+PA Single	D0220
+CBCT Site	D0364
+Ceph 2-D	D0340
+IO Photos	D0350
+Diag Casts	D0472
+Prev	Adult Prophy	D1110
+Child Prophy	D1120
+Gingiv Scale	D4346
+Fl-Varnish	D1206
+Fl-Gel (Ch)	D1208
+Sealant 1T	D1351
+Space-Maint	D1510
+Rest / Prosth	— Direct	
+Comp Ant 1S	D2330
+Comp Ant 2S	D2331
+Comp Ant 3S	D2332
+Comp Ant 4+	D2335
+Comp Post 1S	D2391
+Comp Post 2S	D2392
+Comp Post 3S	D2393
+Comp Post 4+	D2394
+Core Buildup	D2950
+— Fixed	
+Zirc Crown	D2740
+PFM Crown	D2752
+Full-Cast Crn	D2792
+Onlay	D2644
+Veneer	D2962
+3-Unit Bridge	D6740 · D6750 · D6750
+— Removable	
+CD U	D5110
+CD L	D5120
+Partial U	D5213
+Partial L	D5214
+Imm Dent U	D5130
+Reline Ch	D5730
+Denture Rpr	D5520
+Endo	RCT Ant	D3310
+RCT Premol	D3320
+RCT Molar	D3330
+Pulpotomy	D3220
+Debridement	D3221
+Apex Calci	D3361
+Apicoectomy	D3410
+Retreat Ant	D3346
+Perio	FMD	D4355
+SRP Quad	D4341
+SRP 1-3T	D4342
+Perio Maint	D4910
+Gingivect	D4211
+Osseous Q	D4260
+Bone Graft	D4263
+GTR	D4266
+Arestin	D4381
+Implants	Implant Plc	D6010
+Mini Implant	D6051
+Abutment	D6056
+Implant Crn	D6065
+Impl+Ab+Crn	D6010 · D6056 · D6065
+Impl Bridge	D6071 (or practice bundle)
+Impl Remove	D6100
+Sinus Lift	D6104
+Surgery	Simple Ext	D7140
+Surg Ext	D7210
+Soft Imp 3M	D7240
+Full-Bony 3M	D7241
+Alvplasty Q	D7310
+Frenectomy	D7960
+Biopsy	D7285
+Bone Graft X	D7953
+Tori Removal	D7471
+I&D Abscess	D7510
+Ortho	Records	D8660
+Limited Ch	D8070
+Limited Ad	D8670
+Interceptive	D8220
+Comp Child	D8080
+Comp Adult	D8090
+Aligner Case	D8090 (tag “Clear”)
+Retainer New	D8680
+Retainer Rpl	D8692
+Adjunct	Nitrous	D9230
+IV Sed (15)	D9223
+Gen An (15)	D9222
+Palliative	D9110
+Occl Guard H	D9944
+Occl Guard S	D9945
+Bleach Tray	D9975
+Bleach Refill	D9976
+Desensitize	D9910
+Sleep	MAD Device	D9947
+MAD Adj	D9948
+MAD Repair	D9949
+Home Sleep	D9956
+SDB Screen	D9957
+How to keep it usable
+Default view = top 4-6 buttons per category, with a ▸ “More…” expander that reveals the rest.
+Remember the last five buttons used per provider and pin them to the top of the expander for each user.
+Grey-out buttons that are illogical under the current Treatment Type (“Completed”, “Existing”, etc.).
+Autocomplete search still exists for the rare codes not exposed as quick-select buttons, so the list remains exhaustive without visual overload.
