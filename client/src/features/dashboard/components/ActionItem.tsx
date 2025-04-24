@@ -259,15 +259,6 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
                     {remainingMinutes} m
                   </Badge>
                 )}
-                {item.estimatedTimeMin && (
-                  <Badge 
-                    variant="outline" 
-                    className="text-xs flex items-center text-gray-600 bg-gray-50"
-                  >
-                    <Wrench className="h-3 w-3 mr-1" />
-                    ~{item.estimatedTimeMin} min
-                  </Badge>
-                )}
               </div>
             </div>
             
