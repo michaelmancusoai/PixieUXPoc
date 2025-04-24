@@ -31,11 +31,10 @@
   cursor: pointer;
 }
 
-/* Fixed-height containers for game levels to match the original implementation */
+/* Removing fixed height to allow content to flow properly */
 .nes-container.pixelated.border-blue-500,
 .nes-container.pixelated.border-amber-500,
 .nes-container.pixelated.border-orange-500 {
-  height: 490px;
   overflow: hidden;
 }
 
