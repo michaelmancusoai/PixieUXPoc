@@ -297,20 +297,21 @@ const RoleDashboard: React.FC = () => {
     
     if (surrendered) {
       return (
-        <div className="text-center py-2">
-          <div className="flex justify-center mb-2">
-            <Flag className="h-5 w-5 text-gray-500" />
+        <div className="text-center py-2 font-vt323">
+          <div className="nes-container is-rounded is-dark pixelated">
+            <p className="mb-3 mt-1 text-error">QUEST PAUSED</p>
+            <div className="flex justify-center mb-3">
+              <i className="nes-icon close is-medium"></i>
+            </div>
+            <p className="text-white mb-3">COINS BANKED: {coins}/{targetCoins}</p>
+            <button 
+              className="nes-btn is-primary font-press-start text-xs px-2 py-1"
+              onClick={acceptMission}
+            >
+              RESUME QUEST
+            </button>
+            <p className="text-xs text-warning mt-3">DO YOU DARE CONTINUE?</p>
           </div>
-          <p className="text-gray-700 font-medium">Paused: {coins}/{targetCoins} coins banked.</p>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="mt-2 bg-blue-50 text-blue-700 border-blue-200"
-            onClick={acceptMission}
-          >
-            Resume Game
-          </Button>
-          <p className="text-xs text-gray-500 mt-1">Do you dare to resume your quest?</p>
         </div>
       );
     }
@@ -349,33 +350,33 @@ const RoleDashboard: React.FC = () => {
     
     if (level === GameLevel.COMPLETED_1) {
       return (
-        <div className="text-center py-2">
-          <h3 className="font-medium text-sky-800">Level 1 complete! Checkout speed +1.</h3>
-          <p className="text-sm text-sky-700 mt-1">
-            Ready to tackle <strong>Level 2</strong> and collect 5 coins?
-          </p>
-          
-          <div className="flex justify-center space-x-2 my-3">
-            {[0, 1, 2].map(index => renderCoin(index))}
-          </div>
-          
-          <div className="space-x-2">
-            <Button 
-              variant="default" 
-              size="sm"
-              className="bg-amber-600 hover:bg-amber-700"
-              onClick={acceptMission}
-            >
-              Mission Accepted
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="text-gray-600"
-              onClick={surrenderGame}
-            >
-              I Surrender
-            </Button>
+        <div className="text-center py-2 font-vt323">
+          <div className="nes-container is-rounded is-dark with-title">
+            <p className="title font-press-start text-sm">LEVEL 1 COMPLETE!</p>
+            <i className="nes-icon star is-medium mb-2"></i>
+            <p className="text-md mb-3">
+              CHECKOUT SPEED +1<br/>
+              Ready to tackle <strong>LEVEL 2</strong> and collect 5 coins?
+            </p>
+            
+            <div className="flex justify-center my-3">
+              {[0, 1, 2].map(index => renderCoin(index))}
+            </div>
+            
+            <div className="flex justify-center mt-4 space-x-4">
+              <button 
+                className="nes-btn is-warning font-press-start text-xs px-2 py-1"
+                onClick={acceptMission}
+              >
+                CONTINUE QUEST
+              </button>
+              <button 
+                className="nes-btn is-error font-press-start text-xs px-2 py-1"
+                onClick={surrenderGame}
+              >
+                SURRENDER
+              </button>
+            </div>
           </div>
         </div>
       );
@@ -383,66 +384,67 @@ const RoleDashboard: React.FC = () => {
     
     if (level === GameLevel.LEVEL_1) {
       return (
-        <div className="py-2">
-          <div className="flex justify-between items-start">
-            <h3 className="font-medium text-sky-800">Level 1: First 3 Cards</h3>
-            <button 
-              onClick={surrenderGame}
-              className="text-xs text-red-500 hover:text-red-700"
-            >
-              Cancel Quest
-            </button>
-          </div>
-          
-          <div className="flex justify-center space-x-2 my-3">
-            {[0, 1, 2].map(index => renderCoin(index))}
-          </div>
-          
-          {/* Prompt Carousel */}
-          <div className="mt-2 bg-white p-3 rounded-md border border-sky-200 text-sm relative">
-            <div className="absolute -top-2 left-3 bg-sky-100 text-sky-700 px-2 py-0.5 text-xs rounded-full">
-              {promptVariants[currentVariantIndex].name}
+        <div className="py-2 font-vt323">
+          <div className="nes-container is-rounded with-title pixelated border-blue-500 bg-blue-100">
+            <p className="title bg-blue-500 text-white font-press-start text-xs">LEVEL 1: SKY QUEST</p>
+            
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <i className="nes-icon coin is-small"></i> <span className="text-blue-700 font-bold">{coins}/{targetCoins}</span>
+              </div>
+              <button 
+                onClick={surrenderGame}
+                className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
+              >
+                QUIT
+              </button>
             </div>
             
-            <p className="text-gray-700 mt-1 text-sm">
-              <span className="font-medium block">Prompt Line:</span> 
-              "{promptVariants[currentVariantIndex].prompt}"
-            </p>
+            <div className="flex justify-center my-3">
+              {[0, 1, 2].map(index => renderCoin(index))}
+            </div>
             
-            <p className="text-gray-700 mt-2 text-sm">
-              <span className="font-medium block">Benefit:</span> 
-              "{promptVariants[currentVariantIndex].benefit}"
-            </p>
-            
-            <div className="flex justify-between mt-3">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="h-8 w-8 p-0 text-sky-600"
-                onClick={prevVariant}
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
+            {/* Prompt Carousel */}
+            <div className="nes-container is-rounded with-title mt-2 mb-2 pixelated text-sm">
+              <p className="title bg-blue-500 text-white px-2 text-xs font-press-start">
+                {promptVariants[currentVariantIndex].name}
+              </p>
               
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="h-8 w-8 p-0 text-sky-600"
-                onClick={nextVariant}
-              >
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+              <div className="message-list">
+                <div className="nes-balloon from-left">
+                  <p className="text-xs">"{promptVariants[currentVariantIndex].prompt}"</p>
+                </div>
+                <div className="nes-balloon from-right">
+                  <p className="text-xs">"{promptVariants[currentVariantIndex].benefit}"</p>
+                </div>
+              </div>
+              
+              <div className="flex justify-between mt-3">
+                <button 
+                  className="nes-btn is-primary px-2 py-0"
+                  onClick={prevVariant}
+                >
+                  ◀
+                </button>
+                
+                <button 
+                  className="nes-btn is-primary px-2 py-0"
+                  onClick={nextVariant}
+                >
+                  ▶
+                </button>
+              </div>
             </div>
-          </div>
-          
-          <div className="mt-3 flex justify-between items-center">
-            <span className="text-xs text-sky-700 font-medium">
-              <Clock className="h-3 w-3 inline mr-1" />
-              Streak: {streak} days
-            </span>
-            <span className="text-xs text-sky-700 font-medium">
-              {coins}/{targetCoins} coins
-            </span>
+            
+            <div className="mt-3 flex justify-between items-center">
+              <div className="text-xs text-blue-700 font-bold">
+                <i className="nes-icon star is-small"></i>
+                STREAK: {streak} DAYS
+              </div>
+              <div className="text-xs text-blue-700 font-bold">
+                <i className="nes-icon heart is-small"></i>
+              </div>
+            </div>
           </div>
         </div>
       );
@@ -450,33 +452,34 @@ const RoleDashboard: React.FC = () => {
     
     if (level === GameLevel.COMPLETED_2) {
       return (
-        <div className="text-center py-2">
-          <h3 className="font-medium text-amber-800">Level 2 complete! Checkout speed +1.</h3>
-          <p className="text-sm text-amber-700 mt-1">
-            Too easy... Dare to face the <strong>Final Level</strong> for 10 coins?
-          </p>
-          
-          <div className="flex justify-center space-x-2 my-3 flex-wrap">
-            {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
-          </div>
-          
-          <div className="space-x-2">
-            <Button 
-              variant="default" 
-              size="sm"
-              className="bg-orange-600 hover:bg-orange-700"
-              onClick={acceptMission}
-            >
-              Mission Accepted
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm"
-              className="text-gray-600"
-              onClick={surrenderGame}
-            >
-              I Surrender
-            </Button>
+        <div className="text-center py-2 font-vt323">
+          <div className="nes-container is-rounded is-warning with-title pixelated">
+            <p className="title font-press-start text-sm">LEVEL 2 COMPLETE!</p>
+            <i className="nes-icon medal is-large mb-2"></i>
+            <p className="text-md mb-3">
+              CHECKOUT SPEED +2<br/>
+              Ready for the <strong>FINAL CHALLENGE?</strong><br />
+              Collect 10 coins to win!
+            </p>
+            
+            <div className="flex justify-center my-3 flex-wrap">
+              {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
+            </div>
+            
+            <div className="flex justify-center mt-4 space-x-4">
+              <button 
+                className="nes-btn is-error font-press-start text-xs px-2 py-1"
+                onClick={acceptMission}
+              >
+                FINAL QUEST
+              </button>
+              <button 
+                className="nes-btn font-press-start text-xs px-2 py-1"
+                onClick={surrenderGame}
+              >
+                RETREAT
+              </button>
+            </div>
           </div>
         </div>
       );
@@ -484,66 +487,67 @@ const RoleDashboard: React.FC = () => {
     
     if (level === GameLevel.LEVEL_2) {
       return (
-        <div className="py-2">
-          <div className="flex justify-between items-start">
-            <h3 className="font-medium text-amber-800">Level 2: Desert Trail</h3>
-            <button 
-              onClick={surrenderGame}
-              className="text-xs text-red-500 hover:text-red-700"
-            >
-              Cancel Quest
-            </button>
-          </div>
-          
-          <div className="flex justify-center space-x-2 my-3 flex-wrap">
-            {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
-          </div>
-          
-          {/* Prompt Carousel */}
-          <div className="mt-2 bg-white p-3 rounded-md border border-amber-200 text-sm relative">
-            <div className="absolute -top-2 left-3 bg-amber-100 text-amber-700 px-2 py-0.5 text-xs rounded-full">
-              {promptVariants[currentVariantIndex].name}
+        <div className="py-2 font-vt323">
+          <div className="nes-container is-rounded with-title pixelated border-amber-500 bg-amber-100">
+            <p className="title bg-amber-500 text-white font-press-start text-xs">LEVEL 2: DESERT QUEST</p>
+            
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <i className="nes-icon coin is-small"></i> <span className="text-amber-700 font-bold">{coins}/{targetCoins}</span>
+              </div>
+              <button 
+                onClick={surrenderGame}
+                className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
+              >
+                QUIT
+              </button>
             </div>
             
-            <p className="text-gray-700 mt-1 text-sm">
-              <span className="font-medium block">Prompt Line:</span> 
-              "{promptVariants[currentVariantIndex].prompt}"
-            </p>
+            <div className="flex justify-center my-3 flex-wrap">
+              {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
+            </div>
             
-            <p className="text-gray-700 mt-2 text-sm">
-              <span className="font-medium block">Benefit:</span> 
-              "{promptVariants[currentVariantIndex].benefit}"
-            </p>
-            
-            <div className="flex justify-between mt-3">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="h-8 w-8 p-0 text-amber-600"
-                onClick={prevVariant}
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
+            {/* Prompt Carousel */}
+            <div className="nes-container is-rounded with-title mt-2 mb-2 pixelated text-sm">
+              <p className="title bg-amber-500 text-white px-2 text-xs font-press-start">
+                {promptVariants[currentVariantIndex].name}
+              </p>
               
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="h-8 w-8 p-0 text-amber-600"
-                onClick={nextVariant}
-              >
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+              <div className="message-list">
+                <div className="nes-balloon from-left">
+                  <p className="text-xs">"{promptVariants[currentVariantIndex].prompt}"</p>
+                </div>
+                <div className="nes-balloon from-right">
+                  <p className="text-xs">"{promptVariants[currentVariantIndex].benefit}"</p>
+                </div>
+              </div>
+              
+              <div className="flex justify-between mt-3">
+                <button 
+                  className="nes-btn is-warning px-2 py-0"
+                  onClick={prevVariant}
+                >
+                  ◀
+                </button>
+                
+                <button 
+                  className="nes-btn is-warning px-2 py-0"
+                  onClick={nextVariant}
+                >
+                  ▶
+                </button>
+              </div>
             </div>
-          </div>
-          
-          <div className="mt-3 flex justify-between items-center">
-            <span className="text-xs text-amber-700 font-medium">
-              <Clock className="h-3 w-3 inline mr-1" />
-              Streak: {streak} days
-            </span>
-            <span className="text-xs text-amber-700 font-medium">
-              {coins}/{targetCoins} coins
-            </span>
+            
+            <div className="mt-3 flex justify-between items-center">
+              <div className="text-xs text-amber-700 font-bold">
+                <i className="nes-icon star is-small"></i>
+                STREAK: {streak} DAYS
+              </div>
+              <div className="text-xs text-amber-700 font-bold">
+                <i className="nes-icon heart is-small"></i>
+              </div>
+            </div>
           </div>
         </div>
       );
@@ -551,66 +555,67 @@ const RoleDashboard: React.FC = () => {
     
     if (level === GameLevel.LEVEL_FINAL) {
       return (
-        <div className="py-2">
-          <div className="flex justify-between items-start">
-            <h3 className="font-medium text-orange-800">Final Level: Lava Challenge</h3>
-            <button 
-              onClick={surrenderGame}
-              className="text-xs text-red-500 hover:text-red-700"
-            >
-              Cancel Quest
-            </button>
-          </div>
-          
-          <div className="flex justify-center space-x-2 my-3 flex-wrap gap-y-2">
-            {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
-          </div>
-          
-          {/* Prompt Carousel */}
-          <div className="mt-2 bg-white p-3 rounded-md border border-orange-200 text-sm relative">
-            <div className="absolute -top-2 left-3 bg-orange-100 text-orange-700 px-2 py-0.5 text-xs rounded-full">
-              {promptVariants[currentVariantIndex].name}
+        <div className="py-2 font-vt323">
+          <div className="nes-container is-rounded with-title pixelated border-orange-500 bg-orange-100">
+            <p className="title bg-orange-600 text-white font-press-start text-xs">FINAL LEVEL: LAVA QUEST</p>
+            
+            <div className="flex justify-between items-start mb-2">
+              <div>
+                <i className="nes-icon coin is-small"></i> <span className="text-orange-700 font-bold">{coins}/{targetCoins}</span>
+              </div>
+              <button 
+                onClick={surrenderGame}
+                className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
+              >
+                SURRENDER
+              </button>
             </div>
             
-            <p className="text-gray-700 mt-1 text-sm">
-              <span className="font-medium block">Prompt Line:</span> 
-              "{promptVariants[currentVariantIndex].prompt}"
-            </p>
+            <div className="flex justify-center my-3 flex-wrap gap-y-2">
+              {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
+            </div>
             
-            <p className="text-gray-700 mt-2 text-sm">
-              <span className="font-medium block">Benefit:</span> 
-              "{promptVariants[currentVariantIndex].benefit}"
-            </p>
-            
-            <div className="flex justify-between mt-3">
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="h-8 w-8 p-0 text-orange-600"
-                onClick={prevVariant}
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
+            {/* Prompt Carousel */}
+            <div className="nes-container is-rounded with-title mt-2 mb-2 pixelated text-sm">
+              <p className="title bg-orange-600 text-white px-2 text-xs font-press-start">
+                {promptVariants[currentVariantIndex].name}
+              </p>
               
-              <Button 
-                variant="ghost" 
-                size="sm"
-                className="h-8 w-8 p-0 text-orange-600"
-                onClick={nextVariant}
-              >
-                <ArrowRight className="h-4 w-4" />
-              </Button>
+              <div className="message-list">
+                <div className="nes-balloon from-left">
+                  <p className="text-xs">"{promptVariants[currentVariantIndex].prompt}"</p>
+                </div>
+                <div className="nes-balloon from-right">
+                  <p className="text-xs">"{promptVariants[currentVariantIndex].benefit}"</p>
+                </div>
+              </div>
+              
+              <div className="flex justify-between mt-3">
+                <button 
+                  className="nes-btn is-error px-2 py-0"
+                  onClick={prevVariant}
+                >
+                  ◀
+                </button>
+                
+                <button 
+                  className="nes-btn is-error px-2 py-0"
+                  onClick={nextVariant}
+                >
+                  ▶
+                </button>
+              </div>
             </div>
-          </div>
-          
-          <div className="mt-3 flex justify-between items-center">
-            <span className="text-xs text-orange-700 font-medium">
-              <Clock className="h-3 w-3 inline mr-1" />
-              Streak: {streak} days
-            </span>
-            <span className="text-xs text-orange-700 font-medium">
-              {coins}/{targetCoins} coins
-            </span>
+            
+            <div className="mt-3 flex justify-between items-center">
+              <div className="text-xs text-orange-700 font-bold">
+                <i className="nes-icon star is-small"></i>
+                STREAK: {streak} DAYS
+              </div>
+              <div className="text-xs text-orange-700 font-bold">
+                <i className="nes-icon heart is-small"></i>
+              </div>
+            </div>
           </div>
         </div>
       );
@@ -618,28 +623,31 @@ const RoleDashboard: React.FC = () => {
     
     if (level === GameLevel.VICTORY) {
       return (
-        <div className="text-center py-2">
-          <div className="flex items-center justify-center mb-2">
-            <Trophy className="h-6 w-6 text-yellow-500 mr-2" />
-            <h3 className="font-medium text-orange-800">Challenge conquered!</h3>
-          </div>
-          <p className="text-sm text-orange-700">10 coins collected</p>
-          
-          <div className="flex items-center justify-center mt-2">
-            <div className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-xs flex items-center">
-              <Medal className="h-3 w-3 mr-1" />
-              Streak: {streak} days
+        <div className="text-center py-2 font-vt323">
+          <div className="nes-container is-rounded is-dark with-title pixelated">
+            <p className="title font-press-start text-sm text-white">VICTORY!</p>
+            <i className="nes-icon trophy is-large mb-3"></i>
+            <p className="text-xl text-success mb-2">CHALLENGE CONQUERED!</p>
+            <p className="text-md text-warning mb-3">10 COINS COLLECTED</p>
+            
+            <div className="mt-3 inline-block bg-black px-4 py-1 rounded">
+              <p className="text-sm text-white flex items-center">
+                <i className="nes-icon star is-small mr-2"></i>
+                STREAK: {streak} DAYS
+              </p>
             </div>
+            
+            <div className="mt-4">
+              <button 
+                className="nes-btn is-disabled font-press-start text-xs"
+                disabled
+              >
+                NEW QUEST TOMORROW
+              </button>
+            </div>
+            
+            <p className="mt-4 text-xs text-success">CHECKOUT SPEED MAXIMIZED!</p>
           </div>
-          
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="mt-3 text-gray-400 border-gray-200"
-            disabled
-          >
-            Resume game tomorrow
-          </Button>
         </div>
       );
     }
