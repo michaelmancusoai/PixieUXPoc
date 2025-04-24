@@ -347,7 +347,7 @@ const RoleDashboard: React.FC = () => {
               className="nes-btn is-error font-press-start text-xs px-2 py-1"
               onClick={surrenderGame}
             >
-              QUIT GAME
+              SURRENDER
             </button>
           </div>
         </div>
@@ -861,7 +861,7 @@ const RoleDashboard: React.FC = () => {
             
             {/* Status bar at bottom of main container */}
             {(gameState.level === GameLevel.LEVEL_1 || gameState.level === GameLevel.LEVEL_2 || gameState.level === GameLevel.LEVEL_FINAL) && (
-              <div className="flex justify-between items-center border-t-2 border-gray-200 pt-2 mt-2">
+              <div className="flex justify-between items-center mt-2">
                 <div className="text-xs text-gray-700 font-bold">
                   <i className="nes-icon star is-small"></i>
                   STREAK: {gameState.streak} DAYS
