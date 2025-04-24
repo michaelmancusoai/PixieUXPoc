@@ -341,7 +341,7 @@ const RoleDashboard: React.FC = () => {
               className="nes-btn is-primary font-press-start text-xs px-2 py-1"
               onClick={acceptMission}
             >
-              MISSION ACCEPTED
+              ACCEPT MISSION
             </button>
           </div>
         </div>
