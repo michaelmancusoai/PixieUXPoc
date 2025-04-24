@@ -402,13 +402,13 @@ const RoleDashboard: React.FC = () => {
                 <i className="nes-icon coin is-small"></i> <span className="text-blue-800 font-bold">{coins}/{targetCoins}</span>
               </div>
               
-              {/* Quit Button Top Right */}
+              {/* Surrender Button Top Right */}
               <div className="absolute top-2 right-2 mt-4">
                 <button 
                   onClick={surrenderGame}
                   className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
                 >
-                  QUIT
+                  SURRENDER
                 </button>
               </div>
               
@@ -513,13 +513,13 @@ const RoleDashboard: React.FC = () => {
                 <i className="nes-icon coin is-small"></i> <span className="text-amber-800 font-bold">{coins}/{targetCoins}</span>
               </div>
               
-              {/* Quit Button Top Right */}
+              {/* Surrender Button Top Right */}
               <div className="absolute top-2 right-2 mt-4">
                 <button 
                   onClick={surrenderGame}
                   className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
                 >
-                  QUIT
+                  SURRENDER
                 </button>
               </div>
               
@@ -589,7 +589,7 @@ const RoleDashboard: React.FC = () => {
                 <i className="nes-icon coin is-small"></i> <span className="text-orange-800 font-bold">{coins}/{targetCoins}</span>
               </div>
               
-              {/* Quit Button Top Right */}
+              {/* Surrender Button Top Right */}
               <div className="absolute top-2 right-2 mt-4">
                 <button 
                   onClick={surrenderGame}
