@@ -48,15 +48,7 @@ const ToothChartPageFixed = () => {
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [examModeActive, activeTooth, showPalette, showTreatmentPlan]);
-  
-  // Handle tooth click for details
-  useEffect(() => {
-    if (activeTooth && !examModeActive) {
-      setSelectedTooth(activeTooth);
-      setShowToothDetails(true);
-    }
-  }, [activeTooth, examModeActive]);
+  }, [examModeActive, selectedTooth, showPalette, showTreatmentPlan]);
   
   // Tab change handler
   const handleTabChange = (tab: string) => {
@@ -73,9 +65,12 @@ const ToothChartPageFixed = () => {
   
   // Next tooth
   const handleNextTooth = () => {
-    if (activeTooth) {
-      const next = activeTooth === 32 ? 1 : activeTooth + 1;
+    if (selectedTooth) {
+      const next = selectedTooth === 32 ? 1 : selectedTooth + 1;
       setSelectedTooth(next);
+    } else {
+      // If no tooth is selected, start with tooth 1
+      setSelectedTooth(1);
     }
   };
   
@@ -160,14 +155,14 @@ const ToothChartPageFixed = () => {
               {/* Medical History Tab */}
               {activeTab === "medicalHistory" && (
                 <div className="flex-1 overflow-y-auto">
-                  <CompletedMedicalHistory patient={patient} />
+                  <CompletedMedicalHistory patient={{id: String(patient.id), name: patient.name}} />
                 </div>
               )}
               
               {/* Images Tab */}
               {activeTab === "images" && (
                 <div className="flex-1 overflow-y-auto">
-                  <PatientImagingMUI patient={patient} />
+                  <PatientImagingMUI patient={{id: String(patient.id), name: patient.name}} />
                 </div>
               )}
             </>
