@@ -64,33 +64,39 @@ interface PromptVariant {
   name: string;
   prompt: string;
   benefit: string;
+  character?: string; // Optional character type for the different Pokemon
 }
 
 const promptVariants: PromptVariant[] = [
   {
     name: "Friendly Concierge",
     prompt: "While I'm running your card, would you like us to keep it on file for next time?",
-    benefit: "It means a faster checkout—no wallet hunt."
+    benefit: "It means a faster checkout—no wallet hunt.",
+    character: "nes-bulbasaur"
   },
   {
     name: "Time-Saver Angle",
     prompt: "We can store this card securely so your future visits take about 30 seconds to pay—shall I do that for you?",
-    benefit: "You'll still get a text before any charge."
+    benefit: "You'll still get a text before any charge.",
+    character: "nes-squirtle"
   },
   {
     name: "Stress-Reducer",
     prompt: "Most patients let us keep a card on record so they never worry about bills stacking up—okay to add yours?",
-    benefit: "It only runs after your insurance pays."
+    benefit: "It only runs after your insurance pays.",
+    character: "nes-kirby"
   },
   {
     name: "Contactless Convenience",
     prompt: "If you prefer touch-free payments, I can tokenise this card now—want me to switch that on?",
-    benefit: "It's encrypted, and you just tap 'okay' on your phone next time."
+    benefit: "It's encrypted, and you just tap 'okay' on your phone next time.",
+    character: "nes-mario"
   },
   {
     name: "Membership Club Feel",
     prompt: "We offer a 'Fast-Track Checkout'—store a card once and skip the desk dash every visit. Shall I enrol you?",
-    benefit: "Think express lane, but for happy smiles."
+    benefit: "Think express lane, but for happy smiles.",
+    character: "nes-ash"
   }
 ];
 
@@ -406,8 +412,11 @@ const RoleDashboard: React.FC = () => {
             
             {/* Prompt Carousel */}
             <div className="flex items-start mt-2 mb-2">
-              <div className="mr-2">
-                <i className="nes-bulbasaur"></i>
+              <div className="mr-2 flex flex-col items-center">
+                <i className={promptVariants[currentVariantIndex].character || "nes-bulbasaur"}></i>
+                <div className="text-xs text-center text-blue-600 font-press-start mt-1 w-24 leading-tight">
+                  {promptVariants[currentVariantIndex].name}
+                </div>
               </div>
               <div className="flex-1">
                 <div className="nes-balloon from-left">
@@ -416,9 +425,6 @@ const RoleDashboard: React.FC = () => {
                     <span className="text-blue-600 font-bold">Benefit: </span>
                     "{promptVariants[currentVariantIndex].benefit}"
                   </p>
-                </div>
-                <div className="text-xs text-center text-blue-600 font-press-start mt-1">
-                  {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
               
@@ -511,8 +517,11 @@ const RoleDashboard: React.FC = () => {
             
             {/* Prompt Carousel */}
             <div className="flex items-start mt-2 mb-2">
-              <div className="mr-2">
-                <i className="nes-charmander"></i>
+              <div className="mr-2 flex flex-col items-center">
+                <i className={promptVariants[currentVariantIndex].character || "nes-charmander"}></i>
+                <div className="text-xs text-center text-amber-600 font-press-start mt-1 w-24 leading-tight">
+                  {promptVariants[currentVariantIndex].name}
+                </div>
               </div>
               <div className="flex-1">
                 <div className="nes-balloon from-left">
@@ -521,9 +530,6 @@ const RoleDashboard: React.FC = () => {
                     <span className="text-amber-600 font-bold">Benefit: </span>
                     "{promptVariants[currentVariantIndex].benefit}"
                   </p>
-                </div>
-                <div className="text-xs text-center text-amber-600 font-press-start mt-1">
-                  {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
               
@@ -581,8 +587,11 @@ const RoleDashboard: React.FC = () => {
             
             {/* Prompt Carousel */}
             <div className="flex items-start mt-2 mb-2">
-              <div className="mr-2">
-                <i className="nes-charizard"></i>
+              <div className="mr-2 flex flex-col items-center">
+                <i className={promptVariants[currentVariantIndex].character || "nes-charizard"}></i>
+                <div className="text-xs text-center text-orange-600 font-press-start mt-1 w-24 leading-tight">
+                  {promptVariants[currentVariantIndex].name}
+                </div>
               </div>
               <div className="flex-1">
                 <div className="nes-balloon from-left">
@@ -591,9 +600,6 @@ const RoleDashboard: React.FC = () => {
                     <span className="text-orange-600 font-bold">Benefit: </span>
                     "{promptVariants[currentVariantIndex].benefit}"
                   </p>
-                </div>
-                <div className="text-xs text-center text-orange-600 font-press-start mt-1">
-                  {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
               
