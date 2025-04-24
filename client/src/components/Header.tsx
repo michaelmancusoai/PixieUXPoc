@@ -39,14 +39,15 @@ export function Header() {
         <div className="flex items-center">
           <Link href="/">
             <div className="flex items-center">
-              <div className="h-16 w-28 relative overflow-visible" style={{ marginLeft: '-20px' }}>
+              <div className="h-20 w-28 relative overflow-visible flex items-center justify-center" style={{ marginLeft: '-20px' }}>
                 <img 
                   src={logoImage} 
                   alt="Pixie Dental Logo" 
-                  className="h-32 w-36 object-contain absolute -left-0 bottom-0" 
+                  className="h-32 w-36 object-contain absolute left-0 top-1/2 transform -translate-y-1/2" 
+                  style={{ marginTop: '-2px' }}
                 />
               </div>
-              <h1 className="text-xl md:text-2xl font-bold ml-4 text-white self-center">
+              <h1 className="text-xl md:text-2xl font-bold ml-4 text-white my-auto">
                 Pixie Dental
               </h1>
             </div>
