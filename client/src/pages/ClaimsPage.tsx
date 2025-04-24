@@ -1176,10 +1176,6 @@ export default function ClaimsPage() {
                       Insights
                     </Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Claims analytics show a total value of ${totalClaimAmount.toFixed(2)} with an average claim value of ${avgClaimValue.toFixed(2)}. 
-                    Insurance is estimated to cover ${totalInsuranceEstimate.toFixed(2)}.
-                  </p>
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                     <div className="col-span-2">
@@ -1315,16 +1311,16 @@ export default function ClaimsPage() {
                 <div className="border-b px-6 py-3">
                   <TabsList className="grid grid-cols-4 w-full sm:w-auto">
                     <TabsTrigger value="not-submitted" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      Not Submitted {renderTabBadge(40)}
+                      Not Submitted {renderTabBadge(notSentCount)}
                     </TabsTrigger>
                     <TabsTrigger value="submitted" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      Submitted {renderTabBadge(150)}
+                      Submitted {renderTabBadge(sentCount + resentCount)}
                     </TabsTrigger>
                     <TabsTrigger value="in-progress" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      EOBs in Progress {renderTabBadge(3)}
+                      EOBs in Progress {renderTabBadge(pendingCount)}
                     </TabsTrigger>
                     <TabsTrigger value="completed" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-                      Completed {renderTabBadge(1200)}
+                      Completed {renderTabBadge(completedCount)}
                     </TabsTrigger>
                   </TabsList>
                 </div>
