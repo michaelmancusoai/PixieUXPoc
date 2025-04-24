@@ -6,14 +6,24 @@ import {
   ArrowUpRight, 
   Bell, 
   Check, 
+  ChevronDown,
+  ChevronRight,
   ClipboardCheck, 
+  Clock,
   CreditCard, 
+  ExternalLink,
   FileCheck, 
   FileText, 
-  Stethoscope, 
+  LayoutDashboard,
+  LayoutGrid,
+  List,
+  Maximize2,
+  Minimize2,
+  PanelLeftClose,
+  PanelLeftOpen,
   SmilePlus,
-  ChevronDown,
-  Clock,
+  Stethoscope, 
+  Users,
   X,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -21,9 +31,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Separator } from "@/components/ui/separator";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 // Mock patient data for the flow board
 const patientData = [
