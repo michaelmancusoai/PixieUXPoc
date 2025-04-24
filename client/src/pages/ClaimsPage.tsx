@@ -1041,40 +1041,10 @@ export default function ClaimsPage() {
                 
                 {/* Aging Section */}
                 <div>
-                  <h4 className="text-sm font-medium mb-3">Aging Distribution</h4>
-                  
-                  {/* Progress bar visualization */}
-                  <div className="mb-3">
-                    <div className="flex h-3 rounded-full overflow-hidden bg-gray-100">
-                      {/* Calculate percentages */}
-                      {(() => {
-                        const total = agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90;
-                        const under30Pct = (agingBuckets.under30 / total) * 100;
-                        const days30to60Pct = (agingBuckets.days30to60 / total) * 100;
-                        const days60to90Pct = (agingBuckets.days60to90 / total) * 100;
-                        const over90Pct = (agingBuckets.over90 / total) * 100;
-                        
-                        return (
-                          <>
-                            <div className="bg-green-500 h-full" style={{ width: `${under30Pct}%` }}></div>
-                            <div className="bg-blue-500 h-full" style={{ width: `${days30to60Pct}%` }}></div>
-                            <div className="bg-amber-500 h-full" style={{ width: `${days60to90Pct}%` }}></div>
-                            <div className="bg-red-500 h-full" style={{ width: `${over90Pct}%` }}></div>
-                          </>
-                        );
-                      })()}
-                    </div>
-                    
-                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                      <div>0 Days</div>
-                      <div>30 Days</div>
-                      <div>60 Days</div>
-                      <div>90+ Days</div>
-                    </div>
-                  </div>
+                  <h4 className="text-sm font-medium mb-3">Aging Summary</h4>
                   
                   {/* Aging buckets */}
-                  <div className="grid grid-cols-4 gap-4">
+                  <div className="grid grid-cols-4 gap-4 mb-5">
                     <div className="bg-green-50 p-3 rounded-lg border border-green-100">
                       <div className="flex items-center">
                         <div className="mr-2 h-3 w-3 rounded-full bg-green-500"></div>
@@ -1125,6 +1095,37 @@ export default function ClaimsPage() {
                           {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
                         </div>
                       </div>
+                    </div>
+                  </div>
+                  
+                  {/* Distribution visualization */}
+                  <h4 className="text-sm font-medium mb-3">Aging Distribution</h4>
+                  <div className="mb-3">
+                    <div className="flex h-3 rounded-full overflow-hidden bg-gray-100">
+                      {/* Calculate percentages */}
+                      {(() => {
+                        const total = agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90;
+                        const under30Pct = (agingBuckets.under30 / total) * 100;
+                        const days30to60Pct = (agingBuckets.days30to60 / total) * 100;
+                        const days60to90Pct = (agingBuckets.days60to90 / total) * 100;
+                        const over90Pct = (agingBuckets.over90 / total) * 100;
+                        
+                        return (
+                          <>
+                            <div className="bg-green-500 h-full" style={{ width: `${under30Pct}%` }}></div>
+                            <div className="bg-blue-500 h-full" style={{ width: `${days30to60Pct}%` }}></div>
+                            <div className="bg-amber-500 h-full" style={{ width: `${days60to90Pct}%` }}></div>
+                            <div className="bg-red-500 h-full" style={{ width: `${over90Pct}%` }}></div>
+                          </>
+                        );
+                      })()}
+                    </div>
+                    
+                    <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                      <div>0 Days</div>
+                      <div>30 Days</div>
+                      <div>60 Days</div>
+                      <div>90+ Days</div>
                     </div>
                   </div>
                 </div>
