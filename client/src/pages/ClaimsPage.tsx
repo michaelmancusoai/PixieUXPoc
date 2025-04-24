@@ -31,6 +31,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Search,
   Filter,
   CheckCircle,
@@ -963,7 +970,37 @@ export default function ClaimsPage() {
     <NavigationWrapper>
       <div className="min-h-screen bg-muted">
         <div className="container mx-auto py-6">
-          <h1 className="text-2xl font-bold mb-6">Claims Management</h1>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">Claims Management</h1>
+            
+            {/* Quick Actions Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="h-9">
+                  Quick Actions <ChevronDown className="h-4 w-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem className="cursor-pointer">
+                  <Send className="h-4 w-4 mr-2" />
+                  Submit Claims
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Batch EOBs
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Report
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Printer className="h-4 w-4 mr-2" />
+                  Print Claims
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
           
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -1031,27 +1068,34 @@ export default function ClaimsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Quick Actions</CardTitle>
+                <CardTitle className="text-base font-medium">Claim Aging</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
-                <div className="flex flex-col space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <Button className="h-9 w-full">
-                      <Send className="h-4 w-4 mr-1" />
-                      Submit Claims
-                    </Button>
-                    <Button variant="outline" className="h-9 w-full">
-                      <FileText className="h-4 w-4 mr-1" />
-                      Batch EOBs
-                    </Button>
-                    <Button variant="outline" className="h-9 w-full">
-                      <Download className="h-4 w-4 mr-1" />
-                      Export Report
-                    </Button>
-                    <Button variant="outline" className="h-9 w-full">
-                      <Printer className="h-4 w-4 mr-1" />
-                      Print Claims
-                    </Button>
+                <div className="flex items-center">
+                  <AlertCircle className="h-8 w-8 mr-3 text-red-500" />
+                  <div>
+                    <div className="text-2xl font-bold">${agingBuckets.over90.toFixed(2)}</div>
+                    <div className="text-sm text-muted-foreground">
+                      Claims over 90 days
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t grid grid-cols-2 gap-2">
+                  <div>
+                    <div className="text-sm font-medium text-green-600">${agingBuckets.under30.toFixed(0)}</div>
+                    <div className="text-xs text-muted-foreground">0-30 days</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-blue-600">${agingBuckets.days30to60.toFixed(0)}</div>
+                    <div className="text-xs text-muted-foreground">30-60 days</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-amber-600">${agingBuckets.days60to90.toFixed(0)}</div>
+                    <div className="text-xs text-muted-foreground">60-90 days</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-red-600">${agingBuckets.over90.toFixed(0)}</div>
+                    <div className="text-xs text-muted-foreground">90+ days</div>
                   </div>
                 </div>
               </CardContent>
