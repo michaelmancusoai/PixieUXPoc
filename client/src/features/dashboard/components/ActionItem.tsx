@@ -260,6 +260,37 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
               </div>
             </div>
             
+            {/* Timer progress bar for tasks with due times */}
+            {item.dueIn && !item.completed && (
+              <div className="mb-2">
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                        <Progress
+                          value={remainingMinutes <= 60 ? (remainingMinutes / 60) * 100 : 100}
+                          className={`h-full transition-all ${
+                            remainingMinutes <= 15 
+                              ? 'bg-red-500' 
+                              : remainingMinutes <= 30 
+                                ? 'bg-amber-500' 
+                                : 'bg-green-500'
+                          }`}
+                        />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>
+                        {remainingMinutes <= 0 
+                          ? 'Overdue now' 
+                          : `${remainingMinutes} minute${remainingMinutes !== 1 ? 's' : ''} remaining`}
+                      </p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
+            )}
+            
             {renderContextualHint() && (
               <p className={`text-sm mb-2 ${item.completed ? 'text-gray-400' : 'text-gray-600'}`}>
                 {renderContextualHint()}
