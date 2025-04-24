@@ -1086,7 +1086,7 @@ export default function ClaimsPage() {
             
             <Card className="shadow-sm col-span-2">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Claims Value Stream</CardTitle>
+                <CardTitle className="text-base font-medium">Claim Aging</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex flex-col gap-4">
@@ -1100,93 +1100,50 @@ export default function ClaimsPage() {
                     </div>
                   </div>
                   
-                  {/* Value Stream Visualization */}
-                  <div className="relative pt-6 px-2">
-                    <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200"></div>
-                    
-                    <div className="flex justify-between mb-8 relative">
-                      {/* Not Sent */}
-                      <div className="flex flex-col items-center w-1/4">
-                        <div className="absolute -top-3 w-16 h-6 bg-gray-100 rounded-full flex items-center justify-center border">
-                          <span className="text-xs font-semibold">{notSentCount}</span>
-                        </div>
-                        <div className="mt-4 bg-gray-100 p-3 rounded-lg w-full">
-                          <div className="text-center text-sm font-medium">Not Sent</div>
-                          <div className="text-center font-bold mt-1">${notSentClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
-                          <div className="text-xs text-center text-muted-foreground mt-1">0 days avg.</div>
-                        </div>
-                      </div>
-                      
-                      {/* Sent/Resent */}
-                      <div className="flex flex-col items-center w-1/4">
-                        <div className="absolute -top-3 w-16 h-6 bg-blue-100 rounded-full flex items-center justify-center border">
-                          <span className="text-xs font-semibold">{sentCount + resentCount}</span>
-                        </div>
-                        <div className="mt-4 bg-blue-50 p-3 rounded-lg w-full">
-                          <div className="text-center text-sm font-medium">Submitted</div>
-                          <div className="text-center font-bold mt-1">${submittedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
-                          <div className="text-xs text-center text-muted-foreground mt-1">~2 days avg.</div>
-                        </div>
-                      </div>
-                      
-                      {/* Pending */}
-                      <div className="flex flex-col items-center w-1/4">
-                        <div className="absolute -top-3 w-16 h-6 bg-amber-100 rounded-full flex items-center justify-center border">
-                          <span className="text-xs font-semibold">{pendingCount}</span>
-                        </div>
-                        <div className="mt-4 bg-amber-50 p-3 rounded-lg w-full">
-                          <div className="text-center text-sm font-medium">Pending</div>
-                          <div className="text-center font-bold mt-1">${pendingClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
-                          <div className="text-xs text-center text-muted-foreground mt-1">~14 days avg.</div>
-                        </div>
-                      </div>
-                      
-                      {/* Completed */}
-                      <div className="flex flex-col items-center w-1/4">
-                        <div className="absolute -top-3 w-16 h-6 bg-green-100 rounded-full flex items-center justify-center border">
-                          <span className="text-xs font-semibold">{completedCount}</span>
-                        </div>
-                        <div className="mt-4 bg-green-50 p-3 rounded-lg w-full">
-                          <div className="text-center text-sm font-medium">Completed</div>
-                          <div className="text-center font-bold mt-1">${completedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
-                          <div className="text-xs text-center text-muted-foreground mt-1">~21 days avg.</div>
-                        </div>
+                  <div className="grid grid-cols-4 gap-4 mt-2">
+                    <div className="bg-green-50 p-3 rounded-md">
+                      <div className="text-xs text-muted-foreground">0-30 Days</div>
+                      <div className="text-xl font-bold text-green-600">${agingBuckets.under30.toFixed(0)}</div>
+                      <div className="text-xs text-green-600">
+                        {agingBuckets.under30 > 0 ? ((agingBuckets.under30 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
                       </div>
                     </div>
-                    
-                    {/* Flow metrics */}
-                    <div className="flex gap-4 pt-2 border-t">
-                      <div className="w-1/3">
+                    <div className="bg-blue-50 p-3 rounded-md">
+                      <div className="text-xs text-muted-foreground">30-60 Days</div>
+                      <div className="text-xl font-bold text-blue-600">${agingBuckets.days30to60.toFixed(0)}</div>
+                      <div className="text-xs text-blue-600">
+                        {agingBuckets.days30to60 > 0 ? ((agingBuckets.days30to60 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                      </div>
+                    </div>
+                    <div className="bg-amber-50 p-3 rounded-md">
+                      <div className="text-xs text-muted-foreground">60-90 Days</div>
+                      <div className="text-xl font-bold text-amber-600">${agingBuckets.days60to90.toFixed(0)}</div>
+                      <div className="text-xs text-amber-600">
+                        {agingBuckets.days60to90 > 0 ? ((agingBuckets.days60to90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                      </div>
+                    </div>
+                    <div className="bg-red-50 p-3 rounded-md">
+                      <div className="text-xs text-muted-foreground">90+ Days</div>
+                      <div className="text-xl font-bold text-red-600">${agingBuckets.over90.toFixed(0)}</div>
+                      <div className="text-xs text-red-600">
+                        {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-2 pt-4 border-t">
+                    <div className="grid grid-cols-3 gap-4">
+                      <div>
                         <div className="text-xs text-muted-foreground">Cycle Time (Submission to Payment)</div>
                         <div className="text-lg font-bold">~21 days</div>
                       </div>
-                      <div className="w-1/3">
+                      <div>
                         <div className="text-xs text-muted-foreground">Lead Time (Creation to Payment)</div>
                         <div className="text-lg font-bold">~23 days</div>
                       </div>
-                      <div className="w-1/3">
+                      <div>
                         <div className="text-xs text-muted-foreground">Throughput (Claims/Week)</div>
                         <div className="text-lg font-bold">~{Math.round(completedCount / 4)}</div>
-                      </div>
-                    </div>
-                    
-                    {/* Claims aging summary */}
-                    <div className="mt-4 pt-4 border-t flex justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="h-3 w-3 bg-green-500 rounded-full"></div>
-                        <div className="text-xs">0-30: ${agingBuckets.under30.toFixed(0)}</div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="h-3 w-3 bg-blue-500 rounded-full"></div>
-                        <div className="text-xs">30-60: ${agingBuckets.days30to60.toFixed(0)}</div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="h-3 w-3 bg-amber-500 rounded-full"></div>
-                        <div className="text-xs">60-90: ${agingBuckets.days60to90.toFixed(0)}</div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="h-3 w-3 bg-red-500 rounded-full"></div>
-                        <div className="text-xs">90+: ${agingBuckets.over90.toFixed(0)}</div>
                       </div>
                     </div>
                   </div>
@@ -1275,35 +1232,80 @@ export default function ClaimsPage() {
                       )}
                     </div>
                     
-                    <div className="bg-white p-4 rounded-md border shadow-sm">
-                      <h4 className="text-sm font-medium mb-1">Claim Aging</h4>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-green-50 p-3 rounded-md">
-                          <div className="text-xs text-muted-foreground">0-30 Days</div>
-                          <div className="text-xl font-bold text-green-600">${agingBuckets.under30.toFixed(0)}</div>
-                          <div className="text-xs text-green-600">
-                            {agingBuckets.under30 > 0 ? ((agingBuckets.under30 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
-                          </div>
+                    <div className="bg-white p-4 rounded-md border shadow-sm col-span-2">
+                      <h4 className="text-sm font-medium mb-3">Claims Process Bottlenecks</h4>
+                      
+                      <div className="mt-2">
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="text-xs text-muted-foreground">Claim Creation to Submission</div>
+                          <div className="text-xs font-medium">2 days</div>
                         </div>
-                        <div className="bg-blue-50 p-3 rounded-md">
-                          <div className="text-xs text-muted-foreground">30-60 Days</div>
-                          <div className="text-xl font-bold text-blue-600">${agingBuckets.days30to60.toFixed(0)}</div>
-                          <div className="text-xs text-blue-600">
-                            {agingBuckets.days30to60 > 0 ? ((agingBuckets.days30to60 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
-                          </div>
+                        <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
+                          <div className="bg-green-500 h-full rounded-full" style={{ width: '10%' }}></div>
                         </div>
-                        <div className="bg-amber-50 p-3 rounded-md">
-                          <div className="text-xs text-muted-foreground">60-90 Days</div>
-                          <div className="text-xl font-bold text-amber-600">${agingBuckets.days60to90.toFixed(0)}</div>
-                          <div className="text-xs text-amber-600">
-                            {agingBuckets.days60to90 > 0 ? ((agingBuckets.days60to90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
-                          </div>
+                      </div>
+                      
+                      <div className="mt-3">
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="text-xs text-muted-foreground">Submission to Adjudication</div>
+                          <div className="text-xs font-medium">14 days</div>
                         </div>
-                        <div className="bg-red-50 p-3 rounded-md">
-                          <div className="text-xs text-muted-foreground">90+ Days</div>
-                          <div className="text-xl font-bold text-red-600">${agingBuckets.over90.toFixed(0)}</div>
-                          <div className="text-xs text-red-600">
-                            {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                        <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
+                          <div className="bg-amber-500 h-full rounded-full" style={{ width: '60%' }}></div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-3">
+                        <div className="flex justify-between items-center mb-2">
+                          <div className="text-xs text-muted-foreground">Adjudication to Payment</div>
+                          <div className="text-xs font-medium">7 days</div>
+                        </div>
+                        <div className="bg-gray-100 h-2 w-full rounded-full overflow-hidden">
+                          <div className="bg-blue-500 h-full rounded-full" style={{ width: '30%' }}></div>
+                        </div>
+                      </div>
+                      
+                      <div className="mt-4 pt-4 border-t">
+                        <div className="text-sm font-medium mb-2">Value Stream Analysis</div>
+                        <div className="relative pt-2 px-1">
+                          <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200"></div>
+                          
+                          <div className="flex justify-between relative">
+                            {/* Not Sent */}
+                            <div className="flex flex-col items-center w-1/4">
+                              <div className="absolute -top-2 w-12 h-4 bg-gray-100 rounded-full flex items-center justify-center border">
+                                <span className="text-xs">{notSentCount}</span>
+                              </div>
+                              <div className="mt-3 text-xs text-center text-muted-foreground">Not Sent</div>
+                              <div className="text-xs font-medium text-center">${notSentClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                            </div>
+                            
+                            {/* Sent/Resent */}
+                            <div className="flex flex-col items-center w-1/4">
+                              <div className="absolute -top-2 w-12 h-4 bg-blue-100 rounded-full flex items-center justify-center border">
+                                <span className="text-xs">{sentCount + resentCount}</span>
+                              </div>
+                              <div className="mt-3 text-xs text-center text-muted-foreground">Submitted</div>
+                              <div className="text-xs font-medium text-center">${submittedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                            </div>
+                            
+                            {/* Pending */}
+                            <div className="flex flex-col items-center w-1/4">
+                              <div className="absolute -top-2 w-12 h-4 bg-amber-100 rounded-full flex items-center justify-center border">
+                                <span className="text-xs">{pendingCount}</span>
+                              </div>
+                              <div className="mt-3 text-xs text-center text-muted-foreground">Pending</div>
+                              <div className="text-xs font-medium text-center">${pendingClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                            </div>
+                            
+                            {/* Completed */}
+                            <div className="flex flex-col items-center w-1/4">
+                              <div className="absolute -top-2 w-12 h-4 bg-green-100 rounded-full flex items-center justify-center border">
+                                <span className="text-xs">{completedCount}</span>
+                              </div>
+                              <div className="mt-3 text-xs text-center text-muted-foreground">Completed</div>
+                              <div className="text-xs font-medium text-center">${completedClaims.reduce((sum: number, claim: Claim) => sum + claim.claimAmount, 0).toFixed(0)}</div>
+                            </div>
                           </div>
                         </div>
                       </div>
