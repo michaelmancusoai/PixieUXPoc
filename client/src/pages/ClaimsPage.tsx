@@ -1310,48 +1310,6 @@ export default function ClaimsPage() {
                         </div>
                       </div>
                     </div>
-                    
-                    <div className="bg-white p-4 rounded-md border shadow-sm">
-                      <h4 className="text-sm font-medium mb-1">Primary vs Secondary</h4>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center">
-                          <div className="h-4 w-4 rounded-full bg-blue-500 mr-2"></div>
-                          <div>
-                            <div className="text-xs text-muted-foreground">Primary</div>
-                            <div className="text-sm font-medium">${primaryTotal.toFixed(0)}</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center">
-                          <div className="h-4 w-4 rounded-full bg-green-500 mr-2"></div>
-                          <div>
-                            <div className="text-xs text-muted-foreground">Secondary</div>
-                            <div className="text-sm font-medium">${secondaryTotal.toFixed(0)}</div>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
-                        <div 
-                          className="h-full bg-blue-500 rounded-l-full" 
-                          style={{ 
-                            width: `${primaryTotal > 0 || secondaryTotal > 0 ? (primaryTotal / (primaryTotal + secondaryTotal)) * 100 : 0}%` 
-                          }}
-                        ></div>
-                      </div>
-                      
-                      <div className="pt-4 border-t">
-                        <div className="grid grid-cols-2 gap-2">
-                          <div>
-                            <div className="text-xs text-muted-foreground">Primary Ins. Est.</div>
-                            <div className="text-sm font-medium">${primaryInsuranceEstimate.toFixed(0)}</div>
-                          </div>
-                          <div>
-                            <div className="text-xs text-muted-foreground">Secondary Ins. Est.</div>
-                            <div className="text-sm font-medium">${secondaryInsuranceEstimate.toFixed(0)}</div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
