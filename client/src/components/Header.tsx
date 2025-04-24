@@ -24,6 +24,7 @@ import logoImage from "@assets/Screenshot_2025-04-24_at_6.58.45_PM-removebg-prev
  */
 export function Header() {
   const [searchOpen, setSearchOpen] = useState(false);
+  const [searchClosing, setSearchClosing] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState('all');
   const [searchBarRect, setSearchBarRect] = useState<DOMRect | null>(null);
@@ -46,17 +47,28 @@ export function Header() {
     if (searchBarRef.current) {
       setSearchBarRect(searchBarRef.current.getBoundingClientRect());
     }
+    setSearchClosing(false);
     setSearchOpen(true);
+  };
+  
+  // Close with animation
+  const closeSearchModal = () => {
+    setSearchClosing(true);
+    // Wait for animation to complete before fully closing
+    setTimeout(() => {
+      setSearchOpen(false);
+      setSearchClosing(false);
+    }, 200);
   };
   
   // Focus search input when modal opens
   useEffect(() => {
-    if (searchOpen && searchInputRef.current) {
+    if (searchOpen && !searchClosing && searchInputRef.current) {
       setTimeout(() => {
         searchInputRef.current?.focus();
       }, 50);
     }
-  }, [searchOpen]);
+  }, [searchOpen, searchClosing]);
   
   // Handle keyboard shortcut for search
   useEffect(() => {
@@ -68,14 +80,15 @@ export function Header() {
       }
       
       // ESC to close search
-      if (e.key === 'Escape' && searchOpen) {
-        setSearchOpen(false);
+      if (e.key === 'Escape' && searchOpen && !searchClosing) {
+        e.preventDefault();
+        closeSearchModal();
       }
     };
     
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [searchOpen]);
+  }, [searchOpen, searchClosing]);
 
   return (
     <>
@@ -109,8 +122,13 @@ export function Header() {
           >
             <Search className="h-4 w-4 text-white/80 mr-2" />
             <div className="flex-1 text-white/80 text-sm">Search Pixie Dental</div>
-            <div className="flex items-center ml-1 px-1.5 py-0.5 text-xs rounded bg-white/10 text-white/70">
-              <span className="font-mono">⌘K</span>
+            <div className="flex items-center gap-0.5 ml-1">
+              <div className="px-1.5 py-0.5 text-xs rounded bg-white/10 text-white/70">
+                <span className="font-mono">⌘</span>
+              </div>
+              <div className="px-1.5 py-0.5 text-xs rounded bg-white/10 text-white/70">
+                <span className="font-mono">K</span>
+              </div>
             </div>
           </div>
 
@@ -234,12 +252,18 @@ export function Header() {
       {/* HubSpot-style Search Modal with animated expansion from search bar */}
       {searchOpen && (
         <div 
-          className="fixed inset-0 z-50 flex items-start justify-center bg-black/25 backdrop-blur-sm animate-in fade-in duration-200" 
-          onClick={() => setSearchOpen(false)}
+          className={cn(
+            "fixed inset-0 z-50 flex items-start justify-center bg-black/15 backdrop-blur-[2px] transition-all duration-200",
+            searchClosing ? "opacity-0" : "opacity-100"
+          )}
+          onClick={closeSearchModal}
         >
           <div 
             ref={searchModalRef}
-            className="w-full max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden animate-in zoom-in-90 duration-200" 
+            className={cn(
+              "w-full max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden transition-all duration-200",
+              searchClosing ? "opacity-0 scale-95" : "opacity-100 scale-100"
+            )}
             onClick={(e) => e.stopPropagation()}
             style={{
               // Position the modal based on search bar location
@@ -258,7 +282,7 @@ export function Header() {
                 placeholder="Search patients, appointments, treatments..."
                 className="flex-1 border-0 focus-visible:ring-0 text-lg p-0"
               />
-              <Button variant="ghost" size="icon" onClick={() => setSearchOpen(false)} className="ml-2">
+              <Button variant="ghost" size="icon" onClick={closeSearchModal} className="ml-2">
                 <X className="h-5 w-5 text-gray-400" />
               </Button>
             </div>
@@ -372,7 +396,15 @@ export function Header() {
                   <span>See all results for "<strong>{searchQuery}</strong>"</span>
                 ) : null}
               </div>
-              <div className="text-gray-400">Press ENTER</div>
+              <div className="flex items-center gap-2 text-gray-400">
+                <span>Press ENTER</span>
+                <div className="flex items-center gap-2">
+                  <div className="px-1.5 py-0.5 text-xs rounded bg-gray-100 text-gray-500">
+                    <span className="font-mono">ESC</span>
+                  </div>
+                  <span>to close</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
