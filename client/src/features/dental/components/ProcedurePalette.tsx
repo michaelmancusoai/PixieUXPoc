@@ -294,10 +294,10 @@ const ProcedurePalette = () => {
         
         {/* Selected Procedure Display */}
         {selectedProcedure && (
-          <div className="bg-blue-50 border border-blue-200 rounded-md p-2 text-xs flex items-center">
+          <div className="bg-indigo-50 border border-indigo-200 rounded-md p-2 text-xs flex items-center">
             <div className="mr-2 font-bold">{selectedProcedure.code}</div>
             <div className="text-gray-700 flex-grow">{selectedProcedure.description}</div>
-            <div className="text-blue-700 font-medium ml-1">${selectedProcedure.fee}</div>
+            <div className="text-indigo-700 font-medium ml-1">${selectedProcedure.fee}</div>
             <Button 
               variant="ghost" 
               size="sm" 
@@ -322,7 +322,7 @@ const ProcedurePalette = () => {
               </span>
             )}
             {selectedSurface && (
-              <span className="ml-1 bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded">
+              <span className="ml-1 bg-indigo-100 text-indigo-800 px-1.5 py-0.5 rounded">
                 {selectedSurface}
               </span>
             )}
@@ -345,7 +345,7 @@ const ProcedurePalette = () => {
                     key={category}
                     className={`w-full px-2.5 py-2.5 text-sm text-left border-b last:border-b-0 transition-colors ${
                       activeProcedureCategory === category 
-                        ? 'bg-blue-50 text-blue-700' 
+                        ? 'bg-indigo-50 text-indigo-700' 
                         : 'hover:bg-gray-50'
                     }`}
                     onClick={() => dispatch(setActiveProcedureCategory(category))}
