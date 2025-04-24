@@ -34,7 +34,7 @@ export function Header() {
   return (
     <div className="flex flex-col combined-header">
       {/* Top Bar */}
-      <header className="bg-primary text-white py-3 px-4 flex items-center justify-between primary-header" style={{ backgroundColor: '#507286' }}>
+      <header className="bg-primary text-white py-3 px-4 flex items-center justify-between primary-header">
         {/* Logo and Brand Name */}
         <div className="flex items-center">
           <Link href="/">

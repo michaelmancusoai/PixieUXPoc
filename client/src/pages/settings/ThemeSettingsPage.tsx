@@ -210,37 +210,44 @@ function deriveThemeColors(primaryColor: string, secondaryColor: string): Partia
   const primary = parseHslValue(primaryColor);
   const secondary = parseHslValue(secondaryColor);
   
+  // Default to #507286 (HSL 202 25% 42%) if color is not specified
+  if (!primary.h && !primary.s && !primary.l) {
+    primary.h = 202;
+    primary.s = 25;
+    primary.l = 42;
+  }
+  
   const derived: Partial<ThemeSettings> = {
-    primary: primaryColor,
+    primary: primaryColor || "202 25% 42%",
     secondary: secondaryColor,
     
     // Derive primary variations
     primaryDark: formatHslValue(primary.h, primary.s, Math.max(0, primary.l - 6)),
-    primaryForeground: formatHslValue(primary.h, Math.min(10, primary.s), 99),
+    primaryForeground: formatHslValue(0, 0, 100), // White foreground for primary
     
     // Derive secondary variations
-    secondaryForeground: formatHslValue(secondary.h, Math.min(10, secondary.s), 10),
+    secondaryForeground: formatHslValue(primary.h, Math.min(10, primary.s), primary.l < 50 ? 95 : 10),
     
-    // Derive accent
-    accent: formatHslValue(primary.h, Math.min(100, primary.s), 95),
-    accentForeground: formatHslValue(primary.h, Math.min(100, primary.s), 10),
+    // Derive accent - lighter version of primary
+    accent: formatHslValue(primary.h, Math.max(15, primary.s - 10), 95),
+    accentForeground: formatHslValue(primary.h, primary.s, 10),
     
-    // Chart colors - create a palette based on primary and secondary
-    chart1: primaryColor,
-    chart2: secondaryColor,
-    chart3: formatHslValue((primary.h + 15) % 360, Math.min(85, primary.s), Math.min(70, primary.l + 15)),
-    chart4: formatHslValue((secondary.h + 20) % 360, Math.min(80, secondary.s), Math.min(75, secondary.l + 5)),
-    chart5: formatHslValue((primary.h + 30) % 360, Math.min(90, primary.s), Math.min(65, primary.l + 10)),
+    // Chart colors - create a palette based on primary
+    chart1: primaryColor || "202 25% 42%", // Our primary blue
+    chart2: formatHslValue(primary.h, Math.min(50, primary.s + 15), Math.min(60, primary.l + 10)), // Lighter variant
+    chart3: formatHslValue((primary.h + 30) % 360, Math.min(70, primary.s + 20), primary.l), // Complementary 
+    chart4: formatHslValue((primary.h + 210) % 360, primary.s, primary.l), // Triadic
+    chart5: formatHslValue((primary.h + 180) % 360, primary.s, Math.min(70, primary.l + 5)), // Opposite hue
     
     // Sidebar colors
-    sidebarPrimary: primaryColor,
-    sidebarPrimaryForeground: formatHslValue(primary.h, Math.min(10, primary.s), 99),
-    sidebarAccent: formatHslValue(primary.h, Math.min(50, primary.s), 95),
-    sidebarAccentForeground: primaryColor,
-    sidebarRing: primaryColor,
+    sidebarPrimary: primaryColor || "202 25% 42%",
+    sidebarPrimaryForeground: formatHslValue(0, 0, 100), // White text
+    sidebarAccent: formatHslValue(primary.h, Math.min(30, primary.s), 95),
+    sidebarAccentForeground: primaryColor || "202 25% 42%",
+    sidebarRing: primaryColor || "202 25% 42%",
     
     // Ring based on primary
-    ring: primaryColor,
+    ring: primaryColor || "202 25% 42%",
   };
   
   return derived;
