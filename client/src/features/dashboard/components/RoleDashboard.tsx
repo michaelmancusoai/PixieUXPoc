@@ -706,13 +706,17 @@ const RoleDashboard: React.FC = () => {
                 <span className="text-blue-800 font-press-start text-xs">OFFICE RANK: #{gameState.level === GameLevel.LEVEL_FINAL ? "1" : "2"}</span>
               </div>
               
-              {/* Surrender Button - Right */}
-              <button 
-                onClick={surrenderGame}
-                className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
-              >
-                SURRENDER
-              </button>
+              {/* Surrender Button - Only shown during active game levels (not in briefing, intro or victory screens) */}
+              {(gameState.level === GameLevel.LEVEL_1 || gameState.level === GameLevel.LEVEL_2 || gameState.level === GameLevel.LEVEL_FINAL) && 
+                gameState.level !== GameLevel.VICTORY && 
+                gameState.level !== GameLevel.BRIEFING_1 && (
+                <button 
+                  onClick={surrenderGame}
+                  className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
+                >
+                  SURRENDER
+                </button>
+              )}
             </div>
             
             <div className="relative mb-4">
