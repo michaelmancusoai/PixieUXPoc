@@ -412,10 +412,10 @@ const RoleDashboard: React.FC = () => {
               
               <div className="message-list">
                 <div className="nes-balloon from-left">
-                  <p className="text-xs">"{promptVariants[currentVariantIndex].prompt}"</p>
+                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].prompt}"</p>
                 </div>
                 <div className="nes-balloon from-right">
-                  <p className="text-xs">"{promptVariants[currentVariantIndex].benefit}"</p>
+                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].benefit}"</p>
                 </div>
               </div>
               
@@ -515,10 +515,10 @@ const RoleDashboard: React.FC = () => {
               
               <div className="message-list">
                 <div className="nes-balloon from-left">
-                  <p className="text-xs">"{promptVariants[currentVariantIndex].prompt}"</p>
+                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].prompt}"</p>
                 </div>
                 <div className="nes-balloon from-right">
-                  <p className="text-xs">"{promptVariants[currentVariantIndex].benefit}"</p>
+                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].benefit}"</p>
                 </div>
               </div>
               
@@ -583,10 +583,10 @@ const RoleDashboard: React.FC = () => {
               
               <div className="message-list">
                 <div className="nes-balloon from-left">
-                  <p className="text-xs">"{promptVariants[currentVariantIndex].prompt}"</p>
+                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].prompt}"</p>
                 </div>
                 <div className="nes-balloon from-right">
-                  <p className="text-xs">"{promptVariants[currentVariantIndex].benefit}"</p>
+                  <p className="text-sm sm:text-base font-medium">"{promptVariants[currentVariantIndex].benefit}"</p>
                 </div>
               </div>
               
