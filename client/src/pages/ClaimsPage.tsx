@@ -1029,10 +1029,6 @@ export default function ClaimsPage() {
           
           {/* Summary Cards */}
           <div className="mb-6">
-            <div className="text-lg font-semibold mb-4">Claims Aging Analysis</div>
-            <div className="text-sm text-muted-foreground mb-4">
-              Total Outstanding: ${(agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90).toLocaleString('en-US', { maximumFractionDigits: 0 })}
-            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
               {/* 0-30 Days Card */}
               <Card className="shadow-sm">
