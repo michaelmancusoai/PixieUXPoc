@@ -1,0 +1,332 @@
+Role‑Based “Today” Screens – Magnum Opus Draft (US‑Localised)
+
+“Software should be like the theatre: everyone sees the same stage, yet every seat offers a different, perfectly framed view.” — Rory Sutherland
+
+Pixie Dental will astonish users when Today adapts to their persona, surfacing only what they can influence before their next coffee refill. Below are five role‑crafted panoramas—Front Office, Hygienist, Provider, Billing Specialist, and Practice Owner—each annotated with behavioural psychology cues and sample content.
+
+Universal Skeleton (applied to every role)
+
+Greeting Banner – name, photo, motivational nudge.
+
+Primary KPI Strip – 3–4 metrics each role owns.
+
+Impact Queue – ordered list of actions sorted by ROI × Urgency.
+
+Flow Radar – mini Mission‑Control counts relevant to role.
+
+Win Feed – AI‑handled tasks since last login (reinforces trust).
+
+Spacing, typography, and colour palette remain consistent; only content and ordering shift.
+
+1. Front Office Coordinator (Maria)
+
+Behavioural Mandate
+
+Minimise uncertainty and social friction. Front Office fears awkward phone calls and irate walk‑ins more than spreadsheet errors.
+
+Layout & Content
+
+Zone
+
+What to Surface
+
+Why
+
+Greeting
+
+“Morning, Maria. 9 patients left to confirm; AI booked 3 waitlist gaps overnight.”
+
+primes agency
+
+KPI Strip
+
+Confirmed % Today, Gaps Filled, Balance Collected
+
+direct controllables
+
+Impact Queue (top 5)
+
+1
+
+“Call Robert Garcia (crown) – balance $520 – due in 45 m”
+
+loss aversion
+
+2
+
+“SMS blast to unconfirmed (3)”
+
+batch efficiency
+
+3
+
+“Prep new patient packet for Emily R.”
+
+reduce future friction
+
+Flow Radar
+
+Counts in Checked‑In, Seated, Ready for Checkout
+
+situational awareness
+
+Win Feed
+
+“AI verified insurance for 4 patients”
+
+reciprocity
+
+Microcopy Examples
+
+“Collect balance now = fewer surprises later.”
+
+“A friendly reminder now prevents a no‑show later.”
+
+2. Hygienist (Jasmine)
+
+Behavioural Mandate
+
+Focus on clinical rhythm & patient motivation. Hygienists are goal‑oriented but time‑poor.
+
+Zone
+
+What / Example
+
+Cue
+
+Greeting
+
+“Happy Tuesday, Jasmine. You prevent gum disease in 6 patients today.”
+
+purpose framing
+
+KPI Strip
+
+Avg Wait‑to‑Seat, Pocket Depth ≤3 mm %, Fluoride Acceptance Rate
+
+performance & upsell
+
+Impact Queue
+
+1
+
+“Jessica Kim – overdue FMX X‑rays – capture pre‑exam?”
+
+clinical quality
+
+2
+
+“Michael Chen – demo floss loop video?”
+
+behavioural nudge
+
+Flow Radar
+
+Only Seated & Doctor Ready counts
+
+keeps chair flow tight
+
+Win Feed
+
+“AI printed perio chart summaries”
+
+trust tech
+
+Visual: smiling tooth icon + green check when seat‑to‑doctor < 8 min.
+
+3. Provider / Dentist (Dr Patel)
+
+Behavioural Mandate
+
+Highlight revenue‑critical treatment and minimise chair idle.
+
+Zone
+
+Example Content
+
+Why
+
+Greeting
+
+“Good morning, Dr Patel. 3 crowns and 1 Invisalign consult could add $6 340 today.”
+
+monetary salience
+
+KPI Strip
+
+Production Booked vs Goal, Treatment Acceptance 30 d, Seat‑to‑Doctor Avg
+
+reflective control
+
+Impact Queue
+
+1
+
+“Crown prep – Sarah Johnson – Seated 4 min, go now?”
+
+goal gradient
+
+2
+
+“Invisalign consult – show simulation?”
+
+upsell cue
+
+3
+
+“Sign lab slip for UR crown”
+
+unblock downstream
+
+Flow Radar
+
+Doctor Ready + In Treatment counts
+
+avoid bottleneck
+
+Win Feed
+
+“AI drafted 4 SOAP notes”
+
+remove paperwork anxiety
+
+Copy snippet: “Start now, finish by 10:05—keep your streak of on‑time finishes alive.”
+
+4. Billing Specialist (Liam)
+
+Behavioural Mandate
+
+Recover revenue with least effort; prioritise largest dollars per minute.
+
+Zone
+
+Example
+
+Psychological Lever
+
+Greeting
+
+“Liam, $3 450 is one click away—AI prepared 12 claims.”
+
+instant gratification
+
+KPI Strip
+
+Claims Pending, Denial Rate, A/R > 90 d
+
+scoreboard
+
+Impact Queue
+
+1
+
+“Appeal Denial A927 – missing X‑ray – add & resubmit”
+
+frictionless link
+
+2
+
+“Post ERA 1120 – 8 claims – 98 % auto”
+
+progress illusion
+
+3
+
+“Send statement – Robert Garcia $720 45 d”
+
+loss aversion
+
+Flow Radar
+
+Checked‑Out but Balance > $0 count
+
+ensure same‑day collection
+
+Win Feed
+
+“AI posted $4 110 ERAs overnight”
+
+confidence boost
+
+5. Practice Owner / Manager (Dr Lopez)
+
+Behavioural Mandate
+
+Strategic overview: celebrate wins, flag risks.
+
+Zone
+
+Example
+
+Why
+
+Greeting
+
+“Dr Lopez, revenue pacing +12 % this month, but hygiene recall 78 % (target 90 %).”
+
+balanced feedback
+
+KPI Strip
+
+Revenue vs Target, Utilisation 5‑day, Recall Compliance, Staff Overtime Hrs
+
+holistic health
+
+Impact Queue
+
+1
+
+“Approve hiring requisition – hygiene gaps next month.”
+
+proactive capacity
+
+2
+
+“Denial spike +6 % – review Payer Delta CA”
+
+risk mitigation
+
+Flow Radar
+
+Only bottleneck columns highlighted (WIP exceed)
+
+quick glance
+
+Win Feed
+
+“AI saved est. $1 240 via schedule optimisation”
+
+justify investment
+
+Design Nuances Across Roles
+
+Colour Accent – Each role gets a subtle accent tint: blue (front), teal (hygiene), royal purple (provider), amber (billing), fern (owner). Consistency builds habit without confusion.
+
+Tone of Voice – Front office copy is friendly, billing slightly urgent, owner analytic.
+
+Time Horizon – Front office & hygiene deal in hours; owner sees week & month deltas; UI reflects timeframe.
+
+Example Micro‑Interactions
+
+Hover KPI → “What improves this?” tooltip with single action.
+
+Swipe task → quick‑complete; streak counter appears top‑right.
+
+Empty Impact Queue → confetti burst + message “You’re ahead—review tomorrow’s schedule?”
+
+User Journey Snapshot (Front Office)
+
+Maria logs in 7:40 AM. AI Brief shows “2 unconfirmed”. She hits SMS Blast (single click).
+
+KPI Confirmed % jumps from 83 → 92 %. Progress bar turns green.
+
+Flow Radar shows 1 Checked‑In; Maria prints intake form via row action.
+
+Win Feed records “You secured +$520 by collecting balance at check‑in.” Maria feels victorious before first patient.
+
+Checklist for UX Team
+
+
+
+This is the magnum opus: a Today screen that whispers the right thing to the right person at the right moment.
+

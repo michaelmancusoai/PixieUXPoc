@@ -1,0 +1,616 @@
+import { ActionItem, DashboardData, FlowCategory, KPI, UserRole, WinItem } from './types';
+import { format } from 'date-fns';
+
+const today = new Date();
+const formattedDate = format(today, 'EEEE, MMMM do');
+const currentHour = today.getHours();
+
+let timeOfDay = 'day';
+if (currentHour < 12) {
+  timeOfDay = 'morning';
+} else if (currentHour < 17) {
+  timeOfDay = 'afternoon';
+} else {
+  timeOfDay = 'evening';
+}
+
+// Front Office Mock Data
+const frontOfficeData: DashboardData = {
+  greeting: `Good ${timeOfDay}, Maria`,
+  greetingDetails: '9 patients left to confirm; AI booked 3 waitlist gaps overnight.',
+  kpis: [
+    {
+      label: 'Confirmed Today',
+      value: 83,
+      target: 100,
+      status: 'warning',
+      isPercentage: true,
+      trend: 'up',
+    },
+    {
+      label: 'Gaps Filled',
+      value: 3,
+      target: 5,
+      status: 'success',
+      trend: 'up',
+    },
+    {
+      label: 'Balance Collected',
+      value: 1250,
+      target: 2000,
+      unit: '$',
+      status: 'neutral',
+      trend: 'neutral',
+    },
+  ],
+  actionItems: [
+    {
+      id: '1',
+      priority: 1,
+      type: 'call',
+      title: 'Call Robert Garcia (crown)',
+      description: 'Balance due $520',
+      dueIn: '45 min',
+      amount: 520,
+      patientId: 101,
+      patientName: 'Robert Garcia',
+      completed: false,
+      icon: 'Phone',
+    },
+    {
+      id: '2',
+      priority: 2,
+      type: 'reminder',
+      title: 'SMS blast to unconfirmed',
+      description: '3 patients need confirmation',
+      completed: false,
+      icon: 'MessageSquare',
+    },
+    {
+      id: '3',
+      priority: 3,
+      type: 'form',
+      title: 'Prep new patient packet',
+      description: 'For Emily R. arriving at 10:15 AM',
+      patientId: 102,
+      patientName: 'Emily Robinson',
+      completed: false,
+      icon: 'ClipboardList',
+    },
+    {
+      id: '4',
+      priority: 4,
+      type: 'collection',
+      title: 'Process credit card payment',
+      description: 'James Wilson waiting at front desk',
+      amount: 175,
+      patientId: 103,
+      patientName: 'James Wilson',
+      completed: false,
+      icon: 'CreditCard',
+    },
+    {
+      id: '5',
+      priority: 5,
+      type: 'reminder',
+      title: 'Call for follow-up',
+      description: 'Sarah Johnson - extraction yesterday',
+      patientId: 104,
+      patientName: 'Sarah Johnson',
+      completed: false,
+      icon: 'Phone',
+    },
+  ],
+  flowCategories: [
+    {
+      id: 'checkedIn',
+      label: 'Checked In',
+      count: 3,
+    },
+    {
+      id: 'seated',
+      label: 'Seated',
+      count: 2,
+    },
+    {
+      id: 'readyForCheckout',
+      label: 'Ready for Checkout',
+      count: 1,
+      isBottleneck: true,
+    },
+  ],
+  wins: [
+    {
+      id: 'win1',
+      title: 'Insurance verified',
+      description: 'AI verified insurance for 4 patients',
+      timestamp: '7:30 AM',
+      icon: 'CheckCircle',
+    },
+    {
+      id: 'win2',
+      title: 'Appointments filled',
+      description: 'AI booked 3 patients from waitlist',
+      timestamp: '6:15 AM',
+      icon: 'Calendar',
+    },
+    {
+      id: 'win3',
+      title: 'Reminders sent',
+      description: 'Automated reminders sent to 12 patients',
+      timestamp: '5:00 AM',
+      icon: 'Bell',
+    },
+  ],
+};
+
+// Hygienist Mock Data
+const hygienistData: DashboardData = {
+  greeting: `Happy ${formattedDate}, Jasmine`,
+  greetingDetails: 'You prevent gum disease in 6 patients today.',
+  kpis: [
+    {
+      label: 'Wait-to-Seat',
+      value: 7,
+      target: 10,
+      unit: 'min',
+      status: 'success',
+      trend: 'down',
+    },
+    {
+      label: 'Pocket Depth ≤3mm',
+      value: 82,
+      target: 80,
+      isPercentage: true,
+      status: 'success',
+      trend: 'up',
+    },
+    {
+      label: 'Fluoride Acceptance',
+      value: 68,
+      target: 75,
+      isPercentage: true,
+      status: 'warning',
+      trend: 'up',
+    },
+  ],
+  actionItems: [
+    {
+      id: '1',
+      priority: 1,
+      type: 'clinical',
+      title: 'Jessica Kim - overdue FMX X-rays',
+      description: 'Capture pre-exam?',
+      patientId: 105,
+      patientName: 'Jessica Kim',
+      completed: false,
+      icon: 'FileX',
+    },
+    {
+      id: '2',
+      priority: 2,
+      type: 'clinical',
+      title: 'Michael Chen - demo floss loop video',
+      description: 'Shown difficulty with proper technique',
+      patientId: 106,
+      patientName: 'Michael Chen',
+      completed: false,
+      icon: 'Video',
+    },
+    {
+      id: '3',
+      priority: 3,
+      type: 'clinical',
+      title: 'Check Perio Risk Assessment',
+      description: 'For Lisa Thompson - diabetic patient',
+      patientId: 107,
+      patientName: 'Lisa Thompson',
+      completed: false,
+      icon: 'Activity',
+    },
+    {
+      id: '4',
+      priority: 4,
+      type: 'clinical',
+      title: 'Review home care instructions',
+      description: 'For David Brown - new implant patient',
+      patientId: 108,
+      patientName: 'David Brown',
+      completed: false,
+      icon: 'FileText',
+    },
+  ],
+  flowCategories: [
+    {
+      id: 'seated',
+      label: 'Seated',
+      count: 1,
+    },
+    {
+      id: 'doctorReady',
+      label: 'Doctor Ready',
+      count: 2,
+      isBottleneck: false,
+    },
+  ],
+  wins: [
+    {
+      id: 'win1',
+      title: 'Perio charts ready',
+      description: 'AI printed perio chart summaries',
+      timestamp: '7:45 AM',
+      icon: 'FileText',
+    },
+    {
+      id: 'win2',
+      title: 'Reports generated',
+      description: 'Treatment plans prepared for review',
+      timestamp: '7:30 AM',
+      icon: 'FileCheck',
+    },
+    {
+      id: 'win3',
+      title: 'Patient education queued',
+      description: 'Videos queued on iPad for 3 patients',
+      timestamp: '7:15 AM',
+      icon: 'Video',
+    },
+  ],
+};
+
+// Provider/Dentist Mock Data
+const providerData: DashboardData = {
+  greeting: `Good ${timeOfDay}, Dr. Patel`,
+  greetingDetails: '3 crowns and 1 Invisalign consult could add $6,340 today.',
+  kpis: [
+    {
+      label: 'Production vs Goal',
+      value: 4250,
+      target: 8000,
+      unit: '$',
+      status: 'warning',
+      trend: 'up',
+    },
+    {
+      label: 'Treatment Acceptance',
+      value: 85,
+      target: 80,
+      isPercentage: true,
+      status: 'success',
+      trend: 'up',
+    },
+    {
+      label: 'Seat-to-Doctor Avg',
+      value: 5.2,
+      target: 8,
+      unit: 'min',
+      status: 'success',
+      trend: 'down',
+    },
+  ],
+  actionItems: [
+    {
+      id: '1',
+      priority: 1,
+      type: 'clinical',
+      title: 'Crown prep - Sarah Johnson',
+      description: 'Seated 4 min, go now?',
+      patientId: 104,
+      patientName: 'Sarah Johnson',
+      completed: false,
+      icon: 'Tool',
+    },
+    {
+      id: '2',
+      priority: 2,
+      type: 'clinical',
+      title: 'Invisalign consult',
+      description: 'Show simulation?',
+      patientId: 109,
+      patientName: 'Jennifer Davis',
+      completed: false,
+      icon: 'Smile',
+    },
+    {
+      id: '3',
+      priority: 3,
+      type: 'document',
+      title: 'Sign lab slip for UR crown',
+      description: 'For Robert Garcia (#18)',
+      patientId: 101,
+      patientName: 'Robert Garcia',
+      completed: false,
+      icon: 'FileSignature',
+    },
+    {
+      id: '4',
+      priority: 4,
+      type: 'clinical',
+      title: 'Review pre-op X-rays',
+      description: 'For extraction at 11:30 AM',
+      patientId: 110,
+      patientName: 'Daniel Martinez',
+      completed: false,
+      icon: 'FileX',
+    },
+  ],
+  flowCategories: [
+    {
+      id: 'doctorReady',
+      label: 'Doctor Ready',
+      count: 2,
+      isBottleneck: true,
+    },
+    {
+      id: 'inTreatment',
+      label: 'In Treatment',
+      count: 1,
+    },
+  ],
+  wins: [
+    {
+      id: 'win1',
+      title: 'SOAP notes drafted',
+      description: 'AI drafted 4 SOAP notes',
+      timestamp: '7:45 AM',
+      icon: 'FileText',
+    },
+    {
+      id: 'win2',
+      title: 'Lab cases tracked',
+      description: 'Crown for Moore arriving tomorrow',
+      timestamp: '6:30 AM',
+      icon: 'Package',
+    },
+    {
+      id: 'win3',
+      title: 'Treatment plans prepared',
+      description: 'Visual aids ready for 2 presentations',
+      timestamp: '6:15 AM',
+      icon: 'LayoutTemplate',
+    },
+  ],
+};
+
+// Billing Specialist Mock Data
+const billingData: DashboardData = {
+  greeting: `${timeOfDay === 'morning' ? 'Morning' : 'Hello'}, Liam`,
+  greetingDetails: '$3,450 is one click away—AI prepared 12 claims.',
+  kpis: [
+    {
+      label: 'Claims Pending',
+      value: 24,
+      target: 30,
+      status: 'success',
+      trend: 'down',
+    },
+    {
+      label: 'Denial Rate',
+      value: 8.5,
+      target: 10,
+      isPercentage: true,
+      status: 'success',
+      trend: 'down',
+    },
+    {
+      label: 'A/R > 90 days',
+      value: 12500,
+      target: 15000,
+      unit: '$',
+      status: 'success',
+      trend: 'down',
+    },
+  ],
+  actionItems: [
+    {
+      id: '1',
+      priority: 1,
+      type: 'document',
+      title: 'Appeal Denial A927',
+      description: 'Missing X-ray - add & resubmit',
+      patientId: 111,
+      patientName: 'Angela White',
+      completed: false,
+      icon: 'AlertOctagon',
+    },
+    {
+      id: '2',
+      priority: 2,
+      type: 'document',
+      title: 'Post ERA 1120',
+      description: '8 claims - 98% auto',
+      completed: false,
+      icon: 'FileCheck',
+    },
+    {
+      id: '3',
+      priority: 3,
+      type: 'collection',
+      title: 'Send statement',
+      description: 'Robert Garcia $720 - 45 days overdue',
+      amount: 720,
+      patientId: 101,
+      patientName: 'Robert Garcia',
+      completed: false,
+      icon: 'Mail',
+    },
+    {
+      id: '4',
+      priority: 4,
+      type: 'collection',
+      title: 'Review aging report',
+      description: '5 accounts > 60 days need attention',
+      completed: false,
+      icon: 'Clock',
+    },
+  ],
+  flowCategories: [
+    {
+      id: 'checkedOutWithBalance',
+      label: 'Checked-Out (Balance > $0)',
+      count: 3,
+      isBottleneck: true,
+    },
+    {
+      id: 'claimsToSubmit',
+      label: 'Claims to Submit',
+      count: 12,
+    },
+    {
+      id: 'pendingInsurance',
+      label: 'Pending Insurance',
+      count: 24,
+    },
+  ],
+  wins: [
+    {
+      id: 'win1',
+      title: 'ERA posted',
+      description: 'AI posted $4,110 ERAs overnight',
+      value: 4110,
+      timestamp: '6:00 AM',
+      icon: 'DollarSign',
+    },
+    {
+      id: 'win2',
+      title: 'Claims submitted',
+      description: '15 claims processed & submitted',
+      timestamp: '6:30 AM',
+      icon: 'Send',
+    },
+    {
+      id: 'win3',
+      title: 'Payment collected',
+      description: 'Online payment of $325 received',
+      value: 325,
+      timestamp: '11:00 PM (yesterday)',
+      icon: 'CreditCard',
+    },
+  ],
+};
+
+// Practice Owner / Manager Mock Data
+const ownerData: DashboardData = {
+  greeting: `Good ${timeOfDay}, Dr. Lopez`,
+  greetingDetails: 'Revenue pacing +12% this month, but hygiene recall 78% (target 90%).',
+  kpis: [
+    {
+      label: 'Revenue vs Target',
+      value: 45620,
+      target: 42000,
+      unit: '$',
+      status: 'success',
+      trend: 'up',
+      delta: 12,
+    },
+    {
+      label: 'Chair Utilization',
+      value: 85,
+      target: 90,
+      isPercentage: true,
+      status: 'warning',
+      trend: 'up',
+    },
+    {
+      label: 'Recall Compliance',
+      value: 78,
+      target: 90,
+      isPercentage: true,
+      status: 'danger',
+      trend: 'down',
+    },
+    {
+      label: 'Staff Overtime',
+      value: 12.5,
+      target: 10,
+      unit: 'hrs',
+      status: 'warning',
+      trend: 'up',
+    },
+  ],
+  actionItems: [
+    {
+      id: '1',
+      priority: 1,
+      type: 'approval',
+      title: 'Approve hiring requisition',
+      description: 'Hygiene gaps next month',
+      completed: false,
+      icon: 'UserPlus',
+    },
+    {
+      id: '2',
+      priority: 2,
+      type: 'document',
+      title: 'Denial spike +6%',
+      description: 'Review Payer Delta CA',
+      completed: false,
+      icon: 'TrendingUp',
+    },
+    {
+      id: '3',
+      priority: 3,
+      type: 'approval',
+      title: 'Review equipment proposal',
+      description: 'New scanner ROI analysis',
+      completed: false,
+      icon: 'PackageCheck',
+    },
+    {
+      id: '4',
+      priority: 4,
+      type: 'document',
+      title: 'Monthly KPI review',
+      description: 'Prepare for team meeting tomorrow',
+      completed: false,
+      icon: 'BarChart2',
+    },
+  ],
+  flowCategories: [
+    {
+      id: 'doctorReady',
+      label: 'Doctor Ready',
+      count: 2,
+      isBottleneck: true,
+    },
+    {
+      id: 'pendingInsurance',
+      label: 'Pending Insurance',
+      count: 24,
+      isBottleneck: false,
+    },
+  ],
+  wins: [
+    {
+      id: 'win1',
+      title: 'Schedule optimized',
+      description: 'AI saved est. $1,240 via schedule optimization',
+      savings: 1240,
+      timestamp: '6:00 AM',
+      icon: 'Calendar',
+    },
+    {
+      id: 'win2',
+      title: 'Appointment filled',
+      description: 'Last-minute cancellation filled with crown prep',
+      value: 1250,
+      timestamp: 'Yesterday',
+      icon: 'Calendar',
+    },
+    {
+      id: 'win3',
+      title: 'Collection improved',
+      description: 'A/R > 90 days reduced by 8% this week',
+      timestamp: 'This week',
+      icon: 'TrendingDown',
+    },
+  ],
+};
+
+export const roleBasedData: Record<UserRole, DashboardData> = {
+  frontOffice: frontOfficeData,
+  hygienist: hygienistData,
+  provider: providerData,
+  billing: billingData,
+  owner: ownerData,
+};
