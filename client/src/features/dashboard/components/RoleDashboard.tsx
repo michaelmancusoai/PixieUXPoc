@@ -650,9 +650,9 @@ const RoleDashboard: React.FC = () => {
                 <h2 className="text-xl font-semibold flex items-center">
                   {dashboardData.greeting}
                   {currentRole === 'frontOffice' && (
-                    <div className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full flex items-center">
+                    <div className="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full flex items-center">
                       <Activity className="h-3 w-3 mr-1" />
-                      4-day streak of 95% confirmations – keep it alive!
+                      <span className="inline-block leading-tight">4-day streak of 95% confirmations – keep it alive!</span>
                     </div>
                   )}
                 </h2>
@@ -662,13 +662,11 @@ const RoleDashboard: React.FC = () => {
                 
                 {/* AI Overnight Wins - conditionally shown for front office role */}
                 {currentRole === 'frontOffice' && (
-                  <div className="mt-2 text-sm bg-green-50 border border-green-200 rounded-md p-2 flex items-start">
+                  <div className="mt-2 text-sm bg-green-50 border border-green-200 rounded-md p-1.5 flex items-center">
                     <div className="bg-green-100 p-1 rounded-full mr-2 flex-shrink-0">
                       <CheckCircle2 className="h-4 w-4 text-green-600" />
                     </div>
-                    <div>
-                      <p className="text-green-800">Booked 3 waitlist gaps worth $720 while you slept</p>
-                    </div>
+                    <span className="text-green-800 leading-tight">Booked 3 waitlist gaps worth $720 while you slept</span>
                   </div>
                 )}
               </div>
