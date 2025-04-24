@@ -252,16 +252,16 @@ const PerioChart = () => {
       <div className="flex-1 overflow-auto p-4">
         {/* Stats summary */}
         <div className="grid grid-cols-6 gap-3 mb-6">
-          <div className="p-3 bg-gray-50 rounded-lg border">
-            <div className="text-sm text-gray-500">Completion</div>
-            <div className="text-2xl font-semibold">{stats.completionRate}%</div>
-            <div className="text-xs text-gray-500">{stats.recordedSites}/{stats.totalSites} sites</div>
+          <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+            <div className="text-sm text-indigo-700">Completion</div>
+            <div className="text-2xl font-semibold text-indigo-700">{stats.completionRate}%</div>
+            <div className="text-xs text-indigo-600">{stats.recordedSites}/{stats.totalSites} sites</div>
           </div>
           
-          <div className="p-3 bg-gray-50 rounded-lg border">
-            <div className="text-sm text-gray-500">BOP Index</div>
-            <div className="text-2xl font-semibold">{stats.bleedingPercentage}%</div>
-            <div className="text-xs text-gray-500">{stats.bleedingSites} bleeding sites</div>
+          <div className="p-3 bg-indigo-50 rounded-lg border border-indigo-200">
+            <div className="text-sm text-indigo-700">BOP Index</div>
+            <div className="text-2xl font-semibold text-indigo-700">{stats.bleedingPercentage}%</div>
+            <div className="text-xs text-indigo-600">{stats.bleedingSites} bleeding sites</div>
           </div>
           
           <div className="p-3 bg-green-50 rounded-lg border border-green-200">
@@ -550,7 +550,7 @@ const PerioChart = () => {
         </div>
         
         {/* Instructions */}
-        <div className="mt-6 p-4 border rounded-md bg-blue-50 text-blue-800 text-sm space-y-2">
+        <div className="mt-6 p-4 border rounded-md bg-indigo-50 text-indigo-800 text-sm space-y-2 border-indigo-200">
           <h4 className="font-medium">Interactive Chart Instructions</h4>
           <ul className="list-disc list-inside space-y-1 ml-2">
             <li>Click on any pocket depth measurement cell to increase the value. After 9mm, it will reset.</li>
@@ -564,11 +564,11 @@ const PerioChart = () => {
       
       {/* Footer */}
       <div className="border-t p-3 bg-gray-50 flex justify-between">
-        <div className="text-sm text-gray-600">
-          {stats.completionRate}% Complete ({stats.recordedSites}/{stats.totalSites} sites)
+        <div className="text-sm text-indigo-700">
+          <span className="font-medium">{stats.completionRate}%</span> Complete ({stats.recordedSites}/{stats.totalSites} sites)
         </div>
-        <div className="text-sm font-medium">
-          {stats.bleedingPercentage}% Bleeding on Probing
+        <div className="text-sm font-medium text-indigo-700">
+          <span className="font-medium">{stats.bleedingPercentage}%</span> Bleeding on Probing
         </div>
       </div>
     </div>
