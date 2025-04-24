@@ -1176,37 +1176,8 @@ export default function ClaimsPage() {
                     Insurance is estimated to cover ${totalInsuranceEstimate.toFixed(2)}.
                   </p>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <div className="bg-white p-4 rounded-md border shadow-sm">
-                      <h4 className="text-sm font-medium mb-1">Top Insurance Carriers</h4>
-                      {topCarriers.length > 0 ? (
-                        <>
-                          {topCarriers.map((carrier, index) => (
-                            <div key={index} className="flex justify-between items-end mt-3 first:mt-0">
-                              <div className="space-y-2">
-                                <div className="flex justify-between">
-                                  <span className="text-xs text-muted-foreground">{carrier.name}</span>
-                                  <span className="text-xs font-medium">{carrier.percentOfTotal.toFixed(0)}%</span>
-                                </div>
-                                <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
-                                  <div 
-                                    className={`h-full rounded-full ${index === 0 ? 'bg-blue-500' : index === 1 ? 'bg-green-500' : 'bg-amber-500'}`} 
-                                    style={{ width: `${carrier.percentOfTotal}%` }}
-                                  ></div>
-                                </div>
-                              </div>
-                              <div className="ml-2 text-sm font-medium">
-                                ${carrier.totalAmount.toFixed(0)}
-                              </div>
-                            </div>
-                          ))}
-                        </>
-                      ) : (
-                        <div className="text-sm text-muted-foreground mt-2">No carrier data available</div>
-                      )}
-                    </div>
-                    
-                    <div className="bg-white p-4 rounded-md border shadow-sm md:col-span-2">
                       <h4 className="text-sm font-medium mb-3">Claims Process Analysis</h4>
                       
                       <div className="mt-2">
