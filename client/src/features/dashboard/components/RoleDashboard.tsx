@@ -4,7 +4,6 @@ import { roleBasedData } from '../mockData';
 import RoleSelector from './RoleSelector';
 import KPICard from './KPICard';
 import ActionItem from './ActionItem';
-import FlowRadar from './FlowRadar';
 import WinFeed from './WinFeed';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -803,27 +802,6 @@ const RoleDashboard: React.FC = () => {
                   </div>
                 </div>
               )}
-            </CardContent>
-          </Card>
-
-          {/* Live Patient Flow - Mission Control Style */}
-          <Card>
-            <CardHeader className="pb-3">
-              <CardTitle className={`text-${roleConfig.accentColor}-600`}>
-                {currentRole === 'frontOffice' ? 'Live Patient Flow' : 'Patient Flow'}
-              </CardTitle>
-              <p className="text-xs text-muted-foreground">
-                Real-time view of patient movement through the practice
-              </p>
-            </CardHeader>
-            <CardContent className="pt-0 px-2">
-              <FlowRadar 
-                categories={dashboardData.flowCategories}
-                accentColor={roleConfig.accentColor}
-              />
-              <p className="text-xs text-muted-foreground mt-3 text-center">
-                Click any column to jump to those patients in Mission Control
-              </p>
             </CardContent>
           </Card>
         </div>
