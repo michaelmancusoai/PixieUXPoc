@@ -456,16 +456,7 @@ const RoleDashboard: React.FC = () => {
               </div>
             </div>
             
-            {/* Status bar at bottom of container */}
-            <div className="flex justify-between items-center border-t-2 border-blue-200 pt-2 mt-2">
-              <div className="text-xs text-blue-700 font-bold">
-                <i className="nes-icon star is-small"></i>
-                STREAK: {streak} DAYS
-              </div>
-              <div className="text-xs text-blue-700 font-bold">
-                <i className="nes-icon heart is-small"></i>
-              </div>
-            </div>
+
           </div>
         </div>
       );
@@ -576,16 +567,7 @@ const RoleDashboard: React.FC = () => {
               </div>
             </div>
             
-            {/* Status bar at bottom of container */}
-            <div className="flex justify-between items-center border-t-2 border-amber-200 pt-2 mt-2">
-              <div className="text-xs text-amber-700 font-bold">
-                <i className="nes-icon star is-small"></i>
-                STREAK: {streak} DAYS
-              </div>
-              <div className="text-xs text-amber-700 font-bold">
-                <i className="nes-icon heart is-small"></i>
-              </div>
-            </div>
+
           </div>
         </div>
       );
@@ -661,16 +643,7 @@ const RoleDashboard: React.FC = () => {
               </div>
             </div>
             
-            {/* Status bar at bottom of container */}
-            <div className="flex justify-between items-center border-t-2 border-orange-200 pt-2 mt-2">
-              <div className="text-xs text-orange-700 font-bold">
-                <i className="nes-icon star is-small"></i>
-                STREAK: {streak} DAYS
-              </div>
-              <div className="text-xs text-orange-700 font-bold">
-                <i className="nes-icon heart is-small"></i>
-              </div>
-            </div>
+
           </div>
         </div>
       );
@@ -792,7 +765,7 @@ const RoleDashboard: React.FC = () => {
         <div className="relative game-container">
           <div className={`nes-container pixelated is-rounded ${getLevelBackground()} hover:shadow-md transition-shadow duration-200 p-4 font-vt323 overflow-hidden`}>
             <div className="bg-gray-800 text-white p-1 font-press-start text-center mb-3 -mx-3 -mt-3 rounded-t">8-bit Challenge Quest</div>
-            <div className="relative">
+            <div className="relative mb-4">
               {renderGameContent()}
               
               {/* Celebrations */}
@@ -885,6 +858,19 @@ const RoleDashboard: React.FC = () => {
                 </div>
               )}
             </div>
+            
+            {/* Status bar at bottom of main container */}
+            {(level === GameLevel.LEVEL_1 || level === GameLevel.LEVEL_2 || level === GameLevel.LEVEL_FINAL) && (
+              <div className="flex justify-between items-center border-t-2 border-gray-200 pt-2 mt-2">
+                <div className="text-xs text-gray-700 font-bold">
+                  <i className="nes-icon star is-small"></i>
+                  STREAK: {streak} DAYS
+                </div>
+                <div className="text-xs text-gray-700 font-bold">
+                  <i className="nes-icon heart is-small"></i>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}
