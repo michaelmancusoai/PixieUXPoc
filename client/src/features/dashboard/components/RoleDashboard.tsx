@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UserRole, ROLE_CONFIGS } from '../types';
 import { roleBasedData } from '../mockData';
 import RoleSelector from './RoleSelector';
@@ -17,12 +17,18 @@ import {
   MessageCircle, 
   CheckCircle2, 
   Lightbulb,
-  Plus 
+  Plus,
+  Check,
+  PartyPopper
 } from 'lucide-react';
 
 const RoleDashboard: React.FC = () => {
   const [currentRole, setCurrentRole] = useState<UserRole>('frontOffice');
   const [completedActions, setCompletedActions] = useState<Set<string>>(new Set());
+  const [completedCards, setCompletedCards] = useState<Set<number>>(new Set());
+  const [extraCompletedCards, setExtraCompletedCards] = useState<number>(0);
+  const [showConfetti, setShowConfetti] = useState<boolean>(false);
+  const [quickWinVisible, setQuickWinVisible] = useState<boolean>(true);
 
   // Get the dashboard data for the current role
   const dashboardData = roleBasedData[currentRole];
@@ -41,6 +47,42 @@ const RoleDashboard: React.FC = () => {
       }
       return newSet;
     });
+  };
+  
+  // Function to mark a card-on-file action as complete
+  const handleCardComplete = (cardNumber: number) => {
+    setCompletedCards((prev) => {
+      const newSet = new Set(prev);
+      
+      // If already completed, do nothing
+      if (newSet.has(cardNumber)) {
+        return newSet;
+      }
+      
+      // Add the new card
+      newSet.add(cardNumber);
+      
+      // Check if all 3 are now complete
+      if (newSet.size === 3 && !showConfetti) {
+        setShowConfetti(true);
+        // Hide confetti after 3 seconds
+        setTimeout(() => {
+          setShowConfetti(false);
+        }, 3000);
+      }
+      
+      // If more than 3 cards are completed
+      if (newSet.size > 3) {
+        setExtraCompletedCards(newSet.size - 3);
+      }
+      
+      return newSet;
+    });
+  };
+  
+  // Handle dismissing the quick win card
+  const handleDismissQuickWin = () => {
+    setQuickWinVisible(false);
   };
 
   // Get the appropriate icon for the role
@@ -134,8 +176,8 @@ const RoleDashboard: React.FC = () => {
         </CardContent>
       </Card>
       
-      {/* Soft-Skills Nudge - shown only for front office role */}
-      {currentRole === 'frontOffice' && (
+      {/* Quick Win Card - shown only for front office role */}
+      {currentRole === 'frontOffice' && quickWinVisible && (
         <Card className="border-dashed border-2 border-amber-300 bg-amber-50 hover:shadow-md transition-shadow duration-200">
           <CardContent className="p-4">
             <div className="flex items-start space-x-3">
@@ -143,26 +185,81 @@ const RoleDashboard: React.FC = () => {
                 <Lightbulb className="h-5 w-5 text-amber-600" />
               </div>
               <div className="flex-1">
-                <h3 className="font-medium text-amber-800 flex items-center">
-                  💡 Soft-Skills Nudge
-                </h3>
+                <div className="flex justify-between items-start">
+                  <h3 className="font-medium text-amber-800 flex items-center">
+                    💡 Quick Win
+                  </h3>
+                  <Button 
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-500 hover:text-gray-700 h-6 p-0 px-2"
+                    onClick={handleDismissQuickWin}
+                  >
+                    Dismiss
+                  </Button>
+                </div>
                 <p className="text-sm text-amber-700 mt-1">
-                  This afternoon's new patient, Jacob, marked "Anxious" on his form.
+                  Invite 3 patients today to <strong>store a card on file</strong>
+                </p>
+                <p className="text-xs text-amber-600 mt-0.5">
+                  → unlock faster check-outs & fewer billing calls
                 </p>
                 <div className="mt-2 bg-white p-2 rounded-md border border-amber-200 text-sm">
                   <p className="text-gray-700">
-                    <span className="font-medium">Try:</span> "We always explain costs before treatment so there are no surprises."
+                    <span className="font-medium">Try saying:</span> "While I'm processing this, would you like us to keep the card on file? It's encrypted, and we always text you before any charge."
                   </p>
-                  <p className="text-gray-600 text-xs mt-1">Tiny words, huge trust.</p>
                 </div>
-                <div className="mt-3">
-                  <Button 
-                    variant="outline"
-                    size="sm"
-                    className="bg-amber-100 hover:bg-amber-200 text-amber-800 border-amber-300"
-                  >
-                    Mark Read
-                  </Button>
+                <div className="mt-3 flex justify-between items-center">
+                  <div className="flex items-center space-x-2">
+                    {/* Progress circles */}
+                    {[1, 2, 3].map((item) => (
+                      <button 
+                        key={item}
+                        className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-colors ${
+                          completedCards.has(item) 
+                            ? 'border-amber-500 bg-amber-100' 
+                            : 'border-amber-400 bg-white hover:bg-amber-50'
+                        }`}
+                        title={`Mark patient ${item} ${completedCards.has(item) ? 'incomplete' : 'complete'}`}
+                        onClick={() => handleCardComplete(item)}
+                      >
+                        {completedCards.has(item) && <Check className="h-3 w-3 text-amber-600" />}
+                      </button>
+                    ))}
+                    
+                    {/* Show count if more than 3 are completed */}
+                    {extraCompletedCards > 0 && (
+                      <div className="text-xs font-semibold text-amber-700">
+                        +{extraCompletedCards} more
+                      </div>
+                    )}
+                  </div>
+                  
+                  {/* Confetti celebration */}
+                  {showConfetti && (
+                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center pointer-events-none">
+                      <div className="relative">
+                        <PartyPopper className="h-8 w-8 text-amber-500 animate-bounce" />
+                        {/* Simulated confetti particles */}
+                        <div className="absolute top-1/2 left-1/2">
+                          {Array.from({ length: 20 }).map((_, i) => (
+                            <div 
+                              key={i}
+                              className={`absolute w-2 h-2 rounded-full bg-${
+                                ['amber', 'blue', 'green', 'pink', 'purple'][i % 5]
+                              }-500 animate-ping`}
+                              style={{ 
+                                top: `${Math.random() * 100 - 50}px`, 
+                                left: `${Math.random() * 100 - 50}px`,
+                                animationDuration: `${0.5 + Math.random()}s`,
+                                animationDelay: `${Math.random() * 0.5}s`
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
