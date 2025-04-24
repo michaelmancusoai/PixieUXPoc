@@ -48,6 +48,7 @@ interface ActionItemProps {
   item: ActionItemType;
   accentColor: string;
   onComplete: (id: string) => void;
+  onDelegate?: (id: string) => void; // Optional delegate handler
 }
 
 // Helper function to parse time string like "42 m" to minutes
@@ -57,7 +58,7 @@ const parseTimeToMinutes = (timeStr: string): number => {
   return match ? parseInt(match[1], 10) : 0;
 };
 
-const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }) => {
+const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete, onDelegate }) => {
   // For time-to-pain timer functionality
   const [remainingMinutes, setRemainingMinutes] = useState<number>(() => {
     return item.dueIn ? parseTimeToMinutes(item.dueIn) : 0;
@@ -382,6 +383,29 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
                         </TooltipTrigger>
                         <TooltipContent>
                           <p>Collect payment</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    )}
+                    
+                    {/* Delegate to Pixie AI button */}
+                    {onDelegate && !item.delegated && (
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="bg-purple-50 text-purple-600 border-purple-200 hover:bg-purple-100"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onDelegate(item.id);
+                            }}
+                          >
+                            <Zap className="h-4 w-4 mr-1" />
+                            AI
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p>Delegate to Pixie AI</p>
                         </TooltipContent>
                       </Tooltip>
                     )}
