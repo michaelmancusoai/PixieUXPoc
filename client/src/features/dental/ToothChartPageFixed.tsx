@@ -99,12 +99,14 @@ const ToothChartPageFixed = () => {
   return (
     <>
       <NavigationWrapper>
-        {/* Patient Header - Positioned below the main navigation */}
-        <PatientHeader 
-          onTabChange={handleTabChange}
-          currentTab={activeTab}
-          onStartExamMode={toggleExamMode}
-        />
+        {/* Patient Header - Full width, sticky with proper positioning */}
+        <div className="w-full -mx-3 sm:-mx-5 mb-4">
+          <PatientHeader 
+            onTabChange={handleTabChange}
+            currentTab={activeTab}
+            onStartExamMode={toggleExamMode}
+          />
+        </div>
         
         <div className="h-full flex flex-col">
           {examModeActive ? (
