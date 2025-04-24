@@ -760,8 +760,10 @@ const RoleDashboard: React.FC = () => {
         </div>
 
         {/* Win Feed */}
-        <div className="lg:col-span-1">
-          <WinFeed wins={dashboardData.wins} accentColor={roleConfig.accentColor} />
+        <div className="lg:col-span-1 h-full">
+          <div className="h-full flex flex-col">
+            <WinFeed wins={dashboardData.wins} accentColor={roleConfig.accentColor} />
+          </div>
         </div>
       </div>
     </div>

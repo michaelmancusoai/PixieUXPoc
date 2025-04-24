@@ -141,14 +141,14 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
   // Show empty state when all wins are dismissed
   if (filteredWins.length === 0) {
     return (
-      <Card>
+      <Card className="h-full flex flex-col">
         <CardHeader className="pb-3">
           <CardTitle className={`text-base ${getAccentColorClass()}`}>
             Win Feed
           </CardTitle>
         </CardHeader>
-        <CardContent className="pt-0">
-          <div className="flex flex-col items-center justify-center py-4 text-center">
+        <CardContent className="pt-0 flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center text-center">
             <div className={`rounded-full p-3 ${getIconBgColor()} mb-2`}>
               <CheckCircle className="h-5 w-5" />
             </div>
@@ -161,7 +161,7 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
   }
 
   return (
-    <Card>
+    <Card className="h-full flex flex-col">
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <CardTitle className={`text-base ${getAccentColorClass()}`}>
           Win Feed
@@ -170,8 +170,8 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
           {filteredWins.length} {filteredWins.length === 1 ? 'win' : 'wins'} today
         </div>
       </CardHeader>
-      <CardContent className="pt-0">
-        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+      <CardContent className="pt-0 pb-1 flex-1">
+        <div className="space-y-2 h-full overflow-y-auto pr-1">
           {filteredWins.map((win) => (
             <div 
               key={win.id} 
