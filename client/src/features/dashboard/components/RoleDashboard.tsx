@@ -325,9 +325,9 @@ const RoleDashboard: React.FC = () => {
     if (level === GameLevel.BRIEFING_1) {
       return (
         <div className="text-center py-2 font-vt323">
-          <h3 className="font-press-start text-xl text-sky-800 mb-2">Ask 3 Patients To Save a Card on File.</h3>
-          <p className="text-md text-sky-700 mb-3">
-            Today's Daily Challenge.
+          <h3 className="font-press-start text-xl text-sky-800 mb-2">Capture the Cards</h3>
+          <p className="text-lg text-sky-700 mb-3">
+            Today's Daily Challenge
           </p>
           
           <div className="flex justify-center my-3">
@@ -700,7 +700,7 @@ const RoleDashboard: React.FC = () => {
       {currentRole === 'frontOffice' && gameVisible && (
         <div className="relative game-container">
           <div className={`nes-container pixelated is-rounded ${getLevelBackground()} hover:shadow-md transition-shadow duration-200 p-4 font-vt323 overflow-hidden`}>
-            <div className="bg-gray-800 text-white p-1 font-press-start text-center mb-3 -mx-3 -mt-3 rounded-t">Planet Pixie: Capture the Cards</div>
+            <div className="bg-gray-800 text-white p-1 font-press-start text-center mb-3 -mx-3 -mt-3 rounded-t">Planet Pixie: Daily Challenge</div>
             
             {/* Game Header with Office Rank and Surrender */}
             <div className="flex justify-between items-center px-1 mb-3">
