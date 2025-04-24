@@ -249,15 +249,46 @@ const ExamMode = ({ onClose }: ExamModeProps) => {
     }
   ];
   
+  // Handle exam completion
+  const handleExamCompletion = () => {
+    // Mark the current step as completed
+    steps[currentStepIndex].isCompleted = true;
+    
+    // Show completion dialog
+    setShowCompletionDialog(true);
+  };
+  
+  // Add note with AI summary and close exam mode
+  const completeExam = () => {
+    // Add note with AI summary
+    if (aiSummary && aiSummary.trim() !== "") {
+      dispatch(addNote({
+        content: aiSummary,
+        type: 'exam'
+      }));
+    }
+    
+    // Show success toast
+    toast({
+      title: "Exam Completed Successfully",
+      description: "The exam has been finalized and the summary has been saved to patient notes.",
+      variant: "default"
+    });
+    
+    // Close completion dialog
+    setShowCompletionDialog(false);
+    
+    // Close exam mode
+    if (onClose) onClose();
+  };
+
   // Navigation functions
   const goToNextStep = () => {
     if (currentStepIndex < steps.length - 1) {
       setCurrentStepIndex(currentStepIndex + 1);
     } else {
-      toast({
-        title: "Exam Complete",
-        description: "All steps in the exam have been completed.",
-      });
+      // If we're at the last step, prompt for completion
+      handleExamCompletion();
     }
   };
   
@@ -407,6 +438,75 @@ const ExamMode = ({ onClose }: ExamModeProps) => {
           </Button>
         </div>
       </div>
+      
+      {/* Completion Dialog */}
+      <Dialog open={showCompletionDialog} onOpenChange={setShowCompletionDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center">
+              <CheckCircle2 className="h-6 w-6 text-indigo-600 mr-2" />
+              Exam Completed
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="py-4">
+            <div className="rounded-lg bg-indigo-50 p-4 mb-4">
+              <h3 className="font-medium text-indigo-800 mb-2">Examination Summary</h3>
+              <p className="text-sm text-indigo-700">
+                All examination steps have been completed successfully. The exam findings and AI summary will be saved to the patient's record.
+              </p>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="flex items-start">
+                <div className="bg-green-100 p-1 rounded-full mr-3">
+                  <Check className="h-5 w-5 text-green-600" />
+                </div>
+                <div>
+                  <h4 className="font-medium">Tooth Findings</h4>
+                  <p className="text-sm text-gray-600">Caries, fractures, and existing restorations have been documented</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="bg-green-100 p-1 rounded-full mr-3">
+                  <Check className="h-5 w-5 text-green-600" />
+                </div>
+                <div>
+                  <h4 className="font-medium">Periodontal Evaluation</h4>
+                  <p className="text-sm text-gray-600">Probing depths, recession, and mobility recorded</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start">
+                <div className="bg-green-100 p-1 rounded-full mr-3">
+                  <Check className="h-5 w-5 text-green-600" />
+                </div>
+                <div>
+                  <h4 className="font-medium">AI-Generated Summary</h4>
+                  <p className="text-sm text-gray-600">Clinical findings summary created to be added to patient notes</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter className="sm:justify-between">
+            <Button
+              variant="outline"
+              onClick={() => setShowCompletionDialog(false)}
+            >
+              Cancel
+            </Button>
+            <Button 
+              className="bg-indigo-600 hover:bg-indigo-700"
+              onClick={completeExam}
+            >
+              <FileText className="w-4 h-4 mr-2" />
+              Save & Exit Exam Mode
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

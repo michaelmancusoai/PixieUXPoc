@@ -392,6 +392,25 @@ const dentalSlice = createSlice({
     
     togglePatientViewMode: (state) => {
       state.patientViewMode = !state.patientViewMode;
+    },
+    
+    addNote: (state, action: PayloadAction<{content: string, type: 'exam' | 'procedure' | 'other'}>) => {
+      const { content, type } = action.payload;
+      
+      if (!state.patient.notes) {
+        state.patient.notes = [];
+      }
+      
+      const newNote: ExamNote = {
+        id: `note-${Date.now()}`,
+        patientId: state.patient.id,
+        content,
+        type,
+        createdAt: new Date().toISOString(),
+        createdBy: 'Dr. Anderson' // Hardcoded for demo purposes
+      };
+      
+      state.patient.notes.push(newNote);
     }
   }
 });
@@ -408,7 +427,8 @@ export const {
   updateTreatmentPlanItemStatus,
   reorderTreatmentPlanItems,
   setActiveTreatmentPlanTab,
-  togglePatientViewMode
+  togglePatientViewMode,
+  addNote
 } = dentalSlice.actions;
 
 export const store = configureStore({
