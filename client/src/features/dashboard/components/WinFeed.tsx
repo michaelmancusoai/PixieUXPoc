@@ -148,12 +148,12 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <div className={`rounded-full p-3 ${getIconBgColor()} mb-3`}>
-              <CheckCircle className="h-6 w-6" />
+          <div className="flex flex-col items-center justify-center py-4 text-center">
+            <div className={`rounded-full p-3 ${getIconBgColor()} mb-2`}>
+              <CheckCircle className="h-5 w-5" />
             </div>
             <h4 className="text-sm font-medium">All caught up!</h4>
-            <p className="text-sm text-gray-500 mt-1">You're ahead of schedule today.</p>
+            <p className="text-xs text-gray-500 mt-1">You're ahead of schedule today.</p>
           </div>
         </CardContent>
       </Card>
@@ -170,8 +170,8 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
           {filteredWins.length} {filteredWins.length === 1 ? 'win' : 'wins'} today
         </div>
       </CardHeader>
-      <CardContent className="pt-0 max-h-[300px] overflow-y-auto">
-        <div className="space-y-3 pr-2">
+      <CardContent className="pt-0">
+        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
           {filteredWins.map((win) => (
             <div 
               key={win.id} 
