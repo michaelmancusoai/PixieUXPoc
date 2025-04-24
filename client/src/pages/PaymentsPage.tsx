@@ -634,8 +634,8 @@ export default function PaymentsPage() {
                     <div className="text-xs text-muted-foreground">Insurance</div>
                   </div>
                   <div>
-                    <div className="text-sm font-medium">${phase3Total.toFixed(0)}</div>
-                    <div className="text-xs text-muted-foreground">Phase 3</div>
+                    <div className="text-sm font-medium">${totalPending.toFixed(0)}</div>
+                    <div className="text-xs text-muted-foreground">Pending</div>
                   </div>
                 </div>
               </CardContent>
