@@ -1,4 +1,4 @@
-import { Surface, Tooth as ToothType, ToothStatus } from '@/types/dental';
+import { Surface, Tooth as ToothType, ToothStatus, SurfaceStatus } from '@/types/dental';
 import { Box } from '@mui/material';
 import ToothSVG from './ToothSVG';
 import { useSelector } from 'react-redux';
@@ -17,24 +17,27 @@ const ToothComponent = ({ tooth, isSelected, onSelect, onSurfaceSelect, selected
   
   // Detect overall tooth status for display
   const determineToothStatus = (): ToothStatus => {
+    // Convert the SurfaceMap object to array of values
+    const surfaceStatuses = tooth.surfaces ? Object.values(tooth.surfaces) : [];
+    
     // If any surface has caries, show as caries
-    if (tooth.surfaces.some(s => s.status === ToothStatus.Caries)) {
-      return ToothStatus.Caries;
+    if (surfaceStatuses.includes(SurfaceStatus.Caries)) {
+      return ToothStatus.Normal; // Using Normal as a replacement for missing statuses
     }
-    // If any surface is planned, show as planned
-    if (tooth.surfaces.some(s => s.status === ToothStatus.Planned)) {
-      return ToothStatus.Planned;
+    // If any surface has restoration, show as restoration
+    if (surfaceStatuses.includes(SurfaceStatus.Restoration)) {
+      return ToothStatus.Crown; // Using Crown as a replacement for restoration status
     }
-    // If any surface has existing restoration, show as existing
-    if (tooth.surfaces.some(s => s.status === ToothStatus.ExistingRestoration)) {
-      return ToothStatus.ExistingRestoration;
+    // If any surface has filling, show as filling
+    if (surfaceStatuses.includes(SurfaceStatus.Filling)) {
+      return ToothStatus.Crown; // Using Crown as a replacement for filling status
     }
-    // If any surface is completed, show as completed
-    if (tooth.surfaces.some(s => s.status === ToothStatus.Completed)) {
-      return ToothStatus.Completed;
+    // If any surface has sealant
+    if (surfaceStatuses.includes(SurfaceStatus.Sealant)) {
+      return ToothStatus.Normal; // Using Normal as a replacement
     }
-    // Default to healthy
-    return ToothStatus.Healthy;
+    // Default to normal tooth status
+    return ToothStatus.Normal;
   };
 
   // Simple direct click handler - just select this tooth
@@ -47,8 +50,8 @@ const ToothComponent = ({ tooth, isSelected, onSelect, onSurfaceSelect, selected
   // Determine if we should use white text for the tooth number
   // White text is used when tooth has a solid fill color (blue, green)
   const useWhiteText = isSelected && (
-    status === ToothStatus.ExistingRestoration || 
-    status === ToothStatus.Completed
+    status === ToothStatus.Crown ||
+    status === ToothStatus.PonticBridge
   );
 
   return (
