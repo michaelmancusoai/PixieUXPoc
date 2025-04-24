@@ -29,6 +29,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Switch } from "@/components/ui/switch";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   Search,
   Filter,
   CheckCircle,
@@ -449,7 +456,39 @@ export default function StatementsPage() {
     <NavigationWrapper>
       <div className="min-h-screen bg-muted">
         <div className="container mx-auto py-6">
-          <h1 className="text-2xl font-bold mb-6">Statements Management</h1>
+          <div className="flex justify-between items-center mb-6">
+            <h1 className="text-2xl font-bold">Statements Management</h1>
+            
+            {/* Quick Actions Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" className="h-9">
+                  Quick Actions <ChevronDown className="h-4 w-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem className="cursor-pointer">
+                  <PlusCircle className="h-4 w-4 mr-2" />
+                  New Statement
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer">
+                  <Send className="h-4 w-4 mr-2" />
+                  Send Reminders
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem className="cursor-pointer">
+                  <Download className="h-4 w-4 mr-2" />
+                  Export Report
+                </DropdownMenuItem>
+                {draftCount > 0 && (
+                  <DropdownMenuItem className="cursor-pointer">
+                    <Send className="h-4 w-4 mr-2" />
+                    Send {draftCount} Draft{draftCount > 1 ? 's' : ''}
+                  </DropdownMenuItem>
+                )}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
 
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
@@ -511,29 +550,44 @@ export default function StatementsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Quick Actions</CardTitle>
+                <CardTitle className="text-base font-medium">Delivery Methods</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
-                <div className="flex flex-col space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
-                    <Button className="h-9 w-full">
-                      <PlusCircle className="h-4 w-4 mr-1" />
-                      New Statement
-                    </Button>
-                    <Button variant="outline" className="h-9 w-full">
-                      <Send className="h-4 w-4 mr-1" />
-                      Send Reminders
-                    </Button>
-                    <Button variant="outline" className="h-9 w-full">
-                      <Download className="h-4 w-4 mr-1" />
-                      Export Report
-                    </Button>
-                    {draftCount > 0 && (
-                      <Button variant="outline" className="h-9 w-full">
-                        <Send className="h-4 w-4 mr-1" />
-                        Send {draftCount} Draft{draftCount > 1 ? 's' : ''}
-                      </Button>
-                    )}
+                <div className="flex items-center">
+                  <Mail className="h-8 w-8 mr-3 text-blue-500" />
+                  <div>
+                    <div className="text-2xl font-bold">
+                      {filteredStatements.filter(s => s.deliveryMethod === "Email").length}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      Email statements
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="text-sm font-medium">
+                      {filteredStatements.filter(s => s.deliveryMethod === "Mail").length}
+                    </div>
+                    <div className="text-xs text-muted-foreground">Mailed</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">
+                      {filteredStatements.filter(s => s.deliveryMethod === "Portal").length}
+                    </div>
+                    <div className="text-xs text-muted-foreground">Portal</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium text-amber-500">
+                      {filteredStatements.filter(s => s.status === "Overdue" && s.remindersSent === 0).length}
+                    </div>
+                    <div className="text-xs text-muted-foreground">Need reminder</div>
+                  </div>
+                  <div>
+                    <div className="text-sm font-medium">
+                      {filteredStatements.filter(s => s.remindersSent && s.remindersSent > 0).length}
+                    </div>
+                    <div className="text-xs text-muted-foreground">Reminders sent</div>
                   </div>
                 </div>
               </CardContent>
