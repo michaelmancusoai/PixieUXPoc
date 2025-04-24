@@ -18,6 +18,7 @@ import {
   Send,
   TrendingDown,
   Video,
+  Wrench,
   X,
   Zap
 } from 'lucide-react';
@@ -136,9 +137,10 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
     }
   };
   
-  const filteredWins = wins.filter(win => visibleWins.has(win.id));
+  // Only show AI-generated wins in the Pixie AI Agent
+  const filteredWins = wins.filter(win => visibleWins.has(win.id) && win.isAi === true);
   
-  // Show empty state when all wins are dismissed
+  // Show empty state when no AI wins are found
   if (filteredWins.length === 0) {
     return (
       <Card>
@@ -149,11 +151,11 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
         </CardHeader>
         <CardContent className="pt-0 pb-4">
           <div className="flex flex-col items-center justify-center text-center">
-            <div className={`rounded-full p-3 ${getIconBgColor()} mb-2`}>
-              <CheckCircle className="h-5 w-5" />
+            <div className="rounded-full p-3 bg-purple-100 text-purple-800 mb-2">
+              <Zap className="h-5 w-5" />
             </div>
-            <h4 className="text-sm font-medium">All caught up!</h4>
-            <p className="text-xs text-gray-500 mt-1">You're ahead of schedule today.</p>
+            <h4 className="text-sm font-medium">AI is analyzing your day</h4>
+            <p className="text-xs text-gray-500 mt-1">You'll see time-saving insights here soon.</p>
           </div>
         </CardContent>
       </Card>
@@ -228,23 +230,13 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
                     </>
                   )}
                   
-                  {/* Display time saved */}
+                  {/* Display merged AI and time saved pill */}
                   {win.timeSavedMin !== undefined && (
                     <>
                       <span className="mx-2">•</span>
-                      <Zap className="h-3 w-3 mr-1" />
-                      <span className={win.isAi ? "font-medium text-purple-600" : ""}>
-                        Saved {win.timeSavedMin} min
-                      </span>
-                    </>
-                  )}
-                  
-                  {/* Add an AI badge for AI-generated wins */}
-                  {win.isAi && (
-                    <>
-                      <span className="mx-2">•</span>
-                      <span className="bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full text-[10px]">
-                        AI
+                      <span className="bg-purple-100 text-purple-800 px-1.5 py-0.5 rounded-full text-[10px] flex items-center">
+                        <Zap className="h-2.5 w-2.5 mr-1" />
+                        AI Saved ~{win.timeSavedMin} min
                       </span>
                     </>
                   )}
