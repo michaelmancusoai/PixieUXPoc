@@ -394,23 +394,53 @@ const RoleDashboard: React.FC = () => {
           <div className="nes-container is-rounded pixelated border-blue-500 bg-blue-100 overflow-hidden">
             <div className="bg-blue-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 1: SKY QUEST</div>
             
-            <div className="flex justify-between items-start mb-2">
-              <div>
-                <i className="nes-icon coin is-small"></i> <span className="text-blue-700 font-bold">{coins}/{targetCoins}</span>
+            {/* Sky Quest Background */}
+            <div className="relative bg-sky-100 rounded-lg p-4 mb-4 border-2 border-sky-200">
+              
+              {/* Coin Counter Top Left */}
+              <div className="absolute top-2 left-2 mt-4">
+                <i className="nes-icon coin is-small"></i> <span className="text-blue-800 font-bold">{coins}/{targetCoins}</span>
               </div>
-              <button 
-                onClick={surrenderGame}
-                className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
-              >
-                QUIT
-              </button>
-            </div>
-            
-            {/* Prompt Carousel */}
-            <div className="flex flex-col mt-2 mb-4">
-              <div className="flex items-start mb-2">
+              
+              {/* Quit Button Top Right */}
+              <div className="absolute top-2 right-2 mt-4">
+                <button 
+                  onClick={surrenderGame}
+                  className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
+                >
+                  QUIT
+                </button>
+              </div>
+              
+              {/* Nav Buttons - Right Side */}
+              <div className="absolute right-2 top-1/3 flex flex-col space-y-2">
+                <button 
+                  className="nes-btn is-primary px-2 py-0"
+                  onClick={prevVariant}
+                >
+                  ◀
+                </button>
+                <button 
+                  className="nes-btn is-primary px-2 py-0"
+                  onClick={nextVariant}
+                >
+                  ▶
+                </button>
+              </div>
+              
+              {/* Main Content */}
+              <div className="mt-12 flex items-start">
+                {/* Pokemon on left */}
+                <div className="flex flex-col items-center mr-2 mt-12">
+                  <i className={promptVariants[currentVariantIndex].character || "nes-bulbasaur"}></i>
+                  <div className="text-xs text-center text-blue-600 font-press-start mt-1 w-24 leading-tight">
+                    {promptVariants[currentVariantIndex].name}
+                  </div>
+                </div>
+                
+                {/* Speech bubble next to pokemon */}
                 <div className="flex-1">
-                  <div className="nes-balloon from-left">
+                  <div className="nes-balloon from-left mt-0">
                     <p className="text-sm sm:text-base font-medium">
                       "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
                       <span className="text-blue-600 font-bold">Benefit: </span>
@@ -418,38 +448,16 @@ const RoleDashboard: React.FC = () => {
                     </p>
                   </div>
                 </div>
-                
-                <div className="flex flex-col justify-center space-y-2 ml-2">
-                  <button 
-                    className="nes-btn is-primary px-2 py-0"
-                    onClick={prevVariant}
-                  >
-                    ◀
-                  </button>
-                  <button 
-                    className="nes-btn is-primary px-2 py-0"
-                    onClick={nextVariant}
-                  >
-                    ▶
-                  </button>
-                </div>
               </div>
               
-              <div className="flex justify-center">
-                <div className="flex flex-col items-center">
-                  <i className={promptVariants[currentVariantIndex].character || "nes-bulbasaur"}></i>
-                  <div className="text-xs text-center text-blue-600 font-press-start mt-1 w-24 leading-tight">
-                    {promptVariants[currentVariantIndex].name}
-                  </div>
-                </div>
+              {/* Coins at bottom */}
+              <div className="flex justify-center my-3 mt-6">
+                {[0, 1, 2].map(index => renderCoin(index))}
               </div>
             </div>
             
-            <div className="flex justify-center my-3">
-              {[0, 1, 2].map(index => renderCoin(index))}
-            </div>
-            
-            <div className="mt-3 flex justify-between items-center">
+            {/* Status bar at bottom of container */}
+            <div className="flex justify-between items-center border-t-2 border-blue-200 pt-2 mt-2">
               <div className="text-xs text-blue-700 font-bold">
                 <i className="nes-icon star is-small"></i>
                 STREAK: {streak} DAYS
@@ -504,23 +512,55 @@ const RoleDashboard: React.FC = () => {
           <div className="nes-container is-rounded pixelated border-amber-500 bg-amber-100 overflow-hidden">
             <div className="bg-amber-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 2: DESERT QUEST</div>
             
-            <div className="flex justify-between items-start mb-2">
-              <div>
-                <i className="nes-icon coin is-small"></i> <span className="text-amber-700 font-bold">{coins}/{targetCoins}</span>
+            {/* Desert Quest Background */}
+            <div className="relative bg-amber-50 rounded-lg p-4 mb-4 border-2 border-amber-200">
+              {/* Top padding to account for absolute positioned elements */}
+              <div className="h-8"></div>
+              
+              {/* Coin Counter Top Left */}
+              <div className="absolute top-2 left-2 mt-4">
+                <i className="nes-icon coin is-small"></i> <span className="text-amber-800 font-bold">{coins}/{targetCoins}</span>
               </div>
-              <button 
-                onClick={surrenderGame}
-                className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
-              >
-                QUIT
-              </button>
-            </div>
-            
-            {/* Prompt Carousel */}
-            <div className="flex flex-col mt-2 mb-4">
-              <div className="flex items-start mb-2">
+              
+              {/* Quit Button Top Right */}
+              <div className="absolute top-2 right-2 mt-4">
+                <button 
+                  onClick={surrenderGame}
+                  className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
+                >
+                  QUIT
+                </button>
+              </div>
+              
+              {/* Nav Buttons - Right Side */}
+              <div className="absolute right-2 top-1/3 flex flex-col space-y-2">
+                <button 
+                  className="nes-btn is-warning px-2 py-0"
+                  onClick={prevVariant}
+                >
+                  ◀
+                </button>
+                <button 
+                  className="nes-btn is-warning px-2 py-0"
+                  onClick={nextVariant}
+                >
+                  ▶
+                </button>
+              </div>
+              
+              {/* Main Content */}
+              <div className="mt-12 flex items-start">
+                {/* Pokemon on left */}
+                <div className="flex flex-col items-center mr-2 mt-12">
+                  <i className={promptVariants[currentVariantIndex].character || "nes-charmander"}></i>
+                  <div className="text-xs text-center text-amber-600 font-press-start mt-1 w-24 leading-tight">
+                    {promptVariants[currentVariantIndex].name}
+                  </div>
+                </div>
+                
+                {/* Speech bubble next to pokemon */}
                 <div className="flex-1">
-                  <div className="nes-balloon from-left">
+                  <div className="nes-balloon from-left mt-0">
                     <p className="text-sm sm:text-base font-medium">
                       "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
                       <span className="text-amber-600 font-bold">Benefit: </span>
@@ -528,38 +568,16 @@ const RoleDashboard: React.FC = () => {
                     </p>
                   </div>
                 </div>
-                
-                <div className="flex flex-col justify-center space-y-2 ml-2">
-                  <button 
-                    className="nes-btn is-warning px-2 py-0"
-                    onClick={prevVariant}
-                  >
-                    ◀
-                  </button>
-                  <button 
-                    className="nes-btn is-warning px-2 py-0"
-                    onClick={nextVariant}
-                  >
-                    ▶
-                  </button>
-                </div>
               </div>
               
-              <div className="flex justify-center">
-                <div className="flex flex-col items-center">
-                  <i className={promptVariants[currentVariantIndex].character || "nes-charmander"}></i>
-                  <div className="text-xs text-center text-amber-600 font-press-start mt-1 w-24 leading-tight">
-                    {promptVariants[currentVariantIndex].name}
-                  </div>
-                </div>
+              {/* Coins at bottom */}
+              <div className="flex justify-center my-3 mt-6">
+                {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
               </div>
             </div>
             
-            <div className="flex justify-center my-3 flex-wrap">
-              {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
-            </div>
-            
-            <div className="mt-3 flex justify-between items-center">
+            {/* Status bar at bottom of container */}
+            <div className="flex justify-between items-center border-t-2 border-amber-200 pt-2 mt-2">
               <div className="text-xs text-amber-700 font-bold">
                 <i className="nes-icon star is-small"></i>
                 STREAK: {streak} DAYS
@@ -579,23 +597,55 @@ const RoleDashboard: React.FC = () => {
           <div className="nes-container is-rounded pixelated border-orange-500 bg-orange-100 overflow-hidden">
             <div className="bg-orange-600 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">FINAL LEVEL: LAVA QUEST</div>
             
-            <div className="flex justify-between items-start mb-2">
-              <div>
-                <i className="nes-icon coin is-small"></i> <span className="text-orange-700 font-bold">{coins}/{targetCoins}</span>
+            {/* Lava Quest Background */}
+            <div className="relative bg-orange-50 rounded-lg p-4 mb-4 border-2 border-orange-200">
+              {/* Top padding to account for absolute positioned elements */}
+              <div className="h-8"></div>
+              
+              {/* Coin Counter Top Left */}
+              <div className="absolute top-2 left-2 mt-4">
+                <i className="nes-icon coin is-small"></i> <span className="text-orange-800 font-bold">{coins}/{targetCoins}</span>
               </div>
-              <button 
-                onClick={surrenderGame}
-                className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
-              >
-                SURRENDER
-              </button>
-            </div>
-            
-            {/* Prompt Carousel */}
-            <div className="flex flex-col mt-2 mb-4">
-              <div className="flex items-start mb-2">
+              
+              {/* Quit Button Top Right */}
+              <div className="absolute top-2 right-2 mt-4">
+                <button 
+                  onClick={surrenderGame}
+                  className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
+                >
+                  SURRENDER
+                </button>
+              </div>
+              
+              {/* Nav Buttons - Right Side */}
+              <div className="absolute right-2 top-1/3 flex flex-col space-y-2">
+                <button 
+                  className="nes-btn is-error px-2 py-0"
+                  onClick={prevVariant}
+                >
+                  ◀
+                </button>
+                <button 
+                  className="nes-btn is-error px-2 py-0"
+                  onClick={nextVariant}
+                >
+                  ▶
+                </button>
+              </div>
+              
+              {/* Main Content */}
+              <div className="mt-12 flex items-start">
+                {/* Pokemon on left */}
+                <div className="flex flex-col items-center mr-2 mt-12">
+                  <i className={promptVariants[currentVariantIndex].character || "nes-charizard"}></i>
+                  <div className="text-xs text-center text-orange-600 font-press-start mt-1 w-24 leading-tight">
+                    {promptVariants[currentVariantIndex].name}
+                  </div>
+                </div>
+                
+                {/* Speech bubble next to pokemon */}
                 <div className="flex-1">
-                  <div className="nes-balloon from-left">
+                  <div className="nes-balloon from-left mt-0">
                     <p className="text-sm sm:text-base font-medium">
                       "{promptVariants[currentVariantIndex].prompt}"<br/><br/>
                       <span className="text-orange-600 font-bold">Benefit: </span>
@@ -603,38 +653,16 @@ const RoleDashboard: React.FC = () => {
                     </p>
                   </div>
                 </div>
-                
-                <div className="flex flex-col justify-center space-y-2 ml-2">
-                  <button 
-                    className="nes-btn is-error px-2 py-0"
-                    onClick={prevVariant}
-                  >
-                    ◀
-                  </button>
-                  <button 
-                    className="nes-btn is-error px-2 py-0"
-                    onClick={nextVariant}
-                  >
-                    ▶
-                  </button>
-                </div>
               </div>
               
-              <div className="flex justify-center">
-                <div className="flex flex-col items-center">
-                  <i className={promptVariants[currentVariantIndex].character || "nes-charizard"}></i>
-                  <div className="text-xs text-center text-orange-600 font-press-start mt-1 w-24 leading-tight">
-                    {promptVariants[currentVariantIndex].name}
-                  </div>
-                </div>
+              {/* Coins at bottom */}
+              <div className="flex justify-center my-3 mt-6 flex-wrap gap-y-2">
+                {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
               </div>
             </div>
             
-            <div className="flex justify-center my-3 flex-wrap gap-y-2">
-              {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
-            </div>
-            
-            <div className="mt-3 flex justify-between items-center">
+            {/* Status bar at bottom of container */}
+            <div className="flex justify-between items-center border-t-2 border-orange-200 pt-2 mt-2">
               <div className="text-xs text-orange-700 font-bold">
                 <i className="nes-icon star is-small"></i>
                 STREAK: {streak} DAYS
