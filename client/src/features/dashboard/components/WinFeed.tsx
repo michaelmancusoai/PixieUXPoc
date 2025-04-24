@@ -167,13 +167,10 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
 
   return (
     <Card>
-      <CardHeader className="pb-3 flex flex-row items-center justify-between">
+      <CardHeader className="pb-3">
         <CardTitle className={`text-base ${getAccentColorClass()}`}>
           Pixie AI Agent
         </CardTitle>
-        <div className="text-xs text-gray-500">
-          {filteredWins.length} {filteredWins.length === 1 ? 'win' : 'wins'} today
-        </div>
       </CardHeader>
       
       <CardContent className="pt-0 pb-1">
