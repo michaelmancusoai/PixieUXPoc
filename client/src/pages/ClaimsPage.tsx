@@ -1170,7 +1170,12 @@ export default function ClaimsPage() {
             {showInsights && (
               <div className="p-6 border-b bg-blue-50/50">
                 <div className="mb-4">
-                  <h3 className="text-md font-medium mb-2">Claims Insights</h3>
+                  <div className="flex items-center mb-3">
+                    <div className="mr-2 text-lg font-medium">Claims Process Analysis</div>
+                    <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-100 border-blue-300">
+                      Insights
+                    </Badge>
+                  </div>
                   <p className="text-sm text-muted-foreground mb-3">
                     Claims analytics show a total value of ${totalClaimAmount.toFixed(2)} with an average claim value of ${avgClaimValue.toFixed(2)}. 
                     Insurance is estimated to cover ${totalInsuranceEstimate.toFixed(2)}.
@@ -1178,7 +1183,7 @@ export default function ClaimsPage() {
                   
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
                     <div className="col-span-2">
-                      <h4 className="text-sm font-medium mb-3">Claims Process Analysis</h4>
+                      <h4 className="text-sm font-medium mb-3">Value Stream Analysis</h4>
                       <div className="bg-white p-4 rounded-md border shadow-sm h-64">
                         <div className="mb-4">
                           <div className="flex justify-between items-center mb-2">
@@ -1211,7 +1216,7 @@ export default function ClaimsPage() {
                         </div>
                         
                         <div className="pt-3 border-t">
-                          <div className="text-sm font-medium mb-2">Value Stream Analysis</div>
+                          <div className="text-sm font-medium mb-2">Claims Flow</div>
                           <div className="relative pt-2 px-1">
                             <div className="absolute top-0 left-0 right-0 h-1 bg-gray-200"></div>
                             
@@ -1258,7 +1263,7 @@ export default function ClaimsPage() {
                     </div>
                     
                     <div>
-                      <h4 className="text-sm font-medium mb-3">Recommended Actions</h4>
+                      <h4 className="text-sm font-medium mb-3">Process Recommendations</h4>
                       <div className="bg-white p-4 rounded-md border shadow-sm h-64 overflow-y-auto">
                         <ul className="space-y-3">
                           <li className="flex items-start">
