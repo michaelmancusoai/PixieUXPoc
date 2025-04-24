@@ -553,39 +553,26 @@ export default function StatementsPage() {
                 <CardTitle className="text-base font-medium">Statement Metrics</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <Mail className="h-8 w-8 mr-3 text-blue-500" />
-                  <div>
-                    <div className="text-2xl font-bold">68%</div>
-                    <div className="text-sm text-muted-foreground">
-                      E-statement adoption
-                    </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="bg-blue-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">Avg. Time to Pay</div>
+                    <div className="text-xl font-bold text-blue-600">12 days</div>
+                    <div className="text-xs text-blue-600">from receipt</div>
                   </div>
-                </div>
-                <div className="mt-4 pt-4 border-t grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-sm font-medium">
-                      7 days
-                    </div>
-                    <div className="text-xs text-muted-foreground">Avg time to pay</div>
+                  <div className="bg-green-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">Collection Rate</div>
+                    <div className="text-xl font-bold text-green-600">94%</div>
+                    <div className="text-xs text-green-600">within 60 days</div>
                   </div>
-                  <div>
-                    <div className="text-sm font-medium">
-                      85%
-                    </div>
-                    <div className="text-xs text-muted-foreground">Collection rate</div>
+                  <div className="bg-amber-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">Avg. Statement</div>
+                    <div className="text-xl font-bold text-amber-600">$285</div>
+                    <div className="text-xs text-amber-600">per invoice</div>
                   </div>
-                  <div>
-                    <div className="text-sm font-medium text-amber-500">
-                      {filteredStatements.filter(s => s.status === "Overdue" && s.remindersSent === 0).length}
-                    </div>
-                    <div className="text-xs text-muted-foreground">Need reminder</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">
-                      ${totalOutstanding.toFixed(0)}
-                    </div>
-                    <div className="text-xs text-muted-foreground">Total pending</div>
+                  <div className="bg-purple-50 p-3 rounded-md">
+                    <div className="text-xs text-muted-foreground">E-Statement</div>
+                    <div className="text-xl font-bold text-purple-600">68%</div>
+                    <div className="text-xs text-purple-600">adoption rate</div>
                   </div>
                 </div>
               </CardContent>
