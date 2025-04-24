@@ -62,7 +62,7 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
     return item.dueIn ? parseTimeToMinutes(item.dueIn) : 0;
   });
   
-  // Timer colors based on urgency
+  // Timer color function - kept for progress bar coloring
   const getTimerColor = () => {
     if (remainingMinutes <= 0) return 'bg-red-100 text-red-800 border-red-200';
     if (remainingMinutes <= 15) return 'bg-amber-100 text-amber-800 border-amber-200';
@@ -250,15 +250,6 @@ const ActionItem: React.FC<ActionItemProps> = ({ item, accentColor, onComplete }
                 )}
               </h3>
               <div className="flex space-x-2">
-                {item.dueIn && (
-                  <Badge 
-                    variant="outline" 
-                    className={`text-xs flex items-center ${getTimerColor()}`}
-                  >
-                    <Clock className="h-3 w-3 mr-1" />
-                    {remainingMinutes} m
-                  </Badge>
-                )}
                 {item.estimatedTimeMin && (
                   <Badge 
                     variant="outline" 
