@@ -410,9 +410,9 @@ const RoleDashboard: React.FC = () => {
             {/* Main Content */}
             <div className="flex items-start">
               {/* Pokemon on left */}
-              <div className="flex flex-col items-center mr-2">
+              <div className="flex flex-col items-center mr-3">
                 <i className={promptVariants[currentVariantIndex].character || "nes-bulbasaur"}></i>
-                <div className="text-xs text-center text-blue-600 font-press-start mt-1 w-24 leading-tight">
+                <div className="text-xs text-center text-blue-600 font-press-start mt-1 w-32 leading-tight">
                   {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
@@ -497,9 +497,9 @@ const RoleDashboard: React.FC = () => {
             {/* Main Content */}
             <div className="flex items-start">
               {/* Pokemon on left */}
-              <div className="flex flex-col items-center mr-2">
+              <div className="flex flex-col items-center mr-3">
                 <i className={promptVariants[currentVariantIndex].character || "nes-charmander"}></i>
-                <div className="text-xs text-center text-amber-600 font-press-start mt-1 w-24 leading-tight">
+                <div className="text-xs text-center text-amber-600 font-press-start mt-1 w-32 leading-tight">
                   {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
@@ -555,9 +555,9 @@ const RoleDashboard: React.FC = () => {
             {/* Main Content */}
             <div className="flex items-start">
               {/* Pokemon on left */}
-              <div className="flex flex-col items-center mr-2">
+              <div className="flex flex-col items-center mr-3">
                 <i className={promptVariants[currentVariantIndex].character || "nes-charizard"}></i>
-                <div className="text-xs text-center text-orange-600 font-press-start mt-1 w-24 leading-tight">
+                <div className="text-xs text-center text-orange-600 font-press-start mt-1 w-32 leading-tight">
                   {promptVariants[currentVariantIndex].name}
                 </div>
               </div>
