@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 import { useNavigation } from "@/hooks/useNavigation";
+import logoImage from "@assets/Screenshot_2025-04-24_at_6.58.45_PM-removebg-preview.png";
 
 /**
  * Combined Header Component
@@ -38,9 +39,12 @@ export function Header() {
         <div className="flex items-center">
           <Link href="/">
             <div className="flex items-center">
-              <div className="h-10 w-10 rounded bg-white flex items-center justify-center text-primary font-bold text-xl shadow-sm">
-                PD
-              </div>
+              <img 
+                src="/assets/logo.png" 
+                alt="Pixie Dental Logo" 
+                className="h-10 object-contain" 
+                style={{ background: '#16304d' }}
+              />
               <h1 className="text-lg md:text-xl font-semibold ml-3 text-white">
                 Pixie Dental
               </h1>
