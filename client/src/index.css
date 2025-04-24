@@ -24,19 +24,19 @@
 
 .game-container .nes-container {
   cursor: default;
-  min-height: 320px;
-}
-
-/* Fixed-height containers for game levels to prevent layout shifts */
-.level-container {
-  min-height: 280px;
-  display: flex;
-  flex-direction: column;
 }
 
 /* Default cursor for buttons inside the game container */
 .game-container .nes-container button {
   cursor: pointer;
+}
+
+/* Fixed-height containers for game levels to match the original implementation */
+.nes-container.pixelated.border-blue-500,
+.nes-container.pixelated.border-amber-500,
+.nes-container.pixelated.border-orange-500 {
+  height: 340px;
+  overflow: hidden;
 }
 
 :root {

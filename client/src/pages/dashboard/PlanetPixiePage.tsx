@@ -142,41 +142,51 @@ const PlanetPixiePage = () => {
     switch (level) {
       case GameLevel.LEVEL_1:
         return (
-          <div className="grid grid-cols-1 gap-4">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 relative overflow-hidden level-container">
-              <h3 className="font-bold text-blue-800 text-lg mb-2">Capture the Cards</h3>
-              <p className="text-blue-600 mb-4 text-base">Level 1: Mastering Card Prompts</p>
+          <div className="py-2 font-vt323">
+            <div className="nes-container is-rounded pixelated border-blue-500 bg-blue-100 overflow-hidden h-[340px]">
+              <div className="bg-blue-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 1: SKY QUEST</div>
               
-              <div className="flex items-end gap-6 mt-6 relative">
-                {/* Character */}
-                <div className="flex-none">
-                  <i className={`${currentVariant.character} transform scale-150`}></i>
+              {/* Nav Buttons - Left and Right Sides */}
+              <div className="absolute left-2 top-1/3">
+                <button 
+                  className="nes-btn is-primary px-2 py-0"
+                  onClick={prevVariant}
+                >
+                  ◀
+                </button>
+              </div>
+              <div className="absolute right-2 top-1/3">
+                <button 
+                  className="nes-btn is-primary px-2 py-0"
+                  onClick={nextVariant}
+                >
+                  ▶
+                </button>
+              </div>
+              
+              {/* Speech bubble at top */}
+              <div className="flex-1 pr-10 mb-6">
+                <div className="nes-balloon from-left mt-0 mb-0" style={{ marginLeft: '100px' }}>
+                  <p className="text-lg sm:text-xl font-medium leading-tight">
+                    "{currentVariant.prompt}"<br/>
+                    <span className="text-blue-600 font-bold mt-1 block">{currentVariant.benefit}</span>
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex justify-between items-end">
+                {/* Character on left */}
+                <div className="flex flex-col items-center">
+                  <i className={currentVariant.character || "nes-bulbasaur"}></i>
+                  <div className="text-xs text-center text-blue-600 font-press-start mt-1 w-32 leading-tight">
+                    {currentVariant.name}
+                  </div>
                 </div>
                 
-                {/* Speech bubble with prompt */}
-                <div className="ml-24 bg-white border-2 border-gray-800 rounded-xl p-3 relative before:content-[''] before:absolute before:left-[-10px] before:bottom-[20px] before:w-[0] before:h-[0] before:border-[10px] before:border-transparent before:border-r-gray-800">
-                  <p className="font-bold mb-1 text-lg">{currentVariant.name}</p>
-                  <p className="text-base mb-1">{currentVariant.prompt}</p>
-                  <p className="text-sm text-blue-600">{currentVariant.benefit}</p>
+                {/* Coins at right */}
+                <div className="flex justify-end pr-2">
+                  {[0, 1, 2].map(index => renderCoin(index))}
                 </div>
-              </div>
-              
-              {/* Coins at bottom */}
-              <div className="flex justify-end gap-2 mt-4">
-                {[...Array(3)].map((_, index) => renderCoin(index))}
-              </div>
-              
-              {/* Navigation controls */}
-              <div className="flex justify-between mt-4">
-                <Button variant="outline" size="sm" onClick={prevVariant} className="border-gray-500">
-                  <i className="nes-icon arrow-left is-small"></i>
-                </Button>
-                <Button variant="default" size="sm" onClick={acceptMission} className="bg-blue-600 hover:bg-blue-700">
-                  Accept Mission
-                </Button>
-                <Button variant="outline" size="sm" onClick={nextVariant} className="border-gray-500">
-                  <i className="nes-icon arrow-right is-small"></i>
-                </Button>
               </div>
             </div>
           </div>
@@ -184,41 +194,51 @@ const PlanetPixiePage = () => {
       
       case GameLevel.LEVEL_2:
         return (
-          <div className="grid grid-cols-1 gap-4">
-            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 relative overflow-hidden level-container">
-              <h3 className="font-bold text-amber-800 text-lg mb-2">Capture the Cards</h3>
-              <p className="text-amber-600 mb-4 text-base">Level 2: Finding the Perfect Moment</p>
+          <div className="py-2 font-vt323">
+            <div className="nes-container is-rounded pixelated border-amber-500 bg-amber-100 overflow-hidden h-[340px]">
+              <div className="bg-amber-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 2: DESERT QUEST</div>
               
-              <div className="flex items-end gap-6 mt-6 relative">
-                {/* Different character for level 2 */}
-                <div className="flex-none">
-                  <i className="nes-squirtle transform scale-150"></i>
+              {/* Nav Buttons - Left and Right Sides */}
+              <div className="absolute left-2 top-1/3">
+                <button 
+                  className="nes-btn is-warning px-2 py-0"
+                  onClick={prevVariant}
+                >
+                  ◀
+                </button>
+              </div>
+              <div className="absolute right-2 top-1/3">
+                <button 
+                  className="nes-btn is-warning px-2 py-0"
+                  onClick={nextVariant}
+                >
+                  ▶
+                </button>
+              </div>
+              
+              {/* Speech bubble at top */}
+              <div className="flex-1 pr-10 mb-6">
+                <div className="nes-balloon from-left mt-0 mb-0" style={{ marginLeft: '100px' }}>
+                  <p className="text-lg sm:text-xl font-medium leading-tight">
+                    "{currentVariant.prompt}"<br/>
+                    <span className="text-amber-600 font-bold mt-1 block">{currentVariant.benefit}</span>
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex justify-between items-end">
+                {/* Character on left */}
+                <div className="flex flex-col items-center">
+                  <i className={currentVariant.character || "nes-charmander"}></i>
+                  <div className="text-xs text-center text-amber-600 font-press-start mt-1 w-32 leading-tight">
+                    {currentVariant.name}
+                  </div>
                 </div>
                 
-                {/* Speech bubble with level 2 content */}
-                <div className="ml-24 bg-white border-2 border-gray-800 rounded-xl p-3 relative before:content-[''] before:absolute before:left-[-10px] before:bottom-[20px] before:w-[0] before:h-[0] before:border-[10px] before:border-transparent before:border-r-gray-800">
-                  <p className="font-bold mb-1 text-lg">Perfect Timing</p>
-                  <p className="text-base mb-1">Ask when the patient is happy—right after completing treatment or getting good news.</p>
-                  <p className="text-sm text-amber-600">Patients are 65% more likely to say yes when they're feeling good.</p>
+                {/* Coins at right */}
+                <div className="flex justify-end pr-2">
+                  {[0, 1, 2, 3, 4].map(index => renderCoin(index))}
                 </div>
-              </div>
-              
-              {/* Coins at bottom */}
-              <div className="flex justify-end gap-2 mt-4">
-                {[...Array(3)].map((_, index) => renderCoin(index + 3))}
-              </div>
-              
-              {/* Navigation controls */}
-              <div className="flex justify-between mt-4">
-                <Button variant="outline" size="sm" className="border-gray-500" disabled>
-                  <i className="nes-icon arrow-left is-small"></i>
-                </Button>
-                <Button variant="default" size="sm" onClick={acceptMission} className="bg-amber-600 hover:bg-amber-700">
-                  Accept Mission
-                </Button>
-                <Button variant="outline" size="sm" className="border-gray-500" disabled>
-                  <i className="nes-icon arrow-right is-small"></i>
-                </Button>
               </div>
             </div>
           </div>
@@ -226,41 +246,51 @@ const PlanetPixiePage = () => {
       
       case GameLevel.LEVEL_FINAL:
         return (
-          <div className="grid grid-cols-1 gap-4">
-            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 relative overflow-hidden level-container">
-              <h3 className="font-bold text-orange-800 text-lg mb-2">Capture the Cards</h3>
-              <p className="text-orange-600 mb-4 text-base">Final Level: Security Reassurance</p>
+          <div className="py-2 font-vt323">
+            <div className="nes-container is-rounded pixelated border-orange-500 bg-orange-100 overflow-hidden h-[340px]">
+              <div className="bg-orange-600 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">FINAL LEVEL: LAVA QUEST</div>
               
-              <div className="flex items-end gap-6 mt-6 relative">
-                {/* Character for final level */}
-                <div className="flex-none">
-                  <i className="nes-charmander transform scale-150"></i>
+              {/* Nav Buttons - Left and Right Sides */}
+              <div className="absolute left-2 top-1/3">
+                <button 
+                  className="nes-btn is-error px-2 py-0"
+                  onClick={prevVariant}
+                >
+                  ◀
+                </button>
+              </div>
+              <div className="absolute right-2 top-1/3">
+                <button 
+                  className="nes-btn is-error px-2 py-0"
+                  onClick={nextVariant}
+                >
+                  ▶
+                </button>
+              </div>
+              
+              {/* Speech bubble at top */}
+              <div className="flex-1 pr-10 mb-6">
+                <div className="nes-balloon from-left mt-0 mb-0" style={{ marginLeft: '100px' }}>
+                  <p className="text-lg sm:text-xl font-medium leading-tight">
+                    "{currentVariant.prompt}"<br/>
+                    <span className="text-orange-600 font-bold mt-1 block">{currentVariant.benefit}</span>
+                  </p>
+                </div>
+              </div>
+              
+              <div className="flex justify-between items-end">
+                {/* Character on left */}
+                <div className="flex flex-col items-center">
+                  <i className={currentVariant.character || "nes-charizard"}></i>
+                  <div className="text-xs text-center text-orange-600 font-press-start mt-1 w-32 leading-tight">
+                    {currentVariant.name}
+                  </div>
                 </div>
                 
-                {/* Speech bubble with final level content */}
-                <div className="ml-24 bg-white border-2 border-gray-800 rounded-xl p-3 relative before:content-[''] before:absolute before:left-[-10px] before:bottom-[20px] before:w-[0] before:h-[0] before:border-[10px] before:border-transparent before:border-r-gray-800">
-                  <p className="font-bold mb-1 text-lg">Security First</p>
-                  <p className="text-base mb-1">All card info is stored in our encrypted system. You can remove it anytime with one click.</p>
-                  <p className="text-sm text-orange-600">Mentioning security increases enrollment by 40%.</p>
+                {/* Coins at right */}
+                <div className="flex justify-end pr-2 flex-wrap gap-y-2">
+                  {Array.from({ length: 10 }).map((_, index) => renderCoin(index))}
                 </div>
-              </div>
-              
-              {/* Coins at bottom */}
-              <div className="flex justify-end gap-2 mt-4">
-                {[...Array(4)].map((_, index) => renderCoin(index + 6))}
-              </div>
-              
-              {/* Navigation controls */}
-              <div className="flex justify-between mt-4">
-                <Button variant="outline" size="sm" className="border-gray-500" disabled>
-                  <i className="nes-icon arrow-left is-small"></i>
-                </Button>
-                <Button variant="default" size="sm" onClick={acceptMission} className="bg-orange-600 hover:bg-orange-700">
-                  Complete Mission
-                </Button>
-                <Button variant="outline" size="sm" className="border-gray-500" disabled>
-                  <i className="nes-icon arrow-right is-small"></i>
-                </Button>
               </div>
             </div>
           </div>
@@ -268,52 +298,50 @@ const PlanetPixiePage = () => {
       
       case GameLevel.VICTORY:
         return (
-          <div className="text-center py-8 level-container">
-            <i className="nes-icon trophy is-large"></i>
-            <h2 className="font-bold text-2xl text-green-600 mt-4">MISSION COMPLETE!</h2>
-            <p className="text-lg mb-6">You've conquered all levels of card capture training!</p>
-            <div className="nes-container is-rounded with-title is-centered">
-              <p className="title">REWARDS EARNED</p>
-              <div className="flex justify-center gap-4 mb-4">
-                <div className="flex items-center">
-                  <i className="nes-icon coin is-small mr-2"></i>
-                  <span className="font-bold">{completedCoins.size} Coins</span>
-                </div>
-                <div className="flex items-center">
+          <div className="text-center py-2 font-vt323">
+            <div className="nes-container is-rounded is-dark pixelated overflow-hidden">
+              <div className="font-press-start text-sm text-white bg-black py-1 -mx-4 -mt-4 mb-4">VICTORY!</div>
+              <i className="nes-icon trophy is-large mb-3"></i>
+              <p className="text-xl text-success mb-2">CHALLENGE CONQUERED!</p>
+              <p className="text-md text-warning mb-3">10 COINS COLLECTED</p>
+              
+              <div className="mt-3 inline-block bg-black px-4 py-1 rounded">
+                <p className="text-sm text-white flex items-center">
                   <i className="nes-icon star is-small mr-2"></i>
-                  <span className="font-bold">{streak} Day Streak</span>
-                </div>
+                  STREAK: {streak} DAYS
+                </p>
               </div>
-              <p className="text-sm mb-4">Your practice will see increased card collection rates by {completedCoins.size * 2}%!</p>
-              <Button onClick={restartGame} variant="default" className="mt-4">
-                Play Again
-              </Button>
+              
+              <div className="mt-4">
+                <button 
+                  className="nes-btn is-disabled font-press-start text-xs"
+                  disabled
+                >
+                  NEW QUEST TOMORROW
+                </button>
+              </div>
+              
+              <p className="mt-4 text-xs text-success">CHECKOUT SPEED MAXIMIZED!</p>
             </div>
           </div>
         );
       
       case GameLevel.SURRENDERED:
         return (
-          <div className="text-center py-8 level-container">
-            <i className="nes-icon close is-large"></i>
-            <h2 className="font-bold text-2xl text-red-600 mt-4">MISSION ABANDONED</h2>
-            <p className="text-lg mb-6">You've surrendered this challenge.</p>
-            <div className="nes-container is-rounded with-title is-centered">
-              <p className="title">CURRENT STATUS</p>
-              <div className="flex justify-center gap-4 mb-4">
-                <div className="flex items-center">
-                  <i className="nes-icon coin is-small mr-2"></i>
-                  <span className="font-bold">{completedCoins.size} Coins</span>
-                </div>
-                <div className="flex items-center">
-                  <i className="nes-icon star is-small mr-2"></i>
-                  <span className="font-bold">{streak} Day Streak</span>
-                </div>
+          <div className="text-center py-2 font-vt323">
+            <div className="nes-container is-rounded is-dark pixelated">
+              <p className="mb-3 mt-1 text-error">QUEST PAUSED</p>
+              <div className="flex justify-center mb-3">
+                <i className="nes-icon close is-medium"></i>
               </div>
-              <p className="text-sm mb-4">Better luck tomorrow!</p>
-              <Button onClick={restartGame} variant="default" className="mt-4">
-                Try Again
-              </Button>
+              <p className="text-white mb-3">COINS BANKED: {completedCoins.size}/{10}</p>
+              <button 
+                className="nes-btn is-primary font-press-start text-xs px-2 py-1"
+                onClick={acceptMission}
+              >
+                RESUME QUEST
+              </button>
+              <p className="text-xs text-warning mt-3">DO YOU DARE CONTINUE?</p>
             </div>
           </div>
         );
