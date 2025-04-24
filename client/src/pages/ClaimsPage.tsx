@@ -1088,63 +1088,34 @@ export default function ClaimsPage() {
               <CardHeader className="py-4 px-5 border-b">
                 <CardTitle className="text-base font-medium">Claim Aging</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex flex-col gap-4">
-                  <div className="flex items-center">
-                    <AlertCircle className="h-8 w-8 mr-3 text-blue-500" />
-                    <div>
-                      <div className="text-2xl font-bold">${totalClaimAmount.toFixed(2)}</div>
-                      <div className="text-sm text-muted-foreground">
-                        Total claims in pipeline
-                      </div>
+              <CardContent className="p-0">
+                <div className="grid grid-cols-4 gap-0 divide-x">
+                  <div className="flex flex-col items-center justify-center py-5 px-2">
+                    <div className="text-xs text-muted-foreground mb-1">0-30 Days</div>
+                    <div className="text-2xl font-bold text-green-600">${agingBuckets.under30.toFixed(0)}</div>
+                    <div className="text-xs text-green-700">
+                      {agingBuckets.under30 > 0 ? ((agingBuckets.under30 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
                     </div>
                   </div>
-                  
-                  <div className="grid grid-cols-4 gap-4 mt-2">
-                    <div className="bg-green-50 p-3 rounded-md">
-                      <div className="text-xs text-muted-foreground">0-30 Days</div>
-                      <div className="text-xl font-bold text-green-600">${agingBuckets.under30.toFixed(0)}</div>
-                      <div className="text-xs text-green-600">
-                        {agingBuckets.under30 > 0 ? ((agingBuckets.under30 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
-                      </div>
-                    </div>
-                    <div className="bg-blue-50 p-3 rounded-md">
-                      <div className="text-xs text-muted-foreground">30-60 Days</div>
-                      <div className="text-xl font-bold text-blue-600">${agingBuckets.days30to60.toFixed(0)}</div>
-                      <div className="text-xs text-blue-600">
-                        {agingBuckets.days30to60 > 0 ? ((agingBuckets.days30to60 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
-                      </div>
-                    </div>
-                    <div className="bg-amber-50 p-3 rounded-md">
-                      <div className="text-xs text-muted-foreground">60-90 Days</div>
-                      <div className="text-xl font-bold text-amber-600">${agingBuckets.days60to90.toFixed(0)}</div>
-                      <div className="text-xs text-amber-600">
-                        {agingBuckets.days60to90 > 0 ? ((agingBuckets.days60to90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
-                      </div>
-                    </div>
-                    <div className="bg-red-50 p-3 rounded-md">
-                      <div className="text-xs text-muted-foreground">90+ Days</div>
-                      <div className="text-xl font-bold text-red-600">${agingBuckets.over90.toFixed(0)}</div>
-                      <div className="text-xs text-red-600">
-                        {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
-                      </div>
+                  <div className="flex flex-col items-center justify-center py-5 px-2">
+                    <div className="text-xs text-muted-foreground mb-1">30-60 Days</div>
+                    <div className="text-2xl font-bold text-blue-600">${agingBuckets.days30to60.toFixed(0)}</div>
+                    <div className="text-xs text-blue-700">
+                      {agingBuckets.days30to60 > 0 ? ((agingBuckets.days30to60 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
                     </div>
                   </div>
-                  
-                  <div className="mt-2 pt-4 border-t">
-                    <div className="grid grid-cols-3 gap-4">
-                      <div>
-                        <div className="text-xs text-muted-foreground">Cycle Time (Submission to Payment)</div>
-                        <div className="text-lg font-bold">~21 days</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-muted-foreground">Lead Time (Creation to Payment)</div>
-                        <div className="text-lg font-bold">~23 days</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-muted-foreground">Throughput (Claims/Week)</div>
-                        <div className="text-lg font-bold">~{Math.round(completedCount / 4)}</div>
-                      </div>
+                  <div className="flex flex-col items-center justify-center py-5 px-2">
+                    <div className="text-xs text-muted-foreground mb-1">60-90 Days</div>
+                    <div className="text-2xl font-bold text-amber-600">${agingBuckets.days60to90.toFixed(0)}</div>
+                    <div className="text-xs text-amber-700">
+                      {agingBuckets.days60to90 > 0 ? ((agingBuckets.days60to90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center justify-center py-5 px-2">
+                    <div className="text-xs text-muted-foreground mb-1">90+ Days</div>
+                    <div className="text-2xl font-bold text-red-600">${agingBuckets.over90.toFixed(0)}</div>
+                    <div className="text-xs text-red-700">
+                      {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of claims
                     </div>
                   </div>
                 </div>
