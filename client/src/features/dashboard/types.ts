@@ -69,6 +69,7 @@ export interface ActionItem {
   patientName?: string;
   completed?: boolean;
   icon?: string;
+  estimatedTimeMin?: number; // Estimated time to complete in minutes
 }
 
 export interface FlowCategory {
@@ -85,6 +86,7 @@ export interface WinItem {
   timestamp: string;
   value?: number;
   savings?: number;
+  timeSavedMin?: number; // Time saved in minutes
   icon?: string;
   isAi?: boolean;
 }

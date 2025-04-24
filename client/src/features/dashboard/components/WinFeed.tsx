@@ -228,6 +228,17 @@ const WinFeed: React.FC<WinFeedProps> = ({ wins, accentColor }) => {
                     </>
                   )}
                   
+                  {/* Display time saved */}
+                  {win.timeSavedMin !== undefined && (
+                    <>
+                      <span className="mx-2">•</span>
+                      <Zap className="h-3 w-3 mr-1" />
+                      <span className={win.isAi ? "font-medium text-purple-600" : ""}>
+                        Saved {win.timeSavedMin} min
+                      </span>
+                    </>
+                  )}
+                  
                   {/* Add an AI badge for AI-generated wins */}
                   {win.isAi && (
                     <>
