@@ -34,20 +34,20 @@ export function Header() {
   return (
     <div className="flex flex-col combined-header">
       {/* Top Bar */}
-      <header className="bg-primary text-white py-6 px-4 flex items-center justify-between primary-header" style={{ backgroundColor: '#507286' }}>
+      <header className="bg-primary text-white py-3 px-4 flex items-center justify-between primary-header" style={{ backgroundColor: '#507286' }}>
         {/* Logo and Brand Name */}
         <div className="flex items-center">
           <Link href="/">
             <div className="flex items-center">
-              <div className="h-20 w-28 relative overflow-visible flex items-center justify-center" style={{ marginLeft: '-20px' }}>
+              <div className="h-16 w-24 relative overflow-visible flex items-center justify-center" style={{ marginLeft: '-15px' }}>
                 <img 
                   src={logoImage} 
                   alt="Pixie Dental Logo" 
-                  className="h-32 w-36 object-contain absolute left-0 top-1/2 transform -translate-y-1/2" 
+                  className="h-24 w-28 object-contain absolute left-0 top-1/2 transform -translate-y-1/2" 
                   style={{ marginTop: '-2px' }}
                 />
               </div>
-              <h1 className="text-xl md:text-2xl font-bold ml-4 text-white my-auto">
+              <h1 className="text-lg md:text-xl font-bold ml-3 text-white my-auto">
                 Pixie Dental
               </h1>
             </div>
@@ -142,14 +142,14 @@ export function Header() {
 
       {/* Primary Navigation */}
       <div className="border-b border-neutral-border bg-white w-full shadow-sm">
-        <nav className="flex h-12 overflow-x-auto">
+        <nav className="flex h-10 overflow-x-auto">
           {navigationData.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               onClick={() => handleNavClick(item.href)}
               className={cn(
-                "nav-link flex items-center px-6 py-3 text-gray-700 hover:bg-gray-100 border-b-2 border-transparent whitespace-nowrap transition-colors",
+                "nav-link flex items-center px-5 py-2 text-gray-700 hover:bg-gray-100 border-b-2 border-transparent whitespace-nowrap transition-colors",
                 activeNav === item.href && "active text-primary border-primary"
               )}
             >
@@ -162,18 +162,18 @@ export function Header() {
 
       {/* Secondary Navigation - only show if the current section has subnav items */}
       {hasSubNav && (
-        <div className="secondary-nav bg-gray-50 border-b border-neutral-border flex p-2 overflow-x-auto">
+        <div className="secondary-nav bg-gray-50 border-b border-neutral-border flex py-1 px-2 overflow-x-auto">
           {currentSection.items.map((subItem) => (
             <Link
               key={subItem.href}
               href={subItem.href}
               onClick={() => setActiveSubNav(subItem.href)}
               className={cn(
-                "secondary-nav-link flex items-center px-4 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-100 whitespace-nowrap transition-colors",
+                "secondary-nav-link flex items-center px-3 py-1.5 rounded-md text-sm text-gray-700 hover:bg-gray-100 whitespace-nowrap transition-colors",
                 activeSubNav === subItem.href && "active bg-white shadow-sm"
               )}
             >
-              <subItem.icon className="h-4 w-4 mr-2" />
+              <subItem.icon className="h-3.5 w-3.5 mr-1.5" />
               <span>{subItem.title}</span>
             </Link>
           ))}
