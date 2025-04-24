@@ -6,16 +6,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Check, Edit, Copy, Sparkles } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { SurfaceStatus } from '@/types/dental';
 
 // Helper function to generate a simulated AI summary based on tooth status
 const generateAISummary = (teeth: any[], riskFactors: string[] = []) => {
   // Count teeth with different statuses
   const cariesCount = teeth.filter(tooth => 
-    tooth.surfaces.some((s: any) => s.status === 'caries')
+    tooth.surfaces && Object.values(tooth.surfaces).includes(SurfaceStatus.Caries)
   ).length;
   
   const existingRestCount = teeth.filter(tooth => 
-    tooth.surfaces.some((s: any) => s.status === 'existing')
+    tooth.surfaces && Object.values(tooth.surfaces).includes(SurfaceStatus.Restoration)
   ).length;
   
   // Generate clinical findings section
@@ -222,7 +223,7 @@ const AISummaryStep = () => {
             
             <ul className="space-y-3 text-sm">
               <li className="flex items-start">
-                <div className="rounded-full bg-blue-100 text-blue-800 p-1 mr-2 mt-0.5">
+                <div className="rounded-full bg-indigo-100 text-indigo-800 p-1 mr-2 mt-0.5">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M2.5 12a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0Z"></path>
                     <path d="M9 9h.01"></path>
@@ -235,7 +236,7 @@ const AISummaryStep = () => {
                 </div>
               </li>
               <li className="flex items-start">
-                <div className="rounded-full bg-blue-100 text-blue-800 p-1 mr-2 mt-0.5">
+                <div className="rounded-full bg-indigo-100 text-indigo-800 p-1 mr-2 mt-0.5">
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"></path>
                     <path d="M3 13a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2"></path>
@@ -287,7 +288,7 @@ const AISummaryStep = () => {
       
       {/* Acceptance section */}
       <div className="flex items-center justify-center space-x-3 mt-6">
-        <Button className="w-40 bg-green-600 hover:bg-green-700">
+        <Button className="w-40 bg-indigo-600 hover:bg-indigo-700">
           <Check className="w-4 h-4 mr-2" />
           Accept Summary
         </Button>
