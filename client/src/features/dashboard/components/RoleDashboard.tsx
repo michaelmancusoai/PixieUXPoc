@@ -147,18 +147,25 @@ const RoleDashboard: React.FC = () => {
               </div>
               <div className="flex-1">
                 <h3 className="font-medium text-amber-800 flex items-center">
-                  Add card-on-file prompt to four patients today
+                  💡 Quick Win
                 </h3>
                 <p className="text-sm text-amber-700 mt-1">
-                  Likely to generate extra $1,450 this year in reduced collections effort
+                  Invite 3 of today's patients to <strong>save a card on file</strong>
+                  <br/>Potential + $1,320 a year in faster collections
                 </p>
+                <div className="mt-2 bg-white p-2 rounded-md border border-amber-200 text-sm">
+                  <p className="text-gray-700 italic">
+                    "While I've got your card handy, would you like us to keep it securely on file?
+                    <br/>It means faster checkout next time, and we'll always text you before any charge."
+                  </p>
+                </div>
                 <div className="mt-3">
                   <Button 
                     variant="outline"
                     size="sm"
                     className="bg-amber-100 hover:bg-amber-200 text-amber-800 border-amber-300"
                   >
-                    <Plus className="h-4 w-4 mr-1" /> Add prompt
+                    Mark as Done
                   </Button>
                 </div>
               </div>

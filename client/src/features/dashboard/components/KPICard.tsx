@@ -179,26 +179,35 @@ const KPICard: React.FC<KPICardProps> = ({ kpi, accentColor }) => {
           
           {/* Progress bar for goal-based KPIs */}
           {kpi.target && typeof kpi.value === 'number' && typeof kpi.target === 'number' && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="mt-3">
-                    <Progress 
-                      value={progress} 
-                      className="h-2 bg-gray-200" 
-                      indicatorClassName={getProgressColor()}
-                    />
-                  </div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>
-                    {isTargetReached() 
-                      ? "Target reached! 🎉" 
-                      : `${progress.toFixed(1)}% to target`}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="mt-3">
+                      <Progress 
+                        value={progress} 
+                        className="h-2 bg-gray-200" 
+                        indicatorClassName={getProgressColor()}
+                      />
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>
+                      {isTargetReached() 
+                        ? "Target reached! 🎉" 
+                        : `${progress.toFixed(1)}% to target`}
+                    </p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              
+              {/* Success message */}
+              {isTargetReached() && kpi.successMessage && (
+                <div className="text-xs text-green-600 font-medium mt-2 flex items-center">
+                  <span className="mr-1">✓</span> {kpi.successMessage}
+                </div>
+              )}
+            </>
           )}
         </div>
       </CardContent>

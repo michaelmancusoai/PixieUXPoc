@@ -14,7 +14,7 @@ export type RoleConfig = {
 
 export const ROLE_CONFIGS: Record<UserRole, RoleConfig> = {
   frontOffice: {
-    title: 'Front Office Coordinator',
+    title: 'Front Desk Command Centre',
     description: 'Patient check-in, scheduling, and front desk operations',
     accentColor: 'blue',
     icon: 'UserCheck',
@@ -54,6 +54,7 @@ export interface KPI {
   status?: 'success' | 'warning' | 'danger' | 'neutral';
   isPercentage?: boolean;
   trend?: 'up' | 'down' | 'neutral';
+  successMessage?: string; // Message to show when target is reached
 }
 
 export interface ActionItem {

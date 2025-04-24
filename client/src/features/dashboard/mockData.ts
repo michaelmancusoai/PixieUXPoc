@@ -16,8 +16,8 @@ if (currentHour < 12) {
 
 // Front Office Mock Data
 const frontOfficeData: DashboardData = {
-  greeting: `Good ${timeOfDay}, Maria`,
-  greetingDetails: '9 patients left to confirm; AI already filled 3 wait-list gaps for you overnight.',
+  greeting: `Maria's Front Desk Command Centre`,
+  greetingDetails: 'Keep your 18-day streak alive! 9 patients to confirm; AI filled 3 waitlist gaps overnight.',
   kpis: [
     {
       label: 'Confirmed Today',
@@ -26,6 +26,7 @@ const frontOfficeData: DashboardData = {
       status: 'warning',
       isPercentage: true,
       trend: 'up',
+      successMessage: 'All set! Enjoy a coffee ☕',
     },
     {
       label: 'Gaps Filled',
@@ -33,6 +34,7 @@ const frontOfficeData: DashboardData = {
       target: 5,
       status: 'success',
       trend: 'up',
+      successMessage: 'Nothing left but smiles!',
     },
     {
       label: 'Balance Collected',
@@ -41,6 +43,7 @@ const frontOfficeData: DashboardData = {
       unit: '$',
       status: 'neutral',
       trend: 'neutral',
+      successMessage: 'Cash flow champ!',
     },
   ],
   actionItems: [
