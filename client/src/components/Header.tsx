@@ -34,16 +34,16 @@ export function Header() {
   return (
     <div className="flex flex-col combined-header">
       {/* Top Bar */}
-      <header className="bg-primary text-white py-3 px-4 flex items-center justify-between primary-header">
+      <header className="bg-primary text-white py-2 px-4 flex items-center justify-between primary-header">
         {/* Logo and Brand Name */}
         <div className="flex items-center">
           <Link href="/">
             <div className="flex items-center">
-              <div className="h-16 w-24 relative overflow-visible flex items-center justify-center" style={{ marginLeft: '-15px' }}>
+              <div className="h-14 w-24 relative overflow-visible flex items-center justify-center" style={{ marginLeft: '-15px' }}>
                 <img 
                   src={logoImage} 
                   alt="Pixie Dental Logo" 
-                  className="h-24 w-28 object-contain absolute left-0 top-1/2 transform -translate-y-1/2" 
+                  className="h-22 w-28 object-contain absolute left-0 top-1/2 transform -translate-y-1/2" 
                   style={{ marginTop: '-2px' }}
                 />
               </div>
@@ -55,13 +55,16 @@ export function Header() {
         </div>
 
         {/* Search on larger screens */}
-        <div className="hidden md:flex items-center px-3 py-2 rounded-md bg-primary-dark/30 border border-white/20 w-80 mx-4 shadow-inner">
-          <Search className="h-4 w-4 text-white/70 mr-2" />
+        <div className="hidden md:flex items-center px-3 py-1 rounded-md bg-primary-dark/20 border border-white/20 w-80 mx-4 shadow-inner">
+          <Search className="h-3.5 w-3.5 text-white/70 mr-2" />
           <Input
             type="text"
             placeholder="Search patients, appointments..."
-            className="border-0 bg-transparent text-white p-0 focus-visible:ring-0 shadow-none focus-visible:ring-offset-0"
+            className="h-7 border-0 bg-transparent text-white/90 text-sm p-0 focus-visible:ring-0 shadow-none focus-visible:ring-offset-0"
           />
+          <div className="flex items-center ml-2 px-1.5 py-0.5 text-xs rounded bg-white/10 text-white/70">
+            <span className="font-mono">⌘ K</span>
+          </div>
         </div>
 
         {/* Action buttons and user menu */}
@@ -71,10 +74,10 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full text-white hover:bg-primary-dark/30 hover:text-white"
+              className="rounded-full text-white hover:bg-primary-dark/30 hover:text-white h-7 w-7"
               aria-label="Planet Pixie Game"
             >
-              <Gamepad className="h-5 w-5" />
+              <Gamepad className="h-4 w-4" />
             </Button>
           </Link>
 
@@ -82,20 +85,20 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="ml-1 rounded-full text-white hover:bg-primary-dark/30 hover:text-white"
+            className="ml-1 rounded-full text-white hover:bg-primary-dark/30 hover:text-white h-7 w-7"
             aria-label="Notifications"
           >
-            <Bell className="h-5 w-5" />
+            <Bell className="h-4 w-4" />
           </Button>
 
           {/* Help Button */}
           <Button
             variant="ghost"
             size="icon"
-            className="ml-1 rounded-full text-white hover:bg-primary-dark/30 hover:text-white"
+            className="ml-1 rounded-full text-white hover:bg-primary-dark/30 hover:text-white h-7 w-7"
             aria-label="Help"
           >
-            <HelpCircle className="h-5 w-5" />
+            <HelpCircle className="h-4 w-4" />
           </Button>
 
           {/* Settings Button */}
@@ -103,10 +106,10 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="ml-1 rounded-full text-white hover:bg-primary-dark/30 hover:text-white"
+              className="ml-1 rounded-full text-white hover:bg-primary-dark/30 hover:text-white h-7 w-7"
               aria-label="Settings"
             >
-              <Cog className="h-5 w-5" />
+              <Cog className="h-4 w-4" />
             </Button>
           </Link>
 
@@ -116,7 +119,7 @@ export function Header() {
               <Button
                 variant="ghost"
                 size="icon"
-                className="ml-2 rounded-full text-white hover:bg-primary-dark/30 hover:text-white"
+                className="ml-2 rounded-full text-white hover:bg-primary-dark/30 hover:text-white h-8 w-8 p-0"
                 aria-label="User menu"
               >
                 <Avatar className="h-8 w-8 border-2 border-white">
