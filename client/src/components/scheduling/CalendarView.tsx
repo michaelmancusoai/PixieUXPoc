@@ -373,7 +373,7 @@ export default function CalendarView({
         {/* Time grid */}
         <div className="grid" style={{ 
           gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)`,
-          height: "720px"  /* Exact height for 1pm-7pm range (6 hours × 12 slots/hour × 8px + 48px extra for time indicator) */
+          height: "840px"  /* Exact height for 1pm-7pm range (7 hours × 12 slots/hour × 8px + 48px extra for time indicator) */
         }}>
           {/* Time column with enhanced styling - darker solid gray background */}
           <div className="border-r bg-gray-200 relative">

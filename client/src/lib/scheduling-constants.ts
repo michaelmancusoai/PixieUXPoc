@@ -1,9 +1,9 @@
 // Time Constants
 export const MINS_IN_HOUR = 60;
-export const HOURS_IN_DAY = 7; // Show 7 hours (1pm to 7pm)
+export const HOURS_IN_DAY = 7; // Show 7 hours (1pm to 7pm inclusive)
 export const TIME_SLOT = 5; // 5-minute intervals
 export const BUSINESS_START_HOUR = 13; // 1:00 PM
-export const BUSINESS_END_HOUR = 19; // 7:00 PM
+export const BUSINESS_END_HOUR = 20; // 8:00 PM (to ensure 7pm is displayed)
 
 // Appointment Status Colors
 export const STATUS_COLORS = {
