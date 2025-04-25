@@ -1,26 +1,53 @@
-import {
-  users, patients, appointments, medicalAlerts, documents, notes, payments, messages, recalls, treatments, insuranceClaims, activityLog,
-  type User, type InsertUser,
-  type Patient, type InsertPatient,
-  type Appointment, type InsertAppointment,
-  type MedicalAlert, type InsertMedicalAlert,
-  type Document, type InsertDocument,
-  type Note, type InsertNote,
-  type Payment, type InsertPayment,
-  type Message, type InsertMessage,
-  type Recall, type InsertRecall,
-  type Treatment, type InsertTreatment,
-  type Claim, type InsertClaim
+import { and, desc, eq, like, or } from "drizzle-orm";
+import { 
+  users, type User, type InsertUser,
+  locations, type Location, type InsertLocation,
+  userLocations,
+  patients, type Patient, type InsertPatient,
+  accountStageEnum
 } from "@shared/schema";
+import { db, pool } from "./db";
+import * as crypto from "crypto";
+import session from "express-session";
+import connectPg from "connect-pg-simple";
 
-import { db } from "./db";
-import { eq, and, desc, asc, sql, like } from "drizzle-orm";
+const PostgresSessionStore = connectPg(session);
+
+// Helper functions
+async function hashPassword(password: string): Promise<string> {
+  const salt = crypto.randomBytes(16).toString("hex");
+  const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, "sha512").toString("hex");
+  return `${hash}.${salt}`;
+}
+
+async function verifyPassword(suppliedPassword: string, storedPassword: string): Promise<boolean> {
+  const [hash, salt] = storedPassword.split(".");
+  const suppliedHash = crypto.pbkdf2Sync(suppliedPassword, salt, 1000, 64, "sha512").toString("hex");
+  return hash === suppliedHash;
+}
 
 export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: number, data: Partial<InsertUser>): Promise<User | undefined>;
+  changeUserAccountStage(id: number, stage: string): Promise<User | undefined>;
+  listUsers(limit?: number, offset?: number): Promise<User[]>;
+  searchUsers(query: string): Promise<User[]>;
+  setUserAdmin(id: number, isAdmin: boolean): Promise<User | undefined>;
+  deleteUser(id: number): Promise<boolean>;
+  
+  // Location methods
+  createLocation(location: InsertLocation): Promise<Location>;
+  getLocation(id: number): Promise<Location | undefined>;
+  listLocations(): Promise<Location[]>;
+  updateLocation(id: number, data: Partial<InsertLocation>): Promise<Location | undefined>;
+  deleteLocation(id: number): Promise<boolean>;
+  assignUserToLocation(userId: number, locationId: number, isPrimary?: boolean): Promise<boolean>;
+  removeUserFromLocation(userId: number, locationId: number): Promise<boolean>;
+  getUserLocations(userId: number): Promise<Location[]>;
   
   // Patient methods
   getPatient(id: number): Promise<Patient | undefined>;
@@ -30,65 +57,251 @@ export interface IStorage {
   createPatient(patient: InsertPatient): Promise<Patient>;
   updatePatient(id: number, patient: Partial<InsertPatient>): Promise<Patient | undefined>;
   
-  // Medical Alert methods
-  listPatientMedicalAlerts(patientId: number): Promise<MedicalAlert[]>;
-  createMedicalAlert(alert: InsertMedicalAlert): Promise<MedicalAlert>;
-  
-  // Appointment methods
-  getPatientAppointments(patientId: number): Promise<Appointment[]>;
-  createAppointment(appointment: InsertAppointment): Promise<Appointment>;
-  
-  // Document methods
-  getPatientDocuments(patientId: number): Promise<Document[]>;
-  createDocument(document: InsertDocument): Promise<Document>;
-  
-  // Note methods
-  getPatientNotes(patientId: number): Promise<Note[]>;
-  createNote(note: InsertNote): Promise<Note>;
-  
-  // Payment methods
-  getPatientPayments(patientId: number): Promise<Payment[]>;
-  createPayment(payment: InsertPayment): Promise<Payment>;
-  
-  // Message methods
-  getPatientMessages(patientId: number): Promise<Message[]>;
-  createMessage(message: InsertMessage): Promise<Message>;
-  
-  // Recall methods
-  getPatientRecalls(patientId: number): Promise<Recall[]>;
-  createRecall(recall: InsertRecall): Promise<Recall>;
-  
-  // Treatment methods
-  getPatientTreatments(patientId: number): Promise<Treatment[]>;
-  createTreatment(treatment: InsertTreatment): Promise<Treatment>;
-  
-  // Insurance Claim methods
-  getPatientClaims(patientId: number): Promise<Claim[]>;
-  createClaim(claim: InsertClaim): Promise<Claim>;
-  
-  // Activity methods
-  logActivity(patientId: number | null, userId: number | null, actionType: string, description: string, metadata?: any): Promise<void>;
-  getPatientActivityLog(patientId: number): Promise<any[]>;
+  // Session store
+  sessionStore: any; // Using any to avoid express-session type issues
 }
 
 export class DatabaseStorage implements IStorage {
-  // User methods
+  sessionStore: any;
+  
+  constructor() {
+    // Use the pool directly from the imported db module
+    this.sessionStore = new PostgresSessionStore({
+      pool: pool,
+      createTableIfMissing: true
+    });
+  }
+  
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
   }
-
+  
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+  
   async getUserByUsername(username: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.username, username));
     return user;
   }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db.insert(users).values(insertUser).returning();
+  
+  async createUser(userData: InsertUser): Promise<User> {
+    // Hash password before storing
+    const hashedPassword = await hashPassword(userData.password);
+    
+    // Remove confirmPassword as it's not part of the table schema
+    const { confirmPassword, ...userDataWithoutConfirm } = userData;
+    
+    const [user] = await db
+      .insert(users)
+      .values({
+        ...userDataWithoutConfirm,
+        password: hashedPassword,
+        // Set the first user as admin
+        isAdmin: await this.isFirstUser()
+      })
+      .returning();
+    
     return user;
   }
   
-  // Patient methods
+  async updateUser(id: number, data: Partial<InsertUser>): Promise<User | undefined> {
+    // Don't directly update password through this method for security
+    // Use a separate method for password change with verification
+    const { password, confirmPassword, ...updateData } = data;
+    
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        ...updateData,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    return updatedUser;
+  }
+  
+  async changeUserAccountStage(id: number, stage: string): Promise<User | undefined> {
+    if (!Object.values(accountStageEnum.enumValues).includes(stage)) {
+      throw new Error(`Invalid account stage: ${stage}`);
+    }
+    
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        accountStage: stage as any,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    return updatedUser;
+  }
+  
+  async listUsers(limit = 20, offset = 0): Promise<User[]> {
+    const usersList = await db
+      .select()
+      .from(users)
+      .limit(limit)
+      .offset(offset)
+      .orderBy(desc(users.createdAt));
+    
+    return usersList;
+  }
+  
+  async searchUsers(query: string): Promise<User[]> {
+    const searchResults = await db
+      .select()
+      .from(users)
+      .where(
+        or(
+          like(users.username, `%${query}%`),
+          like(users.email, `%${query}%`),
+          like(users.firstName || '', `%${query}%`),
+          like(users.lastName || '', `%${query}%`)
+        )
+      )
+      .limit(50);
+    
+    return searchResults;
+  }
+  
+  async setUserAdmin(id: number, isAdmin: boolean): Promise<User | undefined> {
+    const [updatedUser] = await db
+      .update(users)
+      .set({
+        isAdmin,
+        updatedAt: new Date()
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    return updatedUser;
+  }
+  
+  async deleteUser(id: number): Promise<boolean> {
+    const result = await db
+      .delete(users)
+      .where(eq(users.id, id))
+      .returning();
+    
+    return result.length > 0;
+  }
+  
+  // Location methods
+  async createLocation(locationData: InsertLocation): Promise<Location> {
+    const [location] = await db
+      .insert(locations)
+      .values(locationData)
+      .returning();
+    
+    return location;
+  }
+  
+  async getLocation(id: number): Promise<Location | undefined> {
+    const [location] = await db
+      .select()
+      .from(locations)
+      .where(eq(locations.id, id));
+    
+    return location;
+  }
+  
+  async listLocations(): Promise<Location[]> {
+    return db.select().from(locations);
+  }
+  
+  async updateLocation(id: number, data: Partial<InsertLocation>): Promise<Location | undefined> {
+    const [updatedLocation] = await db
+      .update(locations)
+      .set({
+        ...data,
+        updatedAt: new Date()
+      })
+      .where(eq(locations.id, id))
+      .returning();
+    
+    return updatedLocation;
+  }
+  
+  async deleteLocation(id: number): Promise<boolean> {
+    const result = await db
+      .delete(locations)
+      .where(eq(locations.id, id))
+      .returning();
+    
+    return result.length > 0;
+  }
+  
+  async assignUserToLocation(userId: number, locationId: number, isPrimary = false): Promise<boolean> {
+    // If marked as primary, clear any existing primary locations
+    if (isPrimary) {
+      await db
+        .update(userLocations)
+        .set({ isPrimary: false })
+        .where(and(
+          eq(userLocations.userId, userId),
+          eq(userLocations.isPrimary, true)
+        ));
+    }
+    
+    // Check if relationship already exists
+    const [existing] = await db
+      .select()
+      .from(userLocations)
+      .where(and(
+        eq(userLocations.userId, userId),
+        eq(userLocations.locationId, locationId)
+      ));
+    
+    if (existing) {
+      // Update existing relationship if isPrimary changed
+      if (existing.isPrimary !== isPrimary) {
+        await db
+          .update(userLocations)
+          .set({ isPrimary })
+          .where(eq(userLocations.id, existing.id));
+      }
+    } else {
+      // Create new relationship
+      await db
+        .insert(userLocations)
+        .values({
+          userId,
+          locationId,
+          isPrimary
+        });
+    }
+    
+    return true;
+  }
+  
+  async removeUserFromLocation(userId: number, locationId: number): Promise<boolean> {
+    const result = await db
+      .delete(userLocations)
+      .where(and(
+        eq(userLocations.userId, userId),
+        eq(userLocations.locationId, locationId)
+      ))
+      .returning();
+    
+    return result.length > 0;
+  }
+  
+  async getUserLocations(userId: number): Promise<Location[]> {
+    const userLocationRecords = await db
+      .select()
+      .from(userLocations)
+      .where(eq(userLocations.userId, userId))
+      .innerJoin(locations, eq(userLocations.locationId, locations.id));
+    
+    return userLocationRecords.map(record => record.locations);
+  }
+  
+  // Patient methods from original implementation
   async getPatient(id: number): Promise<Patient | undefined> {
     const [patient] = await db.select().from(patients).where(eq(patients.id, id));
     return patient;
@@ -100,179 +313,58 @@ export class DatabaseStorage implements IStorage {
   }
   
   async listPatients(limit = 20, offset = 0): Promise<Patient[]> {
-    return db.select().from(patients).limit(limit).offset(offset);
+    const patientsList = await db
+      .select()
+      .from(patients)
+      .limit(limit)
+      .offset(offset);
+    
+    return patientsList;
   }
   
   async searchPatients(query: string): Promise<Patient[]> {
-    return db.select().from(patients).where(
-      sql`CONCAT(${patients.firstName}, ' ', ${patients.lastName}) ILIKE ${`%${query}%`}`
-    );
+    const searchResults = await db
+      .select()
+      .from(patients)
+      .where(
+        or(
+          like(patients.name, `%${query}%`),
+          like(patients.chartNumber, `%${query}%`),
+          like(patients.email || '', `%${query}%`),
+          like(patients.phone || '', `%${query}%`)
+        )
+      )
+      .limit(50);
+    
+    return searchResults;
   }
   
-  async createPatient(patient: InsertPatient): Promise<Patient> {
-    const [newPatient] = await db.insert(patients).values(patient).returning();
-    return newPatient;
+  async createPatient(patientData: InsertPatient): Promise<Patient> {
+    const [patient] = await db
+      .insert(patients)
+      .values(patientData)
+      .returning();
+    
+    return patient;
   }
   
   async updatePatient(id: number, patientData: Partial<InsertPatient>): Promise<Patient | undefined> {
     const [updatedPatient] = await db
       .update(patients)
-      .set({ ...patientData, updatedAt: new Date() })
+      .set({
+        ...patientData,
+        updatedAt: new Date()
+      })
       .where(eq(patients.id, id))
       .returning();
     
     return updatedPatient;
   }
   
-  // Medical Alert methods
-  async listPatientMedicalAlerts(patientId: number): Promise<MedicalAlert[]> {
-    return db
-      .select()
-      .from(medicalAlerts)
-      .where(eq(medicalAlerts.patientId, patientId))
-      .orderBy(desc(medicalAlerts.createdAt));
-  }
-  
-  async createMedicalAlert(alert: InsertMedicalAlert): Promise<MedicalAlert> {
-    const [newAlert] = await db.insert(medicalAlerts).values(alert).returning();
-    return newAlert;
-  }
-  
-  // Appointment methods
-  async getPatientAppointments(patientId: number): Promise<Appointment[]> {
-    return db
-      .select()
-      .from(appointments)
-      .where(eq(appointments.patientId, patientId))
-      .orderBy(desc(appointments.startTime));
-  }
-  
-  async createAppointment(appointment: InsertAppointment): Promise<Appointment> {
-    const [newAppointment] = await db.insert(appointments).values(appointment).returning();
-    return newAppointment;
-  }
-  
-  // Document methods
-  async getPatientDocuments(patientId: number): Promise<Document[]> {
-    return db
-      .select()
-      .from(documents)
-      .where(eq(documents.patientId, patientId))
-      .orderBy(desc(documents.uploadedAt));
-  }
-  
-  async createDocument(document: InsertDocument): Promise<Document> {
-    const [newDocument] = await db.insert(documents).values(document).returning();
-    return newDocument;
-  }
-  
-  // Note methods
-  async getPatientNotes(patientId: number): Promise<Note[]> {
-    return db
-      .select()
-      .from(notes)
-      .where(eq(notes.patientId, patientId))
-      .orderBy(desc(notes.createdAt));
-  }
-  
-  async createNote(note: InsertNote): Promise<Note> {
-    const [newNote] = await db.insert(notes).values(note).returning();
-    return newNote;
-  }
-  
-  // Payment methods
-  async getPatientPayments(patientId: number): Promise<Payment[]> {
-    return db
-      .select()
-      .from(payments)
-      .where(eq(payments.patientId, patientId))
-      .orderBy(desc(payments.paymentDate));
-  }
-  
-  async createPayment(payment: InsertPayment): Promise<Payment> {
-    const [newPayment] = await db.insert(payments).values(payment).returning();
-    return newPayment;
-  }
-  
-  // Message methods
-  async getPatientMessages(patientId: number): Promise<Message[]> {
-    return db
-      .select()
-      .from(messages)
-      .where(eq(messages.patientId, patientId))
-      .orderBy(desc(messages.sentAt));
-  }
-  
-  async createMessage(message: InsertMessage): Promise<Message> {
-    const [newMessage] = await db.insert(messages).values(message).returning();
-    return newMessage;
-  }
-  
-  // Recall methods
-  async getPatientRecalls(patientId: number): Promise<Recall[]> {
-    return db
-      .select()
-      .from(recalls)
-      .where(eq(recalls.patientId, patientId))
-      .orderBy(asc(recalls.dueDate));
-  }
-  
-  async createRecall(recall: InsertRecall): Promise<Recall> {
-    const [newRecall] = await db.insert(recalls).values(recall).returning();
-    return newRecall;
-  }
-  
-  // Treatment methods
-  async getPatientTreatments(patientId: number): Promise<Treatment[]> {
-    return db
-      .select()
-      .from(treatments)
-      .where(eq(treatments.patientId, patientId))
-      .orderBy(desc(treatments.treatmentDate));
-  }
-  
-  async createTreatment(treatment: InsertTreatment): Promise<Treatment> {
-    const [newTreatment] = await db.insert(treatments).values(treatment).returning();
-    return newTreatment;
-  }
-  
-  // Insurance Claim methods
-  async getPatientClaims(patientId: number): Promise<Claim[]> {
-    return db
-      .select()
-      .from(insuranceClaims)
-      .where(eq(insuranceClaims.patientId, patientId))
-      .orderBy(desc(insuranceClaims.dateOfService));
-  }
-  
-  async createClaim(claim: InsertClaim): Promise<Claim> {
-    const [newClaim] = await db.insert(insuranceClaims).values(claim).returning();
-    return newClaim;
-  }
-  
-  // Activity Log methods
-  async logActivity(
-    patientId: number | null,
-    userId: number | null,
-    actionType: string,
-    description: string,
-    metadata: any = {}
-  ): Promise<void> {
-    await db.insert(activityLog).values({
-      patientId,
-      userId,
-      actionType,
-      description,
-      metadata
-    });
-  }
-  
-  async getPatientActivityLog(patientId: number): Promise<any[]> {
-    return db
-      .select()
-      .from(activityLog)
-      .where(eq(activityLog.patientId, patientId))
-      .orderBy(desc(activityLog.createdAt));
+  // Helper methods
+  private async isFirstUser(): Promise<boolean> {
+    const usersCount = await db.select().from(users);
+    return usersCount.length === 0;
   }
 }
 
