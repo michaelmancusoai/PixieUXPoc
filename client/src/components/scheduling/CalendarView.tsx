@@ -301,7 +301,7 @@ export default function CalendarView({
       });
     }
     
-    // Now find the index to insert our special current time indicator at 1:15 PM (795 minutes)
+    // Now find the index to insert our special current time indicator at 1:15 PM
     const currentTimeAt1_15PM = 13 * 60 + 15; // 1:15 PM in minutes
     const indexBefore1_15 = Math.floor((currentTimeAt1_15PM - startTime) / TIME_SLOT);
     
@@ -373,7 +373,7 @@ export default function CalendarView({
         {/* Time grid */}
         <div className="grid" style={{ 
           gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)`,
-          minHeight: "1320px"  /* Ensure entire 7am-6pm range is visible (11 hours × 12 slots × 10px) */
+          height: "720px"  /* Exact height for 1pm-7pm range (6 hours × 12 slots/hour × 8px + 48px extra for time indicator) */
         }}>
           {/* Time column with enhanced styling - darker solid gray background */}
           <div className="border-r bg-gray-200 relative">
