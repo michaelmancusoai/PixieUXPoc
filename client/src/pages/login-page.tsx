@@ -130,30 +130,57 @@ const LoginPage = () => {
   const handleEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
     
+    // Create a timeline for face reactions
+    const tl = gsap.timeline();
+    
     // Face reactions based on email input with GSAP
     if (e.target.value.length > 0) {
       if (e.target.value.includes('@')) {
         // Happy/excited face
-        gsap.to([eyeLRef.current, eyeRRef.current], {
+        tl.to([eyeLRef.current, eyeRRef.current], {
           scale: 0.65,
           duration: 0.3,
-          ease: "power2.out"
-        });
-      } else {
-        // Curious face
-        gsap.to([eyeLRef.current, eyeRRef.current], {
-          scale: 0.85,
+          ease: "back.out(1.2)"
+        }, 0);
+        
+        // Move mouth with a slight smile
+        tl.to(mouthRef.current, {
+          scaleX: 1.1,
+          scaleY: 0.9,
           duration: 0.3,
           ease: "power2.out"
-        });
+        }, 0);
+      } else {
+        // Curious face
+        tl.to([eyeLRef.current, eyeRRef.current], {
+          scale: 0.85,
+          duration: 0.3,
+          ease: "power1.out"
+        }, 0);
+        
+        // Reset mouth
+        tl.to(mouthRef.current, {
+          scaleX: 1,
+          scaleY: 1,
+          duration: 0.3,
+          ease: "power2.out"
+        }, 0);
       }
     } else {
       // Reset face
-      gsap.to([eyeLRef.current, eyeRRef.current], {
+      tl.to([eyeLRef.current, eyeRRef.current], {
         scale: 1,
         duration: 0.3,
         ease: "power2.out"
-      });
+      }, 0);
+      
+      // Reset mouth
+      tl.to(mouthRef.current, {
+        scaleX: 1,
+        scaleY: 1,
+        duration: 0.3,
+        ease: "power2.out"
+      }, 0);
     }
     
     // Move eyes to follow cursor
@@ -179,132 +206,148 @@ const LoginPage = () => {
     const eyeRX = Math.cos(eyeRAngle) * 5;
     const eyeRY = Math.sin(eyeRAngle) * 3;
     
-    // Use GSAP for smooth animation
-    gsap.to(eyeLRef.current, {
+    // Create a timeline for coordinated eye movement
+    const tl = gsap.timeline();
+    
+    tl.to(eyeLRef.current, {
       x: -eyeLX,
       y: -eyeLY,
-      duration: 0.3,
+      duration: 0.2,
       ease: "power2.out"
-    });
+    }, 0);
     
-    gsap.to(eyeRRef.current, {
+    tl.to(eyeRRef.current, {
       x: -eyeRX,
       y: -eyeRY,
-      duration: 0.3,
+      duration: 0.2,
       ease: "power2.out"
-    });
+    }, 0);
     
-    gsap.to([noseRef.current, mouthRef.current], {
+    tl.to([noseRef.current, mouthRef.current], {
       x: -eyeLX * 0.5,
       y: -eyeLY * 0.5,
-      duration: 0.3,
+      duration: 0.25,
       ease: "power2.out"
-    });
+    }, 0.05);
   };
 
   const spreadFingers = () => {
     if (twoFingersRef.current) {
-      gsap.to(twoFingersRef.current, {
+      // Create a timeline for finger animation
+      const tl = gsap.timeline();
+      
+      tl.to(twoFingersRef.current, {
         rotation: 30,
         x: -9,
         y: -2,
         transformOrigin: "bottom left",
         duration: 0.35,
-        ease: "power2.inOut"
+        ease: "back.out(1.2)"
       });
     }
   };
 
   const closeFingers = () => {
     if (twoFingersRef.current) {
-      gsap.to(twoFingersRef.current, {
+      // Create a timeline for finger animation
+      const tl = gsap.timeline();
+      
+      tl.to(twoFingersRef.current, {
         rotation: 0,
         x: 0,
         y: 0,
         duration: 0.35,
-        ease: "power2.inOut"
+        ease: "back.out(1)"
       });
     }
   };
 
   const coverEyes = () => {
     if (armLRef.current && armRRef.current && bodyBGRef.current && bodyBGchangedRef.current) {
-      // Show arms
-      gsap.set([armLRef.current, armRRef.current], { visibility: "visible" });
+      // Create a timeline for coordinated animation
+      const tl = gsap.timeline();
       
-      // Animate arms to cover eyes
-      gsap.to(armLRef.current, {
-        x: -93,
-        y: 10,
-        rotation: 0,
-        duration: 0.45,
-        ease: "power2.out"
-      });
+      // Show arms immediately
+      tl.set([armLRef.current, armRRef.current], { visibility: "visible" })
       
-      gsap.to(armRRef.current, {
-        x: -93,
-        y: 10,
-        rotation: 0,
-        duration: 0.45,
-        delay: 0.1,
-        ease: "power2.out"
-      });
-      
-      // Change body background
-      gsap.set(bodyBGRef.current, { display: "none" });
-      gsap.set(bodyBGchangedRef.current, { display: "block" });
+        // Animate left arm to cover eyes
+        .to(armLRef.current, {
+          x: -93,
+          y: 10,
+          rotation: 0,
+          duration: 0.45,
+          ease: "back.out(1.5)"
+        }, 0)
+        
+        // Animate right arm to cover eyes with slight delay
+        .to(armRRef.current, {
+          x: -93,
+          y: 10,
+          rotation: 0,
+          duration: 0.45,
+          ease: "back.out(1.5)"
+        }, 0.1)
+        
+        // Swap body backgrounds
+        .set(bodyBGRef.current, { display: "none" }, 0)
+        .set(bodyBGchangedRef.current, { display: "block" }, 0);
     }
   };
 
   const uncoverEyes = () => {
     if (armLRef.current && armRRef.current && bodyBGRef.current && bodyBGchangedRef.current) {
-      // Animate arms away
-      gsap.to(armLRef.current, {
-        y: 220,
-        duration: 1.35,
-        ease: "power2.out"
-      });
-      
-      gsap.to(armLRef.current, {
-        rotation: 105,
-        duration: 1.35,
-        delay: 0.1,
-        ease: "power2.out"
-      });
-      
-      gsap.to(armRRef.current, {
-        y: 220,
-        duration: 1.35,
-        ease: "power2.out"
-      });
-      
-      gsap.to(armRRef.current, {
-        rotation: -105,
-        duration: 1.35,
-        delay: 0.1,
-        ease: "power2.out",
+      // Create a timeline for coordinated animation
+      const tl = gsap.timeline({
         onComplete: () => {
           // Hide arms when animation completes
           gsap.set([armLRef.current, armRRef.current], { visibility: "hidden" });
         }
       });
       
-      // Change body background back
-      gsap.set(bodyBGRef.current, { display: "block" });
-      gsap.set(bodyBGchangedRef.current, { display: "none" });
+      // Swap body backgrounds immediately
+      tl.set(bodyBGRef.current, { display: "block" }, 0)
+        .set(bodyBGchangedRef.current, { display: "none" }, 0)
+        
+        // Move arms away with synchronized animation
+        .to(armLRef.current, {
+          y: 220,
+          rotation: 105,
+          duration: 0.7,
+          ease: "power2.inOut"
+        }, 0)
+        
+        .to(armRRef.current, {
+          y: 220,
+          rotation: -105,
+          duration: 0.7,
+          ease: "power2.inOut"
+        }, 0.1);
     }
   };
 
   const resetFace = () => {
     if (eyeLRef.current && eyeRRef.current && noseRef.current && mouthRef.current) {
-      gsap.to([eyeLRef.current, eyeRRef.current, noseRef.current, mouthRef.current], {
+      // Create a timeline for coordinated face reset
+      const tl = gsap.timeline();
+      
+      tl.to([eyeLRef.current, eyeRRef.current], {
         x: 0,
         y: 0,
         scale: 1,
         rotation: 0,
-        duration: 1,
+        duration: 0.5,
         ease: "expo.out"
-      });
+      }, 0);
+      
+      tl.to([noseRef.current, mouthRef.current], {
+        x: 0,
+        y: 0,
+        scaleX: 1,
+        scaleY: 1,
+        rotation: 0,
+        duration: 0.5,
+        ease: "expo.out"
+      }, 0.1);
     }
   };
 
@@ -316,20 +359,113 @@ const LoginPage = () => {
       closeFingers();
     }
   };
+  
+  // Animation for successful login
+  const celebrateLogin = () => {
+    if (svgContainerRef.current && eyeLRef.current && eyeRRef.current && mouthRef.current) {
+      // Create a timeline for celebration animation
+      const tl = gsap.timeline();
+      
+      // Big smile
+      tl.to(mouthRef.current, {
+        scaleX: 1.2,
+        scaleY: 0.8,
+        y: 2,
+        duration: 0.5,
+        ease: "elastic.out(1, 0.3)"
+      }, 0);
+      
+      // Happy eyes
+      tl.to([eyeLRef.current, eyeRRef.current], {
+        scaleY: 0.5,
+        scaleX: 1.2,
+        y: 1,
+        duration: 0.5,
+        ease: "elastic.out(1, 0.3)"
+      }, 0);
+      
+      // Bounce animation
+      tl.to(svgContainerRef.current, {
+        y: -20,
+        duration: 0.4,
+        repeat: 1,
+        yoyo: true,
+        ease: "power2.out"
+      }, 0);
+      
+      // Subtle rotation for excitement
+      tl.to(svgContainerRef.current, {
+        rotation: 5,
+        duration: 0.3,
+        repeat: 3,
+        yoyo: true,
+        ease: "sine.inOut"
+      }, 0.4);
+      
+      return tl;
+    }
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormError('');
 
     if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-      toast({
-        title: "Login Successful",
-        description: "Welcome to Pixie Dental!",
-        variant: "default",
-      });
-      setLocation('/dashboard');
+      // Play success animation
+      const celebration = celebrateLogin();
+      
+      // Show toast and redirect after animation completes
+      if (celebration) {
+        // Add onComplete callback to the timeline
+        celebration.eventCallback("onComplete", () => {
+          toast({
+            title: "Login Successful", 
+            description: "Welcome to Pixie Dental!",
+            variant: "default",
+          });
+          
+          // Short delay before redirect for better UX
+          setTimeout(() => {
+            setLocation('/dashboard');
+          }, 500);
+        });
+      } else {
+        // Fallback if animation fails
+        toast({
+          title: "Login Successful",
+          description: "Welcome to Pixie Dental!",
+          variant: "default",
+        });
+        setLocation('/dashboard');
+      }
     } else {
+      // Handle failed login
       setFormError('Invalid email or password');
+      
+      // Create a timeline for error animation
+      const tl = gsap.timeline();
+      
+      // Shake head animation
+      tl.to(svgContainerRef.current, {
+        x: -10,
+        duration: 0.1,
+        repeat: 5,
+        yoyo: true,
+        ease: "sine.inOut",
+        onComplete: () => {
+          gsap.to(svgContainerRef.current, { x: 0, duration: 0.2 });
+        }
+      });
+      
+      // Sad mouth
+      tl.to(mouthRef.current, {
+        scaleX: 0.8,
+        scaleY: 1.2,
+        y: 2,
+        duration: 0.3,
+        ease: "power2.out"
+      }, 0);
+      
       toast({
         title: "Login Failed",
         description: "Please check your credentials",
@@ -410,22 +546,22 @@ const LoginPage = () => {
             <path ref={noseRef} className="nose" d="M97.7 79.9h4.7c1.9 0 3 2.2 1.9 3.7l-2.3 3.3c-.9 1.3-2.9 1.3-3.8 0l-2.3-3.3c-1.3-1.6-.2-3.7 1.8-3.7z" fill={COLORS.dark}/>
             <g className="arms" clipPath="url(#armMask)">
               <g ref={armLRef} className="armL">
-                <polygon fill="#DDF1FA" stroke="#3A5E77" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" points="121.3,98.4 111,59.7 149.8,49.3 169.8,85.4"/>
-                <path fill="#DDF1FA" stroke="#3A5E77" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" d="M134.4,53.5l19.3-5.2c2.7-0.7,5.4,0.9,6.1,3.5v0c0.7,2.7-0.9,5.4-3.5,6.1l-10.3,2.8"/>
-                <path fill="#DDF1FA" stroke="#3A5E77" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" d="M150.9,59.4l26-7c2.7-0.7,5.4,0.9,6.1,3.5v0c0.7,2.7-0.9,5.4-3.5,6.1l-21.3,5.7"/>
+                <polygon fill={COLORS.light} stroke={COLORS.dark} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" points="121.3,98.4 111,59.7 149.8,49.3 169.8,85.4"/>
+                <path fill={COLORS.light} stroke={COLORS.dark} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" d="M134.4,53.5l19.3-5.2c2.7-0.7,5.4,0.9,6.1,3.5v0c0.7,2.7-0.9,5.4-3.5,6.1l-10.3,2.8"/>
+                <path fill={COLORS.light} stroke={COLORS.dark} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" d="M150.9,59.4l26-7c2.7-0.7,5.4,0.9,6.1,3.5v0c0.7,2.7-0.9,5.4-3.5,6.1l-21.3,5.7"/>
                 
                 <g ref={twoFingersRef} className="twoFingers">                  
-                  <path fill="#DDF1FA" stroke="#3A5E77" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" d="M158.3,67.8l23.1-6.2c2.7-0.7,5.4,0.9,6.1,3.5v0c0.7,2.7-0.9,5.4-3.5,6.1l-23.1,6.2"/>
-                  <path fill="#A9DDF3" d="M180.1,65l2.2-0.6c1.1-0.3,2.2,0.3,2.4,1.4v0c0.3,1.1-0.3,2.2-1.4,2.4l-2.2,0.6L180.1,65z"/>
-                  <path fill="#DDF1FA" stroke="#3A5E77" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" d="M160.8,77.5l19.4-5.2c2.7-0.7,5.4,0.9,6.1,3.5v0c0.7,2.7-0.9,5.4-3.5,6.1l-18.3,4.9"/>
-                  <path fill="#A9DDF3" d="M178.8,75.7l2.2-0.6c1.1-0.3,2.2,0.3,2.4,1.4v0c0.3,1.1-0.3,2.2-1.4,2.4l-2.2,0.6L178.8,75.7z"/>
+                  <path fill={COLORS.light} stroke={COLORS.dark} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" d="M158.3,67.8l23.1-6.2c2.7-0.7,5.4,0.9,6.1,3.5v0c0.7,2.7-0.9,5.4-3.5,6.1l-23.1,6.2"/>
+                  <path fill={COLORS.secondary} d="M180.1,65l2.2-0.6c1.1-0.3,2.2,0.3,2.4,1.4v0c0.3,1.1-0.3,2.2-1.4,2.4l-2.2,0.6L180.1,65z"/>
+                  <path fill={COLORS.light} stroke={COLORS.dark} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" d="M160.8,77.5l19.4-5.2c2.7-0.7,5.4,0.9,6.1,3.5v0c0.7,2.7-0.9,5.4-3.5,6.1l-18.3,4.9"/>
+                  <path fill={COLORS.secondary} d="M178.8,75.7l2.2-0.6c1.1-0.3,2.2,0.3,2.4,1.4v0c0.3,1.1-0.3,2.2-1.4,2.4l-2.2,0.6L178.8,75.7z"/>
                 </g>
-                <path fill="#A9DDF3" d="M175.5,55.9l2.2-0.6c1.1-0.3,2.2,0.3,2.4,1.4v0c0.3,1.1-0.3,2.2-1.4,2.4l-2.2,0.6L175.5,55.9z"/>
-                <path fill="#A9DDF3" d="M152.1,50.4l2.2-0.6c1.1-0.3,2.2,0.3,2.4,1.4v0c0.3,1.1-0.3,2.2-1.4,2.4l-2.2,0.6L152.1,50.4z"/>
+                <path fill={COLORS.secondary} d="M175.5,55.9l2.2-0.6c1.1-0.3,2.2,0.3,2.4,1.4v0c0.3,1.1-0.3,2.2-1.4,2.4l-2.2,0.6L175.5,55.9z"/>
+                <path fill={COLORS.secondary} d="M152.1,50.4l2.2-0.6c1.1-0.3,2.2,0.3,2.4,1.4v0c0.3,1.1-0.3,2.2-1.4,2.4l-2.2,0.6L152.1,50.4z"/>
               </g>
               <g ref={armRRef} className="armR">
-                <path fill="#ddf1fa" stroke="#3a5e77" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2.5" d="M265.4 97.3l10.4-38.6-38.9-10.5-20 36.1z"/>
-                <path fill="#ddf1fa" stroke="#3a5e77" strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2.5" d="M252.4 52.4L233 47.2c-2.7-.7-5.4.9-6.1 3.5-.7 2.7.9 5.4 3.5 6.1l10.3 2.8M226 76.4l-19.4-5.2c-2.7-.7-5.4.9-6.1 3.5-.7 2.7.9 5.4 3.5 6.1l18.3 4.9M228.4 66.7l-23.1-6.2c-2.7-.7-5.4.9-6.1 3.5-.7 2.7.9 5.4 3.5 6.1l23.1 6.2M235.8 58.3l-26-7c-2.7-.7-5.4.9-6.1 3.5-.7 2.7.9 5.4 3.5 6.1l21.3 5.7"/>
+                <path fill={COLORS.light} stroke={COLORS.dark} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2.5" d="M265.4 97.3l10.4-38.6-38.9-10.5-20 36.1z"/>
+                <path fill={COLORS.light} stroke={COLORS.dark} strokeLinecap="round" strokeLinejoin="round" strokeMiterlimit="10" strokeWidth="2.5" d="M252.4 52.4L233 47.2c-2.7-.7-5.4.9-6.1 3.5-.7 2.7.9 5.4 3.5 6.1l10.3 2.8M226 76.4l-19.4-5.2c-2.7-.7-5.4.9-6.1 3.5-.7 2.7.9 5.4 3.5 6.1l18.3 4.9M228.4 66.7l-23.1-6.2c-2.7-.7-5.4.9-6.1 3.5-.7 2.7.9 5.4 3.5 6.1l23.1 6.2M235.8 58.3l-26-7c-2.7-.7-5.4.9-6.1 3.5-.7 2.7.9 5.4 3.5 6.1l21.3 5.7"/>
               </g>                              
             </g>
           </svg>
@@ -524,10 +660,9 @@ const LoginPage = () => {
 
           <button
             type="submit"
-            className="w-full h-12 text-white rounded text-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2"
+            className="w-full h-12 text-white rounded text-lg font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 hover:bg-opacity-90"
             style={{
-              backgroundColor: COLORS.secondary,
-              ":hover": { backgroundColor: COLORS.primary }
+              backgroundColor: COLORS.secondary
             }}
           >
             Log in
@@ -537,10 +672,9 @@ const LoginPage = () => {
         <div className="mt-4 text-center">
           <button 
             onClick={handleForgotPassword}
-            className="text-sm transition-colors"
+            className="text-sm transition-colors hover:opacity-80"
             style={{
-              color: COLORS.primary,
-              ":hover": { color: COLORS.secondary }
+              color: COLORS.primary
             }}
           >
             Forgot password?
