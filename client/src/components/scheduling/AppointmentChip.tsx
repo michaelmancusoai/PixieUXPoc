@@ -69,14 +69,15 @@ export default function AppointmentChip({ appointment, style = {}, className = '
     return format(new Date().setHours(hours, minutes), 'HH:mm');
   };
   
-  // Combined style for hover card trigger
+  // Combined style for appointment card
   const chipStyles: React.CSSProperties = {
     cursor: 'grab',
     backgroundColor: 'white',
-    borderRadius: '3px',
+    borderRadius: '4px',
     overflow: 'hidden',
     position: 'relative',
-    borderLeft: `3px solid ${getStatusBorderColor()}`,
+    borderLeft: `4px solid ${getStatusBorderColor()}`,
+    boxShadow: '0 1px 2px rgba(0,0,0,0.05)',
     ...(isDragging ? { opacity: 0.5 } : {}),
     ...style,
   };
@@ -89,39 +90,47 @@ export default function AppointmentChip({ appointment, style = {}, className = '
       {...listeners} 
       {...attributes}
     >
-      <div className="h-full p-1 flex flex-col">
-        {/* Status indicator tag at the top */}
-        <div className="text-[10px] font-medium mb-1">
-          {getStatusDisplay()}
-        </div>
-        
-        {/* Patient name */}
-        <div className="font-medium text-[11px] mb-1 flex justify-between items-baseline">
+      <div className="h-full p-2 flex flex-col">
+        {/* Top row: Patient name and Operatory */}
+        <div className="font-medium text-[13px] mb-1 flex justify-between items-baseline">
           <span className="truncate">{appointment.patient.firstName} {appointment.patient.lastName}</span>
+          <span className="text-gray-500 text-[11px]">Op {appointment.operatory?.id || appointment.operatoryId || 3}</span>
+        </div>
+        
+        {/* Middle row: Status + time in status and Duration */}
+        <div className="flex justify-between items-center mb-1">
+          <div className="flex items-center">
+            <span className="text-[11px] font-medium bg-gray-100 rounded-md px-2 py-0.5">
+              {getStatusDisplay()}
+            </span>
+            {/* Time display with clock icon for "In Chair" or "Checked In" status */}
+            {(appointment.status?.toLowerCase() === 'in_chair' || 
+              appointment.status?.toLowerCase() === 'checked_in') && (
+              <div className="flex items-center text-[11px] text-gray-500 ml-2">
+                <Clock className="h-3 w-3 mr-0.5" />
+                {getTimeDisplay()}
+              </div>
+            )}
+          </div>
           
-          {/* Time display with clock icon for "In Chair" status */}
-          {appointment.status?.toLowerCase() === 'in_chair' && (
-            <div className="flex items-center text-[10px] whitespace-nowrap">
-              <Clock className="h-3 w-3 mr-0.5 text-gray-500" />
-              {getTimeDisplay()}
-            </div>
-          )}
+          {/* Duration badge */}
+          <div className="text-[11px] flex items-center">
+            <Clock className="h-3 w-3 mr-0.5 text-gray-500" />
+            <span className="text-gray-700">{appointment.duration}m</span>
+          </div>
         </div>
         
-        {/* Duration badge */}
-        <div className="text-[9px] bg-gray-100 rounded px-1.5 py-0.5 inline-flex items-center self-start mb-1">
-          <Clock className="h-2.5 w-2.5 mr-0.5 text-gray-500" />
-          <span>{appointment.duration}m</span>
-        </div>
-        
-        {/* Procedure */}
-        <div className="text-[9px] text-gray-700 truncate flex-grow">
-          {appointment.procedure}
-        </div>
-        
-        {/* Doctor name */}
-        <div className="text-[9px] text-gray-500 mt-1">
-          {appointment.provider?.name || 'Dr. Unknown'}
+        {/* Bottom row: Procedure type and Doctor name */}
+        <div className="flex justify-between items-center mt-auto">
+          {/* Procedure */}
+          <div className="text-[11px] text-gray-700 truncate">
+            {appointment.procedure}
+          </div>
+          
+          {/* Doctor name */}
+          <div className="text-[11px] text-gray-700">
+            {appointment.provider?.name || 'Dr. Unknown'}
+          </div>
         </div>
       </div>
     </div>
