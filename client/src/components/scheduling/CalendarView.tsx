@@ -303,8 +303,8 @@ export default function CalendarView({
   }, []);
   
   // Calculate position for exactly 1:15 PM (fixed for demo)
-  const timeMarkFor1_15PM = useMemo(() => {
-    // Time header height + any other offset (approximately 35px)
+  const currentTimePosition = useMemo(() => {
+    // Time header height (consider column header)
     const headerOffset = 35;
     
     // For 1:15 PM
@@ -317,9 +317,8 @@ export default function CalendarView({
     // Convert to pixels: each 5 minutes = 8px
     const pixelsFromTop = (minutesFrom7AM / 5) * 8;
     
-    // Fine-tuned position to match exactly with the appointment at 1:15 PM
-    // Adding 2 pixels to align precisely with appointments
-    return pixelsFromTop + headerOffset + 2;
+    // Base position including header
+    return pixelsFromTop + headerOffset;
   }, []);
   
   // Group appointments by resource
@@ -346,8 +345,10 @@ export default function CalendarView({
     <Card className="w-full h-full overflow-hidden border rounded-md">
       <div className="h-full overflow-auto relative">
         {/* Current time indicator line that spans across entire grid at exactly 1:15 PM */}
-        <div className="absolute left-[60px] right-0 z-20 pointer-events-none"
-             style={{ top: `${timeMarkFor1_15PM}px` }}>
+        <div 
+          className="absolute left-[60px] right-0 z-20 pointer-events-none"
+          style={{ top: '373px' }} // Hardcoded exact position for 1:15 PM
+        >
           <div className="h-[2px] bg-red-500 w-full"></div>
         </div>
         {/* Resource column headers */}
@@ -397,7 +398,7 @@ export default function CalendarView({
             {/* Current time label shown in time column at exactly 1:15 PM */}
             <div 
               className="absolute right-0 flex justify-end items-center z-10 pointer-events-none"
-              style={{ top: `${timeMarkFor1_15PM}px`, transform: 'translateY(-50%)' }}
+              style={{ top: '373px', transform: 'translateY(-50%)' }}
             >
               <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-l whitespace-nowrap">
                 1:15 PM
