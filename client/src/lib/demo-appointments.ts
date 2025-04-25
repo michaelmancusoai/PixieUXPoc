@@ -92,7 +92,7 @@ export function getDemoAppointments(selectedDate: Date) {
     {
       id: 3,
       patientId: 3,
-      patient: { id: 3, firstName: "David", lastName: "Lee", avatarInitials: "DL", dateOfBirth: null, insuranceProvider: "Aetna", allergies: null, balanceDue: 0 },
+      patient: { id: 3, firstName: "Jerry", lastName: "Smith", avatarInitials: "JS", dateOfBirth: null, insuranceProvider: "Aetna", allergies: null, balanceDue: 0 },
       providerId: 4, // Dr. Maria
       provider: { id: 4, name: "Dr. Maria", role: "Dentist", color: "#C5E1A5" },
       operatoryId: 2,
@@ -113,7 +113,7 @@ export function getDemoAppointments(selectedDate: Date) {
     {
       id: 8,
       patientId: 8,
-      patient: { id: 8, firstName: "Emily", lastName: "Davis", avatarInitials: "ED", dateOfBirth: null, insuranceProvider: "Humana", allergies: null, balanceDue: 1200 },
+      patient: { id: 8, firstName: "Bird", lastName: "Person", avatarInitials: "BP", dateOfBirth: null, insuranceProvider: "Humana", allergies: null, balanceDue: 1200 },
       providerId: 3, // Dr. Johnson
       provider: { id: 3, name: "Dr. Johnson", role: "Dentist", color: "#90CAF9" },
       operatoryId: 2,
@@ -221,7 +221,7 @@ export function getDemoAppointments(selectedDate: Date) {
     {
       id: 4,
       patientId: 4,
-      patient: { id: 4, firstName: "Sarah", lastName: "Martinez", avatarInitials: "SM", dateOfBirth: null, insuranceProvider: "MetLife", allergies: null, balanceDue: 2000 },
+      patient: { id: 4, firstName: "Jessica", lastName: "Billard", avatarInitials: "JB", dateOfBirth: null, insuranceProvider: "MetLife", allergies: null, balanceDue: 2000 },
       providerId: 1, // Dr. Nguyen
       provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
       operatoryId: 3,
