@@ -693,18 +693,17 @@ export default function PaymentsPage() {
           
 
           
-          {/* Secondary Payment Insights - 50/50 Layout */}
+          {/* Secondary Row - 50/50 Split Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {/* Pending Verifications Card */}
-            <Card className="shadow-sm border-t-4 border-t-amber-200 flex flex-col">
-              <CardHeader className="py-3 px-5 border-b bg-amber-50/50">
-                <CardTitle className="text-base font-medium">Pending Verifications</CardTitle>
+            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
+                <CardTitle className="text-sm font-medium">Pending Verifications</CardTitle>
               </CardHeader>
-              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+              <CardContent className="py-4 px-5 flex-1 flex flex-col">
                 <div>
-                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
-                    <span>${pendingVerificationsTotal} in limbo</span>
-                    <ChevronRight className="h-5 w-5 text-amber-500" />
+                  <div className="text-xl font-bold mb-1">
+                    ${pendingVerificationsTotal} in limbo
                   </div>
                   <div className="text-sm text-muted-foreground mb-4">
                     e-checks & ACH pending verification
@@ -715,7 +714,6 @@ export default function PaymentsPage() {
                   <Button 
                     variant="default"
                     size="sm"
-                    className="w-full"
                   >
                     View Unsettled ACHs
                   </Button>
@@ -724,15 +722,14 @@ export default function PaymentsPage() {
             </Card>
             
             {/* Preventable Refunds Card */}
-            <Card className="shadow-sm border-t-4 border-t-destructive/30 flex flex-col">
-              <CardHeader className="py-3 px-5 border-b bg-destructive/5">
-                <CardTitle className="text-base font-medium">Preventable Refunds</CardTitle>
+            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
+                <CardTitle className="text-sm font-medium">Preventable Refunds</CardTitle>
               </CardHeader>
-              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+              <CardContent className="py-4 px-5 flex-1 flex flex-col">
                 <div>
-                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
-                    <span>${preventableRefundsTotal} this month</span>
-                    <ChevronRight className="h-5 w-5 text-destructive" />
+                  <div className="text-xl font-bold mb-1">
+                    ${preventableRefundsTotal} this month
                   </div>
                   <div className="text-sm text-muted-foreground mb-4">
                     Double-charges and wrong amount entries
@@ -743,7 +740,6 @@ export default function PaymentsPage() {
                   <Button 
                     variant="default"
                     size="sm"
-                    className="w-full"
                   >
                     See Root-Cause List
                   </Button>
