@@ -278,23 +278,24 @@ export default function CalendarView({
       {
         id: 11,
         patientId: 11,
-        patient: { id: 11, firstName: "Alexander", lastName: "Anderson", avatarInitials: "AA", dateOfBirth: null, insuranceProvider: "BlueCross", allergies: null, balanceDue: 800 },
+        patient: { id: 11, firstName: "Alexandra", lastName: "Anderson", avatarInitials: "AA", dateOfBirth: null, insuranceProvider: "BlueCross", allergies: null, balanceDue: 800 },
         providerId: 3,
         provider: { id: 3, name: "Dr. Johnson", role: "Dentist", color: "#90CAF9" },
         operatoryId: 3,
         operatory: { id: 3, name: "Op 3", color: "#D7CCC8" },
         date: selectedDate,
-        startTime: "13:30:00",
+        startTime: "13:00:00",
         endTime: null,
         duration: 45,
         durationMinutes: null,
         procedure: "Comprehensive Oral Evaluation",
         cdtCode: "D0150",
         isVerified: null,
-        confirmedAt: null,
-        arrivedAt: null,
-        chairStartedAt: null,
-        completedAt: null
+        confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 20),
+        arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 10),
+        chairStartedAt: new Date(),
+        completedAt: null,
+        status: "in_chair"
       },
       {
         id: 12,
@@ -423,6 +424,30 @@ export default function CalendarView({
         arrivedAt: null,
         chairStartedAt: null,
         completedAt: null
+      },
+      
+      // Add one more appointment with "in_chair" status
+      {
+        id: 21,
+        patientId: 21,
+        patient: { id: 21, firstName: "Daniel", lastName: "Wright", avatarInitials: "DW", dateOfBirth: null, insuranceProvider: "Delta Dental", allergies: null, balanceDue: 150 },
+        providerId: 4,
+        provider: { id: 4, name: "Dr. Maria", role: "Dentist", color: "#C5E1A5" },
+        operatoryId: 4,
+        operatory: { id: 4, name: "Op 4", color: "#D6EEDA" },
+        date: selectedDate,
+        startTime: "12:30:00",
+        endTime: null,
+        duration: 60,
+        durationMinutes: null,
+        procedure: "Root Canal - Anterior",
+        cdtCode: "D3310",
+        isVerified: null,
+        confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 40),
+        arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 25),
+        chairStartedAt: new Date(new Date().getTime() - 1000 * 60 * 10),
+        completedAt: null,
+        status: "in_chair"
       },
       
       // More random appointments for different operatories
