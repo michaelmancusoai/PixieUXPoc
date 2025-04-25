@@ -1,0 +1,70 @@
+Capacity Planner — turning blank chair-time into booked revenue
+Design blueprint (Rory-style) for the new Schedule ▸ Capacity page.
+
+0 · One-sentence purpose
+
+See at a glance where your chairs and clinicians are under- or over-booked during the next two weeks, and act on the gaps without ever leaving the view.
+1 · Page anatomy
+
+
+Zone	Span	Question answered	Key components
+Hero KPIs	full-width row	“How healthy is next fortnight’s load?”	3 cards + 1 progress sash
+Heatmap grid	9⁄12 cols	“Where exactly are the gaps?”	Week calendar matrix with colour density
+Gap Actions panel	3⁄12 cols (sticky)	“What can I drop into that gap?”	Waitlist, Online Requests, Unscheduled Tx tabs
+2 · Hero KPIs (single-action cards)
+
+
+Card	Formula	Copy & colour	CTA
+Chair Utilisation	Chair-minutes booked ÷ total available next 14 d	✅ 76 % booked
+Goal ribbon: 80 %	View Free Slots
+Prime-Time Gaps	Unbooked minutes 8 a-12 p + 3 p-5 p (next 7 d)	⚠️ 310 min open	Fill With Waitlist
+Provider Imbalance	Std dev of provider utilisation	🔶 Dr Nguyen light · Dr Sisko heavy	Rebalance
+Unbooked High-Value Tx (sash)	Sum of accepted Tx lacking appt	$12 450 waiting	Schedule Plans
+Colour bands:
+
+Mint when ≥ goal • Amber when 70-79 % • Coral when < 70 %
+3 · Heatmap grid
+
+            Week of  29 Apr – 5 May            (provider toggle)
+┌──────────────── Time (rows) ────────────────┐
+│          Mon      Tue      Wed …            │
+│ 7 a      ░░░░░   ░░░      ░░░░░             │
+│ 8 a      ████    ░░░░░   ████              │
+│ 9 a      ██████  ██····  ████ etc.         │
+│ …                                          │
+└─────────────────────────────────────────────┘
+Colour intensity = percentage of chair capacity booked (0 % white → 100 % full navy).
+Hover cell → tooltip: “Op 2 • Dr Picard • 40 min free” + Add Appointment button.
+Provider toggle pills: All • Dentists • Hygienists • Techs.
+Granularity selector: 15/30/60 min; zoom animates.
+4 · Gap Actions sticky panel (right rail)
+
+
+Tab	Contents	Drag-drop into heatmap
+Waitlist	ASAP list sorted by longest wait × production value	✓
+Online Requests	Portal requests needing slot	✓
+Unscheduled Tx	Accepted treatment plans; prod value badge	✓
+Recalls Due	Patients due ± 1 week; hygiene badge	✓
+Drag card → hover a free cell → cell flashes mint; release schedules with default duration.
+
+5 · Micro-interactions
+
+
+Action	Feedback
+Gap filled	Cell animates green pulse → grid re-calculates KPI bars in header (goal-gradient).
+Hover KPI card	Shows formula + link “How calculated?”.
+Hover empty heatmap cell	Faint dotted outline + “Drag patient here”.
+KPI turns green	1-second confetti tick at card corner.
+6 · Copy primer
+
+Chair Utilisation: “Booked vs possible chair-time next 2 weeks.”
+Prime-Time Gaps: “Unused peak hours patients actually want.”
+Provider Imbalance: “Spread work evenly to avoid burnout + overtime.”
+Rebalance tooltip: “Move low-value checks from Dr Sisko to Dr Nguyen’s lighter afternoons.”
+Tone = coach, not scold.
+
+7 · Behavioural nudges
+
+Scarcity framing: Prime-Time card shows “4 prime slots left — fill before 10 a.m.”
+Endowed progress: Utilisation bar shows faint grey to 100 % so 76 % already feels “nearly there.”
+Loss aversion: Tooltip on Unbooked Tx: “Every week delay ≈ $900 unrecovered.”
