@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, PlusCircle, Calendar as CalendarIcon, Expand, Minimize } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PlusCircle, Calendar as CalendarIcon, Expand, Minimize, CalendarDays } from 'lucide-react';
 import { ViewModeType } from '@/lib/scheduling-constants';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
@@ -43,8 +43,9 @@ export default function AppHeader({
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {/* Today button */}
-          <Button variant="outline" size="sm" onClick={onToday} className="h-8">
-            Today
+          <Button variant="outline" size="sm" onClick={onToday} className="h-8 flex items-center gap-1">
+            <CalendarDays className="h-3.5 w-3.5" />
+            <span>Today</span>
           </Button>
           
           {/* Patient counts */}
