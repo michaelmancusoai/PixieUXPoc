@@ -340,7 +340,7 @@ export default function CalendarView({
 
   return (
     <Card className="w-full h-full border rounded-md">
-      <div className="overflow-auto relative" style={{ height: "calc(100vh - 150px)" }}>
+      <div className="overflow-auto relative" style={{ height: "calc(100vh - 120px)" }}>
         {/* Removing absolute positioned time indicator - using a different approach */}
         {/* Resource column headers */}
         <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
@@ -373,7 +373,7 @@ export default function CalendarView({
         {/* Time grid */}
         <div className="grid" style={{ 
           gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)`,
-          minHeight: "1500px"  /* Ensure enough height to show all time slots */
+          minHeight: "1440px"  /* Ensure entire 7am-7pm range is visible (144 slots × 10px) */
         }}>
           {/* Time column with enhanced styling - darker solid gray background */}
           <div className="border-r bg-gray-200 relative">
