@@ -72,15 +72,15 @@ export default function RightRail({ selectedDate }: RightRailProps) {
       {/* Main Card with Accordion layout similar to LeftRail */}
       <Card className="shadow-sm">
         <CardContent className="p-0">
-          <Accordion type="multiple" className="w-full" defaultValue={["upcoming-checkins", "ready-checkout", "alerts"]}>
+          <Accordion type="multiple" className="w-full" defaultValue={["checkins", "checkout", "alerts"]}>
             
-            {/* Upcoming Check-ins Section */}
-            <AccordionItem value="upcoming-checkins" className="border-b">
+            {/* Check-ins Section */}
+            <AccordionItem value="checkins" className="border-b">
               <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
                 <div className="flex items-center w-full">
                   <div className="flex items-center">
                     <UserCheck className="mr-2 h-4 w-4 text-green-500" />
-                    <h3 className="font-medium">Upcoming Check-ins</h3>
+                    <h3 className="font-medium">Check-ins</h3>
                   </div>
                   <div className="ml-auto">
                     <Badge variant="outline" className="text-xs font-medium bg-white text-gray-700 border-gray-200 rounded px-2 py-0.5">
@@ -126,13 +126,13 @@ export default function RightRail({ selectedDate }: RightRailProps) {
               </AccordionContent>
             </AccordionItem>
             
-            {/* Ready for Checkout Section */}
-            <AccordionItem value="ready-checkout" className="border-b">
+            {/* Checkout Section */}
+            <AccordionItem value="checkout" className="border-b">
               <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
                 <div className="flex items-center w-full">
                   <div className="flex items-center">
                     <LogOut className="mr-2 h-4 w-4 text-purple-500" />
-                    <h3 className="font-medium">Ready for Checkout</h3>
+                    <h3 className="font-medium">Checkout</h3>
                   </div>
                   <div className="ml-auto">
                     <Badge variant="outline" className="text-xs font-medium bg-white text-gray-700 border-gray-200 rounded px-2 py-0.5">
@@ -176,7 +176,7 @@ export default function RightRail({ selectedDate }: RightRailProps) {
                 <div className="flex items-center w-full">
                   <div className="flex items-center">
                     <AlertTriangle className="mr-2 h-4 w-4 text-yellow-500" />
-                    <h3 className="font-medium">Appointment Alerts</h3>
+                    <h3 className="font-medium">Alerts</h3>
                   </div>
                   <div className="ml-auto">
                     <Badge variant="outline" className="text-xs font-medium bg-white text-gray-700 border-gray-200 rounded px-2 py-0.5">
