@@ -2,13 +2,13 @@ import { AppointmentWithDetails } from "./scheduling-utils";
 
 export function getDemoAppointments(selectedDate: Date) {
   return [
-    // Operatory 1 - Mixed providers (Dr. Nguyen and Dr. Robert)
+    // Operatory 1 - Mixed providers (Dr. Picard and Dr. Sisko)
     {
       id: 1,
       patientId: 1,
       patient: { id: 1, firstName: "Rick", lastName: "Sanchez", avatarInitials: "RS", dateOfBirth: null, insuranceProvider: "Delta Dental", allergies: null, balanceDue: 0 },
-      providerId: 1, // Dr. Nguyen
-      provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
+      providerId: 1, // Dr. Picard
+      provider: { id: 1, name: "Dr. Picard", role: "Dentist", color: "#FF9E80" },
       operatoryId: 1,
       operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
       date: selectedDate,
@@ -28,8 +28,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 2,
       patientId: 2,
       patient: { id: 2, firstName: "Morty", lastName: "Smith", avatarInitials: "MS", dateOfBirth: null, insuranceProvider: "Cigna", allergies: null, balanceDue: 4500 },
-      providerId: 2, // Dr. Robert
-      provider: { id: 2, name: "Dr. Robert", role: "Dentist", color: "#B39DDB" },
+      providerId: 2, // Dr. Sisko
+      provider: { id: 2, name: "Dr. Sisko", role: "Dentist", color: "#B39DDB" },
       operatoryId: 1,
       operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
       date: selectedDate,
@@ -49,8 +49,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 5,
       patientId: 5,
       patient: { id: 5, firstName: "Summer", lastName: "Smith", avatarInitials: "SS", dateOfBirth: null, insuranceProvider: "Delta Dental", allergies: null, balanceDue: 0 },
-      providerId: 1, // Dr. Nguyen
-      provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
+      providerId: 1, // Dr. Picard
+      provider: { id: 1, name: "Dr. Picard", role: "Dentist", color: "#FF9E80" },
       operatoryId: 1,
       operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
       date: selectedDate,
@@ -70,8 +70,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 6,
       patientId: 6,
       patient: { id: 6, firstName: "Beth", lastName: "Smith", avatarInitials: "BS", dateOfBirth: null, insuranceProvider: "Guardian", allergies: null, balanceDue: 0 },
-      providerId: 2, // Dr. Robert
-      provider: { id: 2, name: "Dr. Robert", role: "Dentist", color: "#B39DDB" },
+      providerId: 2, // Dr. Sisko
+      provider: { id: 2, name: "Dr. Sisko", role: "Dentist", color: "#B39DDB" },
       operatoryId: 1,
       operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
       date: selectedDate,
@@ -88,13 +88,13 @@ export function getDemoAppointments(selectedDate: Date) {
       completedAt: null
     },
     
-    // Operatory 2 - Mixed providers (Dr. Johnson and Dr. Maria)
+    // Operatory 2 - Mixed providers (Dr. Janeway and Dr. Archer)
     {
       id: 3,
       patientId: 3,
       patient: { id: 3, firstName: "Jerry", lastName: "Smith", avatarInitials: "JS", dateOfBirth: null, insuranceProvider: "Aetna", allergies: null, balanceDue: 0 },
-      providerId: 4, // Dr. Maria
-      provider: { id: 4, name: "Dr. Maria", role: "Dentist", color: "#C5E1A5" },
+      providerId: 4, // Dr. Archer
+      provider: { id: 4, name: "Dr. Archer", role: "Dentist", color: "#C5E1A5" },
       operatoryId: 2,
       operatory: { id: 2, name: "Op 2", color: "#FFD6D6" },
       date: selectedDate,
@@ -114,8 +114,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 8,
       patientId: 8,
       patient: { id: 8, firstName: "Bird", lastName: "Person", avatarInitials: "BP", dateOfBirth: null, insuranceProvider: "Humana", allergies: null, balanceDue: 1200 },
-      providerId: 3, // Dr. Johnson
-      provider: { id: 3, name: "Dr. Johnson", role: "Dentist", color: "#90CAF9" },
+      providerId: 3, // Dr. Janeway
+      provider: { id: 3, name: "Dr. Janeway", role: "Dentist", color: "#90CAF9" },
       operatoryId: 2,
       operatory: { id: 2, name: "Op 2", color: "#FFD6D6" },
       date: selectedDate,
@@ -135,8 +135,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 13,
       patientId: 13,
       patient: { id: 13, firstName: "Benjamin", lastName: "Jackson", avatarInitials: "BJ", dateOfBirth: null, insuranceProvider: "MetLife", allergies: null, balanceDue: 750 },
-      providerId: 4, // Dr. Maria
-      provider: { id: 4, name: "Dr. Maria", role: "Dentist", color: "#C5E1A5" },
+      providerId: 4, // Dr. Archer
+      provider: { id: 4, name: "Dr. Archer", role: "Dentist", color: "#C5E1A5" },
       operatoryId: 2,
       operatory: { id: 2, name: "Op 2", color: "#FFD6D6" },
       date: selectedDate,
@@ -156,8 +156,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 9,
       patientId: 9,
       patient: { id: 9, firstName: "James", lastName: "Miller", avatarInitials: "JM", dateOfBirth: null, insuranceProvider: "UnitedHealthcare", allergies: null, balanceDue: 0 },
-      providerId: 3, // Dr. Johnson
-      provider: { id: 3, name: "Dr. Johnson", role: "Dentist", color: "#90CAF9" },
+      providerId: 3, // Dr. Janeway
+      provider: { id: 3, name: "Dr. Janeway", role: "Dentist", color: "#90CAF9" },
       operatoryId: 2,
       operatory: { id: 2, name: "Op 2", color: "#FFD6D6" },
       date: selectedDate,
@@ -177,8 +177,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 14,
       patientId: 14,
       patient: { id: 14, firstName: "Ava", lastName: "White", avatarInitials: "AW", dateOfBirth: null, insuranceProvider: "Guardian", allergies: null, balanceDue: 0 },
-      providerId: 4, // Dr. Maria
-      provider: { id: 4, name: "Dr. Maria", role: "Dentist", color: "#C5E1A5" },
+      providerId: 4, // Dr. Archer
+      provider: { id: 4, name: "Dr. Archer", role: "Dentist", color: "#C5E1A5" },
       operatoryId: 2,
       operatory: { id: 2, name: "Op 2", color: "#FFD6D6" },
       date: selectedDate,
@@ -198,8 +198,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 22,
       patientId: 22,
       patient: { id: 22, firstName: "D'Vana", lastName: "Tendi", avatarInitials: "DT", dateOfBirth: null, insuranceProvider: "Aetna", allergies: null, balanceDue: 325 },
-      providerId: 2, // Dr. Robert
-      provider: { id: 2, name: "Dr. Robert", role: "Dentist", color: "#B39DDB" },
+      providerId: 2, // Dr. Sisko
+      provider: { id: 2, name: "Dr. Sisko", role: "Dentist", color: "#B39DDB" },
       operatoryId: 2,
       operatory: { id: 2, name: "Op 2", color: "#FFD6D6" },
       date: selectedDate,
@@ -217,13 +217,13 @@ export function getDemoAppointments(selectedDate: Date) {
       status: "checked_in"
     },
     
-    // Operatory 3 - Mixed providers (Dr. Nguyen and Dr. Johnson)
+    // Operatory 3 - Mixed providers (Dr. Picard and Dr. Janeway)
     {
       id: 4,
       patientId: 4,
       patient: { id: 4, firstName: "Jessica", lastName: "Billard", avatarInitials: "JB", dateOfBirth: null, insuranceProvider: "MetLife", allergies: null, balanceDue: 2000 },
-      providerId: 1, // Dr. Nguyen
-      provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
+      providerId: 1, // Dr. Picard
+      provider: { id: 1, name: "Dr. Picard", role: "Dentist", color: "#FF9E80" },
       operatoryId: 3,
       operatory: { id: 3, name: "Op 3", color: "#D7CCC8" },
       date: selectedDate,
@@ -243,8 +243,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 10,
       patientId: 10,
       patient: { id: 10, firstName: "Sophia", lastName: "Wilson", avatarInitials: "SW", dateOfBirth: null, insuranceProvider: "Aetna", allergies: null, balanceDue: 350 },
-      providerId: 3, // Dr. Johnson
-      provider: { id: 3, name: "Dr. Johnson", role: "Dentist", color: "#90CAF9" },
+      providerId: 3, // Dr. Janeway
+      provider: { id: 3, name: "Dr. Janeway", role: "Dentist", color: "#90CAF9" },
       operatoryId: 3,
       operatory: { id: 3, name: "Op 3", color: "#D7CCC8" },
       date: selectedDate,
@@ -264,8 +264,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 7,
       patientId: 7,
       patient: { id: 7, firstName: "Michael", lastName: "Brown", avatarInitials: "MB", dateOfBirth: null, insuranceProvider: "MetLife", allergies: null, balanceDue: 25000 },
-      providerId: 1, // Dr. Nguyen
-      provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
+      providerId: 1, // Dr. Picard
+      provider: { id: 1, name: "Dr. Picard", role: "Dentist", color: "#FF9E80" },
       operatoryId: 3,
       operatory: { id: 3, name: "Op 3", color: "#D7CCC8" },
       date: selectedDate,
@@ -285,8 +285,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 11,
       patientId: 11,
       patient: { id: 11, firstName: "Beckett", lastName: "Mariner", avatarInitials: "BM", dateOfBirth: null, insuranceProvider: "BlueCross", allergies: null, balanceDue: 800 },
-      providerId: 3, // Dr. Johnson
-      provider: { id: 3, name: "Dr. Johnson", role: "Dentist", color: "#90CAF9" },
+      providerId: 3, // Dr. Janeway
+      provider: { id: 3, name: "Dr. Janeway", role: "Dentist", color: "#90CAF9" },
       operatoryId: 3,
       operatory: { id: 3, name: "Op 3", color: "#D7CCC8" },
       date: selectedDate,
@@ -307,8 +307,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 15,
       patientId: 15,
       patient: { id: 15, firstName: "Lucas", lastName: "Harris", avatarInitials: "LH", dateOfBirth: null, insuranceProvider: "Humana", allergies: null, balanceDue: 0 },
-      providerId: 4, // Dr. Maria
-      provider: { id: 4, name: "Dr. Maria", role: "Dentist", color: "#C5E1A5" },
+      providerId: 4, // Dr. Archer
+      provider: { id: 4, name: "Dr. Archer", role: "Dentist", color: "#C5E1A5" },
       operatoryId: 3,
       operatory: { id: 3, name: "Op 3", color: "#D7CCC8" },
       date: selectedDate,
@@ -328,8 +328,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 23,
       patientId: 23,
       patient: { id: 23, firstName: "Sam", lastName: "Rutherford", avatarInitials: "SR", dateOfBirth: null, insuranceProvider: "MetLife", allergies: null, balanceDue: 150 },
-      providerId: 3, // Dr. Johnson
-      provider: { id: 3, name: "Dr. Johnson", role: "Dentist", color: "#90CAF9" },
+      providerId: 3, // Dr. Janeway
+      provider: { id: 3, name: "Dr. Janeway", role: "Dentist", color: "#90CAF9" },
       operatoryId: 3,
       operatory: { id: 3, name: "Op 3", color: "#D7CCC8" },
       date: selectedDate,
@@ -347,13 +347,13 @@ export function getDemoAppointments(selectedDate: Date) {
       status: "checked_in"
     },
     
-    // Operatory 4 - Mixed providers (Dr. Robert and Dr. Maria)
+    // Operatory 4 - Mixed providers (Dr. Sisko and Dr. Archer)
     {
       id: 17,
       patientId: 17,
       patient: { id: 17, firstName: "Ethan", lastName: "Thompson", avatarInitials: "ET", dateOfBirth: null, insuranceProvider: "Aetna", allergies: null, balanceDue: 200 },
-      providerId: 2, // Dr. Robert
-      provider: { id: 2, name: "Dr. Robert", role: "Dentist", color: "#B39DDB" },
+      providerId: 2, // Dr. Sisko
+      provider: { id: 2, name: "Dr. Sisko", role: "Dentist", color: "#B39DDB" },
       operatoryId: 4,
       operatory: { id: 4, name: "Op 4", color: "#D6EEDA" },
       date: selectedDate,
@@ -373,8 +373,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 16,
       patientId: 16,
       patient: { id: 16, firstName: "Mia", lastName: "Martin", avatarInitials: "MM", dateOfBirth: null, insuranceProvider: "Delta Dental", allergies: null, balanceDue: 1500 },
-      providerId: 4, // Dr. Maria
-      provider: { id: 4, name: "Dr. Maria", role: "Dentist", color: "#C5E1A5" },
+      providerId: 4, // Dr. Archer
+      provider: { id: 4, name: "Dr. Archer", role: "Dentist", color: "#C5E1A5" },
       operatoryId: 4,
       operatory: { id: 4, name: "Op 4", color: "#D6EEDA" },
       date: selectedDate,
@@ -394,8 +394,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 18,
       patientId: 18,
       patient: { id: 18, firstName: "Isabella", lastName: "Garcia", avatarInitials: "IG", dateOfBirth: null, insuranceProvider: "Cigna", allergies: null, balanceDue: 0 },
-      providerId: 2, // Dr. Robert
-      provider: { id: 2, name: "Dr. Robert", role: "Dentist", color: "#B39DDB" },
+      providerId: 2, // Dr. Sisko
+      provider: { id: 2, name: "Dr. Sisko", role: "Dentist", color: "#B39DDB" },
       operatoryId: 4,
       operatory: { id: 4, name: "Op 4", color: "#D6EEDA" },
       date: selectedDate,
@@ -415,8 +415,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 21,
       patientId: 21,
       patient: { id: 21, firstName: "Bradward", lastName: "Boimler", avatarInitials: "BB", dateOfBirth: null, insuranceProvider: "Delta Dental", allergies: null, balanceDue: 750 },
-      providerId: 4, // Dr. Maria
-      provider: { id: 4, name: "Dr. Maria", role: "Dentist", color: "#C5E1A5" },
+      providerId: 4, // Dr. Archer
+      provider: { id: 4, name: "Dr. Archer", role: "Dentist", color: "#C5E1A5" },
       operatoryId: 4,
       operatory: { id: 4, name: "Op 4", color: "#D6EEDA" },
       date: selectedDate,
@@ -437,8 +437,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 19,
       patientId: 19,
       patient: { id: 19, firstName: "Mason", lastName: "Martinez", avatarInitials: "MM", dateOfBirth: null, insuranceProvider: "MetLife", allergies: null, balanceDue: 0 },
-      providerId: 2, // Dr. Robert
-      provider: { id: 2, name: "Dr. Robert", role: "Dentist", color: "#B39DDB" },
+      providerId: 2, // Dr. Sisko
+      provider: { id: 2, name: "Dr. Sisko", role: "Dentist", color: "#B39DDB" },
       operatoryId: 4,
       operatory: { id: 4, name: "Op 4", color: "#D6EEDA" },
       date: selectedDate,
@@ -458,8 +458,8 @@ export function getDemoAppointments(selectedDate: Date) {
       id: 20,
       patientId: 20,
       patient: { id: 20, firstName: "Charlotte", lastName: "Robinson", avatarInitials: "CR", dateOfBirth: null, insuranceProvider: "BlueCross", allergies: null, balanceDue: 0 },
-      providerId: 1, // Dr. Nguyen
-      provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
+      providerId: 1, // Dr. Picard
+      provider: { id: 1, name: "Dr. Picard", role: "Dentist", color: "#FF9E80" },
       operatoryId: 1,
       operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
       date: selectedDate,

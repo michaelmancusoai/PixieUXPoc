@@ -37,7 +37,7 @@ export default function RightRail({ selectedDate }: RightRailProps) {
   // Updated appointment alerts
   const appointmentAlerts = [
     { id: 1, message: 'Jessica Billard is running 15 minutes late', type: 'warning' },
-    { id: 2, message: 'Dr. Nguyen procedure with Jerry Smith is taking longer than expected', type: 'info' },
+    { id: 2, message: 'Dr. Picard procedure with Jerry Smith is taking longer than expected', type: 'info' },
     { id: 3, message: 'Bird Person has arrived early (30 minutes)', type: 'info' },
   ];
   
@@ -47,7 +47,7 @@ export default function RightRail({ selectedDate }: RightRailProps) {
       id: 11, 
       name: 'Beckett Mariner', 
       procedure: 'Comprehensive Oral Evaluation', 
-      provider: 'Dr. Johnson',
+      provider: 'Dr. Janeway',
       time: '1:00 PM', 
       paymentAmount: 325.50, 
       needsFollowUp: true 
@@ -56,7 +56,7 @@ export default function RightRail({ selectedDate }: RightRailProps) {
       id: 21, 
       name: 'Bradward Boimler', 
       procedure: 'Root Canal - Anterior', 
-      provider: 'Dr. Maria',
+      provider: 'Dr. Archer',
       time: '1:00 PM', 
       paymentAmount: 720.00, 
       needsFollowUp: true 
@@ -65,7 +65,7 @@ export default function RightRail({ selectedDate }: RightRailProps) {
       id: 7, 
       name: 'Michael Brown', 
       procedure: 'Resin-Based Composite - Four Surfaces', 
-      provider: 'Dr. Nguyen',
+      provider: 'Dr. Picard',
       time: '11:00 AM', 
       paymentAmount: 145.00, 
       needsFollowUp: false 
