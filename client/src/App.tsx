@@ -73,7 +73,6 @@ function Router() {
       <Route path="/reports/:subpage" component={ReportsPage} />
       <Route path="/settings" component={SettingsPage} />
       <Route path="/settings/theme" component={ThemeSettingsPage} />
-      <Route path="/settings/team" component={SettingsPage} />
       <Route path="/settings/:subpage" component={SettingsPage} />
       <Route path="/patients/chart/:id" component={ToothChartPage} />
       <Route component={NotFound} />

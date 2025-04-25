@@ -1,115 +1,200 @@
-import { useLocation, Link, Route, Switch, Redirect } from "wouter";
-import { cn } from "@/lib/utils";
-import TeamMembersPage from "./settings/TeamMembersPage";
-import ThemeSettingsPage from "./settings/ThemeSettingsPage";
-import {
-  Settings,
-  Users,
-  Building,
-  Palette,
-  ShieldCheck,
-  BarChart3,
-  Bell,
-  FileText,
+import { NavigationWrapper } from "@/components/NavigationWrapper";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { 
+  Building, 
+  Shield, 
+  Calendar, 
+  Activity, 
+  Receipt, 
+  MessageSquare, 
+  Package, 
+  Wallet, 
+  RefreshCcw, 
+  Cog, 
+  CreditCard, 
+  FileBarChart, 
+  Users, 
+  LockKeyhole, 
+  Palette
 } from "lucide-react";
-
-const settingsItems = [
-  {
-    title: "Team Members",
-    href: "/settings/team",
-    icon: Users,
-    component: TeamMembersPage,
-  },
-  {
-    title: "Practice Info",
-    href: "/settings/practice",
-    icon: Building,
-    component: () => <div className="p-6">Practice info settings (coming soon)</div>,
-  },
-  {
-    title: "Theme",
-    href: "/settings/theme",
-    icon: Palette,
-    component: ThemeSettingsPage,
-  },
-  {
-    title: "Permissions",
-    href: "/settings/permissions",
-    icon: ShieldCheck,
-    component: () => <div className="p-6">Permissions settings (coming soon)</div>,
-  },
-  {
-    title: "Analytics",
-    href: "/settings/analytics",
-    icon: BarChart3,
-    component: () => <div className="p-6">Analytics settings (coming soon)</div>,
-  },
-  {
-    title: "Notifications",
-    href: "/settings/notifications",
-    icon: Bell,
-    component: () => <div className="p-6">Notification settings (coming soon)</div>,
-  },
-  {
-    title: "Logs",
-    href: "/settings/logs",
-    icon: FileText,
-    component: () => <div className="p-6">System logs (coming soon)</div>,
-  },
-];
+import { useLocation } from "wouter";
 
 export default function SettingsPage() {
-  const [location, setLocation] = useLocation();
+  const [, navigate] = useLocation();
+
+  const handleCardClick = (path: string) => {
+    navigate(path);
+  };
   
-  // Simple redirection to the team members page
-  if (location === "/settings") {
-    setLocation("/settings/team");
-    return null;
-  }
-
   return (
-    <div className="container grid grid-cols-6 gap-6 py-8">
-      {/* Sidebar */}
-      <aside className="col-span-1 space-y-1">
-        <div className="font-semibold flex items-center py-2 mb-4">
-          <Settings className="w-4 h-4 mr-2" />
-          <span>Settings</span>
+    <NavigationWrapper>
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold">Settings</h1>
+        
+        {/* Practice Settings */}
+        <div className="space-y-3">
+          <h2 className="text-xl font-semibold border-b pb-2">Practice</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <SettingsCard 
+              title="Practice Profile" 
+              description="Manage your practice information, locations, and contact details" 
+              icon={Building} 
+            />
+            <SettingsCard 
+              title="Scheduling" 
+              description="Configure appointment types, durations, and availability" 
+              icon={Calendar} 
+            />
+            <SettingsCard 
+              title="Communications" 
+              description="Set up automated reminders, notifications, and templates" 
+              icon={MessageSquare} 
+            />
+            <SettingsCard 
+              title="Practice Finances" 
+              description="Manage financial settings, reports, and tax information" 
+              icon={Wallet} 
+            />
+          </div>
         </div>
-        <nav className="flex flex-col">
-          {settingsItems.map((item) => {
-            const isActive = location === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-md px-3 py-2 text-sm transition-colors",
-                  isActive 
-                    ? "bg-primary text-primary-foreground" 
-                    : "hover:bg-muted text-muted-foreground hover:text-foreground"
-                )}
-              >
-                <item.icon className="h-4 w-4" />
-                <span>{item.title}</span>
-              </Link>
-            );
-          })}
-        </nav>
-      </aside>
+        
+        {/* Users & Security Settings */}
+        <div className="space-y-3">
+          <h2 className="text-xl font-semibold border-b pb-2">Users & Security</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <SettingsCard 
+              title="Team Members" 
+              description="Manage staff accounts, roles, and permissions" 
+              icon={Users} 
+            />
+            <SettingsCard 
+              title="Security" 
+              description="Configure security settings, 2FA, and session controls" 
+              icon={Shield} 
+            />
+            <SettingsCard 
+              title="Access Logs" 
+              description="View system access history and security events" 
+              icon={FileBarChart} 
+            />
+            <SettingsCard 
+              title="User Permissions" 
+              description="Set granular access controls for different user roles" 
+              icon={LockKeyhole} 
+            />
+          </div>
+        </div>
+        
+        {/* Clinical Settings */}
+        <div className="space-y-3">
+          <h2 className="text-xl font-semibold border-b pb-2">Clinical</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <SettingsCard 
+              title="Clinical Templates" 
+              description="Configure clinical notes, forms, and treatment plan templates" 
+              icon={Activity} 
+            />
+            <SettingsCard 
+              title="Inventory" 
+              description="Manage supplies, equipment, and ordering thresholds" 
+              icon={Package} 
+            />
+            <SettingsCard 
+              title="AI Automation" 
+              description="Configure AI tools for clinical recommendations and workflow automation" 
+              icon={RefreshCcw} 
+            />
+          </div>
+        </div>
+        
+        {/* Billing Settings */}
+        <div className="space-y-3">
+          <h2 className="text-xl font-semibold border-b pb-2">Billing</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <SettingsCard 
+              title="Billing & Payments" 
+              description="Configure payment methods, processing, and auto-billing" 
+              icon={Receipt} 
+            />
+            <SettingsCard 
+              title="Fee Schedules" 
+              description="Manage procedure codes, fees, and insurance contracts" 
+              icon={FileBarChart} 
+            />
+            <SettingsCard 
+              title="Subscription" 
+              description="Manage your Pixie Dental subscription and billing details" 
+              icon={CreditCard} 
+            />
+          </div>
+        </div>
+        
+        {/* Appearance Settings */}
+        <div className="space-y-3">
+          <h2 className="text-xl font-semibold border-b pb-2">Appearance</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <SettingsCard 
+              title="Theme" 
+              description="Customize colors, spacing, and visual elements to match your practice branding" 
+              icon={Palette} 
+              onClick={() => handleCardClick("/settings/theme")}
+            />
+          </div>
+        </div>
+        
+        {/* Integrations Settings */}
+        <div className="space-y-3 mb-6">
+          <h2 className="text-xl font-semibold border-b pb-2">Integrations</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+            <SettingsCard 
+              title="External Services" 
+              description="Connect with external services, labs, and referral networks" 
+              icon={Cog} 
+            />
+            <SettingsCard 
+              title="API Settings" 
+              description="Manage API keys and external application access" 
+              icon={Cog} 
+            />
+            <SettingsCard 
+              title="Referral Management" 
+              description="Configure referral workflows and partner communications" 
+              icon={Users} 
+            />
+          </div>
+        </div>
+      </div>
+    </NavigationWrapper>
+  );
+}
 
-      {/* Content */}
-      <main className="col-span-5">
-        <Switch>
-          {settingsItems.map((item) => (
-            <Route key={item.href} path={item.href} component={item.component} />
-          ))}
-          <Route>
-            <div className="p-6 text-center">
-              <p>Select a settings category from the sidebar</p>
-            </div>
-          </Route>
-        </Switch>
-      </main>
-    </div>
+interface SettingsCardProps {
+  title: string;
+  description: string;
+  icon: React.ElementType;
+  onClick?: () => void;
+}
+
+function SettingsCard({ title, description, icon: Icon, onClick }: SettingsCardProps) {
+  return (
+    <Card 
+      className="hover:border-primary/50 transition-colors cursor-pointer"
+      onClick={onClick}
+    >
+      <CardHeader className="flex flex-row items-center gap-3 p-3 pb-2">
+        <div className="bg-primary/10 p-1.5 rounded-md flex-shrink-0">
+          <Icon className="h-4 w-4 text-primary" />
+        </div>
+        <div>
+          <CardTitle className="text-base">{title}</CardTitle>
+          <CardDescription className="text-xs leading-tight mt-0.5">{description}</CardDescription>
+        </div>
+      </CardHeader>
+      <CardContent className="pt-0 pb-2 px-3">
+        <div className="text-xs text-right text-muted-foreground">
+          Configure →
+        </div>
+      </CardContent>
+    </Card>
   );
 }
