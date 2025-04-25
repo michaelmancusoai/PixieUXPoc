@@ -62,7 +62,7 @@ const PlanetPixiePage = () => {
     return (
       <div 
         key={index} 
-        className={`${isCollected ? 'opacity-50' : 'opacity-100 cursor-pointer animate-pulse'}`}
+        className={`relative ${isCollected ? 'cursor-default' : 'cursor-pointer animate-pulse'}`}
         onClick={() => {
           if (!isCollected) {
             const newCompletedCoins = new Set(completedCoins);
@@ -71,16 +71,34 @@ const PlanetPixiePage = () => {
             
             // Check if all coins are collected to advance level
             if (level === GameLevel.LEVEL_1 && newCompletedCoins.size >= 3) {
-              setTimeout(() => advanceLevel(), 500);
+              // Show a level complete message before advancing
+              setLevelCompleteMessage("LEVEL 1 COMPLETE! Ready for Level 2?");
+              setTimeout(() => {
+                setLevelCompleteMessage(null);
+                advanceLevel();
+              }, 2000);
             } else if (level === GameLevel.LEVEL_2 && newCompletedCoins.size >= 5) {
-              setTimeout(() => advanceLevel(), 500);
+              setLevelCompleteMessage("LEVEL 2 COMPLETE! Ready for the Final Level?");
+              setTimeout(() => {
+                setLevelCompleteMessage(null);
+                advanceLevel();
+              }, 2000);
             } else if (level === GameLevel.LEVEL_FINAL && newCompletedCoins.size >= 10) {
-              setTimeout(() => advanceLevel(), 500);
+              setLevelCompleteMessage("FINAL LEVEL COMPLETE! VICTORY!");
+              setTimeout(() => {
+                setLevelCompleteMessage(null);
+                advanceLevel();
+              }, 2000);
             }
           }
         }}
       >
         <i className="nes-icon coin"></i>
+        {isCollected && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 rounded-full">
+            <i className="nes-icon is-small star"></i>
+          </div>
+        )}
       </div>
     );
   };
@@ -101,11 +119,12 @@ const PlanetPixiePage = () => {
     }
   };
 
-  // Additional state variables for game effects
+  // Additional state variables for game effects and UI
   const [showConfetti, setShowConfetti] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
   const [showGrandFinale, setShowGrandFinale] = useState(false);
   const [showWhiteFlag, setShowWhiteFlag] = useState(false);
+  const [levelCompleteMessage, setLevelCompleteMessage] = useState<string | null>(null);
   
   // Function to advance to next level
   const advanceLevel = () => {
@@ -421,6 +440,16 @@ const PlanetPixiePage = () => {
               
               <div className="relative mb-4">
                 {renderGameContent()}
+                
+                {/* Level Complete Dialog */}
+                {levelCompleteMessage && (
+                  <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50">
+                    <div className="nes-container is-rounded is-dark pixelated max-w-md mx-auto p-4 font-press-start text-center">
+                      <p className="text-warning text-xl mb-4">{levelCompleteMessage}</p>
+                      <i className="nes-icon trophy is-large animate-pulse"></i>
+                    </div>
+                  </div>
+                )}
                 
                 {/* Celebrations */}
                 {/* Regular confetti celebration */}
