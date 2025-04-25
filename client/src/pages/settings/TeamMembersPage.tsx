@@ -310,7 +310,7 @@ export default function TeamMembersPage() {
 
       {/* Add Team Member Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Add Team Member</DialogTitle>
             <DialogDescription>
@@ -348,33 +348,35 @@ export default function TeamMembersPage() {
                 />
               </div>
               
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email</FormLabel>
-                    <FormControl>
-                      <Input placeholder="john.doe@example.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="username"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Username</FormLabel>
-                    <FormControl>
-                      <Input placeholder="johndoe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder="john.doe@example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <Input placeholder="johndoe" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               
               <div className="grid grid-cols-2 gap-4">
                 <FormField
@@ -405,84 +407,84 @@ export default function TeamMembersPage() {
                 />
               </div>
               
-              <FormField
-                control={form.control}
-                name="accountStage"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Account Status</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select account status" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {Object.values(accountStages).map((stage) => (
-                          <SelectItem key={stage.value} value={stage.value}>
-                            {stage.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>
-                      {accountStages[field.value]?.description || "Set the initial account status"}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="accountStage"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Account Status</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select account status" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.values(accountStages).map((stage) => (
+                            <SelectItem key={stage.value} value={stage.value}>
+                              {stage.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormDescription className="text-xs">
+                        {field.value && accountStages[field.value]?.description || "Set the initial account status"}
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <div className="pt-7">
+                  <h4 className="text-sm font-medium mb-2">Roles</h4>
+                  <p className="text-xs text-muted-foreground">Select this user's roles</p>
+                </div>
+              </div>
               
               <FormField
                 control={form.control}
                 name="roles"
                 render={() => (
                   <FormItem>
-                    <div className="mb-2">
-                      <FormLabel>Roles</FormLabel>
-                      <FormDescription>
-                        Select the roles this team member will have
-                      </FormDescription>
+                    <div className="grid grid-cols-2 gap-2">
+                      {roleOptions.map((role) => (
+                        <FormField
+                          key={role.value}
+                          control={form.control}
+                          name="roles"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={role.value}
+                                className="flex flex-row items-center space-x-2 space-y-0 rounded-md border p-2"
+                              >
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(role.value)}
+                                    onCheckedChange={(checked) => {
+                                      const currentValues = field.value || [];
+                                      if (checked) {
+                                        field.onChange([...currentValues, role.value]);
+                                      } else {
+                                        field.onChange(
+                                          currentValues.filter((value) => value !== role.value)
+                                        );
+                                      }
+                                    }}
+                                  />
+                                </FormControl>
+                                <div>
+                                  <FormLabel className="font-medium text-sm">
+                                    {role.label}
+                                  </FormLabel>
+                                </div>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      ))}
                     </div>
-                    {roleOptions.map((role) => (
-                      <FormField
-                        key={role.value}
-                        control={form.control}
-                        name="roles"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={role.value}
-                              className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-3 mb-2"
-                            >
-                              <FormControl>
-                                <Checkbox
-                                  checked={field.value?.includes(role.value)}
-                                  onCheckedChange={(checked) => {
-                                    const currentValues = field.value || [];
-                                    if (checked) {
-                                      field.onChange([...currentValues, role.value]);
-                                    } else {
-                                      field.onChange(
-                                        currentValues.filter((value) => value !== role.value)
-                                      );
-                                    }
-                                  }}
-                                />
-                              </FormControl>
-                              <div className="space-y-1 leading-none">
-                                <FormLabel className="font-normal">
-                                  {role.label}
-                                </FormLabel>
-                                <FormDescription>
-                                  {role.description}
-                                </FormDescription>
-                              </div>
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    ))}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -519,7 +521,7 @@ export default function TeamMembersPage() {
       {/* Edit Team Member Dialog */}
       {selectedUser && (
         <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-          <DialogContent className="sm:max-w-[500px]">
+          <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Edit Team Member</DialogTitle>
               <DialogDescription>
