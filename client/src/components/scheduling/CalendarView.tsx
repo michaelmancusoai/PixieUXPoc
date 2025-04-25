@@ -369,7 +369,7 @@ export default function CalendarView({
                   p-1 border-b text-xs
                   ${index % 12 === 0 ? 'font-medium' : 'text-gray-500'}
                 `}
-                style={{ height: '20px' }}
+                style={{ height: '10px' }}
               >
                 {index % 12 === 0 && slot.label}
               </div>
@@ -384,7 +384,7 @@ export default function CalendarView({
                 const slotProps = {
                   key: index,
                   className: `border-b ${index % 12 === 0 ? 'bg-gray-50' : ''}`,
-                  style: { height: '20px' } as React.CSSProperties,
+                  style: { height: '10px' } as React.CSSProperties,
                 };
                 
                 return (
@@ -408,8 +408,8 @@ export default function CalendarView({
                 const startMinutes = parseInt(appointment.startTime.split(':')[0]) * 60 + 
                                    parseInt(appointment.startTime.split(':')[1]);
                 const startFromDayBeginning = startMinutes - (BUSINESS_START_HOUR * 60);
-                const top = (startFromDayBeginning / 5) * 20;
-                const height = (appointment.duration / 5) * 20;
+                const top = (startFromDayBeginning / 5) * 10;
+                const height = (appointment.duration / 5) * 10;
                 
                 // Determine appointment time status
                 const timeStatus = appointment.status;

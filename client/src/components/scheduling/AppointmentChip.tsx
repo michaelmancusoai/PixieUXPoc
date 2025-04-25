@@ -140,17 +140,29 @@ export default function AppointmentChip({
           {...listeners} 
           {...attributes}
         >
-          <Card className="h-full shadow-sm border-none">
-            <div className="overflow-hidden text-xs">
-              <div className="font-medium truncate">
-                {appointment.patient.firstName} {appointment.patient.lastName}
+          <Card className="h-full shadow-sm border-none p-1">
+            <div className="overflow-hidden text-xs h-full flex flex-col">
+              <div className="font-medium truncate flex justify-between items-center">
+                <span>{appointment.patient.firstName} {appointment.patient.lastName}</span>
+                {appointment.patient.balanceDue && appointment.patient.balanceDue > 0 && (
+                  <span className="text-[8px] font-bold text-red-600 whitespace-nowrap">
+                    ${(appointment.patient.balanceDue / 100).toFixed(2)}
+                  </span>
+                )}
               </div>
-              <div className="text-[10px] text-muted-foreground">
+              <div className="text-[9px] text-muted-foreground flex items-center">
+                <span className="inline-block w-2 h-2 rounded-full mr-1" 
+                  style={{ backgroundColor: appointment.provider?.color || '#ccc' }}></span>
                 {getAppointmentTiming(appointment)}
               </div>
-              <div className="text-[10px] mt-0.5 truncate">
+              <div className="text-[9px] mt-0.5 truncate flex-grow">
                 {appointment.procedure}
               </div>
+              {appointment.cdtCode && (
+                <div className="text-[8px] font-mono opacity-75 mt-auto">
+                  {appointment.cdtCode}
+                </div>
+              )}
             </div>
           </Card>
         </div>
