@@ -339,8 +339,8 @@ export default function CalendarView({
   // Status handling is now in the AppointmentChip component
 
   return (
-    <Card className="w-full h-full overflow-hidden border rounded-md">
-      <div className="h-full overflow-auto relative" style={{ minHeight: "100%" }}>
+    <Card className="w-full h-full border rounded-md">
+      <div className="overflow-auto relative" style={{ height: "calc(100vh - 150px)" }}>
         {/* Removing absolute positioned time indicator - using a different approach */}
         {/* Resource column headers */}
         <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
