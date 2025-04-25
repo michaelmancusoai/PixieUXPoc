@@ -1,0 +1,82 @@
+Smart Segments — Design Spec
+A calm cockpit for dynamic, revenue-oriented patient lists.
+
+0 · Purpose (in one line)
+
+Create, save, and act on live patient segments (recall-due, high-balance, FSA-expiring, etc.) so the team can fill chairs, collect balances, and close data gaps in minutes rather than spreadsheets.
+1 · Page Anatomy
+
+
+Zone	Span	Question it answers	Key components
+Hero KPI trio	full-width row	“Which segments are leaking—or ripe—today?”	3 actionable cards
+Saved Segment Gallery	9⁄12 cols	“What lists already exist & how healthy are they?”	Segment tiles ( Kanban style )
+Filter Builder / Segment Drawer	3⁄12 cols (sticky)	“Create or edit a segment right here.”	Multi-step builder
+Bulk-Action Bar	bottom dock	“Do something to the checked segments.”	Contextual buttons
+2 · Hero KPI Cards (one CTA each)
+
+
+Card	Metric & copy	CTA	Colour logic
+Recall Due (Next 7 d)	26 pts · $7 280 prod at risk	Book Hygiene	Amber if ≥20 Coral ≥30
+High Balance > $300	14 pts · $4 960 unpaid	Collect Now	Amber ≥10 Coral ≥20
+Data Gaps	9 charts incomplete (DOB / Ins.)	Fix Info	Amber ≥5 Coral ≥10
+Zero state copy on each: “All clear—nothing leaking.”
+
+3 · Saved Segment Gallery
+
+Tile anatomy
+┌────────────────────────────┐
+│ Recall Due ▸ THIS WEEK     │   • Title
+│ 26 Patients   •  $7 280    │   • Live count + value
+│ Next Action: Book Hygiene  │   • Suggested CTA
+│ [ View  ]  [ Quick SMS ]   │   • Buttons
+└────────────────────────────┘
+Colour band across top: Mint (healthy) · Amber (needs attention) · Coral (urgent)
+Tiles sort DESC by urgency (coral → amber → mint → grey).
+Default out-of-box segments
+
+
+Title	Filter logic	Default CTA
+Recall Due — This Week	NextVisit is null AND RecallDue <= 7 days	Push Gap SMS
+High Balance >$300	Balance >= 300 AND StatementStatus = Sent	Collect
+FSA Expiring 45d	Insurance.FSAExpire <= 45d	Offer Booking
+Allergy Patients	Allergy != null	Flag Chart
+Dormant 12–24 m	LastVisit between 12 and 24 months	Reactivate
+Users may pin any segment to chip row on Directory page (checkbox “Pin to Chips”).
+
+4 · Filter Builder / Edit Drawer
+
+Name your segment
+Pick base list (All • Active • Prospects)
+Add Rules (AND/OR builder with autocomplete fields)
+Category pills: Demographics, Visit History, Financial, Medical, Insurance
+Preview Count + Value (live at bottom)
+Choose Default CTA (dropdown of pre-baked actions or “None”)
+Save → tile appears in gallery, turned grey until scheduler refreshes count.
+Keyboard friendly; Esc closes drawer.
+
+5 · Bulk-Action Bar
+
+Appears when ≥ 1 tile checked.
+
+
+Button	How it behaves
+Send SMS	Opens template picker; merges {first}, {link}.
+Email Campaign	Sends to Mailgun; tracks opens.
+Export CSV	For mail-merge or external marketing.
+Archive Segment	Hides tile (undo in 30 s toast).
+6 · Behavioural Nudges
+
+
+Trigger	Nudge
+Segment turns coral	Red halo + toast: “$2 k slipping — act now.”
+Segment resolved (amber→mint)	1-s confetti tick on tile.
+Stale segment (no activity > 90 d)	Grey badge “Dormant — refresh filters?”
+7 · Copy Tone (library snippets)
+
+
+Context	Line
+Tooltip on Value	“Sum of accepted treatment or balances for this list.”
+Builder preview	“Would target 31 patients · approx $9 420.”
+Empty gallery	“No segments yet. Create one to unlock targeted actions.”
+Archive confirm	“Hide ‘Dormant 12–24 m’? You can restore it anytime.”
+Tone = concise, coach-like, positive.
