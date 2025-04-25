@@ -67,6 +67,8 @@ export function getTimeFromMinutes(minutes: number): string {
   return format(new Date().setHours(hours, mins), 'h a');
 }
 
+// We'll use the implementation below
+
 // Calculate appointment position in the calendar grid
 export function getAppointmentPosition(appointment: AppointmentWithDetails, slotHeight: number) {
   // Parse start time
@@ -157,18 +159,23 @@ export function getInitials(firstName: string, lastName: string): string {
   return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 }
 
-// Helper function to determine status based on appointment time
-export function getStatusBasedOnTime(timeString: string): string {
-  const hourMinutes = timeString.split(':').map(Number);
-  const hour = hourMinutes[0];
+// Determine appointment status based on time
+// - Appointments ending before 1:15pm are "completed"
+// - Appointments starting before 1:15pm but ending after 1:15pm are "in_chair"
+// - Appointments after 1:15pm are "confirmed" or "scheduled" (75% confirmed)
+export function getStatusBasedOnTime(timeString: string, duration: number = 60): string {
+  const [hours, minutes] = timeString.split(':').map(Number);
+  const startMinutes = hours * 60 + minutes;
+  const endMinutes = startMinutes + duration;
   
-  if (hour < 12) {
-    return "completed"; // Before noon: completed
-  } else if (hour < 14) {
-    return "in_chair"; // 1-2pm: in progress/in chair
-  } else if (hour < 15) {
-    return "checked_in"; // 2-3pm: checked in
+  const currentTimeAt1_15PM = 13 * 60 + 15; // 1:15 PM in minutes
+  
+  if (endMinutes <= currentTimeAt1_15PM) {
+    return "completed";
+  } else if (startMinutes < currentTimeAt1_15PM) {
+    return "in_chair";
   } else {
-    return "confirmed"; // After 3pm: scheduled or confirmed
+    // For appointments after 1:15pm, make 75% confirmed and 25% scheduled
+    return Math.random() < 0.75 ? "confirmed" : "scheduled";
   }
 }
