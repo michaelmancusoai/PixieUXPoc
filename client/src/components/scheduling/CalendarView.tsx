@@ -293,7 +293,7 @@ export default function CalendarView({
     const endTime = (BUSINESS_START_HOUR + HOURS_IN_DAY) * MINS_IN_HOUR; // 7:00 PM
     
     // Add all regular time slots
-    for (let i = startTime; i < endTime; i += TIME_SLOT) {
+    for (let i = startTime; i <= endTime; i += TIME_SLOT) {
       slots.push({
         time: i,
         label: getTimeFromMinutes(i),
@@ -373,7 +373,7 @@ export default function CalendarView({
         {/* Time grid */}
         <div className="grid" style={{ 
           gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)`,
-          minHeight: "1440px"  /* Ensure entire 7am-7pm range is visible (144 slots × 10px) */
+          minHeight: "1500px"  /* Ensure entire 7am-7pm range is visible with extra room for scrolling */
         }}>
           {/* Time column with enhanced styling - darker solid gray background */}
           <div className="border-r bg-gray-200 relative">
