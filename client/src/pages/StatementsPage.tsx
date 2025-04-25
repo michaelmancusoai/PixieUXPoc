@@ -437,6 +437,8 @@ export default function StatementsPage() {
   };
 
   const { 
+    totalOutstanding,
+    totalOverdue,
     unsentDraftsCount,
     unsentDraftsTotal,
     agingBalances,
@@ -573,34 +575,36 @@ export default function StatementsPage() {
             </DropdownMenu>
           </div>
 
-          {/* Summary Cards */}
+          {/* Summary Cards - Action-Oriented Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Current Statements</CardTitle>
+                <CardTitle className="text-base font-medium">Unsent Drafts</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
-                  <FileText className="h-8 w-8 mr-3 text-blue-500" />
+                  <FileText className="h-8 w-8 mr-3 text-red-500" />
                   <div>
-                    <div className="text-2xl font-bold">${totalOutstanding.toFixed(2)}</div>
+                    <div className="text-2xl font-bold">{unsentDraftsCount} drafts</div>
                     <div className="text-sm text-muted-foreground">
-                      {filteredStatements.filter(s => s.status !== "Paid").length} active statements
+                      ${unsentDraftsTotal.toFixed(2)} - still on your desk
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-4 border-t flex justify-between items-center">
-                  <div>
-                    <div className="text-sm font-medium">{filteredStatements.filter(s => s.status === "Draft").length}</div>
-                    <div className="text-xs text-muted-foreground">Drafts</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">{filteredStatements.filter(s => s.status === "Sent").length}</div>
-                    <div className="text-xs text-muted-foreground">Sent</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-red-500">{filteredStatements.filter(s => s.status === "Overdue").length}</div>
-                    <div className="text-xs text-muted-foreground">Overdue</div>
+                <div className="mt-4 pt-4 border-t">
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="w-full"
+                    disabled={unsentDraftsCount === 0}
+                  >
+                    <Send className="h-4 w-4 mr-2" />
+                    Open Drafts Queue
+                  </Button>
+                  <div className="mt-2 text-xs text-center text-muted-foreground">
+                    {unsentDraftsCount > 0 ? 
+                      `Clear these to get money flowing - takes 5 minutes` : 
+                      `All clear! No pending drafts to send`}
                   </div>
                 </div>
               </CardContent>
@@ -608,24 +612,111 @@ export default function StatementsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Statement Activity</CardTitle>
+                <CardTitle className="text-base font-medium">Balances Aging ≥ 30 days</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
-                  <AlertCircle className="h-8 w-8 mr-3 text-amber-500" />
+                  <AlertTriangle className="h-8 w-8 mr-3 text-amber-500" />
                   <div>
-                    <div className="text-2xl font-bold">${totalOverdue.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">Overdue amount</div>
+                    <div className="text-2xl font-bold">${totalAgingBalance.toFixed(2)}</div>
+                    <div className="text-sm text-muted-foreground">
+                      {totalAgingCount} {totalAgingCount === 1 ? 'patient' : 'patients'} with stuck balances
+                    </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-4 border-t grid grid-cols-2 gap-4">
-                  <div>
-                    <div className="text-sm font-medium">7 days</div>
-                    <div className="text-xs text-muted-foreground">Avg time to pay</div>
+                <div className="mt-4 pt-2">
+                  <div className="flex space-x-1 h-3 w-full">
+                    {agingBalances.thirty > 0 && (
+                      <div 
+                        className="bg-yellow-500 rounded-l-sm" 
+                        style={{ 
+                          width: `${(agingBalances.thirty / totalAgingBalance * 100) || 0}%`, 
+                          minWidth: totalAgingBalance > 0 ? '10px' : '0'
+                        }} 
+                      />
+                    )}
+                    {agingBalances.sixty > 0 && (
+                      <div 
+                        className="bg-orange-500" 
+                        style={{ 
+                          width: `${(agingBalances.sixty / totalAgingBalance * 100) || 0}%`,
+                          minWidth: totalAgingBalance > 0 ? '10px' : '0'
+                        }} 
+                      />
+                    )}
+                    {agingBalances.ninety > 0 && (
+                      <div 
+                        className="bg-red-500 rounded-r-sm" 
+                        style={{ 
+                          width: `${(agingBalances.ninety / totalAgingBalance * 100) || 0}%`,
+                          minWidth: totalAgingBalance > 0 ? '10px' : '0'
+                        }} 
+                      />
+                    )}
                   </div>
+                  <div className="flex text-xs justify-between mt-2">
+                    <div>
+                      <span className="font-medium">${agingBalances.thirty.toFixed(0)}</span>
+                      <span className="text-muted-foreground ml-1">30d</span>
+                    </div>
+                    <div>
+                      <span className="font-medium">${agingBalances.sixty.toFixed(0)}</span>
+                      <span className="text-muted-foreground ml-1">60d</span>
+                    </div>
+                    <div>
+                      <span className="font-medium">${agingBalances.ninety.toFixed(0)}</span>
+                      <span className="text-muted-foreground ml-1">90d+</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-2 border-t">
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="w-full"
+                    disabled={totalAgingBalance === 0}
+                  >
+                    <Send className="h-4 w-4 mr-2" />
+                    Send Statement Reminders
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="shadow-sm">
+              <CardHeader className="py-4 px-5 border-b flex justify-between items-center">
+                <CardTitle className="text-base font-medium">Need First Reminder</CardTitle>
+                {needFirstReminder.length > 0 && (
+                  <div className="h-5 w-5 flex items-center justify-center bg-amber-100 rounded-full pulse-animation">
+                    <Clock className="h-3 w-3 text-amber-600" />
+                  </div>
+                )}
+              </CardHeader>
+              <CardContent className="py-6 px-5">
+                <div className="flex items-center">
+                  <Bell className="h-8 w-8 mr-3 text-amber-600" />
                   <div>
-                    <div className="text-sm font-medium">68%</div>
-                    <div className="text-xs text-muted-foreground">E-statement adoption</div>
+                    <div className="text-2xl font-bold">{needFirstReminder.length} {needFirstReminder.length === 1 ? 'statement' : 'statements'}</div>
+                    <div className="text-sm text-muted-foreground">
+                      Sent &gt; 14 days ago, no follow-up
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-4 pt-4 border-t">
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="w-full"
+                    disabled={needFirstReminder.length === 0}
+                  >
+                    <Send className="h-4 w-4 mr-2" />
+                    Run 14-Day Reminder
+                  </Button>
+                  <div className="mt-2 text-xs text-center text-muted-foreground">
+                    {needFirstReminder.length > 0 ?
+                      `Send a gentle reminder to prompt payment` :
+                      `All statements are recently sent or have reminders`}
                   </div>
                 </div>
               </CardContent>
@@ -633,34 +724,172 @@ export default function StatementsPage() {
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Statement Metrics</CardTitle>
+                <CardTitle className="text-base font-medium">e-Statement Opt-In Gap</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-blue-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">Avg. Time to Pay</div>
-                    <div className="text-xl font-bold text-blue-600">12 days</div>
-                    <div className="text-xs text-blue-600">from receipt</div>
+                <div className="flex items-center">
+                  <BadgePercent className="h-8 w-8 mr-3 text-blue-500" />
+                  <div>
+                    <div className="text-2xl font-bold">{eStatementRate}% adopted</div>
+                    <div className="text-sm text-muted-foreground">
+                      {paperStatementCount} {paperStatementCount === 1 ? 'patient' : 'patients'} still on paper
+                    </div>
                   </div>
-                  <div className="bg-green-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">Collection Rate</div>
-                    <div className="text-xl font-bold text-green-600">94%</div>
-                    <div className="text-xs text-green-600">within 60 days</div>
+                </div>
+                
+                <div className="mt-4">
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div 
+                      className="bg-blue-600 h-2.5 rounded-full" 
+                      style={{ width: `${eStatementRate}%` }}
+                    ></div>
                   </div>
-                  <div className="bg-amber-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">Avg. Statement</div>
-                    <div className="text-xl font-bold text-amber-600">$285</div>
-                    <div className="text-xs text-amber-600">per invoice</div>
+                  <div className="flex justify-between mt-1 text-xs text-muted-foreground">
+                    <span>0%</span>
+                    <span>Goal: 100%</span>
                   </div>
-                  <div className="bg-purple-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">E-Statement</div>
-                    <div className="text-xl font-bold text-purple-600">68%</div>
-                    <div className="text-xs text-purple-600">adoption rate</div>
+                </div>
+                
+                <div className="mt-4 pt-4 border-t">
+                  <Button 
+                    variant="default" 
+                    size="sm" 
+                    className="w-full"
+                    disabled={paperStatementCount === 0}
+                  >
+                    <Mail className="h-4 w-4 mr-2" />
+                    Invite to Paperless
+                  </Button>
+                  <div className="mt-2 text-xs text-center text-muted-foreground">
+                    {paperStatementCount > 0 ?
+                      `Save $0.58 per statement and get paid faster` :
+                      `Great job! All patients are using e-statements`}
                   </div>
                 </div>
               </CardContent>
             </Card>
+            
+            <Card className="shadow-sm">
+              <CardHeader className="py-4 px-5 border-b">
+                <CardTitle className="text-base font-medium">High-Balance Watchlist</CardTitle>
+              </CardHeader>
+              <CardContent className="py-6 px-5">
+                {highBalanceWatchlist.length > 0 ? (
+                  <div className="space-y-3">
+                    {highBalanceWatchlist.map((statement, index) => (
+                      <div key={statement.id} className="flex justify-between items-center">
+                        <div>
+                          <div className="font-medium">{statement.patientName}</div>
+                          <div className="text-sm text-muted-foreground">${statement.balance.toFixed(2)}</div>
+                        </div>
+                        <Button size="sm" variant="outline" className="h-8">
+                          <Phone className="h-3 w-3 mr-1" />
+                          Call
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-3 text-muted-foreground">
+                    No high balances to watch
+                  </div>
+                )}
+                
+                <div className="mt-4 pt-4 border-t">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="w-full"
+                    disabled={highBalanceWatchlist.length === 0}
+                  >
+                    <Users className="h-4 w-4 mr-2" />
+                    Offer Payment Plans
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="shadow-sm">
+              <CardHeader className="py-4 px-5 border-b">
+                <CardTitle className="text-base font-medium">Today's To-Do List</CardTitle>
+              </CardHeader>
+              <CardContent className="py-6 px-5">
+                <ul className="space-y-3">
+                  {unsentDraftsCount > 0 && (
+                    <li className="flex items-start">
+                      <div className="min-w-5 min-h-5 bg-red-100 rounded-full flex items-center justify-center mr-2 mt-0.5">
+                        <span className="text-xs text-red-600 font-bold">1</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Send {unsentDraftsCount} draft {unsentDraftsCount === 1 ? 'statement' : 'statements'}</p>
+                        <p className="text-xs text-muted-foreground">Money still sitting on your desk</p>
+                      </div>
+                    </li>
+                  )}
+                  
+                  {needFirstReminder.length > 0 && (
+                    <li className="flex items-start">
+                      <div className="min-w-5 min-h-5 bg-amber-100 rounded-full flex items-center justify-center mr-2 mt-0.5">
+                        <span className="text-xs text-amber-600 font-bold">2</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Send first reminders</p>
+                        <p className="text-xs text-muted-foreground">Cut payment lag in half with a quick nudge</p>
+                      </div>
+                    </li>
+                  )}
+                  
+                  {agingBalances.ninety > 0 && (
+                    <li className="flex items-start">
+                      <div className="min-w-5 min-h-5 bg-red-100 rounded-full flex items-center justify-center mr-2 mt-0.5">
+                        <span className="text-xs text-red-600 font-bold">3</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Call patients with 90+ day balances</p>
+                        <p className="text-xs text-muted-foreground">${agingBalances.ninety.toFixed(2)} at risk of collections</p>
+                      </div>
+                    </li>
+                  )}
+                  
+                  {paperStatementCount > 0 && (
+                    <li className="flex items-start">
+                      <div className="min-w-5 min-h-5 bg-blue-100 rounded-full flex items-center justify-center mr-2 mt-0.5">
+                        <span className="text-xs text-blue-600 font-bold">4</span>
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">Convert {Math.min(5, paperStatementCount)} patients to e-statements</p>
+                        <p className="text-xs text-muted-foreground">Save ${(Math.min(5, paperStatementCount) * 0.58).toFixed(2)} this week</p>
+                      </div>
+                    </li>
+                  )}
+                  
+                  {unsentDraftsCount === 0 && needFirstReminder.length === 0 && agingBalances.ninety === 0 && paperStatementCount === 0 && (
+                    <li className="flex items-start">
+                      <div className="min-w-5 min-h-5 bg-green-100 rounded-full flex items-center justify-center mr-2 mt-0.5">
+                        <CheckCircle className="h-3 w-3 text-green-600" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium">All clear! Statements are in great shape</p>
+                        <p className="text-xs text-muted-foreground">Take a moment to celebrate your efficiency</p>
+                      </div>
+                    </li>
+                  )}
+                </ul>
+              </CardContent>
+            </Card>
           </div>
+          
+          {/* Add custom animation for the pulse effect */}
+          <style jsx>{`
+            @keyframes pulse {
+              0% { opacity: 0.6; transform: scale(0.95); }
+              50% { opacity: 1; transform: scale(1.05); }
+              100% { opacity: 0.6; transform: scale(0.95); }
+            }
+            .pulse-animation {
+              animation: pulse 2s infinite;
+            }
+          `}</style>
 
           <Card className="shadow-sm">
             <CardHeader className="px-6 py-4 border-b">
@@ -706,13 +935,13 @@ export default function StatementsPage() {
             {showInsights && (
               <div className="p-6 border-b bg-blue-50/50">
                 <div className="mb-4">
-                  <h3 className="text-md font-medium mb-2">Statement Insights</h3>
+                  <h3 className="text-md font-medium mb-2">Statement Insights & Opportunities</h3>
                   <p className="text-sm text-muted-foreground mb-3">
-                    There are {filteredStatements.filter(s => s.status === "Overdue").length} overdue statements totaling ${totalOverdue.toFixed(2)}. E-statements have a 42% higher timely payment rate.
+                    <span className="font-medium">6% of revenue is still missing</span> — you can fetch it before month-end with the quick actions below. E-statements get paid 42% faster than paper.
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div className="bg-white p-4 rounded-md border shadow-sm">
-                      <h4 className="text-sm font-medium mb-1">Payment Rate by Delivery Method</h4>
+                      <h4 className="text-sm font-medium mb-1">Payment Success by Method</h4>
                       <div className="flex justify-between items-end">
                         <div className="space-y-2">
                           <div className="flex justify-between">
@@ -749,31 +978,43 @@ export default function StatementsPage() {
                         </div>
                         <FileText className="h-5 w-5 text-amber-500 ml-2" />
                       </div>
+                      
+                      <div className="mt-3 text-xs text-blue-600">
+                        <ArrowRight className="h-3 w-3 inline mr-1" />
+                        <span className="font-medium">Converting mail to email saves $0.58 per statement and gets paid 42% faster</span>
+                      </div>
                     </div>
                     
                     <div className="bg-white p-4 rounded-md border shadow-sm">
-                      <h4 className="text-sm font-medium mb-1">Statement Metrics</h4>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="bg-blue-50 p-3 rounded-md">
-                          <div className="text-xs text-muted-foreground">Avg. Time to Pay</div>
-                          <div className="text-xl font-bold text-blue-600">12 days</div>
-                          <div className="text-xs text-blue-600">from receipt</div>
+                      <h4 className="text-sm font-medium mb-1">Statement Timeline Benchmarks</h4>
+                      <div className="mb-3">
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-muted-foreground">Current Time to Pay:</span>
+                          <span className="font-medium">12 days</span>
                         </div>
-                        <div className="bg-green-50 p-3 rounded-md">
-                          <div className="text-xs text-muted-foreground">Collection Rate</div>
-                          <div className="text-xl font-bold text-green-600">94%</div>
-                          <div className="text-xs text-green-600">within 60 days</div>
+                        <div className="flex justify-between text-xs mb-1">
+                          <span className="text-muted-foreground">Best Practices Target:</span>
+                          <span className="font-medium text-green-600">7 days</span>
                         </div>
-                        <div className="bg-amber-50 p-3 rounded-md">
-                          <div className="text-xs text-muted-foreground">Avg. Statement</div>
-                          <div className="text-xl font-bold text-amber-600">$285</div>
-                          <div className="text-xs text-amber-600">per invoice</div>
+                        <div className="flex justify-between text-xs mb-2">
+                          <span className="text-muted-foreground">Opportunity:</span>
+                          <span className="font-medium text-amber-600">5 days faster</span>
                         </div>
-                        <div className="bg-purple-50 p-3 rounded-md">
-                          <div className="text-xs text-muted-foreground">E-Statement</div>
-                          <div className="text-xl font-bold text-purple-600">68%</div>
-                          <div className="text-xs text-purple-600">adoption rate</div>
+
+                        <div className="h-2 w-full bg-gray-200 rounded-full mt-1">
+                          <div className="h-full bg-amber-500 rounded-full" style={{ width: '58%' }}></div>
+                          <div className="flex justify-between text-xs mt-1">
+                            <span>0 days</span>
+                            <span className="text-green-600">7d</span>
+                            <span>Current: 12d</span>
+                            <span>21d</span>
+                          </div>
                         </div>
+                      </div>
+
+                      <div className="text-xs text-blue-600 mt-4">
+                        <ArrowRight className="h-3 w-3 inline mr-1" />
+                        <span className="font-medium">First 14-day reminders cut payment lag in half for most patients</span>
                       </div>
                     </div>
                     

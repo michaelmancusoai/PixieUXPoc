@@ -1,0 +1,62 @@
+Why “Collections” needs different KPIs from “Payments” or “Statements”
+At this stage you’re no longer persuading; you’re recovering. Collections should shine a 1 000-watt beam on three things only:
+
+Ripest fruit (dollars most likely to be recovered today)
+Rotting fruit (accounts drifting past a recovery threshold)
+Broken promises (payment plans that just slipped)
+Every widget must either reduce aging days or raise promise-kept % before the month closes.
+
+1 · Swap ledger cards for “act-now” recovery KPIs
+
+
+Replace this card	With this KPI	Why it triggers behaviour	Visual
+Accounts > 90 d $8 899	No Next Action – $ value + account count	Staff hate seeing a red number labelled “abandoned.”	Red pill; tap filters grid to those accounts
+Collected This Month $1 250	Ripest 30 d Window – $ due in next 30 days if calls made	Puts a reachable carrot in front of the collector.	Green progress bar to monthly goal
+Recovery Rate 43 %	Broken Promises Today – # plans missed yesterday	Fresh pain → immediate call; goal is zero.	Amber exclamation when > 0
+Adherence 82 %	Payment-Plan At-Risk – $ where next instalment is in 3 days	Three-day runway allows salvage.	Clock icon fills as day approaches
+n/a	Escalate or Settle – accounts > 120 d & <$200	Quick decision: write-off vs. agency.	Tiny toggle CTA: “Choose now”
+Wireframe in words
+┌── No Next Action ─────────┐ ┌─ Ripest 30-day Window ─┐ ┌─ Broken Promises ─┐
+│  $2,310  (9 accts) red    │ │  $3,450 possible       │ │  2 plans slipped  │
+└───────────────────────────┘ └────────────────────────┘ └───────────────────┘
+┌── At-Risk Plans ───────────┐ ┌─ Escalate or Settle ───┐
+│  $1,120 due in 3 d         │ │  4 accts  >120d  <$200 │
+└───────────────────────────┘ └────────────────────────┘
+Tap any card → grid auto-filters to those accounts.
+
+2 · Action buttons stitched to each KPI
+
+
+KPI widget	Primary CTA	Hover secondary
+No Next Action	“Create Tasks” (opens bulk task modal)	“Auto-schedule SMS”
+Ripest Window	“Call List (auto-sort)”	“Send payment-portal link”
+Broken Promises	“Retry cards”	“Mark as contact attempted”
+At-Risk Plans	“Pre-emptive reminder SMS”	“Offer split plan”
+Escalate/Settle	“Write-off vs. Agency” wizard	“Tag for dentist review”
+3 · Copy tweaks that speak collector language
+
+
+Current	Rory-style
+“Collected this month”	“Won back this month — let’s add $X more.”
+“Adherence rate 82 %”	“18 % of plans wobbling — steady them before Friday.”
+“Recovery rate 43 %”	“57 % still out there — fetchable with calls & links.”
+4 · Grid enhancements that match the new KPIs
+
+Next Action column becomes Time-Until-Next, colour-coded:
+Green ≤ 24 h | Amber 1-3 d | Red overdue
+Promise-Kept % mini-badge on every payment-plan row.
+Quick-resolve dropdown on low-balance, high-age rows: Write-off / Agency / Extend.
+5 · Behavioural nudges & rituals
+
+
+Nudge	Trigger	Text
+Red pulse on “No Next Action”	Card > $0 at 10 AM	“These 9 accts are silent — give them a voice.”
+Amber toast after Broken Promise list clears	all promises contacted	“Nice catch! Plans back on track.”
+Green confetti tick	All KPI cards green	“Ledger tamed for today — time for a victory coffee ☕.”
+6 · Designer checklist
+
+KPI cards use colour sparingly: grey default, colour only when action/celebration required.
+Provide single-tap CTAs on every card; match hover secondary.
+Progress visuals: stacked bars for ageing, rings for percentage goals.
+Ensure empty-state copy celebrates zeroes: “No plans wobbling — splendid.”
+Shift the Collections page from a sombre graveyard of 90-day balances to a battle map of actionable recoveries and your staff will spend less time doom-scrolling dollars lost, more time pressing the green buttons that fetch them back.
