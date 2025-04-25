@@ -79,16 +79,6 @@ export default function RightRail({ selectedDate }: RightRailProps) {
   
   return (
     <div className="h-full overflow-y-auto space-y-4">
-      {/* Book Appointment Button */}
-      <Button 
-        className="w-full flex items-center justify-center py-4 shadow-sm" 
-        size="sm"
-        onClick={() => handleOpenBookAppointment()}
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Book Appointment
-      </Button>
-      
       {/* Book Appointment Dialog */}
       {bookAppointmentOpen && (
         <BookAppointmentDialog
