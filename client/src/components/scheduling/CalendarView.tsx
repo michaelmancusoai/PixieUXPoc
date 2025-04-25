@@ -12,58 +12,6 @@ import {
   getStatusBasedOnTime
 } from "@/lib/scheduling-utils";
 
-// Define TimeSlot component before it's used
-interface TimeSlotProps {
-  resource: { id: number; name: string };
-  slot: { 
-    time: number; 
-    label: string; 
-    isMajor: boolean; 
-    isMedium: boolean; 
-    isMinor: boolean 
-  };
-  slotHeight: number;
-  dragTarget: { resourceId: number; time: number } | null;
-  draggingAppointment: AppointmentWithDetails | null;
-}
-
-function TimeSlot({ 
-  resource, 
-  slot, 
-  slotHeight, 
-  dragTarget, 
-  draggingAppointment 
-}: TimeSlotProps) {
-  // This hook is now safely called at the component level, not in a loop
-  const { setNodeRef } = useDroppable({
-    id: `${resource.id}-${slot.time}`,
-    data: {
-      resourceId: resource.id,
-      time: slot.time
-    }
-  });
-  
-  return (
-    <div 
-      ref={setNodeRef}
-      className={`
-        relative border-b border-r 
-        ${slot.isMajor ? 'border-gray-300' : 'border-gray-200'}
-        ${slot.isMajor ? 'bg-gray-50' : ''}
-        ${slot.isMedium ? 'border-dashed' : ''}
-        ${dragTarget?.resourceId === resource.id && dragTarget?.time === slot.time ? 'bg-blue-100' : ''}
-        hover:bg-blue-50/50
-      `}
-      style={{ height: `${slotHeight}px` }}
-      onClick={() => {
-        if (!draggingAppointment) {
-          // Could handle slot click here to create new appointment
-        }
-      }}
-    ></div>
-  );
-}
-
 interface CalendarViewProps {
   selectedDate: Date;
   viewMode: ViewModeType;
@@ -401,32 +349,56 @@ export default function CalendarView({
         </div>
         
         {/* Resource columns with time slots */}
-        {resourceColumns.map((resource, columnIndex) => (
-          <div key={resource.id} className="relative">
-            {/* Time slots for this resource column */}
-            {timeSlots.map((slot, slotIndex) => (
-              <TimeSlot
-                key={slotIndex}
-                resource={resource}
-                slot={slot}
-                slotHeight={slotHeight}
-                dragTarget={dragTarget}
-                draggingAppointment={draggingAppointment}
-              />
-            ))}
-            
-            {/* Appointments for this resource column */}
-            {(appointmentsByResource[resource.id] || []).map((appointment) => (
-              <AppointmentChip
-                key={appointment.id}
-                appointment={appointment}
-                columnIndex={columnIndex}
-                slotHeight={slotHeight}
-                onClick={() => handleAppointmentClick(appointment)}
-              />
-            ))}
-          </div>
-        ))}
+        {resourceColumns.map((resource, columnIndex) => {
+          // Create all droppable refs for this resource column outside the render loop
+          const dropRefs = timeSlots.map((slot) => {
+            const { setNodeRef } = useDroppable({
+              id: `${resource.id}-${slot.time}`,
+              data: {
+                resourceId: resource.id,
+                time: slot.time
+              }
+            });
+            return { slot, ref: setNodeRef };
+          });
+          
+          return (
+            <div key={resource.id} className="relative">
+              {/* Time slots for this resource column */}
+              {dropRefs.map(({ slot, ref }, slotIndex) => (
+                <div 
+                  key={slotIndex} 
+                  ref={ref}
+                  className={`
+                    relative border-b border-r 
+                    ${slot.isMajor ? 'border-gray-300' : 'border-gray-200'}
+                    ${slot.isMajor ? 'bg-gray-50' : ''}
+                    ${slot.isMedium ? 'border-dashed' : ''}
+                    ${dragTarget?.resourceId === resource.id && dragTarget?.time === slot.time ? 'bg-blue-100' : ''}
+                    hover:bg-blue-50/50
+                  `}
+                  style={{ height: `${slotHeight}px` }}
+                  onClick={() => {
+                    if (!draggingAppointment) {
+                      // Could handle slot click here to create new appointment
+                    }
+                  }}
+                ></div>
+              ))}
+              
+              {/* Appointments for this resource column */}
+              {(appointmentsByResource[resource.id] || []).map((appointment) => (
+                <AppointmentChip
+                  key={appointment.id}
+                  appointment={appointment}
+                  columnIndex={columnIndex}
+                  slotHeight={slotHeight}
+                  onClick={() => handleAppointmentClick(appointment)}
+                />
+              ))}
+            </div>
+          );
+        })}
       </div>
     </div>
   );
