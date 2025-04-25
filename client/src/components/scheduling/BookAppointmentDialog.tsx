@@ -449,37 +449,50 @@ export default function BookAppointmentDialog({
                       <label className="block text-sm mb-1">Days</label>
                       <div className="flex space-x-1">
                         {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => {
-                          // Get date of this weekday
-                          const date = new Date();
-                          const diff = i - date.getDay();
-                          if (diff > 0) {
-                            date.setDate(date.getDate() + diff);
-                          } else if (diff < 0) {
-                            date.setDate(date.getDate() + diff + 7);
-                          }
+                          const isSelected = formState.selectedDays.includes(i);
                           
                           return (
                             <Button
                               key={i}
                               type="button"
-                              variant={i === selectedDay ? "default" : "outline"}
-                              className={`flex items-center justify-center w-8 h-8 rounded-md p-0 font-medium ${
-                                i === selectedDay ? "bg-blue-500 text-white" : ""
-                              }`}
+                              variant={isSelected ? "default" : "outline"}
+                              className={`flex items-center justify-center w-8 h-8 rounded-md p-0 font-medium`}
                               onClick={() => {
-                                setSelectedDay(i);
+                                // Toggle day selection
+                                const newSelectedDays = [...formState.selectedDays];
                                 
-                                const selectedDate = new Date();
-                                const diff = i - selectedDate.getDay();
-                                if (diff > 0) {
-                                  selectedDate.setDate(selectedDate.getDate() + diff);
-                                } else if (diff < 0) {
-                                  selectedDate.setDate(selectedDate.getDate() + diff + 7);
+                                if (isSelected) {
+                                  // Remove day if already selected
+                                  const index = newSelectedDays.indexOf(i);
+                                  if (index > -1) {
+                                    newSelectedDays.splice(index, 1);
+                                  }
+                                } else {
+                                  // Add day if not already selected
+                                  newSelectedDays.push(i);
                                 }
-                                form.setValue("date", selectedDate);
                                 
-                                // Force the slots to update
-                                setFormState(prev => ({...prev, showTimeSlots: true}));
+                                // Update form state
+                                setFormState(prev => ({
+                                  ...prev, 
+                                  selectedDays: newSelectedDays,
+                                  showTimeSlots: true
+                                }));
+                                
+                                // Update form values
+                                form.setValue("selectedDays", newSelectedDays);
+                                
+                                // If this is the first day selected, update the date
+                                if (newSelectedDays.length === 1) {
+                                  const selectedDate = new Date();
+                                  const diff = newSelectedDays[0] - selectedDate.getDay();
+                                  if (diff > 0) {
+                                    selectedDate.setDate(selectedDate.getDate() + diff);
+                                  } else if (diff < 0) {
+                                    selectedDate.setDate(selectedDate.getDate() + diff + 7);
+                                  }
+                                  form.setValue("date", selectedDate);
+                                }
                               }}
                             >
                               {day}
@@ -515,6 +528,17 @@ export default function BookAppointmentDialog({
                         >
                           PM
                         </Button>
+                        <Button
+                          type="button"
+                          className="flex items-center justify-center w-16 h-8"
+                          variant={formState.amPmFilter === "BOTH" ? "default" : "outline"}
+                          onClick={() => {
+                            form.setValue("amPmFilter", "BOTH");
+                            setFormState(prev => ({ ...prev, amPmFilter: "BOTH" }));
+                          }}
+                        >
+                          BOTH
+                        </Button>
                       </div>
                     </div>
                     
@@ -535,7 +559,10 @@ export default function BookAppointmentDialog({
                               .filter(slot => {
                                 const hour = parseInt(slot.value.split(':')[0]);
                                 const isPM = hour >= 12;
-                                return form.getValues("amPmFilter") === "PM" ? isPM : !isPM;
+                                // Show all slots if "BOTH" is selected
+                                if (formState.amPmFilter === "BOTH") return true;
+                                // Otherwise filter by AM or PM
+                                return formState.amPmFilter === "PM" ? isPM : !isPM;
                               })
                               .slice(0, 20)
                               .map(slot => (
@@ -642,8 +669,8 @@ export default function BookAppointmentDialog({
                       <div className="divide-y">
                         {form.getValues("category") ? (
                           <>
-                            {/* Morning slot - visible in AM or if no filter */}
-                            {(formState.amPmFilter === "AM") && (
+                            {/* Morning slot - visible in AM or BOTH */}
+                            {(formState.amPmFilter === "AM" || formState.amPmFilter === "BOTH") && (
                               <div 
                                 className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
                                   form.getValues("startTime") === "09:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
@@ -689,8 +716,8 @@ export default function BookAppointmentDialog({
                                 </Badge>
                               </div>
                             </div>
-                            {/* Afternoon slot - visible in PM filter */}
-                            {(formState.amPmFilter === "PM") && (
+                            {/* Afternoon slot - visible in PM or BOTH filter */}
+                            {(formState.amPmFilter === "PM" || formState.amPmFilter === "BOTH") && (
                               <div
                                 className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
                                   form.getValues("startTime") === "14:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
@@ -714,8 +741,8 @@ export default function BookAppointmentDialog({
                               </div>
                             )}
                             
-                            {/* Evening slot - visible in PM */}
-                            {formState.amPmFilter === "PM" && (
+                            {/* Evening slot - visible in PM or BOTH */}
+                            {(formState.amPmFilter === "PM" || formState.amPmFilter === "BOTH") && (
                               <div
                                 className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
                                   form.getValues("startTime") === "17:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
