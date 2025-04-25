@@ -14,7 +14,6 @@ import MissionControlPage from "@/pages/dashboard/MissionControlPage";
 import LeaderboardPage from "@/pages/dashboard/LeaderboardPage";
 import PlanetPixiePage from "@/pages/dashboard/PlanetPixiePage";
 import SchedulingPage from "@/pages/SchedulingPage";
-import RecallsPage from "@/pages/RecallsPage";
 import PatientsPage from "@/pages/PatientsPage";
 import BillingPage from "@/pages/BillingPage";
 import ClaimsPage from "@/pages/ClaimsPage";
@@ -40,7 +39,6 @@ function Router() {
       <Route path="/dashboard/planet-pixie" component={PlanetPixiePage} />
       <Route path="/schedule" component={SchedulingPage} />
       <Route path="/scheduling" component={SchedulingPage} />
-      <Route path="/schedule/recalls" component={RecallsPage} />
       <Route path="/schedule/:subpage" component={SchedulingPage} />
       <Route path="/patients" component={PatientsPage} />
       <Route path="/patients/profile/:id" component={PatientProfilePage} />
