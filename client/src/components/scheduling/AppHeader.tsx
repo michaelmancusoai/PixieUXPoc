@@ -33,7 +33,7 @@ export default function AppHeader({
   onBookAppointment,
   expandedView,
   onToggleExpandView,
-  patientCounts = { total: 24, upcoming: 8, inProgress: 5, completed: 11 } // Default values for now
+  patientCounts = { total: 22, upcoming: 19, inProgress: 2, completed: 1 } // Updated based on our calendar
 }: AppHeaderProps) {
   // Format date display
   const formattedDate = format(selectedDate, 'EEEE, MMMM d, yyyy');

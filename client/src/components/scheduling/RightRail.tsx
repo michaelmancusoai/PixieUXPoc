@@ -17,58 +17,58 @@ export default function RightRail({ selectedDate }: RightRailProps) {
   const [bookAppointmentOpen, setBookAppointmentOpen] = useState(false);
   const [selectedPatient, setSelectedPatient] = useState("");
   
-  // Sample data for the day summary
+  // Updated data for the day summary based on our calendar
   const daySummary = {
-    totalAppointments: 15,
-    completed: 5,
+    totalAppointments: 22,
+    completed: 1,
     inProgress: 2,
-    upcoming: 8,
+    upcoming: 19,
     producedAmount: 4325.50,
     openChairs: 2,
   };
   
-  // Sample patient check-in data
+  // Updated patient check-in data based on our calendar
   const upcomingCheckIns = [
-    { id: 1, name: 'Michael Brown', time: '2:00 PM', status: 'confirmed', confirmed: true, isNew: false },
-    { id: 2, name: 'Jennifer Taylor', time: '2:30 PM', status: 'confirmed', confirmed: true, isNew: true },
-    { id: 3, name: 'David Lee', time: '3:00 PM', status: 'scheduled', confirmed: false, isNew: false },
+    { id: 22, name: "D'Vana Tendi", time: '4:30 PM', status: 'confirmed', confirmed: true, isNew: false },
+    { id: 23, name: 'Sam Rutherford', time: '4:30 PM', status: 'confirmed', confirmed: true, isNew: false },
+    { id: 20, name: 'Charlotte Robinson', time: '4:30 PM', status: 'scheduled', confirmed: false, isNew: false },
   ];
   
-  // Sample appointment alerts
+  // Updated appointment alerts
   const appointmentAlerts = [
-    { id: 1, message: 'Sarah Martinez is running 15 minutes late', type: 'warning' },
-    { id: 2, message: 'Dr. Nguyen procedure is taking longer than expected', type: 'info' },
-    { id: 3, message: 'Richard Walker has arrived early (30 minutes)', type: 'info' },
+    { id: 1, message: 'Jessica Billard is running 15 minutes late', type: 'warning' },
+    { id: 2, message: 'Dr. Nguyen procedure with Jerry Smith is taking longer than expected', type: 'info' },
+    { id: 3, message: 'Bird Person has arrived early (30 minutes)', type: 'info' },
   ];
   
-  // Sample ready for checkout patients
+  // Updated ready for checkout patients
   const readyForCheckout = [
     { 
-      id: 101, 
-      name: 'Robert Johnson', 
-      procedure: 'Crown prep', 
-      provider: 'Dr. Williams',
-      time: '1:45 PM', 
+      id: 11, 
+      name: 'Beckett Mariner', 
+      procedure: 'Comprehensive Oral Evaluation', 
+      provider: 'Dr. Johnson',
+      time: '1:00 PM', 
       paymentAmount: 325.50, 
       needsFollowUp: true 
     },
     { 
-      id: 102, 
-      name: 'Emily Davis', 
-      procedure: 'Root canal', 
-      provider: 'Dr. Martinez',
-      time: '12:30 PM', 
+      id: 21, 
+      name: 'Bradward Boimler', 
+      procedure: 'Root Canal - Anterior', 
+      provider: 'Dr. Maria',
+      time: '1:00 PM', 
       paymentAmount: 720.00, 
-      needsFollowUp: false 
+      needsFollowUp: true 
     },
     { 
-      id: 103, 
-      name: 'Thomas Wilson', 
-      procedure: 'Cleaning', 
-      provider: 'Dr. Thompson',
-      time: '10:15 AM', 
+      id: 7, 
+      name: 'Michael Brown', 
+      procedure: 'Resin-Based Composite - Four Surfaces', 
+      provider: 'Dr. Nguyen',
+      time: '11:00 AM', 
       paymentAmount: 145.00, 
-      needsFollowUp: true 
+      needsFollowUp: false 
     },
   ];
   
