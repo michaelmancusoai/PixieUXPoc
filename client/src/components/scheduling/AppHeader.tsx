@@ -120,17 +120,6 @@ export default function AppHeader({
           </div>
         </div>
       </div>
-      
-      {/* Sub-navigation for scheduling page */}
-      <div className="flex items-center">
-        <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-          <Button variant="ghost" size="sm" className="text-xs px-3 h-7 rounded-md">All</Button>
-          <Button variant="ghost" size="sm" className="text-xs px-3 h-7 rounded-md bg-white shadow-sm">Calendar</Button>
-          <Button variant="ghost" size="sm" className="text-xs px-3 h-7 rounded-md">Recalls</Button>
-          <Button variant="ghost" size="sm" className="text-xs px-3 h-7 rounded-md">Waitlist</Button>
-          <Button variant="ghost" size="sm" className="text-xs px-3 h-7 rounded-md">Online Requests</Button>
-        </div>
-      </div>
     </div>
   );
 }
