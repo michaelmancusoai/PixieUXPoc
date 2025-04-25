@@ -263,76 +263,73 @@ const LoginPage = () => {
   };
 
   const coverEyes = () => {
+    const tl = gsap.timeline();
+    
     if (armLRef.current && armRRef.current && bodyBGRef.current && bodyBGchangedRef.current) {
-      // Show arms
+      // Show arms first
       gsap.set([armLRef.current, armRRef.current], { visibility: "visible" });
       
-      // Animate arms to cover eyes
-      gsap.to(armLRef.current, {
+      tl.to(armLRef.current, {
         x: -93,
         y: 10,
         rotation: 0,
-        duration: 0.45,
-        ease: "power2.out"
-      });
-      
-      gsap.to(armRRef.current, {
+        ease: "power2.out",
+        duration: 0.45
+      }, 0)
+      .to(armRRef.current, {
         x: -93,
         y: 10,
         rotation: 0,
-        duration: 0.45,
-        delay: 0.1,
-        ease: "power2.out"
-      });
-      
-      // Change body background
-      gsap.set(bodyBGRef.current, { display: "none" });
-      gsap.set(bodyBGchangedRef.current, { display: "block" });
+        ease: "power2.out",
+        duration: 0.45
+      }, 0.1)
+      .to(bodyBGRef.current, {
+        display: "none"
+      }, 0)
+      .to(bodyBGchangedRef.current, {
+        display: "block"
+      }, 0);
     }
   };
 
   const uncoverEyes = () => {
+    const tl = gsap.timeline();
+    
     if (armLRef.current && armRRef.current && bodyBGRef.current && bodyBGchangedRef.current) {
-      // Animate left arm away
-      gsap.to(armLRef.current, {
+      tl.to(armLRef.current, {
         y: 220,
-        duration: 0.7,
-        ease: "power2.out"
-      });
-      
-      gsap.to(armLRef.current, {
-        rotation: 105,
-        duration: 0.7,
-        delay: 0.1,
-        ease: "power2.out"
-      });
-      
-      // Animate right arm away
-      gsap.to(armRRef.current, {
-        y: 220,
-        duration: 0.7,
-        ease: "power2.out"
-      });
-      
-      gsap.to(armRRef.current, {
-        rotation: -105,
-        duration: 0.7,
-        delay: 0.1,
         ease: "power2.out",
-        onComplete: () => {
-          // Hide arms when animation completes
-          gsap.set([armLRef.current, armRRef.current], { 
+        duration: 0.7
+      }, 0)
+      .to(armLRef.current, {
+        rotation: 105,
+        ease: "power2.out",
+        duration: 0.7
+      }, 0.1)
+      .to(armRRef.current, {
+        y: 220,
+        ease: "power2.out",
+        duration: 0.7
+      }, 0)
+      .to(armRRef.current, {
+        rotation: -105,
+        ease: "power2.out",
+        duration: 0.7,
+        onComplete: function() {
+          gsap.set([armLRef.current, armRRef.current], {
             visibility: "hidden",
             x: 0,
             y: 0,
             rotation: 0
           });
         }
-      });
-      
-      // Change body background back
-      gsap.set(bodyBGRef.current, { display: "block" });
-      gsap.set(bodyBGchangedRef.current, { display: "none" });
+      }, 0.1)
+      .to(bodyBGRef.current, {
+        display: "block"
+      }, 0)
+      .to(bodyBGchangedRef.current, {
+        display: "none"
+      }, 0);
     }
   };
 
