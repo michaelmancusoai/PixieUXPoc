@@ -60,9 +60,10 @@ const settingsItems = [
 export default function SettingsPage() {
   const [location] = useLocation();
   
-  // If we're at /settings, redirect to /settings/team
+  // Simple redirection to the team members page
   if (location === "/settings") {
-    return <Redirect to="/settings/team" />;
+    window.location.href = "/settings/team";
+    return null;
   }
 
   return (
