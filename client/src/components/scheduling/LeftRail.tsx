@@ -83,27 +83,8 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
       
       {/* Main Card with Accordion layout similar to PatientProfilePage */}
       <Card className="shadow-sm">
-        <CardHeader className="px-4 py-3 border-b">
-          <CardTitle className="text-lg font-medium">
-            Wait List
-          </CardTitle>
-        </CardHeader>
-        
-        <CardContent className="p-0">
-          {/* Search Input - Integrated inside card */}
-          <div className="px-4 py-3 border-b">
-            <div className="relative">
-              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search patients..."
-                className="pl-8 h-8 text-sm"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-          </div>
-          
-          <Accordion type="multiple" className="w-full" defaultValue={["combined-waitlist"]}>
+        <CardContent className="p-0">          
+          <Accordion type="multiple" className="w-full" defaultValue={["combined-waitlist", "quickFill"]}>
             
             {/* Combined Waitlist Section */}
             <AccordionItem value="combined-waitlist" className="border-b">
@@ -114,13 +95,26 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                     <h3 className="font-medium">Waitlist Patients</h3>
                   </div>
                   <div className="ml-auto">
-                    <Badge variant="secondary" className="font-normal">
+                    <Badge variant="outline" className="text-xs font-medium bg-white text-gray-700 border-gray-200 rounded px-2 py-0.5">
                       {asapPatients.length + regularWaitlist.length}
                     </Badge>
                   </div>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
+                {/* Search input inside the accordion content */}
+                <div className="mb-3">
+                  <div className="relative">
+                    <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Input
+                      placeholder="Search patients..."
+                      className="pl-8 h-8 text-sm"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                </div>
+                
                 {filteredWaitlist.length > 0 ? (
                   <div className="space-y-2">
                     
@@ -149,7 +143,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                     {/* Regular Waitlist Group */}
                     {regularWaitlist.length > 0 && (
                       <div>
-                        <h4 className="text-xs font-medium text-muted-foreground mb-1 px-1">Scheduled</h4>
+                        <h4 className="text-xs font-medium text-muted-foreground mb-1 px-1">Regular Waitlist</h4>
                         <div className="border rounded-sm overflow-hidden divide-y divide-gray-100">
                           {regularWaitlist.map(patient => (
                             <div key={patient.id} className="group flex items-center bg-white hover:bg-gray-50 py-1.5 px-2 text-xs cursor-pointer">
@@ -188,7 +182,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                     <h3 className="font-medium">Quick Fill</h3>
                   </div>
                   <div className="ml-auto">
-                    <Badge variant="secondary" className="font-normal">
+                    <Badge variant="outline" className="text-xs font-medium bg-white text-gray-700 border-gray-200 rounded px-2 py-0.5">
                       3
                     </Badge>
                   </div>
