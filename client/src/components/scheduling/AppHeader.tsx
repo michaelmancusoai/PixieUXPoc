@@ -12,7 +12,6 @@ interface AppHeaderProps {
   onToday: () => void;
   onViewChange: (mode: ViewModeType) => void;
   currentView: ViewModeType;
-  utilizationPercentage: number;
   onBookAppointment: () => void;
   expandedView: boolean;
   onToggleExpandView: () => void;
@@ -31,7 +30,6 @@ export default function AppHeader({
   onToday,
   onViewChange,
   currentView,
-  utilizationPercentage,
   onBookAppointment,
   expandedView,
   onToggleExpandView,
@@ -39,16 +37,6 @@ export default function AppHeader({
 }: AppHeaderProps) {
   // Format date display
   const formattedDate = format(selectedDate, 'EEEE, MMMM d, yyyy');
-  
-  // Determine utilization color based on percentage
-  const getUtilizationColor = (percent: number) => {
-    if (percent < 50) return 'bg-blue-500';
-    if (percent < 75) return 'bg-green-500';
-    if (percent < 90) return 'bg-yellow-500';
-    return 'bg-red-500';
-  };
-  
-  const utilizationColor = getUtilizationColor(utilizationPercentage);
   
   return (
     <div className="bg-white border-b p-4 flex flex-col gap-4">
@@ -132,14 +120,6 @@ export default function AppHeader({
               <span>Book Appointment</span>
             </Button>
           </div>
-        </div>
-      </div>
-      
-      <div className="flex items-center justify-end">
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-medium">Chair Utilization:</span>
-          <Progress value={utilizationPercentage} className="w-32 h-2" indicatorClassName={utilizationColor} />
-          <span className="text-sm">{utilizationPercentage}%</span>
         </div>
       </div>
     </div>

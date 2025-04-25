@@ -18,8 +18,8 @@ export default function SchedulingPage() {
   const [expandedView, setExpandedView] = useState(false);
   const { toast } = useToast();
 
-  // Hardcoded utilization for demonstration purposes
-  const utilizationPercentage = 78;
+  // We no longer need utilization percentage since it's been removed from the UI
+  // const utilizationPercentage = 78;
 
   // Handle navigation
   const goToPreviousDay = () => {
@@ -72,7 +72,6 @@ export default function SchedulingPage() {
               onToday={goToToday}
               onViewChange={setViewMode}
               currentView={viewMode}
-              utilizationPercentage={utilizationPercentage}
               onBookAppointment={handleOpenBooking}
               expandedView={expandedView}
               onToggleExpandView={toggleExpandedView}
