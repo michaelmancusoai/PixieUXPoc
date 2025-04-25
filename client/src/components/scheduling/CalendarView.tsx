@@ -324,19 +324,19 @@ export default function CalendarView({
   const getStatusBorderColor = useCallback((status: string) => {
     switch (status.toLowerCase()) {
       case 'completed':
-        return '#9E9E9E';
+        return '#9E9E9E'; // Gray
       case 'in_chair':
-        return '#FFA000';
+        return '#FF9800'; // Orange
       case 'checked_in':
-        return '#4CAF50';
+        return '#4CAF50'; // Green
       case 'confirmed':
-        return '#2196F3';
+        return '#1976D2'; // Blue
       case 'scheduled':
-        return '#BDBDBD';
+        return '#90A4AE'; // Light Gray
       case 'no_show':
-        return '#F44336';
+        return '#F44336'; // Red
       default:
-        return '#BDBDBD';
+        return '#90A4AE'; // Light Gray
     }
   }, []);
 
@@ -369,13 +369,13 @@ export default function CalendarView({
         {/* Time grid */}
         <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
           {/* Time column */}
-          <div className="border-r">
+          <div className="border-r bg-gray-50">
             {timeSlots.map((slot, index) => (
               <div
                 key={index}
                 className={`
-                  p-1 border-b text-xs
-                  ${index % 12 === 0 ? 'font-medium' : 'text-gray-500'}
+                  p-1 border-b text-xs text-right pr-2
+                  ${index % 12 === 0 ? 'font-medium text-gray-700' : 'text-gray-500'}
                 `}
                 style={{ height: '10px' }}
               >
