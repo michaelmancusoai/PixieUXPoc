@@ -1135,7 +1135,7 @@ export default function ClaimsPage() {
           </div>
           
           {/* Support Rail (secondary row) */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {/* Missing Attachments Card */}
             <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
               <CardHeader className="py-2 px-5 border-b bg-muted/20">
@@ -1186,34 +1186,6 @@ export default function ClaimsPage() {
                       className="h-8"
                     >
                       Review EOB
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* Pre-Auth Needed Soon Card */}
-            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
-              <CardHeader className="py-2 px-5 border-b bg-muted/20">
-                <CardTitle className="text-sm font-medium">Pre-Auth Needed Soon</CardTitle>
-              </CardHeader>
-              <CardContent className="py-4 px-5 flex-1 flex flex-col">
-                <div className="flex justify-between mb-2">
-                  <div>
-                    <div className="text-xl font-bold mb-1">
-                      2 patients
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      Pre-auth expires &lt; 14 days
-                    </div>
-                  </div>
-                  <div className="flex items-center">
-                    <Button 
-                      variant="outline"
-                      size="sm"
-                      className="h-8"
-                    >
-                      Generate Pre-Auth
                     </Button>
                   </div>
                 </div>
