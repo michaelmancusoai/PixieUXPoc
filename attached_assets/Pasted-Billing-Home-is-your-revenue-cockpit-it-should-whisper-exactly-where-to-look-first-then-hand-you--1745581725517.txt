@@ -1,0 +1,64 @@
+Billing Home is your revenue cockpit — it should whisper exactly where to look first, then hand you the switch that fixes it.
+Right now it’s a polite directory with four vanity totals (“Monthly Revenue”, “Patient A/R”) and six navigation tiles you’ve already given people in the tab-bar above. Nothing on the page changes anyone’s behaviour at 9 a.m.
+
+Below is a redesign that keeps the calm aesthetic you’ve adopted for Payments / Statements / Collections, but turns Billing Home into a daily triage console.
+
+1 · Recast the hero row: from vanity totals to actionable leak-meters
+
+
+New card	Data shown	Why it matters	CTA (single button)
+Unbilled Procedures	$3 780 (23 completed today)	Every day unfiled is a day revenue waits	Create Claims
+Draft Claims	5 claims · $2 150	Dollars sitting in drafts queue	Send Claims
+Denied / Rejected	3 claims · $940	Fix now → cash in ≤ 7 days	Correct & Resubmit
+Patient A/R Aging > 30 d	$1 860 (14 pts)	Balances at risk of collections fees	Send Statements
+Colour bands
+
+Grey when metric = 0
+Amber for soft threshold (e.g. draft > 0)
+Coral when hard threshold reached (e.g. any denial)
+Zero state copy: “No denials today — cup of tea time ☕”
+2 · Replace the six nav tiles with Role-Smart Cards
+
+
+Tile	Shows	Primary action
+Today’s Claim Tasks	Drafts, denials, follow-ups count	Open Claim Queue
+Today’s Payment Tasks	Patient-resp left to collect before 5 p.m.	Unpaid Check-outs
+Today’s Statement Tasks	Statements awaiting first reminder	Send Reminders
+Collections Watch	Aging > 90 d bucket	View Over 90 d
+Fee-Schedule Alerts	Plans > 18 mo old	Review Fees
+Each card loads with only the numbers relevant to the logged-in role. A billing specialist might see all five; a front-desk user sees just Claims, Payments, Statements.
+
+3 · Add a slim “Revenue Radar” strip for leadership
+
+Revenue Radar — Forecast Month-End
+┌──────────────┬─────────────┬─────────────┬───────────────┐
+| On-track $   | At-risk $   | Stalled $   | Won back $    |
+| $22,840      | $4,950      | $1,860      | $2,310        |
+└──────────────┴─────────────┴─────────────┴───────────────┘
+Hover → tooltip explains calculation. Click → pre-filtered report.
+
+4 · Behavioural nudges
+
+
+Trigger	Nudge
+Draft Claims > 0 at 3 p.m.	Red halo on card header: “Send now to avoid an extra day’s float.”
+Denials cleared to zero	Confetti tick 1 s; card fades to mint.
+Fee Schedules > 18 mo	Amber badge: “Out-of-date fees cost ~8 % revenue.”
+5 · Micro-copy swaps
+
+
+Old	New
+“Outstanding Claims”	“Draft claims — revenue on your desk”
+“Patient A/R Balance”	“Balances aging — nudge before month-end”
+“Collections”	“Already in collections (fees rising)”
+Short, verb-ready, loss-averse.
+
+6 · Designer checklist
+
+Hero row = 4 equal cards, single CTA, band colour per status.
+Role-Smart cards use same component but default grey header; colourise only when attention needed.
+Remove the six navigation buttons; primary nav already lives in the sub-tabs.
+Maintain the calm white space and single-colour icon set used elsewhere.
+Ensure every dollar figure has a tooltip: formula + data source.
+End result
+Billing Home becomes the one-glance triage board: “Send these drafts, fix those denials, nudge that aging bucket — then go to lunch.” Vanity totals move to monthly reports; the home screen now pushes the precise levers that free cash today.
