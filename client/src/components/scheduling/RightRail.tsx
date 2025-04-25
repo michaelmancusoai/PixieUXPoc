@@ -1,16 +1,22 @@
+import { useState } from 'react';
 import { format } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { MessageSquare, CheckCircle, UserCheck, ClipboardList, Clock, AlertTriangle, CreditCard, LogOut } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { MessageSquare, CheckCircle, UserCheck, ClipboardList, Clock, AlertTriangle, CreditCard, LogOut, Plus } from 'lucide-react';
 import { AppointmentWithDetails } from '@/lib/scheduling-utils';
+import BookAppointmentDialog from './BookAppointmentDialog';
 
 interface RightRailProps {
   selectedDate: Date;
 }
 
 export default function RightRail({ selectedDate }: RightRailProps) {
+  const [bookAppointmentOpen, setBookAppointmentOpen] = useState(false);
+  const [selectedPatient, setSelectedPatient] = useState("");
+  
   // Sample data for the day summary
   const daySummary = {
     totalAppointments: 15,
@@ -66,8 +72,29 @@ export default function RightRail({ selectedDate }: RightRailProps) {
     },
   ];
   
+  const handleOpenBookAppointment = (patientName = "") => {
+    setSelectedPatient(patientName);
+    setBookAppointmentOpen(true);
+  };
+  
   return (
     <div className="h-full overflow-y-auto space-y-4">
+      {/* Book Appointment Button */}
+      <Button 
+        className="w-full flex items-center justify-center py-4 shadow-sm" 
+        size="sm"
+        onClick={() => handleOpenBookAppointment()}
+      >
+        <Plus className="h-4 w-4 mr-2" />
+        Book Appointment
+      </Button>
+      
+      {/* Book Appointment Dialog */}
+      <BookAppointmentDialog
+        open={bookAppointmentOpen}
+        onOpenChange={setBookAppointmentOpen}
+        patientName={selectedPatient}
+      />
       
       {/* Main Card with Accordion layout similar to LeftRail */}
       <Card className="shadow-sm">
@@ -193,7 +220,7 @@ export default function RightRail({ selectedDate }: RightRailProps) {
                     ) : (
                       <MessageSquare className="h-3 w-3 text-blue-500 flex-shrink-0" />
                     )}
-                    <span className="line-clamp-1">{alert.message}</span>
+                    <span className="whitespace-normal">{alert.message}</span>
                   </div>
                 ))}
               </AccordionContent>

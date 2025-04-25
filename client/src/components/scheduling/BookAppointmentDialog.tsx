@@ -1,13 +1,26 @@
 import { useState } from "react";
 import { format } from "date-fns";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Calendar } from "@/components/ui/calendar";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { CalendarIcon, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -15,422 +28,527 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { CDT_CATEGORIES } from "@/lib/scheduling-constants";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
-// Define the form schema
+// Define form schema with Zod
 const formSchema = z.object({
-  patientId: z.string().min(1, { message: "Patient is required" }),
-  providerId: z.string().min(1, { message: "Provider is required" }),
-  operatoryId: z.string().min(1, { message: "Operatory is required" }),
-  duration: z.string().min(1, { message: "Duration is required" }),
-  startTime: z.string().min(1, { message: "Start time is required" }),
-  procedure: z.string().optional(),
-  cdtCode: z.string().optional(),
-  notes: z.string().optional(),
+  patient: z.string().min(1, "Patient is required"),
+  sendReminders: z.boolean().default(true),
+  category: z.string().min(1, "Category is required"),
+  procedures: z.array(z.string()).min(1, "At least one procedure is required"),
+  comments: z.string().optional(),
+  addToAsapList: z.boolean().default(false),
+  date: z.date({
+    required_error: "Date is required",
+  }),
+  startTime: z.string().min(1, "Start time is required"),
+  provider: z.string().min(1, "Provider is required"),
+  hygienist: z.string().optional(),
 });
+
+type FormValues = z.infer<typeof formSchema>;
 
 interface BookAppointmentDialogProps {
   open: boolean;
-  onClose: () => void;
-  onBook: () => void;
-  selectedDate: Date;
+  onOpenChange: (open: boolean) => void;
+  patientName?: string;
 }
 
 export default function BookAppointmentDialog({
   open,
-  onClose,
-  onBook,
-  selectedDate,
+  onOpenChange,
+  patientName = "",
 }: BookAppointmentDialogProps) {
-  const [selectedCdtCategory, setSelectedCdtCategory] = useState("");
-
-  // Sample data for the dropdowns
-  const patients = [
-    { id: 1, name: "John Johnson" },
-    { id: 2, name: "Maria Garcia" },
-    { id: 3, name: "David Lee" },
-    { id: 4, name: "Sarah Martinez" },
-    { id: 5, name: "Robert Wilson" },
-  ];
-
-  const providers = [
-    { id: 1, name: "Dr. Nguyen" },
-    { id: 2, name: "Dr. Robert" },
-    { id: 3, name: "Dr. Johnson" },
-    { id: 4, name: "Dr. Maria" },
-  ];
-
-  const operatories = [
-    { id: 1, name: "Op 1" },
-    { id: 2, name: "Op 2" },
-    { id: 3, name: "Op 3" },
-    { id: 4, name: "Op 4" },
-  ];
-
-  const durations = [
-    { value: "15", label: "15 minutes" },
-    { value: "30", label: "30 minutes" },
-    { value: "45", label: "45 minutes" },
-    { value: "60", label: "1 hour" },
-    { value: "90", label: "1 hour 30 minutes" },
-    { value: "120", label: "2 hours" },
-  ];
-
-  const timeSlots: { value: string; label: string }[] = [];
-  // Generate time slots from 8:00 AM to 5:00 PM
-  for (let hour = 8; hour <= 17; hour++) {
-    for (let minute = 0; minute < 60; minute += 15) {
-      const h = hour > 12 ? hour - 12 : hour;
-      const period = hour >= 12 ? "PM" : "AM";
-      const formattedMinute = minute === 0 ? "00" : minute;
-      const formattedHour = hour === 0 ? 12 : h;
-      const timeLabel = `${formattedHour}:${formattedMinute} ${period}`;
-      const timeValue = `${hour.toString().padStart(2, "0")}:${formattedMinute.toString().padStart(2, "0")}`;
-      timeSlots.push({ value: timeValue, label: timeLabel });
-    }
-  }
-
-  // CDT codes (dental procedure codes)
-  const cdtCodes = [
-    // Diagnostic
-    { code: "D0120", name: "Periodic Oral Evaluation" },
-    { code: "D0150", name: "Comprehensive Oral Evaluation" },
-    { code: "D0210", name: "Complete Series of Radiographs" },
-    { code: "D0220", name: "Intraoral - Periapical First Film" },
-    { code: "D0274", name: "Bitewings - Four Films" },
-    // Preventive
-    { code: "D1110", name: "Prophylaxis - Adult" },
-    { code: "D1120", name: "Prophylaxis - Child" },
-    { code: "D1206", name: "Fluoride Varnish" },
-    { code: "D1351", name: "Sealant - Per Tooth" },
-    // Restorative
-    { code: "D2140", name: "Amalgam - One Surface" },
-    { code: "D2330", name: "Resin-Based Composite - One Surface" },
-    { code: "D2332", name: "Resin-Based Composite - Three Surfaces" },
-    { code: "D2335", name: "Resin-Based Composite - Four Surfaces" },
-    { code: "D2391", name: "Resin-Based Composite - One Surface" },
-    { code: "D2750", name: "Crown - Porcelain Fused to High Noble Metal" },
-    { code: "D2790", name: "Crown - Full Cast High Noble Metal" },
-    { code: "D2950", name: "Core Buildup, Including any Pins" },
-    // Endodontics
-    { code: "D3310", name: "Anterior Root Canal" },
-    { code: "D3320", name: "Bicuspid Root Canal" },
-    { code: "D3330", name: "Molar Root Canal" },
-  ];
-
-  // Filter CDT codes by category
-  const filteredCdtCodes = selectedCdtCategory
-    ? cdtCodes.filter((code) => code.code.startsWith(selectedCdtCategory))
-    : cdtCodes;
-
-  // Set up the form
-  const form = useForm<z.infer<typeof formSchema>>({
+  const [activeTab, setActiveTab] = useState<"set" | "find">("set");
+  
+  // Create form
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      patientId: "",
-      providerId: "",
-      operatoryId: "",
-      duration: "30",
-      startTime: "09:00",
-      procedure: "",
-      cdtCode: "",
-      notes: "",
+      patient: patientName,
+      sendReminders: true,
+      category: "",
+      procedures: [],
+      comments: "",
+      addToAsapList: false,
+      startTime: "",
+      provider: "",
+      hygienist: "",
     },
   });
-
-  const handleSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log("Booking appointment with values:", values);
-    onBook();
+  
+  // Generate sample time slots for the demo
+  const generateTimeSlots = () => {
+    const slots = [];
+    for (let hour = 8; hour <= 17; hour++) {
+      for (let minute = 0; minute < 60; minute += 15) {
+        const period = hour >= 12 ? "PM" : "AM";
+        const displayHour = hour > 12 ? hour - 12 : hour;
+        const displayMinute = minute === 0 ? "00" : minute;
+        const label = `${displayHour}:${displayMinute} ${period}`;
+        const value = `${hour.toString().padStart(2, "0")}:${displayMinute}`;
+        slots.push({ label, value });
+      }
+    }
+    return slots;
   };
-
+  
+  const timeSlots = generateTimeSlots();
+  
+  // Sample procedure categories
+  const procedureCategories = [
+    { name: "Surgery", id: "surgery" },
+    { name: "New Patient Exam", id: "new-patient-exam" },
+    { name: "Adult Prophy & Exam", id: "adult-prophy-exam" },
+    { name: "Emergency Exam", id: "emergency-exam" },
+    { name: "New Pediatric Patient Exam", id: "new-pediatric-patient-exam" },
+    { name: "Consultation", id: "consultation" },
+    { name: "Child Prophy & Exam", id: "child-prophy-exam" },
+    { name: "Botox", id: "botox" },
+    { name: "Treatment Plan", id: "treatment-plan" },
+  ];
+  
+  // Sample procedure list
+  const procedureList = [
+    { id: "perex", name: "PerEx", category: "adult-prophy-exam" },
+    { id: "4bw", name: "4BW", category: "adult-prophy-exam" },
+    { id: "pro", name: "Pro", category: "adult-prophy-exam" },
+    { id: "flovarn", name: "FloVarn", category: "adult-prophy-exam" },
+  ];
+  
+  // Sample providers
+  const providers = [
+    { id: "dr-winderfield", name: "Dr. Winderfield" },
+    { id: "dr-sak", name: "Dr. Sak" },
+    { id: "dr-capps", name: "Dr. Capps" },
+    { id: "dr-rowley", name: "Dr. Rowley" },
+  ];
+  
+  // Sample hygienists
+  const hygienists = [
+    { id: "n-sheth", name: "N. Sheth" },
+    { id: "e-shenton", name: "E. Shenton" },
+  ];
+  
+  // Form submission handler
+  const onSubmit = (values: FormValues) => {
+    console.log("Form values:", values);
+    // In a real app, you would send this to your API
+    onOpenChange(false);
+  };
+  
   return (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl">
         <DialogHeader>
-          <DialogTitle>Book Appointment</DialogTitle>
-          <DialogDescription>
-            Schedule a new appointment for{" "}
-            {format(selectedDate, "EEEE, MMMM d, yyyy")}
-          </DialogDescription>
+          <DialogTitle className="text-xl">Add Appointment</DialogTitle>
         </DialogHeader>
-
+        
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-6"
-          >
-            <div className="grid grid-cols-2 gap-4">
-              {/* Patient Selection */}
-              <FormField
-                control={form.control}
-                name="patientId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Patient</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            {/* Patient Info Section */}
+            <div className="border-b pb-4">
+              <div className="flex justify-between items-center">
+                <div className="flex-1">
+                  <FormField
+                    control={form.control}
+                    name="patient"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-lg font-medium">{field.value || "Select Patient"}</FormLabel>
+                        <FormDescription>
+                          {field.value ? "" : "Please select a patient for this appointment"}
+                        </FormDescription>
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                <FormField
+                  control={form.control}
+                  name="sendReminders"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-row items-center space-x-2 space-y-0">
                       <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select patient" />
-                        </SelectTrigger>
+                        <Checkbox
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
                       </FormControl>
-                      <SelectContent>
-                        {patients.map((patient) => (
-                          <SelectItem
-                            key={patient.id}
-                            value={patient.id.toString()}
-                          >
-                            {patient.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Provider Selection */}
-              <FormField
-                control={form.control}
-                name="providerId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Provider</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select provider" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {providers.map((provider) => (
-                          <SelectItem
-                            key={provider.id}
-                            value={provider.id.toString()}
-                          >
-                            {provider.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Operatory Selection */}
-              <FormField
-                control={form.control}
-                name="operatoryId"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Operatory</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select operatory" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {operatories.map((operatory) => (
-                          <SelectItem
-                            key={operatory.id}
-                            value={operatory.id.toString()}
-                          >
-                            {operatory.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Duration Selection */}
-              <FormField
-                control={form.control}
-                name="duration"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Duration</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select duration" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {durations.map((duration) => (
-                          <SelectItem key={duration.value} value={duration.value}>
-                            {duration.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* Start Time Selection */}
-              <FormField
-                control={form.control}
-                name="startTime"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Start Time</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select start time" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {timeSlots.map((timeSlot, index) => (
-                          <SelectItem key={index} value={timeSlot.value}>
-                            {timeSlot.label}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              {/* CDT Category Selection */}
-              <FormItem>
-                <FormLabel>CDT Category</FormLabel>
-                <Select
-                  onValueChange={setSelectedCdtCategory}
-                  value={selectedCdtCategory}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="">All Categories</SelectItem>
-                    <SelectItem value={CDT_CATEGORIES.DIAGNOSTIC}>
-                      Diagnostic (D0)
-                    </SelectItem>
-                    <SelectItem value={CDT_CATEGORIES.PREVENTIVE}>
-                      Preventive (D1)
-                    </SelectItem>
-                    <SelectItem value={CDT_CATEGORIES.RESTORATIVE}>
-                      Restorative (D2)
-                    </SelectItem>
-                    <SelectItem value={CDT_CATEGORIES.ENDODONTICS}>
-                      Endodontics (D3)
-                    </SelectItem>
-                    <SelectItem value={CDT_CATEGORIES.PERIODONTICS}>
-                      Periodontics (D4)
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </FormItem>
+                      <FormLabel className="text-sm font-normal">
+                        Send auto-reminders
+                      </FormLabel>
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
-
-            {/* CDT Code Selection */}
-            <FormField
-              control={form.control}
-              name="cdtCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>CDT Code</FormLabel>
-                  <Select
-                    onValueChange={(value) => {
-                      field.onChange(value);
-                      // Find the selected code
-                      const selectedCode = cdtCodes.find((code) => code.code === value);
-                      if (selectedCode) {
-                        // Update the procedure field with the name of the CDT code
-                        form.setValue("procedure", selectedCode.name);
-                      }
-                    }}
-                    value={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select CDT code" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {filteredCdtCodes.map((cdt) => (
-                        <SelectItem key={cdt.code} value={cdt.code}>
-                          {cdt.code} - {cdt.name}
-                        </SelectItem>
+            
+            {/* Procedures Section */}
+            <div className="space-y-4">
+              <h3 className="text-base font-medium">Procedures</h3>
+              
+              {/* Categories */}
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category <span className="text-red-500">*</span></FormLabel>
+                    <div className="flex flex-wrap gap-2">
+                      {procedureCategories.map((category) => (
+                        <Button
+                          key={category.id}
+                          type="button"
+                          variant={field.value === category.id ? "default" : "outline"}
+                          onClick={() => field.onChange(category.id)}
+                          className="rounded-full h-8"
+                        >
+                          {category.name}
+                        </Button>
                       ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              {/* Procedure Selection */}
+              <div className="grid grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="procedures"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category Procedures <span className="text-red-500">*</span></FormLabel>
+                      <div className="flex flex-wrap gap-2">
+                        {procedureList
+                          .filter(proc => !form.getValues("category") || proc.category === form.getValues("category"))
+                          .map((procedure) => {
+                            const isSelected = field.value.includes(procedure.id);
+                            return (
+                              <Badge
+                                key={procedure.id}
+                                variant={isSelected ? "default" : "outline"}
+                                className="cursor-pointer"
+                                onClick={() => {
+                                  const currentValues = [...field.value];
+                                  if (isSelected) {
+                                    field.onChange(currentValues.filter(id => id !== procedure.id));
+                                  } else {
+                                    field.onChange([...currentValues, procedure.id]);
+                                  }
+                                }}
+                              >
+                                {procedure.name}
+                                {isSelected && <span className="ml-1">✕</span>}
+                              </Badge>
+                            );
+                          })}
+                      </div>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                
+                <div>
+                  <FormLabel>Addtl Procedures <span className="text-red-500">*</span></FormLabel>
+                  <div className="flex items-center space-x-2">
+                    <Button type="button" variant="outline" size="icon" className="h-8 w-8 rounded-full">+</Button>
+                    <span className="text-sm text-muted-foreground">Add more procedures</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Comments */}
+              <FormField
+                control={form.control}
+                name="comments"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Comments</FormLabel>
+                    <FormControl>
+                      <Textarea
+                        placeholder="Please give brief overview of patient's condition e.g. Broken tooth/severe tooth pain/ etc."
+                        {...field}
+                        className="min-h-[80px]"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            
+            {/* ASAP List */}
+            <div className="border-t pt-4">
+              <h3 className="text-base font-medium">ASAP List</h3>
+              <FormField
+                control={form.control}
+                name="addToAsapList"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center space-x-2 space-y-0 mt-2">
+                    <FormControl>
+                      <Checkbox
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <FormLabel className="text-sm font-normal">
+                      Add Patient to ASAP List
+                    </FormLabel>
+                  </FormItem>
+                )}
+              />
+            </div>
+            
+            {/* Tabs for Set/Find Appointment */}
+            <div className="border-t pt-4">
+              <div className="flex border-b">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className={`px-4 py-2 -mb-px border-b-2 ${
+                    activeTab === "set"
+                      ? "border-blue-500 text-blue-600"
+                      : "border-transparent"
+                  }`}
+                  onClick={() => setActiveTab("set")}
+                >
+                  Set Appointment
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className={`px-4 py-2 -mb-px border-b-2 ${
+                    activeTab === "find"
+                      ? "border-blue-500 text-blue-600"
+                      : "border-transparent"
+                  }`}
+                  onClick={() => setActiveTab("find")}
+                >
+                  Find Appointment
+                </Button>
+              </div>
+              
+              {/* Set Appointment View */}
+              {activeTab === "set" && (
+                <div className="pt-4 space-y-4">
+                  <div className="flex space-x-4 items-center">
+                    <div className="w-28">
+                      <FormLabel>Show from</FormLabel>
+                    </div>
+                    <FormField
+                      control={form.control}
+                      name="date"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col">
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    "w-[240px] pl-3 text-left font-normal",
+                                    !field.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "MM/dd/yyyy")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-auto p-0" align="start">
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                initialFocus
+                              />
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    
+                    <Button type="button" variant="outline" className="ml-2">Today</Button>
+                    <Button type="button" variant="outline">+3m</Button>
+                    <Button type="button" variant="outline">+6m</Button>
+                  </div>
+                  
+                  <div className="border rounded-md p-4 bg-gray-100">
+                    {/* Day Selection */}
+                    <div className="mb-4">
+                      <label className="block text-sm mb-1">Days</label>
+                      <div className="flex space-x-1">
+                        {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
+                          <div
+                            key={i}
+                            className={`flex items-center justify-center w-8 h-8 rounded-md ${
+                              i === 3 ? "bg-blue-500 text-white" : "bg-white"
+                            }`}
+                          >
+                            {day}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* AM/PM Selection */}
+                    <div className="mb-4">
+                      <label className="block text-sm mb-1">Time Slot</label>
+                      <div className="flex space-x-1">
+                        <div className="flex items-center justify-center w-12 h-8 rounded-md bg-blue-500 text-white">
+                          AM
+                        </div>
+                        <div className="flex items-center justify-center w-12 h-8 rounded-md bg-white">
+                          PM
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Time Range Selection */}
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <label className="block text-sm mb-1">From</label>
+                        <Select defaultValue="08:00">
+                          <SelectTrigger className="bg-white">
+                            <SelectValue placeholder="Select time" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="08:00">8:00 AM</SelectItem>
+                            <SelectItem value="09:00">9:00 AM</SelectItem>
+                            <SelectItem value="10:00">10:00 AM</SelectItem>
+                            <SelectItem value="11:00">11:00 AM</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div>
+                        <label className="block text-sm mb-1">To</label>
+                        <Select defaultValue="13:00">
+                          <SelectTrigger className="bg-white">
+                            <SelectValue placeholder="Select time" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="12:00">12:00 PM</SelectItem>
+                            <SelectItem value="13:00">1:00 PM</SelectItem>
+                            <SelectItem value="14:00">2:00 PM</SelectItem>
+                            <SelectItem value="15:00">3:00 PM</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    
+                    {/* Provider Selection */}
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <FormField
+                          control={form.control}
+                          name="provider"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm">Provider</FormLabel>
+                              <div className="flex flex-wrap gap-1 mt-1">
+                                {providers.map(provider => (
+                                  <Button
+                                    key={provider.id}
+                                    type="button"
+                                    onClick={() => field.onChange(provider.id)}
+                                    variant={field.value === provider.id ? "default" : "outline"}
+                                    size="sm"
+                                    className={`text-xs px-2 py-1 h-auto ${
+                                      provider.id === "dr-sak" ? "bg-blue-100 border-blue-300" : ""
+                                    }`}
+                                  >
+                                    {provider.name}
+                                  </Button>
+                                ))}
+                              </div>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div>
+                        <FormField
+                          control={form.control}
+                          name="hygienist"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-sm">Hygienist</FormLabel>
+                              <div className="flex flex-wrap gap-1 mt-1">
+                                {hygienists.map(hygienist => (
+                                  <Button
+                                    key={hygienist.id}
+                                    type="button"
+                                    onClick={() => field.onChange(hygienist.id)}
+                                    variant={field.value === hygienist.id ? "default" : "outline"}
+                                    size="sm"
+                                    className="text-xs px-2 py-1 h-auto"
+                                  >
+                                    {hygienist.name}
+                                  </Button>
+                                ))}
+                              </div>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Time Slots */}
+                  <div>
+                    <h4 className="font-medium mb-2">Time Slots</h4>
+                    <div className="border rounded-md">
+                      <div className="flex justify-between items-center p-3 border-b">
+                        <div className="font-medium">Available Providers & Hygienists</div>
+                      </div>
+                      
+                      <div className="divide-y">
+                        <div className="p-3">
+                          <div className="font-medium mb-1">Wednesday, August 16th</div>
+                          <div className="flex items-center">
+                            <div className="w-40">09:00 AM - 10:00 AM</div>
+                            <Badge variant="outline" className="ml-4">Dr. Sak</Badge>
+                          </div>
+                        </div>
+                        
+                        <div className="p-3">
+                          <div className="font-medium mb-1">Thursday, August 17th</div>
+                          <div className="flex items-center">
+                            <div className="w-40">09:00 AM - 10:00 AM</div>
+                            <Badge variant="outline" className="ml-4">Dr. Sak</Badge>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               )}
-            />
-
-            {/* Procedure Description */}
-            <FormField
-              control={form.control}
-              name="procedure"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Procedure</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Procedure description" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+              
+              {/* Find Appointment View (simplified for now) */}
+              {activeTab === "find" && (
+                <div className="py-4">
+                  <p className="text-center text-muted-foreground">
+                    Find appointment feature allows you to search for available slots.
+                  </p>
+                </div>
               )}
-            />
-
-            {/* Notes */}
-            <FormField
-              control={form.control}
-              name="notes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Notes</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Additional notes" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+            </div>
+            
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose}>
+              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
                 Cancel
               </Button>
-              <Button type="submit">Book Appointment</Button>
+              <Button type="submit">Save</Button>
             </DialogFooter>
           </form>
         </Form>
