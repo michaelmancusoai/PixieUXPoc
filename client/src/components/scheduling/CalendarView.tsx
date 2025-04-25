@@ -336,7 +336,7 @@ export default function CalendarView({
       <div className="h-full overflow-auto relative">
         {/* Current time indicator line that spans across entire grid */}
         <div className="absolute left-[60px] right-0 z-20 pointer-events-none"
-             style={{ top: `${currentTimeIndicatorTop + 35}px` }}>
+             style={{ top: `${currentTimeIndicatorTop + 37.5}px` }}>
           <div className="h-[2px] bg-red-500 w-full"></div>
         </div>
         {/* Resource column headers */}
@@ -386,9 +386,9 @@ export default function CalendarView({
             {/* Current time label shown in time column */}
             <div 
               className="absolute right-0 flex justify-end items-center z-10 pointer-events-none"
-              style={{ top: `${currentTimeIndicatorTop + 35}px` }}
+              style={{ top: `${currentTimeIndicatorTop + 37.5}px`, transform: 'translateY(-50%)' }}
             >
-              <div className="bg-red-500 text-white text-[10px] py-0.5 px-1 rounded-l whitespace-nowrap">
+              <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-l whitespace-nowrap">
                 1:15 PM
               </div>
             </div>
