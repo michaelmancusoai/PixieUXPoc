@@ -148,7 +148,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
               <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
                 <div className="flex items-center w-full">
                   <div className="flex items-center">
-                    <UserPlus className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <UserPlus className="mr-2 h-4 w-4 text-blue-500" />
                     <h3 className="font-medium">Waitlist</h3>
                   </div>
                   <div className="ml-auto">
@@ -190,7 +190,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                                 </div>
                                 <p className="text-muted-foreground truncate">{patient.reason || patient.procedure}</p>
                               </div>
-                              <Phone className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 ml-1.5" />
+                              <Phone className="h-3 w-3 text-blue-500 opacity-0 group-hover:opacity-100 ml-1.5" />
                             </div>
                           ))}
                         </div>
@@ -212,7 +212,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                                 </div>
                                 <p className="text-muted-foreground truncate">{patient.procedure}</p>
                               </div>
-                              <Phone className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 ml-1.5" />
+                              <Phone className="h-3 w-3 text-blue-500 opacity-0 group-hover:opacity-100 ml-1.5" />
                             </div>
                           ))}
                         </div>
@@ -232,7 +232,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
               <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
                 <div className="flex items-center w-full">
                   <div className="flex items-center">
-                    <Bell className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <Bell className="mr-2 h-4 w-4 text-purple-500" />
                     <h3 className="font-medium">Recalls</h3>
                   </div>
                   <div className="ml-auto">
@@ -257,8 +257,8 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                         <p className="text-muted-foreground truncate">{patient.recallType}</p>
                       </div>
                       <div className="flex space-x-1">
-                        <Phone className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100" />
-                        <Calendar className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100" />
+                        <Phone className="h-3 w-3 text-purple-500 opacity-0 group-hover:opacity-100" />
+                        <Calendar className="h-3 w-3 text-purple-500 opacity-0 group-hover:opacity-100" />
                       </div>
                     </div>
                   ))}
@@ -271,9 +271,9 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
               <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
                 <div className="flex items-center w-full">
                   <div className="flex items-center">
-                    <div className="relative mr-2 h-4 w-4 text-muted-foreground">
-                      <Calendar className="h-4 w-4" />
-                      <Clock className="h-2 w-2 absolute -bottom-0.5 -right-0.5" />
+                    <div className="relative mr-2 h-4 w-4">
+                      <Calendar className="h-4 w-4 text-green-500" />
+                      <Clock className="h-2 w-2 absolute -bottom-0.5 -right-0.5 text-green-600" />
                     </div>
                     <h3 className="font-medium">Quick Fill</h3>
                   </div>
@@ -295,7 +295,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                       </div>
                       <p className="text-muted-foreground truncate">Dr. Smith • Op. 2</p>
                     </div>
-                    <UserPlus className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 ml-1.5" />
+                    <UserPlus className="h-3 w-3 text-green-500 opacity-0 group-hover:opacity-100 ml-1.5" />
                   </div>
                   
                   <div className="group flex items-center bg-white hover:bg-gray-50 py-1.5 px-2 text-xs cursor-pointer">
@@ -307,7 +307,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                       </div>
                       <p className="text-muted-foreground truncate">Dr. Johnson • Op. 4</p>
                     </div>
-                    <UserPlus className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 ml-1.5" />
+                    <UserPlus className="h-3 w-3 text-green-500 opacity-0 group-hover:opacity-100 ml-1.5" />
                   </div>
                   
                   <div className="group flex items-center bg-white hover:bg-gray-50 py-1.5 px-2 text-xs cursor-pointer">
@@ -319,7 +319,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                       </div>
                       <p className="text-muted-foreground truncate">Dr. Davis • Op. 1</p>
                     </div>
-                    <UserPlus className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 ml-1.5" />
+                    <UserPlus className="h-3 w-3 text-green-500 opacity-0 group-hover:opacity-100 ml-1.5" />
                   </div>
                 </div>
               </AccordionContent>
