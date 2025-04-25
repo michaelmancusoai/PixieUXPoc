@@ -61,32 +61,36 @@ export default function AppHeader({
           
           {/* Patient counts in a visually stimulating display */}
           <div className="flex items-center gap-2 ml-2 h-9">
-            <div className="flex items-center w-16 bg-blue-100 border border-blue-300 rounded-md h-full overflow-hidden">
-              <div className="flex items-center justify-center w-6 bg-blue-200 h-full mr-1 border-r border-blue-300">
-                <span className="text-sm font-bold text-blue-700">{patientCounts.total}</span>
-              </div>
-              <span className="text-xs text-blue-600">Total</span>
-            </div>
-            
-            <div className="flex items-center w-16 bg-amber-100 border border-amber-300 rounded-md h-full overflow-hidden">
-              <div className="flex items-center justify-center w-6 bg-amber-200 h-full mr-1 border-r border-amber-300">
-                <span className="text-sm font-bold text-amber-700">{patientCounts.upcoming}</span>
-              </div>
-              <span className="text-xs text-amber-600">Up</span>
-            </div>
-            
-            <div className="flex items-center w-16 bg-green-100 border border-green-300 rounded-md h-full overflow-hidden">
-              <div className="flex items-center justify-center w-6 bg-green-200 h-full mr-1 border-r border-green-300">
-                <span className="text-sm font-bold text-green-700">{patientCounts.inProgress}</span>
-              </div>
-              <span className="text-xs text-green-600">In</span>
-            </div>
-            
+            {/* Total - Dark Gray */}
             <div className="flex items-center w-16 bg-gray-100 border border-gray-300 rounded-md h-full overflow-hidden">
               <div className="flex items-center justify-center w-6 bg-gray-200 h-full mr-1 border-r border-gray-300">
-                <span className="text-sm font-bold text-gray-700">{patientCounts.completed}</span>
+                <span className="text-sm font-bold text-gray-800">{patientCounts.total}</span>
               </div>
-              <span className="text-xs text-gray-600">Done</span>
+              <span className="text-xs text-gray-700">Total</span>
+            </div>
+            
+            {/* Upcoming - Green */}
+            <div className="flex items-center w-16 bg-green-50 border border-green-200 rounded-md h-full overflow-hidden">
+              <div className="flex items-center justify-center w-6 bg-green-100 h-full mr-1 border-r border-green-200">
+                <span className="text-sm font-bold text-green-700">{patientCounts.upcoming}</span>
+              </div>
+              <span className="text-xs text-green-600">Up</span>
+            </div>
+            
+            {/* In Progress - Orange */}
+            <div className="flex items-center w-16 bg-orange-50 border border-orange-200 rounded-md h-full overflow-hidden">
+              <div className="flex items-center justify-center w-6 bg-orange-100 h-full mr-1 border-r border-orange-200">
+                <span className="text-sm font-bold text-orange-600">{patientCounts.inProgress}</span>
+              </div>
+              <span className="text-xs text-orange-500">In</span>
+            </div>
+            
+            {/* Completed - Light Gray */}
+            <div className="flex items-center w-16 bg-gray-50 border border-gray-200 rounded-md h-full overflow-hidden">
+              <div className="flex items-center justify-center w-6 bg-gray-100 h-full mr-1 border-r border-gray-200">
+                <span className="text-sm font-bold text-gray-500">{patientCounts.completed}</span>
+              </div>
+              <span className="text-xs text-gray-400">Done</span>
             </div>
           </div>
         </div>
