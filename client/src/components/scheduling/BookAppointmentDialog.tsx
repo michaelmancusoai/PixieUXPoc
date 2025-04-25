@@ -65,6 +65,14 @@ export default function BookAppointmentDialog({
   patientName = "",
 }: BookAppointmentDialogProps) {
   const [activeTab, setActiveTab] = useState<"set" | "find">("set");
+  const [selectedDay, setSelectedDay] = useState<number>(new Date().getDay()); // 0-6, Sunday is 0
+  const [formState, setFormState] = useState<{
+    amPmFilter: "AM" | "PM",
+    showTimeSlots: boolean
+  }>({
+    amPmFilter: "AM",
+    showTimeSlots: false
+  });
   
   // Create form
   const form = useForm<FormValues>({
@@ -447,12 +455,16 @@ export default function BookAppointmentDialog({
                           }
                           
                           return (
-                            <div
+                            <Button
                               key={i}
-                              className={`flex items-center justify-center w-8 h-8 rounded-md cursor-pointer ${
-                                i === currentDayOfWeek ? "bg-blue-500 text-white" : "bg-white hover:bg-blue-100"
+                              type="button"
+                              variant={i === selectedDay ? "default" : "outline"}
+                              className={`flex items-center justify-center w-8 h-8 rounded-md p-0 font-medium ${
+                                i === selectedDay ? "bg-blue-500 text-white" : ""
                               }`}
                               onClick={() => {
+                                setSelectedDay(i);
+                                
                                 const selectedDate = new Date();
                                 const diff = i - selectedDate.getDay();
                                 if (diff > 0) {
@@ -461,10 +473,13 @@ export default function BookAppointmentDialog({
                                   selectedDate.setDate(selectedDate.getDate() + diff + 7);
                                 }
                                 form.setValue("date", selectedDate);
+                                
+                                // Force the slots to update
+                                setFormState(prev => ({...prev, showTimeSlots: true}));
                               }}
                             >
                               {day}
-                            </div>
+                            </Button>
                           );
                         })}
                       </div>
@@ -473,105 +488,89 @@ export default function BookAppointmentDialog({
                     {/* AM/PM Selection */}
                     <div className="mb-3">
                       <label className="block text-sm mb-1">Time Slot</label>
-                      <FormField
-                        control={form.control}
-                        name="amPmFilter"
-                        render={({ field }) => (
-                          <FormItem>
-                            <div className="flex space-x-1">
-                              <div 
-                                className={`flex items-center justify-center w-12 h-8 rounded-md cursor-pointer ${
-                                  field.value === "AM" ? "bg-blue-500 text-white" : "bg-white hover:bg-blue-100"
-                                }`}
-                                onClick={() => field.onChange("AM")}
-                              >
-                                AM
-                              </div>
-                              <div 
-                                className={`flex items-center justify-center w-12 h-8 rounded-md cursor-pointer ${
-                                  field.value === "PM" ? "bg-blue-500 text-white" : "bg-white hover:bg-blue-100"
-                                }`}
-                                onClick={() => field.onChange("PM")}
-                              >
-                                PM
-                              </div>
-                            </div>
-                          </FormItem>
-                        )}
-                      />
+                      <div className="flex space-x-1">
+                        <Button
+                          type="button"
+                          className={`flex items-center justify-center w-12 h-8 ${
+                            formState.amPmFilter === "AM" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-white hover:bg-blue-100"
+                          }`}
+                          variant={formState.amPmFilter === "AM" ? "default" : "outline"}
+                          onClick={() => {
+                            form.setValue("amPmFilter", "AM");
+                            setFormState(prev => ({ ...prev, amPmFilter: "AM" }));
+                          }}
+                        >
+                          AM
+                        </Button>
+                        <Button
+                          type="button"
+                          className={`flex items-center justify-center w-12 h-8 ${
+                            formState.amPmFilter === "PM" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-white hover:bg-blue-100"
+                          }`}
+                          variant={formState.amPmFilter === "PM" ? "default" : "outline"}
+                          onClick={() => {
+                            form.setValue("amPmFilter", "PM");
+                            setFormState(prev => ({ ...prev, amPmFilter: "PM" }));
+                          }}
+                        >
+                          PM
+                        </Button>
+                      </div>
                     </div>
                     
                     {/* Time Range Selection */}
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div>
                         <label className="block text-sm mb-1">From</label>
-                        <FormField
-                          control={form.control}
-                          name="fromTime"
-                          render={({ field }) => (
-                            <FormItem>
-                              <Select
-                                value={field.value}
-                                onValueChange={field.onChange}
-                                defaultValue="07:00"
-                              >
-                                <SelectTrigger className="bg-white h-8 text-sm">
-                                  <SelectValue placeholder="Select time" />
-                                </SelectTrigger>
-                                <SelectContent className="max-h-[200px]">
-                                  {timeSlots
-                                    .filter(slot => {
-                                      const hour = parseInt(slot.value.split(':')[0]);
-                                      const isPM = hour >= 12;
-                                      return form.watch("amPmFilter") === "PM" ? isPM : !isPM;
-                                    })
-                                    .slice(0, 20)
-                                    .map(slot => (
-                                      <SelectItem key={slot.value} value={slot.value}>
-                                        {slot.label}
-                                      </SelectItem>
-                                    ))}
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                        <Select 
+                          defaultValue="07:00"
+                          onValueChange={(value) => form.setValue("fromTime", value)}
+                          value={form.getValues("fromTime") || "07:00"}
+                        >
+                          <SelectTrigger className="bg-white h-8 text-sm">
+                            <SelectValue placeholder="Select time" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-[200px]">
+                            {timeSlots
+                              .filter(slot => {
+                                const hour = parseInt(slot.value.split(':')[0]);
+                                const isPM = hour >= 12;
+                                return form.getValues("amPmFilter") === "PM" ? isPM : !isPM;
+                              })
+                              .slice(0, 20)
+                              .map(slot => (
+                                <SelectItem key={slot.value} value={slot.value}>
+                                  {slot.label}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div>
                         <label className="block text-sm mb-1">To</label>
-                        <FormField
-                          control={form.control}
-                          name="toTime"
-                          render={({ field }) => (
-                            <FormItem>
-                              <Select
-                                value={field.value}
-                                onValueChange={field.onChange}
-                                defaultValue="19:00"
-                              >
-                                <SelectTrigger className="bg-white h-8 text-sm">
-                                  <SelectValue placeholder="Select time" />
-                                </SelectTrigger>
-                                <SelectContent className="max-h-[200px]">
-                                  {timeSlots
-                                    .filter(slot => {
-                                      const fromHour = parseInt(form.watch("fromTime")?.split(':')[0] || "7");
-                                      const hour = parseInt(slot.value.split(':')[0]);
-                                      return hour > fromHour;
-                                    })
-                                    .slice(0, 20)
-                                    .map(slot => (
-                                      <SelectItem key={slot.value} value={slot.value}>
-                                        {slot.label}
-                                      </SelectItem>
-                                    ))}
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                        <Select 
+                          defaultValue="19:00"
+                          onValueChange={(value) => form.setValue("toTime", value)}
+                          value={form.getValues("toTime") || "19:00"}
+                        >
+                          <SelectTrigger className="bg-white h-8 text-sm">
+                            <SelectValue placeholder="Select time" />
+                          </SelectTrigger>
+                          <SelectContent className="max-h-[200px]">
+                            {timeSlots
+                              .filter(slot => {
+                                const fromHour = parseInt(form.getValues("fromTime")?.split(':')[0] || "7");
+                                const hour = parseInt(slot.value.split(':')[0]);
+                                return hour > fromHour;
+                              })
+                              .slice(0, 20)
+                              .map(slot => (
+                                <SelectItem key={slot.value} value={slot.value}>
+                                  {slot.label}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
                     
@@ -644,7 +643,7 @@ export default function BookAppointmentDialog({
                         {form.getValues("category") ? (
                           <>
                             {/* Morning slot - visible in AM or if no filter */}
-                            {(form.watch("amPmFilter") === "AM" || form.watch("amPmFilter") === undefined) && (
+                            {(formState.amPmFilter === "AM") && (
                               <div 
                                 className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
                                   form.getValues("startTime") === "09:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
@@ -668,31 +667,31 @@ export default function BookAppointmentDialog({
                               </div>
                             )}
                             
-                            {/* Late morning/noon slot - visible in either AM or PM depending on preference */}
-                            <div
-                              className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
-                                form.getValues("startTime") === "11:30" ? "bg-blue-50 border-l-4 border-blue-500" : ""
-                              }`}
-                              onClick={() => {
-                                form.setValue("startTime", "11:30");
-                                form.setValue("provider", "dr-robert");
-                              }}
-                            >
-                              <div className="font-medium mb-1 text-sm">
-                                {form.getValues("date") 
-                                  ? format(form.getValues("date"), "EEEE, MMMM do, yyyy")
-                                  : format(new Date(), "EEEE, MMMM do, yyyy")}
+                            {/* Late morning/noon slot - always visible */}
+                              <div
+                                className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
+                                  form.getValues("startTime") === "11:30" ? "bg-blue-50 border-l-4 border-blue-500" : ""
+                                }`}
+                                onClick={() => {
+                                  form.setValue("startTime", "11:30");
+                                  form.setValue("provider", "dr-robert");
+                                }}
+                              >
+                                <div className="font-medium mb-1 text-sm">
+                                  {form.getValues("date") 
+                                    ? format(form.getValues("date"), "EEEE, MMMM do, yyyy")
+                                    : format(new Date(), "EEEE, MMMM do, yyyy")}
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <div className="text-sm">11:30 - 12:30 PM</div>
+                                  <Badge variant={form.getValues("startTime") === "11:30" ? "default" : "outline"} className="ml-2 text-xs">
+                                    Dr. Robert {form.getValues("startTime") === "11:30" && "✓"}
+                                  </Badge>
+                                </div>
                               </div>
-                              <div className="flex items-center justify-between">
-                                <div className="text-sm">11:30 - 12:30 PM</div>
-                                <Badge variant={form.getValues("startTime") === "11:30" ? "default" : "outline"} className="ml-2 text-xs">
-                                  Dr. Robert {form.getValues("startTime") === "11:30" && "✓"}
-                                </Badge>
-                              </div>
-                            </div>
                             
-                            {/* Afternoon slot - visible in PM or if no filter */}
-                            {(form.watch("amPmFilter") === "PM" || form.watch("amPmFilter") === undefined) && (
+                            {/* Afternoon slot - visible in PM filter */}
+                            {(formState.amPmFilter === "PM") && (
                               <div
                                 className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
                                   form.getValues("startTime") === "14:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
@@ -717,7 +716,7 @@ export default function BookAppointmentDialog({
                             )}
                             
                             {/* Evening slot - visible in PM */}
-                            {form.watch("amPmFilter") === "PM" && (
+                            {formState.amPmFilter === "PM" && (
                               <div
                                 className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
                                   form.getValues("startTime") === "17:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
