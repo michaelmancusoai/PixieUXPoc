@@ -577,7 +577,7 @@ export default function StatementsPage() {
             </DropdownMenu>
           </div>
 
-          {/* Action-Oriented KPI Cards - Primary Row */}
+          {/* Primary Row - Action-Oriented KPIs */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {/* Unsent Drafts Card */}
             <Card className="shadow-sm border-t-4 border-t-primary/30 flex flex-col">
@@ -719,38 +719,47 @@ export default function StatementsPage() {
                 </div>
               </CardContent>
             </Card>
-            
+          </div>
+          
+          {/* Secondary Row - 50/50 Split Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {/* e-Statement Opt-In Gap Card */}
             <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
               <CardHeader className="py-2 px-5 border-b bg-muted/20">
                 <CardTitle className="text-sm font-medium">e-Statement Gap</CardTitle>
               </CardHeader>
               <CardContent className="py-4 px-5 flex-1 flex flex-col">
-                <div>
-                  <div className="text-xl font-bold flex items-center justify-between">
-                    <span>{eStatementRate}% adopted</span>
+                <div className="flex justify-between mb-2">
+                  <div>
+                    <div className="text-xl font-bold mb-1">
+                      {eStatementRate}% adopted
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {paperStatementCount} patient{paperStatementCount !== 1 && 's'} still on paper
+                    </div>
                   </div>
-                  <div className="text-xs text-muted-foreground mb-3">
-                    {paperStatementCount} patient{paperStatementCount !== 1 && 's'} still on paper
-                  </div>
-                  
-                  <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                    <div 
-                      className="bg-primary h-2 rounded-full" 
-                      style={{ width: `${eStatementRate}%` }}
-                    ></div>
+                  <div className="flex items-center">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="h-8"
+                      disabled={paperStatementCount === 0}
+                    >
+                      Invite Paperless
+                    </Button>
                   </div>
                 </div>
                 
-                <div className="mt-auto">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="w-full"
-                    disabled={paperStatementCount === 0}
-                  >
-                    Invite Paperless
-                  </Button>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                  <div 
+                    className="bg-primary h-2 rounded-full" 
+                    style={{ width: `${eStatementRate}%` }}
+                  ></div>
+                </div>
+                <div className="flex justify-between text-xs mt-1 text-muted-foreground">
+                  <span>0%</span>
+                  <span>50%</span>
+                  <span>100%</span>
                 </div>
               </CardContent>
             </Card>
@@ -760,43 +769,53 @@ export default function StatementsPage() {
               <CardHeader className="py-2 px-5 border-b bg-muted/20">
                 <CardTitle className="text-sm font-medium">High-Balance Watchlist</CardTitle>
               </CardHeader>
-              <CardContent className="py-4 px-5 flex-1 flex flex-col">
-                {highBalanceWatchlist.length > 0 ? (
-                  <div className="space-y-2 mb-4">
-                    {highBalanceWatchlist.map((statement, index) => (
-                      <div key={statement.id} className="flex justify-between items-center">
-                        <div>
-                          <div className="text-sm font-medium">{statement.patientName}</div>
-                          <div className="text-xs text-muted-foreground">${statement.balance.toFixed(2)}</div>
-                        </div>
-                        <Button size="sm" variant="outline" className="h-7 px-2">
-                          <Phone className="h-3 w-3 mr-1" />
-                          Call
-                        </Button>
-                      </div>
-                    ))}
+              <CardContent className="py-4 px-5 flex-1">
+                <div className="flex justify-between mb-2">
+                  <div>
+                    <div className="text-xl font-bold mb-1">
+                      {highBalanceWatchlist.length} account{highBalanceWatchlist.length !== 1 && 's'}
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      {highBalanceWatchlist.length > 0 ? 'Need attention' : 'No high balances'}
+                    </div>
                   </div>
-                ) : (
-                  <div className="text-center py-2 text-muted-foreground text-sm mb-4">
-                    No high balances to watch
+                  <div className="flex items-center">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      className="h-8"
+                      disabled={highBalanceWatchlist.length === 0}
+                    >
+                      Payment Plans
+                    </Button>
                   </div>
-                )}
+                </div>
                 
-                <div className="mt-auto">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    className="w-full"
-                    disabled={highBalanceWatchlist.length === 0}
-                  >
-                    Offer Payment Plans
-                  </Button>
+                <div className="mt-2">
+                  {highBalanceWatchlist.length > 0 ? (
+                    <div className="grid gap-2 grid-cols-1">
+                      {highBalanceWatchlist.slice(0, 3).map((statement, index) => (
+                        <div key={statement.id} className="flex justify-between items-center px-2 py-1 rounded bg-muted/30">
+                          <div>
+                            <div className="text-sm font-medium">{statement.patientName}</div>
+                            <div className="text-xs text-muted-foreground">${statement.balance.toFixed(2)}</div>
+                          </div>
+                          <Button size="sm" variant="ghost" className="h-7 w-7 p-0">
+                            <Phone className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-2 text-muted-foreground text-sm">
+                      All accounts are in good standing
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
-            
           </div>
-          
+            
           {/* Add custom animation for the pulse effect */}
           <style dangerouslySetInnerHTML={{
             __html: `
