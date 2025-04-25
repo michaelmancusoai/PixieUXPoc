@@ -110,6 +110,11 @@ export const navigationData: NavSection[] = [
         icon: CalendarDays,
       },
       {
+        title: "Capacity",
+        href: "/schedule/capacity",
+        icon: BarChart3,
+      },
+      {
         title: "Recalls",
         href: "/schedule/recalls",
         icon: RefreshCcw,
