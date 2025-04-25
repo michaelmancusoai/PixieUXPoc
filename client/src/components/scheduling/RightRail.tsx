@@ -105,49 +105,6 @@ export default function RightRail({ selectedDate }: RightRailProps) {
           ))}
         </CardContent>
       </Card>
-      
-      {/* Production Goals */}
-      <Card>
-        <CardHeader className="py-3">
-          <CardTitle className="text-sm font-semibold flex items-center">
-            <ClipboardList className="mr-2 h-4 w-4 text-primary" />
-            Production Goals
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <div className="space-y-3 text-xs">
-            <div>
-              <div className="flex justify-between mb-1">
-                <span>Daily Goal ($5,000)</span>
-                <span className="font-semibold">{Math.round((daySummary.producedAmount / 5000) * 100)}%</span>
-              </div>
-              <div className="w-full bg-gray-100 rounded-full h-1.5">
-                <div className="bg-green-500 h-1.5 rounded-full" style={{ width: `${Math.min(100, (daySummary.producedAmount / 5000) * 100)}%` }}></div>
-              </div>
-            </div>
-            
-            <div>
-              <div className="flex justify-between mb-1">
-                <span>Weekly Goal ($25,000)</span>
-                <span className="font-semibold">78%</span>
-              </div>
-              <div className="w-full bg-gray-100 rounded-full h-1.5">
-                <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: "78%" }}></div>
-              </div>
-            </div>
-            
-            <div>
-              <div className="flex justify-between mb-1">
-                <span>Monthly Goal ($100,000)</span>
-                <span className="font-semibold">62%</span>
-              </div>
-              <div className="w-full bg-gray-100 rounded-full h-1.5">
-                <div className="bg-purple-500 h-1.5 rounded-full" style={{ width: "62%" }}></div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }
