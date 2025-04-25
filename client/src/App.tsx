@@ -32,6 +32,23 @@ import ReportsPage from "@/pages/ReportsPage";
 import SettingsPage from "@/pages/SettingsPage";
 import PatientProfilePage from "@/pages/PatientProfilePage";
 import ThemeSettingsPage from "@/pages/settings/ThemeSettingsPage";
+import PracticeProfilePage from "@/pages/settings/PracticeProfilePage";
+import SchedulingSettingsPage from "@/pages/settings/SchedulingSettingsPage";
+import CommunicationsSettingsPage from "@/pages/settings/CommunicationsSettingsPage";
+import PracticeFinancesPage from "@/pages/settings/PracticeFinancesPage";
+import TeamMembersPage from "@/pages/settings/TeamMembersPage";
+import SecuritySettingsPage from "@/pages/settings/SecuritySettingsPage";
+import AccessLogsPage from "@/pages/settings/AccessLogsPage";
+import UserPermissionsPage from "@/pages/settings/UserPermissionsPage";
+import ClinicalTemplatesPage from "@/pages/settings/ClinicalTemplatesPage";
+import InventorySettingsPage from "@/pages/settings/InventorySettingsPage";
+import AIAutomationPage from "@/pages/settings/AIAutomationPage";
+import BillingPaymentsPage from "@/pages/settings/BillingPaymentsPage";
+import FeeSchedulesSettingsPage from "@/pages/settings/FeeSchedulesSettingsPage";
+import SubscriptionPage from "@/pages/settings/SubscriptionPage";
+import ExternalServicesPage from "@/pages/settings/ExternalServicesPage";
+import APISettingsPage from "@/pages/settings/APISettingsPage";
+import ReferralManagementPage from "@/pages/settings/ReferralManagementPage";
 import ToothChartPage from "@/features/dental/ToothChartPageFixed";
 
 function Router() {
@@ -73,6 +90,23 @@ function Router() {
       <Route path="/reports/:subpage" component={ReportsPage} />
       <Route path="/settings" component={SettingsPage} />
       <Route path="/settings/theme" component={ThemeSettingsPage} />
+      <Route path="/settings/practice-profile" component={PracticeProfilePage} />
+      <Route path="/settings/scheduling" component={SchedulingSettingsPage} />
+      <Route path="/settings/communications" component={CommunicationsSettingsPage} />
+      <Route path="/settings/practice-finances" component={PracticeFinancesPage} />
+      <Route path="/settings/team-members" component={TeamMembersPage} />
+      <Route path="/settings/security" component={SecuritySettingsPage} />
+      <Route path="/settings/access-logs" component={AccessLogsPage} />
+      <Route path="/settings/user-permissions" component={UserPermissionsPage} />
+      <Route path="/settings/clinical-templates" component={ClinicalTemplatesPage} />
+      <Route path="/settings/inventory" component={InventorySettingsPage} />
+      <Route path="/settings/ai-automation" component={AIAutomationPage} />
+      <Route path="/settings/billing-payments" component={BillingPaymentsPage} />
+      <Route path="/settings/fee-schedules-settings" component={FeeSchedulesSettingsPage} />
+      <Route path="/settings/subscription" component={SubscriptionPage} />
+      <Route path="/settings/external-services" component={ExternalServicesPage} />
+      <Route path="/settings/api-settings" component={APISettingsPage} />
+      <Route path="/settings/referral-management" component={ReferralManagementPage} />
       <Route path="/settings/:subpage" component={SettingsPage} />
       <Route path="/patients/chart/:id" component={ToothChartPage} />
       <Route component={NotFound} />

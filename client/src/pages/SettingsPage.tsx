@@ -26,6 +26,28 @@ export default function SettingsPage() {
     navigate(path);
   };
   
+  // Define paths for settings cards
+  const SETTINGS_PATHS = {
+    practiceProfile: "/settings/practice-profile",
+    scheduling: "/settings/scheduling",
+    communications: "/settings/communications",
+    practiceFinances: "/settings/practice-finances",
+    teamMembers: "/settings/team-members",
+    security: "/settings/security",
+    accessLogs: "/settings/access-logs",
+    userPermissions: "/settings/user-permissions",
+    clinicalTemplates: "/settings/clinical-templates",
+    inventory: "/settings/inventory",
+    aiAutomation: "/settings/ai-automation",
+    billingPayments: "/settings/billing-payments",
+    feeSchedules: "/settings/fee-schedules-settings",
+    subscription: "/settings/subscription",
+    externalServices: "/settings/external-services",
+    apiSettings: "/settings/api-settings",
+    referralManagement: "/settings/referral-management",
+    theme: "/settings/theme"
+  };
+  
   return (
     <NavigationWrapper>
       <div className="space-y-6">
@@ -38,22 +60,26 @@ export default function SettingsPage() {
             <SettingsCard 
               title="Practice Profile" 
               description="Manage your practice information, locations, and contact details" 
-              icon={Building} 
+              icon={Building}
+              onClick={() => handleCardClick(SETTINGS_PATHS.practiceProfile)}
             />
             <SettingsCard 
               title="Scheduling" 
               description="Configure appointment types, durations, and availability" 
-              icon={Calendar} 
+              icon={Calendar}
+              onClick={() => handleCardClick(SETTINGS_PATHS.scheduling)}
             />
             <SettingsCard 
               title="Communications" 
               description="Set up automated reminders, notifications, and templates" 
-              icon={MessageSquare} 
+              icon={MessageSquare}
+              onClick={() => handleCardClick(SETTINGS_PATHS.communications)}
             />
             <SettingsCard 
               title="Practice Finances" 
               description="Manage financial settings, reports, and tax information" 
-              icon={Wallet} 
+              icon={Wallet}
+              onClick={() => handleCardClick(SETTINGS_PATHS.practiceFinances)}
             />
           </div>
         </div>
@@ -65,22 +91,26 @@ export default function SettingsPage() {
             <SettingsCard 
               title="Team Members" 
               description="Manage staff accounts, roles, and permissions" 
-              icon={Users} 
+              icon={Users}
+              onClick={() => handleCardClick(SETTINGS_PATHS.teamMembers)}
             />
             <SettingsCard 
               title="Security" 
               description="Configure security settings, 2FA, and session controls" 
-              icon={Shield} 
+              icon={Shield}
+              onClick={() => handleCardClick(SETTINGS_PATHS.security)}
             />
             <SettingsCard 
               title="Access Logs" 
               description="View system access history and security events" 
-              icon={FileBarChart} 
+              icon={FileBarChart}
+              onClick={() => handleCardClick(SETTINGS_PATHS.accessLogs)}
             />
             <SettingsCard 
               title="User Permissions" 
               description="Set granular access controls for different user roles" 
-              icon={LockKeyhole} 
+              icon={LockKeyhole}
+              onClick={() => handleCardClick(SETTINGS_PATHS.userPermissions)}
             />
           </div>
         </div>
@@ -92,17 +122,20 @@ export default function SettingsPage() {
             <SettingsCard 
               title="Clinical Templates" 
               description="Configure clinical notes, forms, and treatment plan templates" 
-              icon={Activity} 
+              icon={Activity}
+              onClick={() => handleCardClick(SETTINGS_PATHS.clinicalTemplates)}
             />
             <SettingsCard 
               title="Inventory" 
               description="Manage supplies, equipment, and ordering thresholds" 
-              icon={Package} 
+              icon={Package}
+              onClick={() => handleCardClick(SETTINGS_PATHS.inventory)}
             />
             <SettingsCard 
               title="AI Automation" 
               description="Configure AI tools for clinical recommendations and workflow automation" 
-              icon={RefreshCcw} 
+              icon={RefreshCcw}
+              onClick={() => handleCardClick(SETTINGS_PATHS.aiAutomation)}
             />
           </div>
         </div>
@@ -114,17 +147,20 @@ export default function SettingsPage() {
             <SettingsCard 
               title="Billing & Payments" 
               description="Configure payment methods, processing, and auto-billing" 
-              icon={Receipt} 
+              icon={Receipt}
+              onClick={() => handleCardClick(SETTINGS_PATHS.billingPayments)}
             />
             <SettingsCard 
               title="Fee Schedules" 
               description="Manage procedure codes, fees, and insurance contracts" 
-              icon={FileBarChart} 
+              icon={FileBarChart}
+              onClick={() => handleCardClick(SETTINGS_PATHS.feeSchedules)}
             />
             <SettingsCard 
               title="Subscription" 
               description="Manage your Pixie Dental subscription and billing details" 
-              icon={CreditCard} 
+              icon={CreditCard}
+              onClick={() => handleCardClick(SETTINGS_PATHS.subscription)}
             />
           </div>
         </div>
@@ -137,7 +173,7 @@ export default function SettingsPage() {
               title="Theme" 
               description="Customize colors, spacing, and visual elements to match your practice branding" 
               icon={Palette} 
-              onClick={() => handleCardClick("/settings/theme")}
+              onClick={() => handleCardClick(SETTINGS_PATHS.theme)}
             />
           </div>
         </div>
@@ -149,17 +185,20 @@ export default function SettingsPage() {
             <SettingsCard 
               title="External Services" 
               description="Connect with external services, labs, and referral networks" 
-              icon={Cog} 
+              icon={Cog}
+              onClick={() => handleCardClick(SETTINGS_PATHS.externalServices)}
             />
             <SettingsCard 
               title="API Settings" 
               description="Manage API keys and external application access" 
-              icon={Cog} 
+              icon={Cog}
+              onClick={() => handleCardClick(SETTINGS_PATHS.apiSettings)}
             />
             <SettingsCard 
               title="Referral Management" 
               description="Configure referral workflows and partner communications" 
-              icon={Users} 
+              icon={Users}
+              onClick={() => handleCardClick(SETTINGS_PATHS.referralManagement)}
             />
           </div>
         </div>
