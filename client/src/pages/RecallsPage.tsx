@@ -24,7 +24,6 @@ import {
   X, 
   Sliders, 
   Plus,
-  Tooth,
   ClipboardList,
   Info,
   Zap,
@@ -93,6 +92,180 @@ interface RecallPatient {
     patient: number;
   };
 }
+
+// Patient Row Component
+const PatientRow = ({ 
+  patient, 
+  isExpanded, 
+  onToggleExpand,
+  formatDueDate
+}: { 
+  patient: RecallPatient; 
+  isExpanded: boolean; 
+  onToggleExpand: (id: number) => void;
+  formatDueDate: (date: Date) => string;
+}) => {
+  return (
+    <TableRow 
+      className={patient.isOverdue ? 'bg-red-50' : isToday(patient.dueDate) ? 'bg-amber-50' : ''}
+    >
+      <TableCell className="font-medium">{patient.name}</TableCell>
+      <TableCell>{patient.recallType}</TableCell>
+      <TableCell>
+        <Badge 
+          variant="outline" 
+          className={`
+            ${patient.isOverdue 
+              ? 'bg-red-100 text-red-600 border-red-200' 
+              : isToday(patient.dueDate) 
+                ? 'bg-amber-100 text-amber-600 border-amber-200' 
+                : 'bg-gray-100 text-gray-600 border-gray-200'
+            }
+          `}
+        >
+          {formatDueDate(patient.dueDate)}
+        </Badge>
+      </TableCell>
+      <TableCell>{patient.provider}</TableCell>
+      <TableCell>
+        <div className="flex flex-col text-sm">
+          <div className="flex items-center text-xs">
+            <Phone className="h-3 w-3 mr-1 text-muted-foreground" />
+            <span>{patient.phone}</span>
+          </div>
+          <div className="flex items-center text-xs mt-1">
+            <Mail className="h-3 w-3 mr-1 text-muted-foreground" />
+            <span className="truncate max-w-[120px]">{patient.email}</span>
+          </div>
+        </div>
+      </TableCell>
+      <TableCell>
+        {patient.lastAttempt || 'Not contacted'}
+      </TableCell>
+      <TableCell className="text-right">
+        <div className="flex items-center justify-end space-x-1">
+          <Button variant="ghost" size="icon" className="h-7 w-7">
+            <Phone className="h-3.5 w-3.5 text-blue-500" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-7 w-7">
+            <MessageCircle className="h-3.5 w-3.5 text-green-500" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-7 w-7">
+            <Calendar className="h-3.5 w-3.5 text-purple-500" />
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="h-7 w-7"
+            onClick={() => onToggleExpand(patient.id)}
+          >
+            {isExpanded ? (
+              <ChevronDown className="h-3.5 w-3.5" />
+            ) : (
+              <ChevronRight className="h-3.5 w-3.5" />
+            )}
+          </Button>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+};
+
+// Expanded Details Row Component
+const ExpandedDetailsRow = ({ patient }: { patient: RecallPatient }) => {
+  return (
+    <TableRow className="bg-muted/30 border-t-0">
+      <TableCell colSpan={7} className="p-0">
+        <div className="p-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Patient Info */}
+            <div className="bg-white rounded-md border p-3">
+              <h4 className="text-sm font-semibold mb-2 flex items-center">
+                <User className="h-4 w-4 mr-1 text-blue-500" />
+                Patient Information
+              </h4>
+              <div className="space-y-2 text-sm">
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Date of Birth:</span>
+                  <span>{patient.birthdate}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Insurance:</span>
+                  <span>{patient.insuranceCarrier}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Plan Type:</span>
+                  <span>{patient.planType}</span>
+                </div>
+                {patient.balanceInfo && (
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Balance:</span>
+                    <span className={patient.balanceInfo.totalBalance > 0 ? 'text-red-600 font-medium' : ''}>
+                      ${patient.balanceInfo.totalBalance.toFixed(2)}
+                    </span>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            {/* Appointment History */}
+            <div className="bg-white rounded-md border p-3">
+              <h4 className="text-sm font-semibold mb-2 flex items-center">
+                <Calendar className="h-4 w-4 mr-1 text-purple-500" />
+                Appointment History
+              </h4>
+              <div className="space-y-2 text-sm">
+                <div>
+                  <span className="text-muted-foreground block">Last Visit:</span>
+                  <div className="flex justify-between mt-1">
+                    <span className="font-medium">{patient.lastAppointment?.date}</span>
+                    <span>{patient.lastAppointment?.type}</span>
+                  </div>
+                </div>
+                <div className="pt-1">
+                  <span className="text-muted-foreground block">Upcoming:</span>
+                  {patient.upcomingAppointment ? (
+                    <div className="flex justify-between mt-1">
+                      <span className="font-medium">{patient.upcomingAppointment.date}</span>
+                      <span>{patient.upcomingAppointment.type}</span>
+                    </div>
+                  ) : (
+                    <div className="flex items-center mt-1">
+                      <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200">
+                        No appointment scheduled
+                      </Badge>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+            
+            {/* Notes & Quick Actions */}
+            <div className="bg-white rounded-md border p-3">
+              <h4 className="text-sm font-semibold mb-2 flex items-center">
+                <ClipboardList className="h-4 w-4 mr-1 text-green-500" />
+                Notes & Quick Actions
+              </h4>
+              <div className="text-sm mb-3">
+                <p className="text-gray-600 text-xs italic">{patient.notes}</p>
+              </div>
+              <div className="flex space-x-2 mt-2">
+                <Button size="sm" className="text-xs h-7 flex-1 gap-1">
+                  <Calendar className="h-3 w-3" /> 
+                  Schedule
+                </Button>
+                <Button size="sm" variant="outline" className="text-xs h-7 flex-1 gap-1">
+                  <Mail className="h-3 w-3" />
+                  Send Email
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </TableCell>
+    </TableRow>
+  );
+};
 
 export default function RecallsPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -756,167 +929,21 @@ export default function RecallsPage() {
                   </TableHeader>
                   <TableBody>
                     {filteredRecalls.length > 0 ? (
-                      filteredRecalls.map(patient => (
-                        <>
-                          <TableRow 
-                            key={`recall-${patient.id}`}
-                            className={patient.isOverdue ? 'bg-red-50' : isToday(patient.dueDate) ? 'bg-amber-50' : ''}
-                          >
-                            <TableCell className="font-medium">{patient.name}</TableCell>
-                            <TableCell>{patient.recallType}</TableCell>
-                            <TableCell>
-                              <Badge 
-                                variant="outline" 
-                                className={`
-                                  ${patient.isOverdue 
-                                    ? 'bg-red-100 text-red-600 border-red-200' 
-                                    : isToday(patient.dueDate) 
-                                      ? 'bg-amber-100 text-amber-600 border-amber-200' 
-                                      : 'bg-gray-100 text-gray-600 border-gray-200'
-                                  }
-                                `}
-                              >
-                                {formatDueDate(patient.dueDate)}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>{patient.provider}</TableCell>
-                            <TableCell>
-                              <div className="flex flex-col text-sm">
-                                <div className="flex items-center text-xs">
-                                  <Phone className="h-3 w-3 mr-1 text-muted-foreground" />
-                                  <span>{patient.phone}</span>
-                                </div>
-                                <div className="flex items-center text-xs mt-1">
-                                  <Mail className="h-3 w-3 mr-1 text-muted-foreground" />
-                                  <span className="truncate max-w-[120px]">{patient.email}</span>
-                                </div>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              {patient.lastAttempt || 'Not contacted'}
-                            </TableCell>
-                            <TableCell className="text-right">
-                              <div className="flex items-center justify-end space-x-1">
-                                <Button variant="ghost" size="icon" className="h-7 w-7">
-                                  <Phone className="h-3.5 w-3.5 text-blue-500" />
-                                </Button>
-                                <Button variant="ghost" size="icon" className="h-7 w-7">
-                                  <MessageCircle className="h-3.5 w-3.5 text-green-500" />
-                                </Button>
-                                <Button variant="ghost" size="icon" className="h-7 w-7">
-                                  <Calendar className="h-3.5 w-3.5 text-purple-500" />
-                                </Button>
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
-                                  className="h-7 w-7"
-                                  onClick={() => toggleExpandRow(patient.id)}
-                                >
-                                  {expandedRowId === patient.id ? (
-                                    <ChevronDown className="h-3.5 w-3.5" />
-                                  ) : (
-                                    <ChevronRight className="h-3.5 w-3.5" />
-                                  )}
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                          
-                          {/* Expanded row with patient details */}
-                          {expandedRowId === patient.id && (
-                            <TableRow className="bg-muted/30 border-t-0">
-                              <TableCell colSpan={7} className="p-0">
-                                <div className="p-4">
-                                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    {/* Patient Info */}
-                                    <div className="bg-white rounded-md border p-3">
-                                      <h4 className="text-sm font-semibold mb-2 flex items-center">
-                                        <User className="h-4 w-4 mr-1 text-blue-500" />
-                                        Patient Information
-                                      </h4>
-                                      <div className="space-y-2 text-sm">
-                                        <div className="flex justify-between">
-                                          <span className="text-muted-foreground">Date of Birth:</span>
-                                          <span>{patient.birthdate}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                          <span className="text-muted-foreground">Insurance:</span>
-                                          <span>{patient.insuranceCarrier}</span>
-                                        </div>
-                                        <div className="flex justify-between">
-                                          <span className="text-muted-foreground">Plan Type:</span>
-                                          <span>{patient.planType}</span>
-                                        </div>
-                                        {patient.balanceInfo && (
-                                          <div className="flex justify-between">
-                                            <span className="text-muted-foreground">Balance:</span>
-                                            <span className={patient.balanceInfo.totalBalance > 0 ? 'text-red-600 font-medium' : ''}>
-                                              ${patient.balanceInfo.totalBalance.toFixed(2)}
-                                            </span>
-                                          </div>
-                                        )}
-                                      </div>
-                                    </div>
-                                    
-                                    {/* Appointment History */}
-                                    <div className="bg-white rounded-md border p-3">
-                                      <h4 className="text-sm font-semibold mb-2 flex items-center">
-                                        <Calendar className="h-4 w-4 mr-1 text-purple-500" />
-                                        Appointment History
-                                      </h4>
-                                      <div className="space-y-2 text-sm">
-                                        <div>
-                                          <span className="text-muted-foreground block">Last Visit:</span>
-                                          <div className="flex justify-between mt-1">
-                                            <span className="font-medium">{patient.lastAppointment?.date}</span>
-                                            <span>{patient.lastAppointment?.type}</span>
-                                          </div>
-                                        </div>
-                                        <div className="pt-1">
-                                          <span className="text-muted-foreground block">Upcoming:</span>
-                                          {patient.upcomingAppointment ? (
-                                            <div className="flex justify-between mt-1">
-                                              <span className="font-medium">{patient.upcomingAppointment.date}</span>
-                                              <span>{patient.upcomingAppointment.type}</span>
-                                            </div>
-                                          ) : (
-                                            <div className="flex items-center mt-1">
-                                              <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200">
-                                                No appointment scheduled
-                                              </Badge>
-                                            </div>
-                                          )}
-                                        </div>
-                                      </div>
-                                    </div>
-                                    
-                                    {/* Notes & Quick Actions */}
-                                    <div className="bg-white rounded-md border p-3">
-                                      <h4 className="text-sm font-semibold mb-2 flex items-center">
-                                        <ClipboardList className="h-4 w-4 mr-1 text-green-500" />
-                                        Notes & Quick Actions
-                                      </h4>
-                                      <div className="text-sm mb-3">
-                                        <p className="text-gray-600 text-xs italic">{patient.notes}</p>
-                                      </div>
-                                      <div className="flex space-x-2 mt-2">
-                                        <Button size="sm" className="text-xs h-7 flex-1 gap-1">
-                                          <Calendar className="h-3 w-3" /> 
-                                          Schedule
-                                        </Button>
-                                        <Button size="sm" variant="outline" className="text-xs h-7 flex-1 gap-1">
-                                          <Mail className="h-3 w-3" />
-                                          Send Email
-                                        </Button>
-                                      </div>
-                                    </div>
-                                  </div>
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          )}
-                        </>
-                      ))
+                      <>
+                        {filteredRecalls.map(patient => (
+                          <PatientRow 
+                            key={`patient-${patient.id}`}
+                            patient={patient} 
+                            isExpanded={expandedRowId === patient.id}
+                            onToggleExpand={toggleExpandRow}
+                            formatDueDate={formatDueDate}
+                          />
+                        ))}
+                        
+                        {expandedRowId !== null && filteredRecalls.some(p => p.id === expandedRowId) && (
+                          <ExpandedDetailsRow patient={filteredRecalls.find(p => p.id === expandedRowId)!} />
+                        )}
+                      </>
                     ) : (
                       <TableRow>
                         <TableCell colSpan={7} className="text-center h-32">
