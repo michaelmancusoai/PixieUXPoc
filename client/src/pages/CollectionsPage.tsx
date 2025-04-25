@@ -990,13 +990,13 @@ export default function CollectionsPage() {
             {showInsights && (
               <div className="p-6 border-b bg-blue-50/50">
                 <div className="mb-4">
-                  <h3 className="text-md font-medium mb-2">Collection Insights</h3>
+                  <h3 className="text-md font-medium mb-2">Battle Map for Revenue Recovery</h3>
                   <p className="text-sm text-muted-foreground mb-3">
-                    13 accounts representing $9,640 have had no contact in the last 30 days. This constitutes 62% of your outstanding collections.
+                    <span className="font-medium text-blue-600">57% still out there</span> — fetchable with calls & links. Remember, at this stage you're no longer persuading; you're recovering.
                   </p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div className="bg-white p-4 rounded-md border shadow-sm">
-                      <h4 className="text-sm font-medium mb-1">Success Rate by Contact Method</h4>
+                      <h4 className="text-sm font-medium mb-1">Conversation Success Rates</h4>
                       <div className="flex justify-between items-end">
                         <div className="space-y-2">
                           <div className="flex justify-between">
@@ -1008,6 +1008,18 @@ export default function CollectionsPage() {
                           </div>
                         </div>
                         <Phone className="h-5 w-5 text-green-500 ml-2" />
+                      </div>
+                      <div className="flex justify-between items-end mt-3">
+                        <div className="space-y-2">
+                          <div className="flex justify-between">
+                            <span className="text-xs text-muted-foreground">SMS + link</span>
+                            <span className="text-xs font-medium">51%</span>
+                          </div>
+                          <div className="h-2 w-40 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="h-full bg-purple-500 rounded-full" style={{ width: '51%' }}></div>
+                          </div>
+                        </div>
+                        <MessageSquare className="h-5 w-5 text-purple-500 ml-2" />
                       </div>
                       <div className="flex justify-between items-end mt-3">
                         <div className="space-y-2">
@@ -1033,62 +1045,93 @@ export default function CollectionsPage() {
                         </div>
                         <FileText className="h-5 w-5 text-amber-500 ml-2" />
                       </div>
+                      
+                      <div className="mt-3 text-xs text-blue-600">
+                        <Clock className="h-3 w-3 inline mr-1" />
+                        <span className="font-medium">Phone call + SMS follow-up doubles response rate</span>
+                      </div>
                     </div>
                     
                     <div className="bg-white p-4 rounded-md border shadow-sm">
-                      <h4 className="text-sm font-medium mb-1">Payment Plans Performance</h4>
-                      <div className="flex items-center justify-between">
+                      <h4 className="text-sm font-medium mb-1">Recovery Threshold Analysis</h4>
+                      <div className="flex flex-col space-y-3">
                         <div>
-                          <div className="text-2xl font-bold">82%</div>
-                          <div className="text-xs text-muted-foreground">adherence rate</div>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="text-muted-foreground">31-60 days (88% recoverable)</span>
+                            <span className="font-medium">$2,340.00</span>
+                          </div>
+                          <div className="h-2 w-full bg-blue-100 rounded-full overflow-hidden">
+                            <div className="h-full bg-blue-500 rounded-full" style={{ width: '20%' }}></div>
+                          </div>
                         </div>
-                        <div className="h-16 w-16 rounded-full border-4 border-green-500 flex items-center justify-center">
-                          <CheckCircle className="h-8 w-8 text-green-500" />
+                        <div>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="text-muted-foreground">61-90 days (62% recoverable)</span>
+                            <span className="font-medium">$3,640.00</span>
+                          </div>
+                          <div className="h-2 w-full bg-amber-100 rounded-full overflow-hidden">
+                            <div className="h-full bg-amber-500 rounded-full" style={{ width: '36%' }}></div>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="text-muted-foreground">91-120 days (35% recoverable)</span>
+                            <span className="font-medium">$2,560.00</span>
+                          </div>
+                          <div className="h-2 w-full bg-orange-100 rounded-full overflow-hidden">
+                            <div className="h-full bg-orange-500 rounded-full" style={{ width: '25%' }}></div>
+                          </div>
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="text-muted-foreground">120+ days (18% recoverable)</span>
+                            <span className="font-medium text-red-600">$8,340.00</span>
+                          </div>
+                          <div className="h-2 w-full bg-red-100 rounded-full overflow-hidden">
+                            <div className="h-full bg-red-500 rounded-full" style={{ width: '83%' }}></div>
+                          </div>
                         </div>
                       </div>
-                      <div className="mt-2 text-xs text-muted-foreground">
-                        <div className="flex justify-between mb-1">
-                          <span>Active plans:</span>
-                          <span className="font-medium">14</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span>Monthly collected:</span>
-                          <span className="font-medium">$2,350</span>
-                        </div>
+                      
+                      <div className="mt-3 text-xs text-amber-600">
+                        <AlertCircle className="h-3 w-3 inline mr-1" />
+                        <span className="font-medium">Critical threshold at 120 days — recovery drops from 35% to 18%</span>
                       </div>
                     </div>
                     
                     <div className="bg-white p-4 rounded-md border shadow-sm">
-                      <h4 className="text-sm font-medium mb-1">Recommended Actions</h4>
-                      <ul className="text-xs space-y-2">
+                      <h4 className="text-sm font-medium mb-1">Today's Quick Wins</h4>
+                      <ul className="text-xs space-y-3 mt-2">
                         <li className="flex items-start">
-                          <div className="h-5 w-5 rounded-full bg-red-100 flex items-center justify-center mr-2 mt-0.5">
-                            <PhoneCall className="h-3 w-3 text-red-500" />
+                          <div className="h-4 w-4 bg-red-100 rounded-full flex items-center justify-center mr-1.5 mt-0.5 flex-shrink-0">
+                            <span className="text-[10px] text-red-600 font-bold">1</span>
                           </div>
-                          <div>
-                            <span className="font-medium block">Call accounts {'>'} 90 days</span>
-                            <span className="text-muted-foreground">7 accounts, $5,120 total</span>
-                          </div>
+                          <span><span className="font-medium">Attack your No Next Action list</span> — don't leave ${noNextActionValue.toFixed(0)} abandoned</span>
                         </li>
                         <li className="flex items-start">
-                          <div className="h-5 w-5 rounded-full bg-amber-100 flex items-center justify-center mr-2 mt-0.5">
-                            <Mail className="h-3 w-3 text-amber-500" />
+                          <div className="h-4 w-4 bg-amber-100 rounded-full flex items-center justify-center mr-1.5 mt-0.5 flex-shrink-0">
+                            <span className="text-[10px] text-amber-600 font-bold">2</span>
                           </div>
-                          <div>
-                            <span className="font-medium block">Email payment reminders</span>
-                            <span className="text-muted-foreground">12 accounts due this week</span>
-                          </div>
+                          <span><span className="font-medium">Stabilize your Broken Promises</span> — catch them within 24h for 3x better recovery</span>
                         </li>
                         <li className="flex items-start">
-                          <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center mr-2 mt-0.5">
-                            <PiggyBank className="h-3 w-3 text-blue-500" />
+                          <div className="h-4 w-4 bg-blue-100 rounded-full flex items-center justify-center mr-1.5 mt-0.5 flex-shrink-0">
+                            <span className="text-[10px] text-blue-600 font-bold">3</span>
                           </div>
-                          <div>
-                            <span className="font-medium block">Offer payment plans</span>
-                            <span className="text-muted-foreground">5 accounts {'>'} $800</span>
+                          <span><span className="font-medium">Decide on aged, small-balance accounts</span> — each small account consumes same effort as large ones</span>
+                        </li>
+                        <li className="flex items-start">
+                          <div className="h-4 w-4 bg-green-100 rounded-full flex items-center justify-center mr-1.5 mt-0.5 flex-shrink-0">
+                            <span className="text-[10px] text-green-600 font-bold">4</span>
                           </div>
+                          <span><span className="font-medium">Create 3 more payment plans</span> — even $50/month keeps account "active" and lowers write-off risk</span>
                         </li>
                       </ul>
+                      <div className="mt-3 pt-3 border-t">
+                        <div className="text-xs text-muted-foreground italic">
+                          "18% of plans wobbling — steady them before Friday. The money is still out there, but it has an expiration date."
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
