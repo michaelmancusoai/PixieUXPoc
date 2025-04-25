@@ -56,13 +56,17 @@ type FormValues = z.infer<typeof formSchema>;
 
 interface BookAppointmentDialogProps {
   open: boolean;
-  onOpenChange: (open: boolean) => void;
+  onClose: () => void;
+  onBook: () => void;
+  selectedDate?: Date;
   patientName?: string;
 }
 
 export default function BookAppointmentDialog({
   open,
-  onOpenChange,
+  onClose,
+  onBook,
+  selectedDate,
   patientName = "",
 }: BookAppointmentDialogProps) {
   const [activeTab, setActiveTab] = useState<"set" | "find">("set");
@@ -74,7 +78,7 @@ export default function BookAppointmentDialog({
   }>({
     amPmFilter: "BOTH",
     showTimeSlots: false,
-    selectedDays: [1, 2, 3, 4, 5] // Mon-Fri by default
+    selectedDays: [] // No days selected by default
   });
   
   // Create form
@@ -159,13 +163,16 @@ export default function BookAppointmentDialog({
     console.log("Form values:", values);
     // In a real app, you would send this to your API
     
-    // Display success feedback and close modal
-    alert(`Appointment booked successfully with ${values.provider.split('-')[1].toUpperCase()} for ${values.procedures.join(', ')}`);
-    onOpenChange(false);
+    // Call the onBook function passed from parent
+    onBook();
   };
   
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={(isOpen) => {
+      if (!isOpen) {
+        onClose();
+      }
+    }}>
       <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl">Add Appointment</DialogTitle>
@@ -788,7 +795,7 @@ export default function BookAppointmentDialog({
             </div>
             
             <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
               <Button type="submit">Save</Button>

@@ -93,7 +93,9 @@ export default function RightRail({ selectedDate }: RightRailProps) {
       {bookAppointmentOpen && (
         <BookAppointmentDialog
           open={bookAppointmentOpen}
-          onOpenChange={setBookAppointmentOpen}
+          onClose={() => setBookAppointmentOpen(false)}
+          onBook={() => setBookAppointmentOpen(false)}
+          selectedDate={selectedDate}
           patientName={selectedPatient}
         />
       )}
