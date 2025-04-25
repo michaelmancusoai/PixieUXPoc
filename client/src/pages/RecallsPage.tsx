@@ -36,15 +36,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Tabs,
   TabsContent,
   TabsList,
@@ -446,104 +437,105 @@ export default function RecallsPage() {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        
-        <div className="flex items-center gap-2">
-          <Tabs defaultValue="list" className="w-[240px]">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="list">List View</TabsTrigger>
-              <TabsTrigger value="calendar">Calendar</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
       </div>
       
-      {/* Recall List */}
-      <TabsContent value="list" className="mt-0">
-        <Card>
-          <CardContent className="p-0">
-            <div className="border-b bg-gray-50 px-4 py-2 text-xs font-medium text-gray-500 grid grid-cols-12 gap-2">
-              <div className="col-span-3">Patient</div>
-              <div className="col-span-2">Recall Type</div>
-              <div className="col-span-2">Due Date</div>
-              <div className="col-span-2">Provider</div>
-              <div className="col-span-2">Last Contact</div>
-              <div className="col-span-1 text-right">Actions</div>
-            </div>
-            
-            <div className="divide-y max-h-[calc(100vh-340px)] overflow-y-auto">
-              {filteredRecalls.length > 0 ? (
-                filteredRecalls.map(patient => (
-                  <div 
-                    key={patient.id} 
-                    className={`grid grid-cols-12 gap-2 px-4 py-3 text-sm ${
-                      patient.isOverdue ? 'bg-red-50' : isToday(patient.dueDate) ? 'bg-amber-50' : ''
-                    }`}
-                  >
-                    <div className="col-span-3 flex items-center">
-                      <div className="font-medium">{patient.name}</div>
-                    </div>
-                    <div className="col-span-2 text-gray-600">
-                      {patient.recallType}
-                    </div>
-                    <div className="col-span-2">
-                      <div className="flex items-center">
-                        <Badge 
-                          variant="outline" 
-                          className={`
-                            ${patient.isOverdue 
-                              ? 'bg-red-100 text-red-600 border-red-200' 
-                              : isToday(patient.dueDate) 
-                                ? 'bg-amber-100 text-amber-600 border-amber-200' 
-                                : 'bg-gray-100 text-gray-600 border-gray-200'
-                            }
-                          `}
-                        >
-                          {formatDueDate(patient.dueDate)}
-                        </Badge>
+      {/* View Tabs */}
+      <Tabs defaultValue="list" className="w-full">
+        <div className="flex justify-end mb-4">
+          <TabsList className="grid w-[240px] grid-cols-2">
+            <TabsTrigger value="list">List View</TabsTrigger>
+            <TabsTrigger value="calendar">Calendar</TabsTrigger>
+          </TabsList>
+        </div>
+        
+        {/* Recall List */}
+        <TabsContent value="list">
+          <Card>
+            <CardContent className="p-0">
+              <div className="border-b bg-gray-50 px-4 py-2 text-xs font-medium text-gray-500 grid grid-cols-12 gap-2">
+                <div className="col-span-3">Patient</div>
+                <div className="col-span-2">Recall Type</div>
+                <div className="col-span-2">Due Date</div>
+                <div className="col-span-2">Provider</div>
+                <div className="col-span-2">Last Contact</div>
+                <div className="col-span-1 text-right">Actions</div>
+              </div>
+              
+              <div className="divide-y max-h-[calc(100vh-340px)] overflow-y-auto">
+                {filteredRecalls.length > 0 ? (
+                  filteredRecalls.map(patient => (
+                    <div 
+                      key={patient.id} 
+                      className={`grid grid-cols-12 gap-2 px-4 py-3 text-sm ${
+                        patient.isOverdue ? 'bg-red-50' : isToday(patient.dueDate) ? 'bg-amber-50' : ''
+                      }`}
+                    >
+                      <div className="col-span-3 flex items-center">
+                        <div className="font-medium">{patient.name}</div>
+                      </div>
+                      <div className="col-span-2 text-gray-600">
+                        {patient.recallType}
+                      </div>
+                      <div className="col-span-2">
+                        <div className="flex items-center">
+                          <Badge 
+                            variant="outline" 
+                            className={`
+                              ${patient.isOverdue 
+                                ? 'bg-red-100 text-red-600 border-red-200' 
+                                : isToday(patient.dueDate) 
+                                  ? 'bg-amber-100 text-amber-600 border-amber-200' 
+                                  : 'bg-gray-100 text-gray-600 border-gray-200'
+                              }
+                            `}
+                          >
+                            {formatDueDate(patient.dueDate)}
+                          </Badge>
+                        </div>
+                      </div>
+                      <div className="col-span-2 text-gray-600">
+                        {patient.provider}
+                      </div>
+                      <div className="col-span-2 text-gray-600">
+                        {patient.lastAttempt || 'Not contacted'}
+                      </div>
+                      <div className="col-span-1 text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button variant="ghost" size="icon" className="h-7 w-7">
+                            <Phone className="h-3.5 w-3.5 text-blue-500" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7">
+                            <MessageCircle className="h-3.5 w-3.5 text-green-500" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-7 w-7">
+                            <Calendar className="h-3.5 w-3.5 text-purple-500" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                    <div className="col-span-2 text-gray-600">
-                      {patient.provider}
-                    </div>
-                    <div className="col-span-2 text-gray-600">
-                      {patient.lastAttempt || 'Not contacted'}
-                    </div>
-                    <div className="col-span-1 text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
-                          <Phone className="h-3.5 w-3.5 text-blue-500" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
-                          <MessageCircle className="h-3.5 w-3.5 text-green-500" />
-                        </Button>
-                        <Button variant="ghost" size="icon" className="h-7 w-7">
-                          <Calendar className="h-3.5 w-3.5 text-purple-500" />
-                        </Button>
-                      </div>
-                    </div>
+                  ))
+                ) : (
+                  <div className="py-8 text-center text-gray-500">
+                    {searchTerm ? (
+                      <p>No recalls found matching your search criteria</p>
+                    ) : (
+                      <p>No recalls found in this category</p>
+                    )}
                   </div>
-                ))
-              ) : (
-                <div className="py-8 text-center text-gray-500">
-                  {searchTerm ? (
-                    <p>No recalls found matching your search criteria</p>
-                  ) : (
-                    <p>No recalls found in this category</p>
-                  )}
-                </div>
-              )}
+                )}
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+        
+        <TabsContent value="calendar">
+          <Card className="p-6">
+            <div className="text-center p-12 text-gray-500">
+              Calendar view is not implemented yet
             </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
-      
-      <TabsContent value="calendar" className="mt-0">
-        <Card className="p-6">
-          <div className="text-center p-12 text-gray-500">
-            Calendar view is not implemented yet
-          </div>
-        </Card>
-      </TabsContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 }
