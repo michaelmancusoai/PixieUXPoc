@@ -29,7 +29,7 @@ export default function CalendarView({
 }: CalendarViewProps) {
   const { toast } = useToast();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [resourceColumns, setResourceColumns] = useState<Array<{id: number, name: string}>>([]);
+  const [resourceColumns, setResourceColumns] = useState<Array<{id: number, name: string, color?: string}>>([]);
   const [draggingAppointment, setDraggingAppointment] = useState<AppointmentWithDetails | null>(null);
   const [dragTarget, setDragTarget] = useState<{resourceId: number, time: number} | null>(null);
 
@@ -344,22 +344,30 @@ export default function CalendarView({
     <Card className="w-full h-full overflow-hidden border rounded-md">
       <div className="h-full overflow-auto">
         {/* Resource column headers */}
-        <div className="grid" style={{ gridTemplateColumns: `80px repeat(${resourceColumns.length}, 1fr)` }}>
+        <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
           {/* Time header */}
-          <div className="p-2 border-b border-r bg-gray-50 text-center text-xs font-medium">
+          <div className="p-1 border-b border-r bg-gray-50 text-center text-xs font-medium text-gray-600">
             Time
           </div>
           
           {/* Resource headers */}
           {resourceColumns.map(resource => (
-            <div key={resource.id} className="p-2 border-b border-r text-center">
-              <div className="font-semibold truncate">{resource.name}</div>
+            <div key={resource.id} className="py-1 px-2 border-b border-r text-center bg-gray-50">
+              <div 
+                className="font-semibold truncate text-xs" 
+                style={{ 
+                  color: resource.color || '#6B7280',
+                  borderBottom: `2px solid ${resource.color || '#E5E7EB'}`
+                }}
+              >
+                {resource.name}
+              </div>
             </div>
           ))}
         </div>
         
         {/* Time grid */}
-        <div className="grid" style={{ gridTemplateColumns: `80px repeat(${resourceColumns.length}, 1fr)` }}>
+        <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
           {/* Time column */}
           <div className="border-r">
             {timeSlots.map((slot, index) => (
@@ -436,12 +444,9 @@ export default function CalendarView({
                       padding: '0.25rem',
                       borderRadius: '4px',
                       overflow: 'hidden',
-                      borderLeftWidth: '3px',
-                      borderLeftStyle: 'solid',
-                      borderLeftColor: borderColor,
-                      borderTop: 'none',
-                      borderRight: 'none',
-                      borderBottom: 'none'
+                      border: '1px solid #e5e7eb',
+                      borderLeft: `3px solid ${borderColor}`,
+                      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
                     }}
                   />
                 );
