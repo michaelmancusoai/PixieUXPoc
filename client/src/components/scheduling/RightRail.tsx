@@ -36,45 +36,6 @@ export default function RightRail({ selectedDate }: RightRailProps) {
   
   return (
     <div className="h-full overflow-y-auto space-y-4">
-      {/* Day Summary Card */}
-      <Card>
-        <CardHeader className="py-3">
-          <CardTitle className="text-sm font-semibold">
-            Day Summary - {format(selectedDate, 'MMM d')}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0">
-          <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="flex flex-col items-center p-2 bg-primary/5 rounded-md">
-              <span className="text-muted-foreground mb-1">Total</span>
-              <span className="font-bold text-lg">{daySummary.totalAppointments}</span>
-            </div>
-            <div className="flex flex-col items-center p-2 bg-green-50 rounded-md">
-              <span className="text-muted-foreground mb-1">Completed</span>
-              <span className="font-bold text-lg text-green-600">{daySummary.completed}</span>
-            </div>
-            <div className="flex flex-col items-center p-2 bg-yellow-50 rounded-md">
-              <span className="text-muted-foreground mb-1">In Progress</span>
-              <span className="font-bold text-lg text-yellow-600">{daySummary.inProgress}</span>
-            </div>
-            <div className="flex flex-col items-center p-2 bg-blue-50 rounded-md">
-              <span className="text-muted-foreground mb-1">Upcoming</span>
-              <span className="font-bold text-lg text-blue-600">{daySummary.upcoming}</span>
-            </div>
-          </div>
-          
-          <div className="mt-3 pt-3 border-t flex justify-between items-center">
-            <div className="text-xs">
-              <div className="text-muted-foreground">Produced Today</div>
-              <div className="font-bold">${daySummary.producedAmount.toFixed(2)}</div>
-            </div>
-            <div className="text-xs">
-              <div className="text-muted-foreground">Open Chairs</div>
-              <div className="font-bold">{daySummary.openChairs} available</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
       
       {/* Upcoming Check-ins */}
       <Card>
