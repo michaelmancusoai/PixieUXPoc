@@ -16,7 +16,10 @@ enum GameLevel {
   BRIEFING_FINAL = 'BRIEFING_FINAL',
   LEVEL_FINAL = 'LEVEL_FINAL',
   VICTORY = 'VICTORY',
-  SURRENDERED = 'SURRENDERED'
+  SURRENDERED = 'SURRENDERED',
+  LEVEL_1_COMPLETE = 'LEVEL_1_COMPLETE',
+  LEVEL_2_COMPLETE = 'LEVEL_2_COMPLETE',
+  FINAL_LEVEL_COMPLETE = 'FINAL_LEVEL_COMPLETE'
 }
 
 // Sample prompt variants for our game
@@ -69,26 +72,14 @@ const PlanetPixiePage = () => {
             newCompletedCoins.add(index);
             setCompletedCoins(newCompletedCoins);
             
-            // Check if all coins are collected to advance level
+            // Check if all coins are collected to show level complete screen
             if (level === GameLevel.LEVEL_1 && newCompletedCoins.size >= 3) {
-              // Show a level complete message before advancing
-              setLevelCompleteMessage("LEVEL 1 COMPLETE! Ready for Level 2?");
-              setTimeout(() => {
-                setLevelCompleteMessage(null);
-                advanceLevel();
-              }, 2000);
+              // Show level complete celebration
+              setLevel(GameLevel.LEVEL_1_COMPLETE);
             } else if (level === GameLevel.LEVEL_2 && newCompletedCoins.size >= 5) {
-              setLevelCompleteMessage("LEVEL 2 COMPLETE! Ready for the Final Level?");
-              setTimeout(() => {
-                setLevelCompleteMessage(null);
-                advanceLevel();
-              }, 2000);
+              setLevel(GameLevel.LEVEL_2_COMPLETE);
             } else if (level === GameLevel.LEVEL_FINAL && newCompletedCoins.size >= 10) {
-              setLevelCompleteMessage("FINAL LEVEL COMPLETE! VICTORY!");
-              setTimeout(() => {
-                setLevelCompleteMessage(null);
-                advanceLevel();
-              }, 2000);
+              setLevel(GameLevel.FINAL_LEVEL_COMPLETE);
             }
           }
         }}
@@ -160,7 +151,21 @@ const PlanetPixiePage = () => {
   
   // Accept mission - move to next level
   const acceptMission = () => {
-    advanceLevel();
+    if (level === GameLevel.LEVEL_1_COMPLETE) {
+      setLevel(GameLevel.LEVEL_2);
+      setShowConfetti(true);
+      setTimeout(() => setShowConfetti(false), 3000);
+    } else if (level === GameLevel.LEVEL_2_COMPLETE) {
+      setLevel(GameLevel.LEVEL_FINAL);
+      setShowFireworks(true);
+      setTimeout(() => setShowFireworks(false), 3000);
+    } else if (level === GameLevel.FINAL_LEVEL_COMPLETE) {
+      setLevel(GameLevel.VICTORY);
+      setShowGrandFinale(true);
+      setStreak(streak + 1);
+    } else {
+      advanceLevel();
+    }
   };
   
   // Render game content based on level
@@ -380,6 +385,126 @@ const PlanetPixiePage = () => {
           </div>
         );
       
+      case GameLevel.LEVEL_1_COMPLETE:
+        return (
+          <div className="text-center py-2 font-vt323">
+            <div className="nes-container is-rounded pixelated border-blue-500 bg-blue-100 overflow-hidden min-h-[350px] relative flex flex-col items-center justify-center">
+              <div className="bg-blue-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 1 COMPLETE!</div>
+              <i className="nes-icon trophy is-large mb-4 animate-pulse"></i>
+              <p className="text-xl font-bold mb-3">Congratulations, Brave Explorer!</p>
+              <p className="mb-4 text-blue-600 font-bold">You've collected all 3 coins!</p>
+              
+              <div className="flex items-center justify-center mb-4">
+                <div className="flex">
+                  {[0, 1, 2].map(index => (
+                    <div key={index} className="relative mx-1">
+                      <i className="nes-icon coin"></i>
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 rounded-full">
+                        <i className="nes-icon is-small star"></i>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <p className="text-md mb-6 max-w-md text-center">Are you brave enough to face the challenges of Level 2?</p>
+              
+              <div className="flex gap-4">
+                <button 
+                  className="nes-btn is-primary font-press-start text-xs"
+                  onClick={acceptMission}
+                >
+                  ACCEPT
+                </button>
+                <button 
+                  className="nes-btn is-error font-press-start text-xs"
+                  onClick={surrenderGame}
+                >
+                  SURRENDER
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+        
+      case GameLevel.LEVEL_2_COMPLETE:
+        return (
+          <div className="text-center py-2 font-vt323">
+            <div className="nes-container is-rounded pixelated border-amber-500 bg-amber-100 overflow-hidden min-h-[350px] relative flex flex-col items-center justify-center">
+              <div className="bg-amber-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">LEVEL 2 COMPLETE!</div>
+              <i className="nes-icon trophy is-large mb-4 animate-pulse"></i>
+              <p className="text-xl font-bold mb-3">Outstanding Achievement!</p>
+              <p className="mb-4 text-amber-600 font-bold">You've collected all 5 coins!</p>
+              
+              <div className="flex items-center justify-center mb-4">
+                <div className="flex flex-wrap justify-center" style={{ maxWidth: '180px' }}>
+                  {[0, 1, 2, 3, 4].map(index => (
+                    <div key={index} className="relative mx-1 mb-2">
+                      <i className="nes-icon coin"></i>
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 rounded-full">
+                        <i className="nes-icon is-small star"></i>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <p className="text-md mb-6 max-w-md text-center">The final challenge awaits! Do you dare to continue?</p>
+              
+              <div className="flex gap-4">
+                <button 
+                  className="nes-btn is-warning font-press-start text-xs"
+                  onClick={acceptMission}
+                >
+                  ACCEPT
+                </button>
+                <button 
+                  className="nes-btn is-error font-press-start text-xs"
+                  onClick={surrenderGame}
+                >
+                  SURRENDER
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+        
+      case GameLevel.FINAL_LEVEL_COMPLETE:
+        return (
+          <div className="text-center py-2 font-vt323">
+            <div className="nes-container is-rounded pixelated border-orange-500 bg-orange-100 overflow-hidden min-h-[350px] relative flex flex-col items-center justify-center">
+              <div className="bg-orange-600 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">FINAL LEVEL COMPLETE!</div>
+              <i className="nes-icon trophy is-large mb-4 animate-pulse"></i>
+              <p className="text-xl font-bold mb-3">LEGENDARY VICTORY!</p>
+              <p className="mb-4 text-orange-600 font-bold">You've collected all 10 coins!</p>
+              
+              <div className="flex items-center justify-center mb-4">
+                <div className="flex flex-wrap justify-center" style={{ maxWidth: '200px' }}>
+                  {Array.from({ length: 10 }).map((_, index) => (
+                    <div key={index} className="relative mx-1 mb-2">
+                      <i className="nes-icon coin"></i>
+                      <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-60 rounded-full">
+                        <i className="nes-icon is-small star"></i>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <p className="text-md mb-6 max-w-md text-center">Claim your reward and receive eternal glory!</p>
+              
+              <div className="flex gap-4">
+                <button 
+                  className="nes-btn is-success font-press-start text-xs"
+                  onClick={acceptMission}
+                >
+                  CLAIM VICTORY
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+        
       case GameLevel.SURRENDERED:
         return (
           <div className="text-center py-2 font-vt323">
