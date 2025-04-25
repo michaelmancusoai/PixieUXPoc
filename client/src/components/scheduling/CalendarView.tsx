@@ -428,8 +428,6 @@ export default function CalendarView({
                   timeStatus
                 };
                 
-                const borderColor = getStatusBorderColor(timeStatus);
-                
                 return (
                   <AppointmentChip
                     key={appointment.id}
@@ -441,13 +439,6 @@ export default function CalendarView({
                       right: '4px',
                       height: `${height}px`,
                       zIndex: 5,
-                      padding: '2px 4px',
-                      borderRadius: '2px',
-                      overflow: 'hidden',
-                      border: '1px solid #e2e8f0',
-                      borderLeft: `3px solid ${borderColor}`,
-                      backgroundColor: '#fff',
-                      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.03)'
                     }}
                   />
                 );
