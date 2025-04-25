@@ -15,6 +15,7 @@ import LeaderboardPage from "@/pages/dashboard/LeaderboardPage";
 import PlanetPixiePage from "@/pages/dashboard/PlanetPixiePage";
 import SchedulingPage from "@/pages/SchedulingPage";
 import CapacityPage from "@/pages/CapacityPage";
+import RecallsPage from "@/pages/RecallsPage";
 import PatientsPage from "@/pages/PatientsPage";
 import BillingPage from "@/pages/BillingPage";
 import ClaimsPage from "@/pages/ClaimsPage";
