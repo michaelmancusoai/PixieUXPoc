@@ -1,0 +1,80 @@
+Waitlist & Online Requests — List View
+Same calm aesthetic, same one-click power, built for the once-or-twice-a-day gap-filling ritual.
+
+0 · Purpose in one line
+
+Convert unbooked demand (ASAP waitlist + web requests) into filled chair-time in < 10 minutes, using density scores and drag-to-calendar actions.
+1 · Page anatomy
+
+
+Zone	Span	Question answered	Components
+Hero KPIs	full-width row	“Which bucket earns me most right now?”	3 actionable cards
+Filter rail	sticky left	“Show only the requests I can actually slot.”	Accordions
+Demand table	9∕12 cols	“Who’s waiting, how valuable, what slots fit?”	Virtual grid
+Bulk Action bar	bottom dock	“Schedule / offer / triage in batches.”	Smart buttons
+2 · Hero cards (single CTA each)
+
+
+Card	Metric & copy	CTA	Colour band
+ASAP, High Value	$3 450 • 11 patients (Prod > $250, want next 48 h)	Fill First → auto-select	Mint if ≤10, amber 11-20, coral >20
+Web Requests Unanswered	5 requests (oldest 3 h)	Respond Now	Amber after 2 h
+Schedule Gap > 30 min Today	2 gaps • 70 min	Match Patients	Coral when gap ≥1 h
+Zero state: “No high-value waiters—chairs happy.”
+
+3 · Filter rail
+
+Demand Source
+Waitlist • Web/Portal • Phone messages
+Procedure Type
+Crown • Implant • Hygiene • Ortho consult …
+Desired Window
+ASAP < 48 h • This week • Next week • Flexible
+Provider Requested
+☐ Any • Dr A • Dr B …
+Est. Production (slider)
+$0–$2 000
+Sticky; collapses to 40 px strip.
+
+4 · Demand table columns
+
+
+Col	Detail	Behaviour nugget
+Patient	Initial avatar + name	Click → side drawer
+Prod $	blue badge	Sort DESC default
+Contact Age	“2 h”, “1 d”	Red text after 24 h
+Desired Window	“ASAP”, “This Week”, date range	Colour pill
+Requested Provider	Badge or “Any”	—
+Fit Score	0-100 (gap alg.)	Green ≥80
+Status	Uncontacted • Offered • Booked	—
+Action	Book • Offer • SMS	Action icons
+Fit Score pre-computes how well patient’s availability matches today’s free chair-time.
+
+5 · Bulk Action bar
+
+Appears when ≥ 1 row selected.
+
+
+Button	Rule	Sub-modal
+Offer Slots	rows with Fit ≥ 60	Lists first 3 matching gaps, bulk-SMS
+Book Now	one row	Opens add-to-calendar modal pre-filled
+Send Waitlist SMS	any	Template picker
+Archive	any	Marks as inactive
+Progress toast: “3 offers sent · 1 accepted in 2 min.”
+
+6 · Drag-to-calendar handshake
+
+Drag row → hover Calendar gap cell → cell highlights mint → drop to create appointment.
+After drop, row auto-moves to Booked filter and hero KPIs refresh (goal-gradient).
+7 · Behavioural nudges
+
+
+Trigger	Nudge
+Web Requests > 3 h	Amber halo around card header: “Respond within 4 h to keep 78 % conversion.”
+Fit Score ≥ 90	Green “Perfect Fit” tag; row floats to top for 30 s.
+All hero cards grey	Mint ribbon: “Demand queue clear—cheers to zero idle chairs!”
+8 · Copy snippets
+
+Offer SMS: “Hi {first}, a slot opened {date time}. Text YES to grab it.”
+Fit tooltip: “Score 92 — matches Dr Nguyen availability tomorrow 3 pm.”
+Archive reason dropdown: “Declined • Unable to reach • Booked elsewhere.”
+Tone = crisp, energetic, never guilt-trippy.

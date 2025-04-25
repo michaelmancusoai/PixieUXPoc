@@ -16,6 +16,7 @@ import PlanetPixiePage from "@/pages/dashboard/PlanetPixiePage";
 import SchedulingPage from "@/pages/SchedulingPage";
 import CapacityPage from "@/pages/CapacityPage";
 import RecallsPage from "@/pages/RecallsPage";
+import WaitlistPage from "@/pages/WaitlistPage";
 import PatientsPage from "@/pages/PatientsPage";
 import BillingPage from "@/pages/BillingPage";
 import ClaimsPage from "@/pages/ClaimsPage";
@@ -43,6 +44,7 @@ function Router() {
       <Route path="/scheduling" component={SchedulingPage} />
       <Route path="/schedule/capacity" component={CapacityPage} />
       <Route path="/schedule/recalls" component={RecallsPage} />
+      <Route path="/schedule/waitlist" component={WaitlistPage} />
       <Route path="/schedule/:subpage" component={SchedulingPage} />
       <Route path="/patients" component={PatientsPage} />
       <Route path="/patients/profile/:id" component={PatientProfilePage} />
