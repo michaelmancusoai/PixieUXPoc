@@ -310,6 +310,12 @@ export default function CalendarView({
     const minutesFromStart = (currentHour - startHour) * 60 + currentMinute;
     return (minutesFromStart / 5) * 8; // Convert to pixels using our scale
   }, []);
+
+  // Calculate layout offset for specific time marks - for positioning the 1:15 PM label
+  const calculateTimeOffset = useCallback((hour: number, minute: number) => {
+    const totalMinutes = (hour - BUSINESS_START_HOUR) * 60 + minute;
+    return (totalMinutes / 5) * 8; // 8px per 5 minutes
+  }, []);
   
   // Group appointments by resource
   const appointmentsByResource = useMemo(() => {
@@ -334,9 +340,9 @@ export default function CalendarView({
   return (
     <Card className="w-full h-full overflow-hidden border rounded-md">
       <div className="h-full overflow-auto relative">
-        {/* Current time indicator line that spans across entire grid */}
+        {/* Current time indicator line that spans across entire grid at exactly 1:15 PM */}
         <div className="absolute left-[60px] right-0 z-20 pointer-events-none"
-             style={{ top: `${currentTimeIndicatorTop + 37.5}px` }}>
+             style={{ top: `${calculateTimeOffset(13, 15) + 35}px` }}>
           <div className="h-[2px] bg-red-500 w-full"></div>
         </div>
         {/* Resource column headers */}
@@ -383,10 +389,10 @@ export default function CalendarView({
               </div>
             ))}
             
-            {/* Current time label shown in time column */}
+            {/* Current time label shown in time column at exactly 1:15 PM */}
             <div 
               className="absolute right-0 flex justify-end items-center z-10 pointer-events-none"
-              style={{ top: `${currentTimeIndicatorTop + 37.5}px`, transform: 'translateY(-50%)' }}
+              style={{ top: `${calculateTimeOffset(13, 15) + 35}px`, transform: 'translateY(-50%)' }}
             >
               <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-l whitespace-nowrap">
                 1:15 PM
