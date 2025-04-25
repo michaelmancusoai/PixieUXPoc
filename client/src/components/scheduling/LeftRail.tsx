@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Timer, UserPlus, Calendar, Clock, Plus } from 'lucide-react';
+import { Search, Timer, UserPlus, Calendar, Clock, Plus, Phone, MessageCircle } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -44,36 +44,43 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
   return (
     <div className="h-full overflow-y-auto space-y-4">
       
-      {/* Search Input */}
-      <div className="relative mb-1">
-        <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search waitlist..."
-          className="pl-8"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
-      
       {/* Main Card with Accordion layout similar to PatientProfilePage */}
       <Card className="shadow-sm">
         <CardHeader className="px-4 py-3 border-b">
-          <CardTitle className="text-lg font-medium">Schedule Management</CardTitle>
+          <CardTitle className="text-lg font-medium flex items-center justify-between">
+            <span>Schedule Management</span>
+            <span className="text-sm text-muted-foreground font-normal">{format(selectedDate, 'EEEE, MMMM d')}</span>
+          </CardTitle>
         </CardHeader>
         
         <CardContent className="p-0">
+          {/* Search Input - Integrated inside card */}
+          <div className="px-4 py-3 border-b">
+            <div className="relative">
+              <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search patients..."
+                className="pl-8 h-8 text-sm"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </div>
+          
           <Accordion type="multiple" className="w-full" defaultValue={["asapList", "waitlist"]}>
             
             {/* ASAP List Section */}
             <AccordionItem value="asapList" className="border-b">
-              <AccordionTrigger className="px-4 py-3 hover:bg-gray-50">
+              <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
                 <div className="flex items-center w-full">
                   <div className="flex items-center">
                     <Timer className="mr-2 h-4 w-4 text-red-500" />
                     <h3 className="font-medium">ASAP List</h3>
                   </div>
                   <div className="ml-auto">
-                    <span className="text-red-600 font-medium">{asapList.length} patients</span>
+                    <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200">
+                      {asapList.length}
+                    </Badge>
                   </div>
                 </div>
               </AccordionTrigger>
@@ -81,17 +88,24 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                 {asapList.length > 0 ? (
                   <div className="space-y-2">
                     {asapList.map(patient => (
-                      <div key={patient.id} className="flex items-center gap-2 bg-red-50 p-2 rounded-md border border-red-100 text-xs">
-                        <div className="min-w-0 flex-1">
-                          <p className="font-medium text-red-700">{patient.name}</p>
-                          <div className="text-muted-foreground">{patient.reason}</div>
-                          <div className="flex justify-between items-center mt-1">
-                            <span>{patient.contact}</span>
+                      <div key={patient.id} className="flex flex-col bg-red-50 rounded-md border border-red-100 text-xs overflow-hidden">
+                        <div className="p-2 border-b border-red-100">
+                          <div className="flex justify-between">
+                            <p className="font-medium text-red-700">{patient.name}</p>
+                            <p className="text-xs text-red-600">{patient.contact}</p>
                           </div>
+                          <p className="text-muted-foreground mt-0.5">{patient.reason}</p>
                         </div>
-                        <Button size="sm" variant="secondary" className="h-6 text-[10px] ml-auto flex-shrink-0">
-                          Call
-                        </Button>
+                        <div className="flex divide-x divide-red-100">
+                          <Button size="sm" variant="ghost" className="h-7 text-xs flex-1 rounded-none text-red-700 hover:bg-red-100">
+                            <Phone className="h-3 w-3 mr-1" />
+                            Call
+                          </Button>
+                          <Button size="sm" variant="ghost" className="h-7 text-xs flex-1 rounded-none text-red-700 hover:bg-red-100">
+                            <MessageCircle className="h-3 w-3 mr-1" />
+                            Message
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -105,14 +119,16 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
             
             {/* Waitlist Section */}
             <AccordionItem value="waitlist" className="border-b">
-              <AccordionTrigger className="px-4 py-3 hover:bg-gray-50">
+              <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
                 <div className="flex items-center w-full">
                   <div className="flex items-center">
                     <UserPlus className="mr-2 h-4 w-4 text-blue-500" />
                     <h3 className="font-medium">Waitlist</h3>
                   </div>
                   <div className="ml-auto">
-                    <span className="text-blue-600 font-medium">{filteredWaitlist.length} patients</span>
+                    <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200">
+                      {filteredWaitlist.length}
+                    </Badge>
                   </div>
                 </div>
               </AccordionTrigger>
@@ -120,26 +136,28 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                 {filteredWaitlist.length > 0 ? (
                   <div className="space-y-2">
                     {filteredWaitlist.map(patient => (
-                      <div key={patient.id} className="bg-blue-50 rounded-lg p-3 border border-blue-100">
-                        <div className="flex justify-between items-center">
-                          <span className="font-semibold">{patient.name}</span>
-                          <Badge variant="outline" className="bg-blue-100 text-blue-700 border-blue-200">
-                            {patient.propensityScore}%
-                          </Badge>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2 mt-2 text-xs">
-                          <div>
-                            <span className="text-muted-foreground block">Procedure:</span>
-                            <span className="font-medium">{patient.procedure}</span>
+                      <div key={patient.id} className="flex flex-col bg-blue-50 rounded-md border border-blue-100 text-xs overflow-hidden">
+                        <div className="p-2 border-b border-blue-100">
+                          <div className="flex justify-between">
+                            <p className="font-medium text-blue-700">{patient.name}</p>
+                            <p className="text-xs text-blue-600">{patient.waitingSince}</p>
                           </div>
-                          <div>
-                            <span className="text-muted-foreground block">Waiting since:</span>
-                            <span className="font-medium">{patient.waitingSince}</span>
-                          </div>
+                          <p className="text-muted-foreground mt-0.5">{patient.procedure}</p>
                         </div>
-                        <Button size="sm" className="w-full mt-3 h-7 text-xs">
-                          Schedule
-                        </Button>
+                        <div className="grid grid-cols-3 divide-x divide-blue-100">
+                          <Button size="sm" variant="ghost" className="h-7 text-xs rounded-none text-blue-700 hover:bg-blue-100">
+                            <Phone className="h-3 w-3 mr-1" />
+                            Call
+                          </Button>
+                          <Button size="sm" variant="ghost" className="h-7 text-xs rounded-none text-blue-700 hover:bg-blue-100">
+                            <MessageSquare className="h-3 w-3 mr-1" />
+                            Message
+                          </Button>
+                          <Button size="sm" variant="ghost" className="h-7 text-xs rounded-none text-blue-700 hover:bg-blue-100 font-medium">
+                            <Plus className="h-3 w-3 mr-1" />
+                            Schedule
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -153,7 +171,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
             
             {/* Quick Fill Section - Example of another accordion section */}
             <AccordionItem value="quickFill" className="border-b">
-              <AccordionTrigger className="px-4 py-3 hover:bg-gray-50">
+              <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
                 <div className="flex items-center w-full">
                   <div className="flex items-center">
                     <div className="relative mr-2 h-4 w-4 text-green-500">
@@ -163,17 +181,56 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                     <h3 className="font-medium">Quick Fill</h3>
                   </div>
                   <div className="ml-auto">
-                    <span className="text-green-600 font-medium">Find openings</span>
+                    <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">
+                      3
+                    </Badge>
                   </div>
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
-                <div className="bg-gray-50 rounded-lg p-3 text-center">
-                  <p className="text-xs text-muted-foreground">Quick fill feature helps you identify available slots to maximize chair utilization.</p>
+                <div className="space-y-2">
+                  <div className="flex flex-col bg-green-50 rounded-md border border-green-100 text-xs overflow-hidden">
+                    <div className="p-2 border-b border-green-100">
+                      <div className="flex justify-between">
+                        <p className="font-medium text-green-700">30-min opening</p>
+                        <p className="text-xs text-green-600">10:30 AM</p>
+                      </div>
+                      <p className="text-muted-foreground mt-0.5">Dr. Smith • Op. 2</p>
+                    </div>
+                    <Button size="sm" variant="ghost" className="h-7 text-xs rounded-none text-green-700 hover:bg-green-100">
+                      <UserPlus className="h-3 w-3 mr-1" />
+                      Fill Slot
+                    </Button>
+                  </div>
+                  
+                  <div className="flex flex-col bg-green-50 rounded-md border border-green-100 text-xs overflow-hidden">
+                    <div className="p-2 border-b border-green-100">
+                      <div className="flex justify-between">
+                        <p className="font-medium text-green-700">45-min opening</p>
+                        <p className="text-xs text-green-600">2:15 PM</p>
+                      </div>
+                      <p className="text-muted-foreground mt-0.5">Dr. Johnson • Op. 4</p>
+                    </div>
+                    <Button size="sm" variant="ghost" className="h-7 text-xs rounded-none text-green-700 hover:bg-green-100">
+                      <UserPlus className="h-3 w-3 mr-1" />
+                      Fill Slot
+                    </Button>
+                  </div>
+                  
+                  <div className="flex flex-col bg-green-50 rounded-md border border-green-100 text-xs overflow-hidden">
+                    <div className="p-2 border-b border-green-100">
+                      <div className="flex justify-between">
+                        <p className="font-medium text-green-700">60-min opening</p>
+                        <p className="text-xs text-green-600">3:30 PM</p>
+                      </div>
+                      <p className="text-muted-foreground mt-0.5">Dr. Davis • Op. 1</p>
+                    </div>
+                    <Button size="sm" variant="ghost" className="h-7 text-xs rounded-none text-green-700 hover:bg-green-100">
+                      <UserPlus className="h-3 w-3 mr-1" />
+                      Fill Slot
+                    </Button>
+                  </div>
                 </div>
-                <Button size="sm" className="w-full mt-3 h-7 text-xs">
-                  Find Available Slots
-                </Button>
               </AccordionContent>
             </AccordionItem>
             
