@@ -293,7 +293,7 @@ const LoginPage = () => {
 
   const uncoverEyes = () => {
     if (armLRef.current && armRRef.current && bodyBGRef.current && bodyBGchangedRef.current) {
-      // Animate arms away
+      // Animate left arm away
       gsap.to(armLRef.current, {
         y: 220,
         duration: 0.7,
@@ -307,6 +307,7 @@ const LoginPage = () => {
         ease: "power2.out"
       });
       
+      // Animate right arm away
       gsap.to(armRRef.current, {
         y: 220,
         duration: 0.7,
