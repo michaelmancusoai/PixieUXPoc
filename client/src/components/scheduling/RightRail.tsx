@@ -90,11 +90,13 @@ export default function RightRail({ selectedDate }: RightRailProps) {
       </Button>
       
       {/* Book Appointment Dialog */}
-      <BookAppointmentDialog
-        open={bookAppointmentOpen}
-        onOpenChange={setBookAppointmentOpen}
-        patientName={selectedPatient}
-      />
+      {bookAppointmentOpen && (
+        <BookAppointmentDialog
+          open={bookAppointmentOpen}
+          onOpenChange={setBookAppointmentOpen}
+          patientName={selectedPatient}
+        />
+      )}
       
       {/* Main Card with Accordion layout similar to LeftRail */}
       <Card className="shadow-sm">

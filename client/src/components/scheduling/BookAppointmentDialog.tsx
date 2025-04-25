@@ -117,24 +117,27 @@ export default function BookAppointmentDialog({
     { id: "flovarn", name: "FloVarn", category: "adult-prophy-exam" },
   ];
   
-  // Sample providers
+  // Sample providers matching existing ones
   const providers = [
-    { id: "dr-winderfield", name: "Dr. Winderfield" },
-    { id: "dr-sak", name: "Dr. Sak" },
-    { id: "dr-capps", name: "Dr. Capps" },
-    { id: "dr-rowley", name: "Dr. Rowley" },
+    { id: "dr-nguyen", name: "Dr. Nguyen" },
+    { id: "dr-robert", name: "Dr. Robert" },
+    { id: "dr-johnson", name: "Dr. Johnson" },
+    { id: "dr-maria", name: "Dr. Maria" },
   ];
   
   // Sample hygienists
   const hygienists = [
-    { id: "n-sheth", name: "N. Sheth" },
-    { id: "e-shenton", name: "E. Shenton" },
+    { id: "h-wilson", name: "H. Wilson" },
+    { id: "j-thompson", name: "J. Thompson" },
   ];
   
   // Form submission handler
   const onSubmit = (values: FormValues) => {
     console.log("Form values:", values);
     // In a real app, you would send this to your API
+    
+    // Display success feedback and close modal
+    alert(`Appointment booked successfully with ${values.provider.split('-')[1].toUpperCase()} for ${values.procedures.join(', ')}`);
     onOpenChange(false);
   };
   
@@ -515,21 +518,57 @@ export default function BookAppointmentDialog({
                       </div>
                       
                       <div className="divide-y">
-                        <div className="p-2">
-                          <div className="font-medium mb-1 text-sm">Wednesday, August 16th</div>
-                          <div className="flex items-center">
-                            <div className="w-32 text-sm">09:00 - 10:00 AM</div>
-                            <Badge variant="outline" className="ml-2 text-xs">Dr. Sak</Badge>
-                          </div>
-                        </div>
+                        {form.getValues("category") && (
+                          <>
+                            <div 
+                              className="p-2 hover:bg-blue-50 cursor-pointer transition-colors"
+                              onClick={() => {
+                                form.setValue("startTime", "09:00");
+                                form.setValue("provider", "dr-nguyen");
+                              }}
+                            >
+                              <div className="font-medium mb-1 text-sm">Today, {format(new Date(), "MMMM do")}</div>
+                              <div className="flex items-center justify-between">
+                                <div className="text-sm">09:00 - 10:00 AM</div>
+                                <Badge variant="outline" className="ml-2 text-xs">Dr. Nguyen</Badge>
+                              </div>
+                            </div>
+                            
+                            <div
+                              className="p-2 hover:bg-blue-50 cursor-pointer transition-colors"
+                              onClick={() => {
+                                form.setValue("startTime", "11:30");
+                                form.setValue("provider", "dr-robert");
+                              }}
+                            >
+                              <div className="font-medium mb-1 text-sm">Today, {format(new Date(), "MMMM do")}</div>
+                              <div className="flex items-center justify-between">
+                                <div className="text-sm">11:30 - 12:30 PM</div>
+                                <Badge variant="outline" className="ml-2 text-xs">Dr. Robert</Badge>
+                              </div>
+                            </div>
+                            
+                            <div
+                              className="p-2 hover:bg-blue-50 cursor-pointer transition-colors"
+                              onClick={() => {
+                                form.setValue("startTime", "14:00");
+                                form.setValue("provider", "dr-johnson");
+                              }}
+                            >
+                              <div className="font-medium mb-1 text-sm">Tomorrow, {format(new Date(new Date().setDate(new Date().getDate() + 1)), "MMMM do")}</div>
+                              <div className="flex items-center justify-between">
+                                <div className="text-sm">2:00 - 3:00 PM</div>
+                                <Badge variant="outline" className="ml-2 text-xs">Dr. Johnson</Badge>
+                              </div>
+                            </div>
+                          </>
+                        )}
                         
-                        <div className="p-2">
-                          <div className="font-medium mb-1 text-sm">Thursday, August 17th</div>
-                          <div className="flex items-center">
-                            <div className="w-32 text-sm">09:00 - 10:00 AM</div>
-                            <Badge variant="outline" className="ml-2 text-xs">Dr. Sak</Badge>
+                        {!form.getValues("category") && (
+                          <div className="p-4 text-center text-sm text-muted-foreground">
+                            Select a procedure category to see available slots
                           </div>
-                        </div>
+                        )}
                       </div>
                     </div>
                   </div>
