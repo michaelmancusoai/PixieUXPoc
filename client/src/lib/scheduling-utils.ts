@@ -104,14 +104,14 @@ export function getAppointmentTiming(appointment: AppointmentWithDetails): strin
   // Create date objects to handle time formatting properly
   const startDate = new Date();
   startDate.setHours(hours, minutes || 0, 0);
-  const start = format(startDate, 'h:mm a');
+  const start = format(startDate, 'h a');
   
   // Calculate end time by adding duration
   const endDate = new Date(startDate);
   endDate.setMinutes(endDate.getMinutes() + appointment.duration);
-  const end = format(endDate, 'h:mm a');
+  const end = format(endDate, 'h a');
   
-  return `${start} - ${end}`;
+  return `${start}`;
 }
 
 // Countdown timer component

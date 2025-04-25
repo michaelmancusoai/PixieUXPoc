@@ -140,31 +140,31 @@ export default function AppointmentChip({
           {...listeners} 
           {...attributes}
         >
-          <Card className="h-full shadow-sm border-none p-1">
+          <div className="h-full p-0.5">
             <div className="overflow-hidden text-xs h-full flex flex-col">
-              <div className="font-medium truncate flex justify-between items-center">
-                <span>{appointment.patient.firstName} {appointment.patient.lastName}</span>
+              <div className="font-medium truncate flex justify-between items-center text-[10px]">
+                <span className="text-gray-900">{appointment.patient.firstName} {appointment.patient.lastName}</span>
                 {appointment.patient.balanceDue && appointment.patient.balanceDue > 0 && (
                   <span className="text-[8px] font-bold text-red-600 whitespace-nowrap">
                     ${(appointment.patient.balanceDue / 100).toFixed(2)}
                   </span>
                 )}
               </div>
-              <div className="text-[9px] text-muted-foreground flex items-center">
-                <span className="inline-block w-2 h-2 rounded-full mr-1" 
+              <div className="text-[9px] text-gray-500 flex items-center">
+                <span className="inline-block w-1.5 h-1.5 rounded-full mr-1" 
                   style={{ backgroundColor: appointment.provider?.color || '#ccc' }}></span>
                 {getAppointmentTiming(appointment)}
               </div>
-              <div className="text-[9px] mt-0.5 truncate flex-grow">
+              <div className="text-[9px] text-gray-500 truncate flex-grow mt-0.5">
                 {appointment.procedure}
               </div>
               {appointment.cdtCode && (
-                <div className="text-[8px] font-mono opacity-75 mt-auto">
+                <div className="text-[8px] font-mono text-gray-400 mt-auto">
                   {appointment.cdtCode}
                 </div>
               )}
             </div>
-          </Card>
+          </div>
         </div>
       </HoverCardTrigger>
       
