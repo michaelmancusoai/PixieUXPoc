@@ -47,7 +47,7 @@ const formSchema = z.object({
   hygienist: z.string().optional(),
   // Additional fields for the time filters
   amPmFilter: z.enum(["AM", "PM", "BOTH"]).default("BOTH"),
-  selectedDays: z.array(z.number()).default([1, 2, 3, 4, 5]), // Mon-Fri by default
+  selectedDays: z.array(z.number()).default([]), // No days selected by default
   fromTime: z.string().optional(),
   toTime: z.string().optional(),
 });
@@ -98,7 +98,7 @@ export default function BookAppointmentDialog({
       amPmFilter: "BOTH",
       fromTime: "07:00",
       toTime: "19:00",
-      selectedDays: [1, 2, 3, 4, 5], // Mon-Fri by default
+      selectedDays: [], // No days selected by default
     },
   });
   
