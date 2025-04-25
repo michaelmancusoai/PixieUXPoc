@@ -19,6 +19,7 @@ import RecallsPage from "@/pages/RecallsPage";
 import WaitlistPage from "@/pages/WaitlistPage";
 import PatientsPage from "@/pages/PatientsPage";
 import SmartSegmentsPage from "@/pages/SmartSegmentsPage";
+import ProspectsPage from "@/pages/ProspectsPage";
 import BillingPage from "@/pages/BillingPage";
 import ClaimsPage from "@/pages/ClaimsPage";
 import PaymentsPage from "@/pages/PaymentsPage";
@@ -50,6 +51,7 @@ function Router() {
       <Route path="/patients" component={PatientsPage} />
       <Route path="/patients/profile/:id" component={PatientProfilePage} />
       <Route path="/patients/segments" component={SmartSegmentsPage} />
+      <Route path="/patients/prospects" component={ProspectsPage} />
       <Route path="/patients/:subpage" component={PatientsPage} />
       <Route path="/billing" component={BillingPage} />
       <Route path="/billing/claims" component={ClaimsPage} />

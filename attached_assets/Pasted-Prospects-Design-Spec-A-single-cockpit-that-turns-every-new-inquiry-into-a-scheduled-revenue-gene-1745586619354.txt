@@ -1,0 +1,97 @@
+Prospects — Design Spec
+A single cockpit that turns every new inquiry into a scheduled, revenue-generating visit.
+
+0 · Purpose in one line
+
+Track, triage, and convert new leads and referrals through a simple Kanban pipeline—with live KPIs that expose response-time leaks and one-tap actions to book, nurture, or disqualify.
+1 · Page anatomy
+
+
+Zone	Span	Question answered	Key components
+Hero KPI trio	full-width row	“Is our lead pipeline healthy today?”	3 actionable cards
+Pipeline board	9 ⁄ 12 cols	“Where is each prospect and what’s the next move?”	5-column Kanban
+Prospect Drawer	slide-in right	“Full context on the selected lead.”	Details + quick actions
+Filter rail	collapsible left	“Show only leads I can act on now.”	Source, procedure, date filters
+(Bulk Action bar appears only when multi-select is active.)
+
+2 · Hero KPI cards (single CTA each)
+
+
+Card	Metric & copy	CTA	Colour band
+Uncontacted < 1 h	4 leads waiting · avg 28 min	Call Now	Amber ≥3 • Coral ≥6
+Conversion Rate (30 d)	42 % booked to consult	View Lost Reasons	Mint ≥50 % • Grey otherwise
+Avg. Response Time	38 min (goal 15 min)	Auto-SMS Offers	Amber if 16-60 min • Coral >60 min
+Zero state: “All new inquiries answered—pipeline humming.”
+
+3 · Pipeline board (Kanban)
+
+
+Column	Entry criteria	Card preview	WIP colour
+New Inquiry	Contact method captured; no outbound	Name • Source • Time waiting	Grey
+Contacted	At least one call / SMS sent	“1 attempt • 12 min ago”	Amber badge if >1 h
+Consult Scheduled	Appointment booked	Date • Provider	Mint
+Plan Sent	Treatment plan emailed	$ value • Sent date	Blue
+Converted / Lost	Visit completed → auto-move • or marked Lost	“$1 850 accepted” / reason pill	Mint / Coral
+Drag-drop left↔right to advance stage.
+Dropping into Lost opens reason modal (price, timing, no-show, other).
+Columns show count + sum $ potential in header.
+4 · Prospect card anatomy
+
+─────────
+MS   Mia Smith         •  $3 200 crown case
+[☎︎]     New Inquiry    •  Web Form        18 min
+─────────
+Icons: phone, SMS, email appear on hover. Clicking opens drawer.
+
+5 · Prospect Drawer (right slide-in)
+
+
+Section	Fields / buttons
+Lead Details	Name, phone, email, referral source, procedure interest, est. value
+Contact Log	Timeline of calls, texts, emails (with SLA timers)
+Quick Actions	Call, SMS template pick-list, Email, Book Consult, Send Intake Forms
+Status buttons	Mark Converted • Mark Lost (dropdown reasons)
+Drawer sticks when moving prospect across stages.
+
+6 · Filter rail (collapsible)
+
+Source: Web, Phone, Referral, Ad, Social
+Procedure: Implant, Ortho, Cosmetic, General, Hygiene
+Value slider: $0 – $10 000+
+Uncontacted time: < 15 min, 15-60 min, > 1 h
+Rail collapses to 40 px bar; badge count of active filters.
+7 · Bulk actions (multi-select)
+
+
+Button	Rule	Modal
+Send SMS Offer	any rows	Template picker with merge fields
+Assign to Provider	rows with Consult Scheduled blank	Provider dropdown
+Archive Lost	only Lost stage rows	Confirm bulk action
+8 · Behavioural nudges
+
+
+Trigger	Nudge
+Lead waits > 30 min in “New Inquiry”	Card border pulses amber every 10 s, KPI card halo animates.
+Column exceeds WIP limit (e.g. > 10 in Contacted)	Header turns amber with text “Risk of stagnation—clear 3 today.”
+Conversion Rate hits monthly goal	Green confetti tick over KPI card for 1 s.
+9 · Copy snippets
+
+
+Context	Line
+SMS quick reply	“Hi {first}, we have a consult slot {date time}. Text YES to claim!”
+Lost reason options	Price • Timing • No response • Booked elsewhere • Other
+Empty column copy	“No leads stalled here — victory!”
+Tooltip on response KPI	“First outbound attempt measured from inquiry timestamp.”
+Tone = energetic concierge, concise.
+
+10 · Designer checklist
+
+Hero cards 280 px h, colour band matches Payments palette.
+Kanban columns equal width; horizontal scroll if > 5 providers later.
+Card height 80 px; virtualised drag-drop.
+Drawer width 360 px; scrollable contact log.
+Filter rail width 240 px; collapses.
+Use mint/amber/coral/grey system; avoid new colours.
+All stage headers sticky on scroll.
+Result
+Staff open Patients ▸ Prospects, scan the hero cards, drag four uncontacted leads into Contacted while dialling from the drawer, book two consults, mark one lost—and the pipeline neon shifts from amber to calming mint in under ten minutes.
