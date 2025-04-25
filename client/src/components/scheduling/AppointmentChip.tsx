@@ -25,6 +25,10 @@ export default function AppointmentChip({
   const handleDragStart = (e: React.DragEvent) => {
     e.dataTransfer.setData('appointment', JSON.stringify(appointment));
     setIsDragging(true);
+    // Pass the dragged appointment data to the parent via onClick handler
+    if (onClick) {
+      onClick();
+    }
   };
   
   const handleDragEnd = () => {

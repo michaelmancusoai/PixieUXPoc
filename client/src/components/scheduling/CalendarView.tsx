@@ -381,7 +381,10 @@ export default function CalendarView({
                   appointment={appointment}
                   columnIndex={columnIndex}
                   slotHeight={slotHeight}
-                  onClick={() => handleAppointmentClick(appointment)}
+                  onClick={() => {
+                    handleAppointmentClick(appointment);
+                    handleAppointmentDragStart(appointment);
+                  }}
                 />
               ))}
             </div>
