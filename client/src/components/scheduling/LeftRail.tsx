@@ -150,7 +150,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                             Call
                           </Button>
                           <Button size="sm" variant="ghost" className="h-7 text-xs rounded-none text-blue-700 hover:bg-blue-100">
-                            <MessageSquare className="h-3 w-3 mr-1" />
+                            <MessageCircle className="h-3 w-3 mr-1" />
                             Message
                           </Button>
                           <Button size="sm" variant="ghost" className="h-7 text-xs rounded-none text-blue-700 hover:bg-blue-100 font-medium">
