@@ -347,7 +347,7 @@ export default function CalendarView({
         {/* Current time indicator line that spans across entire grid at exactly 1:15 PM */}
         <div 
           className="absolute left-[60px] right-0 z-20 pointer-events-none"
-          style={{ top: '373px' }} // Hardcoded exact position for 1:15 PM
+          style={{ top: '253px' }} // Adjusted position to be between 10 AM and 11 AM
         >
           <div className="h-[2px] bg-red-500 w-full"></div>
         </div>
@@ -398,7 +398,7 @@ export default function CalendarView({
             {/* Current time label shown in time column at exactly 1:15 PM */}
             <div 
               className="absolute right-0 flex justify-end items-center z-10 pointer-events-none"
-              style={{ top: '373px', transform: 'translateY(-50%)' }}
+              style={{ top: '253px', transform: 'translateY(-50%)' }}
             >
               <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-l whitespace-nowrap">
                 1:15 PM
