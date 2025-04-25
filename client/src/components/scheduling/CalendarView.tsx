@@ -302,6 +302,15 @@ export default function CalendarView({
     return slots;
   }, []);
   
+  // Calculate current time indicator position (fixed at 1:15 PM for demo)
+  const currentTimeIndicatorTop = useMemo(() => {
+    const currentHour = 13; // 1 PM
+    const currentMinute = 15; // 15 minutes
+    const startHour = BUSINESS_START_HOUR;
+    const minutesFromStart = (currentHour - startHour) * 60 + currentMinute;
+    return (minutesFromStart / 5) * 8; // Convert to pixels using our scale
+  }, []);
+  
   // Group appointments by resource
   const appointmentsByResource = useMemo(() => {
     const grouped: { [key: number]: AppointmentWithDetails[] } = {};
@@ -350,16 +359,20 @@ export default function CalendarView({
         
         {/* Time grid */}
         <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
-          {/* Time column */}
-          <div className="border-r bg-[#F8F9FA]">
+          {/* Time column with enhanced styling */}
+          <div className="border-r bg-[#F1F3F5]">
             {timeSlots.map((slot, index) => (
               <div
                 key={index}
                 className={`
                   border-b text-xs text-right pr-2.5
-                  ${index % 12 === 0 ? 'font-medium text-gray-600' : 'text-transparent'}
+                  ${index % 12 === 0 ? 'font-medium text-gray-700' : 'text-transparent'}
                 `}
-                style={{ height: '8px' }}
+                style={{ 
+                  height: '8px',
+                  backgroundColor: index % 12 === 0 ? '#E9ECF0' : '#F1F3F5',
+                  borderBottom: index % 12 === 0 ? '1px solid #D1D5DB' : '1px solid #E5E7EB'
+                }}
               >
                 {index % 12 === 0 && slot.label}
               </div>
@@ -369,19 +382,35 @@ export default function CalendarView({
           {/* Resource columns */}
           {resourceColumns.map((resource) => (
             <div key={resource.id} className="relative border-r">
-              {/* Time slots background */}
+              {/* Time slots background with graduated shading */}
               {timeSlots.map((slot, index) => {
-                const slotProps = {
-                  key: index,
-                  className: `border-b ${index % 12 === 0 ? 'bg-[#F8F9FA]' : ''}`,
-                  style: { height: '8px' } as React.CSSProperties,
-                };
+                // Determine background color based on time division
+                // Hour marks (darkest), quarter-hour marks (medium), 5-minute increments (lightest)
+                let bgColor = 'transparent';
+                let borderStyle = '1px solid #E5E7EB';
+                
+                if (index % 12 === 0) {
+                  // Hour marks (e.g., 10:00, 11:00)
+                  bgColor = '#F0F1F3';
+                  borderStyle = '1px solid #D1D5DB';
+                } else if (index % 3 === 0) {
+                  // Quarter-hour marks (15, 30, 45 minutes)
+                  bgColor = '#F5F6F8';
+                  borderStyle = '1px solid #E2E4E8';
+                } else {
+                  // 5-minute increments
+                  bgColor = 'transparent';
+                }
                 
                 return (
                   <div 
                     key={index}
-                    className={slotProps.className}
-                    style={slotProps.style}
+                    className={`border-b`}
+                    style={{ 
+                      height: '8px',
+                      backgroundColor: bgColor,
+                      borderBottom: borderStyle
+                    }}
                   >
                     <DropTimeSlot 
                       resourceId={resource.id}
@@ -422,6 +451,19 @@ export default function CalendarView({
               })}
             </div>
           ))}
+          
+          {/* Current time indicator */}
+          <div 
+            className="absolute left-0 right-0 flex items-center z-10 pointer-events-none"
+            style={{ top: `${currentTimeIndicatorTop}px` }}
+          >
+            {/* Time label */}
+            <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-r ml-[60px] whitespace-nowrap">
+              Now: 1:15 PM
+            </div>
+            {/* Red line */}
+            <div className="h-[2px] bg-red-500 flex-grow ml-1 mr-1" />
+          </div>
         </div>
       </div>
     </Card>
