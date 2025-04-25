@@ -62,427 +62,259 @@ import {
   Zap,
   FileCheck,
   BarChart3,
+  Calendar,
   Phone,
   Mail,
-  Calendar,
-  Bell,
-  RefreshCcw,
-  User
+  User,
+  RefreshCcw
 } from "lucide-react";
-import { format, addDays, isAfter, isBefore, isToday } from "date-fns";
 
 // Types
 type Recall = {
   id: number;
   patientName: string;
-  recallType: string;
-  dueDate: Date;
+  dueDate: string;
+  lastContact: string | null;
   lastVisit: string;
+  nextVisit: number;
+  provider: string;
+  recallType: string;
   phone: string;
   email: string;
-  isOverdue: boolean;
-  lastAttempt: string | null;
-  provider: string;
-  birthdate: string;
-  insuranceCarrier: string;
-  planType: string;
-  lastAppointment: {
-    date: string;
-    type: string;
-    provider: string;
-  } | null;
-  upcomingAppointment: {
-    date: string;
-    type: string;
-    provider: string;
-  } | null;
-  balanceInfo: {
-    totalBalance: number;
-    insurance: number;
-    patient: number;
-  };
-  notes: string;
-  recallStatus: "Due" | "Overdue" | "Scheduled" | "In Progress" | "Confirmed";
+  recallStatus: "Due" | "Overdue" | "Scheduled" | "Confirmed" | "In Progress";
+  notes?: string;
 };
 
-// Mocked Harry Potter characters recall data
+// Mocked data with Harry Potter characters
 const mockRecalls: Recall[] = [
-  { 
-    id: 101, 
-    patientName: 'Nymphadora Tonks', 
-    recallType: '6-month hygiene', 
-    dueDate: addDays(new Date(), -14), 
-    lastVisit: '6 months ago',
-    phone: '555-123-4567',
-    email: 'tonks@ministry.wiz',
-    isOverdue: true,
-    lastAttempt: '3 days ago',
-    provider: 'Dr. Picard',
-    birthdate: '05/15/1973',
-    insuranceCarrier: 'Hogwarts Health Plan',
-    planType: 'PPO',
-    lastAppointment: {
-      date: '10/25/2024',
-      type: 'Comprehensive Exam',
-      provider: 'Dr. Picard'
-    },
-    upcomingAppointment: null,
-    balanceInfo: {
-      totalBalance: 325.50,
-      insurance: 225.50,
-      patient: 100.00
-    },
-    notes: 'Patient prefers morning appointments. Has expressed interest in teeth whitening.',
-    recallStatus: "Overdue"
+  // Overdue Recalls
+  {
+    id: 1,
+    patientName: "Nymphadora Tonks",
+    dueDate: "04/01/2025",
+    lastContact: "04/13/2025",
+    lastVisit: "10/01/2024",
+    nextVisit: 0,
+    provider: "Dr. Picard",
+    recallType: "6-month hygiene",
+    phone: "555-123-4567",
+    email: "tonks@ministry.wiz",
+    recallStatus: "Overdue",
+    notes: "Patient prefers morning appointments. Has expressed interest in teeth whitening."
   },
-  { 
-    id: 102, 
-    patientName: 'Remus Lupin', 
-    recallType: 'Annual exam',
-    dueDate: addDays(new Date(), -7), 
-    lastVisit: '1 year ago',
-    phone: '555-234-5678',
-    email: 'lupin@hogwarts.edu',
-    isOverdue: true,
-    lastAttempt: '1 week ago',
-    provider: 'Dr. Janeway',
-    birthdate: '03/10/1960',
-    insuranceCarrier: 'Hogwarts Health Plan',
-    planType: 'Faculty',
-    lastAppointment: {
-      date: '04/25/2024',
-      type: 'Annual Exam',
-      provider: 'Dr. Janeway'
-    },
-    upcomingAppointment: null,
-    balanceInfo: {
-      totalBalance: 0,
-      insurance: 0,
-      patient: 0
-    },
-    notes: 'Schedule appointments around the full moon. Patient has history of periodontal disease.',
-    recallStatus: "Overdue"
+  {
+    id: 2,
+    patientName: "Remus Lupin",
+    dueDate: "04/05/2025",
+    lastContact: "04/12/2025",
+    lastVisit: "04/05/2024",
+    nextVisit: 0,
+    provider: "Dr. Janeway",
+    recallType: "Annual exam",
+    phone: "555-234-5678",
+    email: "lupin@hogwarts.edu",
+    recallStatus: "Overdue",
+    notes: "Schedule appointments around the full moon. Patient has history of periodontal disease."
   },
-  { 
-    id: 103, 
-    patientName: 'Sirius Black', 
-    recallType: '3-month perio', 
-    dueDate: new Date(), 
-    lastVisit: '3 months ago',
-    phone: '555-345-6789',
-    email: 'padfoot@black.wiz',
-    isOverdue: false,
-    lastAttempt: null,
-    provider: 'Dr. Sisko',
-    birthdate: '11/03/1959',
-    insuranceCarrier: 'Order of Phoenix Health',
-    planType: 'DHMO',
-    lastAppointment: {
-      date: '01/25/2025',
-      type: 'Periodontal Therapy',
-      provider: 'Dr. Sisko'
-    },
-    upcomingAppointment: null,
-    balanceInfo: {
-      totalBalance: 745.00,
-      insurance: 645.00,
-      patient: 100.00
-    },
-    notes: 'Patient is very anxious about dental visits. Consider sedation options.',
-    recallStatus: "Due"
+  {
+    id: 3,
+    patientName: "Alastor Moody",
+    dueDate: "04/09/2025",
+    lastContact: "04/10/2025",
+    lastVisit: "01/09/2025",
+    nextVisit: 0,
+    provider: "Dr. Sisko",
+    recallType: "3-month perio",
+    phone: "555-345-6789",
+    email: "moody@auror.wiz",
+    recallStatus: "Overdue",
+    notes: "Patient is very anxious about dental visits. Consider sedation options."
   },
-  { 
-    id: 104, 
-    patientName: 'Bellatrix Lestrange', 
-    recallType: '6-month check-up', 
-    dueDate: addDays(new Date(), 1), 
-    lastVisit: '5 months ago',
-    phone: '555-456-7890',
-    email: 'bella@darkarts.wiz',
-    isOverdue: false,
-    lastAttempt: null,
-    provider: 'Dr. Janeway',
-    birthdate: '09/21/1951',
-    insuranceCarrier: 'Death Eater Dental Group',
-    planType: 'Premium',
-    lastAppointment: {
-      date: '11/25/2024',
-      type: 'Restorative',
-      provider: 'Dr. Janeway'
-    },
-    upcomingAppointment: {
-      date: '04/26/2025',
-      type: 'Check-up',
-      provider: 'Dr. Janeway'
-    },
-    balanceInfo: {
-      totalBalance: 0,
-      insurance: 0,
-      patient: 0
-    },
-    notes: 'Difficult patient. Insists on special treatment and can be disruptive.',
-    recallStatus: "Scheduled"
+  
+  // Due Recalls
+  {
+    id: 4,
+    patientName: "Sirius Black",
+    dueDate: "04/25/2025",
+    lastContact: null,
+    lastVisit: "10/25/2024",
+    nextVisit: 0,
+    provider: "Dr. Sisko",
+    recallType: "6-month check-up",
+    phone: "555-456-7890",
+    email: "padfoot@black.wiz",
+    recallStatus: "Due",
+    notes: "Patient often reschedules. Likes to be the last appointment of the day."
   },
-  { 
-    id: 105, 
-    patientName: 'Rubeus Hagrid', 
-    recallType: 'Annual comprehensive', 
-    dueDate: addDays(new Date(), 3), 
-    lastVisit: '11 months ago',
-    phone: '555-567-8901',
-    email: 'hagrid@hogwarts.edu',
-    isOverdue: false,
-    lastAttempt: null,
-    provider: 'Dr. Picard',
-    birthdate: '12/06/1928',
-    insuranceCarrier: 'Hogwarts Health Plan',
-    planType: 'Staff',
-    lastAppointment: {
-      date: '05/25/2024',
-      type: 'Annual Exam',
-      provider: 'Dr. Picard'
-    },
-    upcomingAppointment: {
-      date: '04/28/2025',
-      type: 'Comprehensive Exam',
-      provider: 'Dr. Picard'
-    },
-    balanceInfo: {
-      totalBalance: 125.00,
-      insurance: 25.00,
-      patient: 100.00
-    },
-    notes: 'Patient requires special extra-large chair accommodation. Schedule him as last patient of the day.',
-    recallStatus: "Scheduled"
+  {
+    id: 5,
+    patientName: "Molly Weasley",
+    dueDate: "04/27/2025",
+    lastContact: "04/15/2025",
+    lastVisit: "01/27/2025",
+    nextVisit: 0,
+    provider: "Dr. Picard",
+    recallType: "3-month perio",
+    phone: "555-567-8901",
+    email: "molly@burrow.wiz",
+    recallStatus: "Due",
+    notes: "Patient likes to schedule appointments for multiple family members on the same day."
   },
-  { 
-    id: 106, 
-    patientName: 'Dolores Umbridge', 
-    recallType: '6-month check-up', 
-    dueDate: addDays(new Date(), 5), 
-    lastVisit: '6 months ago',
-    phone: '555-678-9012',
-    email: 'dolores@ministry.wiz',
-    isOverdue: false,
-    lastAttempt: '1 day ago',
-    provider: 'Dr. Archer',
-    birthdate: '08/26/1945',
-    insuranceCarrier: 'Ministry of Magic Benefit Plan',
-    planType: 'Executive',
-    lastAppointment: {
-      date: '10/25/2024',
-      type: 'Check-up',
-      provider: 'Dr. Archer'
-    },
-    upcomingAppointment: null,
-    balanceInfo: {
-      totalBalance: 0,
-      insurance: 0,
-      patient: 0
-    },
-    notes: 'Patient frequently complains and has filed multiple grievances. Handle with extreme care.',
-    recallStatus: "In Progress"
+  {
+    id: 6,
+    patientName: "Argus Filch",
+    dueDate: "05/01/2025",
+    lastContact: null,
+    lastVisit: "05/01/2024",
+    nextVisit: 0,
+    provider: "Dr. Archer",
+    recallType: "Annual comprehensive",
+    phone: "555-678-9012",
+    email: "filch@hogwarts.edu",
+    recallStatus: "Due",
+    notes: "Patient complains about dental sensitivity and has very poor oral hygiene. Will require extensive patient education."
   },
-  { 
-    id: 107, 
-    patientName: 'Molly Weasley', 
-    recallType: '3-month perio', 
-    dueDate: addDays(new Date(), 7), 
-    lastVisit: '3 months ago',
-    phone: '555-789-0123',
-    email: 'molly@burrow.wiz',
-    isOverdue: false,
-    lastAttempt: null,
-    provider: 'Dr. Sisko',
-    birthdate: '10/30/1949',
-    insuranceCarrier: 'Weasley Family Plan',
-    planType: 'Family',
-    lastAppointment: {
-      date: '01/25/2025',
-      type: 'Periodontal Maintenance',
-      provider: 'Dr. Sisko'
-    },
-    upcomingAppointment: {
-      date: '05/02/2025',
-      type: 'Periodontal Maintenance',
-      provider: 'Dr. Sisko'
-    },
-    balanceInfo: {
-      totalBalance: 350.00,
-      insurance: 280.00,
-      patient: 70.00
-    },
-    notes: 'Patient likes to schedule appointments for multiple family members on the same day.',
-    recallStatus: "Due"
+  
+  // Scheduled Recalls
+  {
+    id: 7,
+    patientName: "Minerva McGonagall",
+    dueDate: "05/05/2025",
+    lastContact: "04/07/2025",
+    lastVisit: "11/05/2024",
+    nextVisit: 21,
+    provider: "Dr. Janeway",
+    recallType: "6-month check-up",
+    phone: "555-789-0123",
+    email: "mcgonagall@hogwarts.edu",
+    recallStatus: "Scheduled",
+    notes: "Very punctual patient with excellent oral hygiene. Prefers afternoon appointments."
   },
-  { 
-    id: 108, 
-    patientName: 'Arthur Weasley', 
-    recallType: '6-month check-up', 
-    dueDate: addDays(new Date(), 14), 
-    lastVisit: '6 months ago',
-    phone: '555-890-1234',
-    email: 'arthur@ministry.wiz',
-    isOverdue: false,
-    lastAttempt: '1 week ago',
-    provider: 'Dr. Picard',
-    birthdate: '02/06/1950',
-    insuranceCarrier: 'Ministry of Magic Benefit Plan',
-    planType: 'Standard',
-    lastAppointment: {
-      date: '10/25/2024',
-      type: 'Check-up',
-      provider: 'Dr. Picard'
-    },
-    upcomingAppointment: null,
-    balanceInfo: {
-      totalBalance: 125.00,
-      insurance: 75.00,
-      patient: 50.00
-    },
-    notes: 'Fascinated by dental instruments and equipment. Asks lots of questions about how they work.',
-    recallStatus: "Confirmed"
+  {
+    id: 8,
+    patientName: "Rubeus Hagrid",
+    dueDate: "05/07/2025",
+    lastContact: "04/07/2025",
+    lastVisit: "11/07/2024",
+    nextVisit: 14,
+    provider: "Dr. Picard",
+    recallType: "6-month hygiene",
+    phone: "555-890-1234",
+    email: "hagrid@hogwarts.edu",
+    recallStatus: "Scheduled",
+    notes: "Patient requires special extra-large chair accommodation. Schedule him as last patient of the day."
   },
-  { 
-    id: 109, 
-    patientName: 'Argus Filch', 
-    recallType: 'Annual comprehensive', 
-    dueDate: addDays(new Date(), 21), 
-    lastVisit: '10 months ago',
-    phone: '555-901-2345',
-    email: 'filch@hogwarts.edu',
-    isOverdue: false,
-    lastAttempt: null,
-    provider: 'Dr. Sisko',
-    birthdate: '04/20/1946',
-    insuranceCarrier: 'Hogwarts Health Plan',
-    planType: 'Staff',
-    lastAppointment: {
-      date: '06/25/2024',
-      type: 'Annual Exam',
-      provider: 'Dr. Sisko'
-    },
-    upcomingAppointment: null,
-    balanceInfo: {
-      totalBalance: 0,
-      insurance: 0,
-      patient: 0
-    },
-    notes: 'Patient complains about dental sensitivity and has very poor oral hygiene. Will require extensive patient education.',
-    recallStatus: "Due"
+  {
+    id: 9,
+    patientName: "Arthur Weasley",
+    dueDate: "05/07/2025",
+    lastContact: "04/08/2025",
+    lastVisit: "11/07/2024",
+    nextVisit: 7,
+    provider: "Dr. Picard",
+    recallType: "6-month check-up",
+    phone: "555-901-2345",
+    email: "arthur@ministry.wiz",
+    recallStatus: "Confirmed",
+    notes: "Fascinated by dental instruments and equipment. Asks lots of questions about how they work."
   },
-  { 
-    id: 110, 
-    patientName: 'Minerva McGonagall', 
-    recallType: '6-month check-up', 
-    dueDate: addDays(new Date(), 28), 
-    lastVisit: '5 months ago',
-    phone: '555-012-3456',
-    email: 'mcgonagall@hogwarts.edu',
-    isOverdue: false,
-    lastAttempt: null,
-    provider: 'Dr. Janeway',
-    birthdate: '10/04/1935',
-    insuranceCarrier: 'Hogwarts Health Plan',
-    planType: 'Faculty Premium',
-    lastAppointment: {
-      date: '11/25/2024',
-      type: 'Check-up',
-      provider: 'Dr. Janeway'
-    },
-    upcomingAppointment: {
-      date: '05/22/2025',
-      type: '6-month Check-up',
-      provider: 'Dr. Janeway'
-    },
-    balanceInfo: {
-      totalBalance: 0,
-      insurance: 0,
-      patient: 0
-    },
-    notes: 'Very punctual patient with excellent oral hygiene. Prefers afternoon appointments.',
-    recallStatus: "Scheduled"
+  
+  // In Progress Recalls
+  {
+    id: 10,
+    patientName: "Bellatrix Lestrange",
+    dueDate: "04/07/2025",
+    lastContact: "04/15/2025",
+    lastVisit: "10/07/2024",
+    nextVisit: 0,
+    provider: "Dr. Janeway",
+    recallType: "6-month check-up",
+    phone: "555-012-3456",
+    email: "bella@darkarts.wiz",
+    recallStatus: "In Progress",
+    notes: "Difficult patient. Insists on special treatment and can be disruptive."
+  },
+  {
+    id: 11,
+    patientName: "Dolores Umbridge",
+    dueDate: "04/07/2025",
+    lastContact: "04/09/2025",
+    lastVisit: "10/07/2024",
+    nextVisit: 0,
+    provider: "Dr. Archer",
+    recallType: "6-month hygiene",
+    phone: "555-123-7890",
+    email: "dolores@ministry.wiz",
+    recallStatus: "In Progress",
+    notes: "Patient frequently complains and has filed multiple grievances. Handle with extreme care."
   }
 ];
 
-// ExpandedRow component to show recall details
-const ExpandedRow = ({ recall }: { recall: Recall }) => {
+// Expanded Detail Row for Recalls
+const ExpandedDetailRow = ({ recall }: { recall: Recall }) => {
   return (
-    <TableRow className="border-t-0">
-      <TableCell colSpan={7} className="p-0">
-        <div className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Patient Info */}
-            <div className="bg-white rounded-md border p-3">
-              <h4 className="text-sm font-semibold mb-2 flex items-center">
-                <User className="h-4 w-4 mr-1 text-blue-500" />
-                Patient Information
-              </h4>
-              <div className="space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Date of Birth:</span>
-                  <span>{recall.birthdate}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Insurance:</span>
-                  <span>{recall.insuranceCarrier}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Plan Type:</span>
-                  <span>{recall.planType}</span>
-                </div>
-                {recall.balanceInfo && (
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Balance:</span>
-                    <span className={recall.balanceInfo.totalBalance > 0 ? 'text-red-600 font-medium' : ''}>
-                      ${recall.balanceInfo.totalBalance.toFixed(2)}
-                    </span>
-                  </div>
-                )}
+    <TableRow className="bg-muted/30">
+      <TableCell colSpan={8} className="p-0">
+        <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Patient Contact Info */}
+          <div className="bg-white rounded-md border p-3">
+            <h4 className="text-sm font-semibold mb-2 flex items-center">
+              <User className="h-4 w-4 mr-1 text-blue-500" />
+              Contact Information
+            </h4>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center">
+                <Phone className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                <span className="text-muted-foreground mr-1">Phone:</span>
+                <span>{recall.phone}</span>
+              </div>
+              <div className="flex items-center">
+                <Mail className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                <span className="text-muted-foreground mr-1">Email:</span>
+                <span className="truncate">{recall.email}</span>
+              </div>
+              <div className="flex items-center">
+                <Calendar className="h-3.5 w-3.5 mr-2 text-muted-foreground" />
+                <span className="text-muted-foreground mr-1">Last Visit:</span>
+                <span>{recall.lastVisit}</span>
               </div>
             </div>
-            
-            {/* Appointment History */}
-            <div className="bg-white rounded-md border p-3">
-              <h4 className="text-sm font-semibold mb-2 flex items-center">
-                <Calendar className="h-4 w-4 mr-1 text-purple-500" />
-                Appointment History
-              </h4>
-              <div className="space-y-2 text-sm">
-                <div>
-                  <span className="text-muted-foreground block">Last Visit:</span>
-                  <div className="flex justify-between mt-1">
-                    <span className="font-medium">{recall.lastAppointment?.date}</span>
-                    <span>{recall.lastAppointment?.type}</span>
-                  </div>
-                </div>
-                <div className="pt-1">
-                  <span className="text-muted-foreground block">Upcoming:</span>
-                  {recall.upcomingAppointment ? (
-                    <div className="flex justify-between mt-1">
-                      <span className="font-medium">{recall.upcomingAppointment.date}</span>
-                      <span>{recall.upcomingAppointment.type}</span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center mt-1">
-                      <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200">
-                        No appointment scheduled
-                      </Badge>
-                    </div>
-                  )}
-                </div>
+          </div>
+
+          {/* Last Contact Details */}
+          <div className="bg-white rounded-md border p-3">
+            <h4 className="text-sm font-semibold mb-2 flex items-center">
+              <Calendar className="h-4 w-4 mr-1 text-purple-500" />
+              Recall Details
+            </h4>
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Due Date:</span>
+                <span>{recall.dueDate}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Last Contact:</span>
+                <span>{recall.lastContact || "Not contacted"}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Recall Type:</span>
+                <span>{recall.recallType}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Provider:</span>
+                <span>{recall.provider}</span>
               </div>
             </div>
-            
-            {/* Pixie AI Notes */}
-            <div className="bg-white rounded-md border p-3">
-              <h4 className="text-sm font-semibold mb-2 flex items-center">
-                <Zap className="h-4 w-4 mr-1 text-purple-500" />
-                Pixie AI Notes
-              </h4>
-              <div className="text-sm">
-                <p className="text-gray-600 text-xs italic">{recall.notes}</p>
-              </div>
+          </div>
+
+          {/* Pixie AI Notes */}
+          <div className="bg-white rounded-md border p-3">
+            <h4 className="text-sm font-semibold mb-2 flex items-center">
+              <Zap className="h-4 w-4 mr-1 text-purple-500" />
+              Pixie AI Notes
+            </h4>
+            <div className="text-sm">
+              <p className="text-gray-600 text-xs italic">{recall.notes}</p>
             </div>
           </div>
         </div>
@@ -499,7 +331,6 @@ export default function RecallsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [showInsights, setShowInsights] = useState(false);
   const [filters, setFilters] = useState({
-    insuranceCarrier: "All Carriers",
     provider: "All Providers",
     recallType: "All Types",
     recallStatus: "All Statuses",
@@ -531,9 +362,6 @@ export default function RecallsPage() {
     }
 
     // Apply dropdown filters
-    if (filters.insuranceCarrier !== "All Carriers") {
-      filtered = filtered.filter(recall => recall.insuranceCarrier === filters.insuranceCarrier);
-    }
     if (filters.provider !== "All Providers") {
       filtered = filtered.filter(recall => recall.provider === filters.provider);
     }
@@ -582,42 +410,26 @@ export default function RecallsPage() {
     </Badge>
   );
 
-  // Calculate metrics for KPIs and insights
+  // Calculate metrics and total values for KPIs and insights
   const calculateMetrics = () => {
-    const totalOverdue = mockRecalls.filter(recall => recall.recallStatus === "Overdue").length;
-    const totalDue = mockRecalls.filter(recall => recall.recallStatus === "Due").length;
-    const totalScheduled = mockRecalls.filter(recall => recall.recallStatus === "Scheduled" || recall.recallStatus === "Confirmed").length;
-    const totalInProgress = mockRecalls.filter(recall => recall.recallStatus === "In Progress").length;
-
+    const overdueCount = mockRecalls.filter(recall => recall.recallStatus === "Overdue").length;
+    const dueCount = mockRecalls.filter(recall => recall.recallStatus === "Due").length;
+    const scheduledCount = mockRecalls.filter(recall => recall.recallStatus === "Scheduled" || recall.recallStatus === "Confirmed").length;
+    const inProgressCount = mockRecalls.filter(recall => recall.recallStatus === "In Progress").length;
+    
     // Calculate aging buckets
-    const now = new Date();
-    const under7Days = mockRecalls.filter(recall => {
-      const daysDiff = Math.ceil((now.getTime() - recall.dueDate.getTime()) / (1000 * 60 * 60 * 24));
-      return daysDiff >= 0 && daysDiff < 7;
-    }).length;
-
-    const days7to30 = mockRecalls.filter(recall => {
-      const daysDiff = Math.ceil((now.getTime() - recall.dueDate.getTime()) / (1000 * 60 * 60 * 24));
-      return daysDiff >= 7 && daysDiff < 30;
-    }).length;
-
-    const days30to90 = mockRecalls.filter(recall => {
-      const daysDiff = Math.ceil((now.getTime() - recall.dueDate.getTime()) / (1000 * 60 * 60 * 24));
-      return daysDiff >= 30 && daysDiff < 90;
-    }).length;
-
-    const over90Days = mockRecalls.filter(recall => {
-      const daysDiff = Math.ceil((now.getTime() - recall.dueDate.getTime()) / (1000 * 60 * 60 * 24));
-      return daysDiff >= 90;
-    }).length;
-
+    const under7Days = 5;
+    const days7to30 = 4;
+    const days30to90 = 2;
+    const over90Days = 0;
+    
     // Calculate recall types breakdown
     const recallTypeCounts = mockRecalls.reduce((acc, recall) => {
       const type = recall.recallType;
       acc[type] = (acc[type] || 0) + 1;
       return acc;
     }, {} as Record<string, number>);
-
+    
     // Get top recall types
     const topRecallTypes = Object.entries(recallTypeCounts)
       .sort(([, a], [, b]) => b - a)
@@ -627,45 +439,54 @@ export default function RecallsPage() {
         count,
         percentage: (count / mockRecalls.length) * 100
       }));
-
+    
+    // Calculate provider statistics
+    const providerStats = mockRecalls.reduce((acc, recall) => {
+      const provider = recall.provider;
+      if (!acc[provider]) {
+        acc[provider] = {
+          count: 0,
+          overdueCount: 0,
+          dueCount: 0
+        };
+      }
+      acc[provider].count += 1;
+      
+      if (recall.recallStatus === "Overdue") {
+        acc[provider].overdueCount += 1;
+      } else if (recall.recallStatus === "Due") {
+        acc[provider].dueCount += 1;
+      }
+      
+      return acc;
+    }, {} as Record<string, { count: number; overdueCount: number; dueCount: number; }>);
+    
+    // Find top providers by recall count
+    const topProviders = Object.entries(providerStats)
+      .sort(([, a], [, b]) => b.count - a.count)
+      .slice(0, 3)
+      .map(([name, stats]) => ({
+        name,
+        recallCount: stats.count,
+        overdueCount: stats.overdueCount,
+        percentOfTotal: (stats.count / mockRecalls.length) * 100
+      }));
+      
     return {
-      totalOverdue,
-      totalDue,
-      totalScheduled,
-      totalInProgress,
+      overdueCount,
+      dueCount,
+      scheduledCount,
+      inProgressCount,
       under7Days,
       days7to30,
       days30to90,
       over90Days,
-      topRecallTypes
+      topRecallTypes,
+      topProviders
     };
   };
 
   const metrics = calculateMetrics();
-
-  // Format due date for display
-  const formatDueDate = (date: Date): string => {
-    if (isToday(date)) {
-      return 'Today';
-    }
-    
-    const now = new Date();
-    
-    if (isAfter(date, now) && isBefore(date, addDays(now, 1))) {
-      return 'Tomorrow';
-    }
-    
-    if (isAfter(date, now) && isBefore(date, addDays(now, 7))) {
-      return `In ${Math.ceil((date.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))} days`;
-    }
-    
-    if (isBefore(date, now)) {
-      const daysOverdue = Math.ceil((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
-      return `${daysOverdue} days overdue`;
-    }
-    
-    return format(date, 'MMM d, yyyy');
-  };
 
   // Render status badge
   const renderStatusBadge = (status: string) => {
@@ -741,7 +562,7 @@ export default function RecallsPage() {
             <CardContent>
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="text-2xl font-bold">{metrics.totalOverdue}</div>
+                  <div className="text-2xl font-bold">{metrics.overdueCount}</div>
                   <p className="text-xs text-muted-foreground">
                     requires immediate action
                   </p>
@@ -759,7 +580,7 @@ export default function RecallsPage() {
             <CardContent>
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="text-2xl font-bold">{metrics.totalDue}</div>
+                  <div className="text-2xl font-bold">{metrics.dueCount}</div>
                   <p className="text-xs text-muted-foreground">
                     to schedule in next 30 days
                   </p>
@@ -777,7 +598,7 @@ export default function RecallsPage() {
             <CardContent>
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="text-2xl font-bold">{metrics.totalScheduled}</div>
+                  <div className="text-2xl font-bold">{metrics.scheduledCount}</div>
                   <p className="text-xs text-muted-foreground">
                     appointments confirmed
                   </p>
@@ -795,7 +616,7 @@ export default function RecallsPage() {
             <CardContent>
               <div className="flex justify-between items-center">
                 <div>
-                  <div className="text-2xl font-bold">{metrics.totalInProgress}</div>
+                  <div className="text-2xl font-bold">{metrics.inProgressCount}</div>
                   <p className="text-xs text-muted-foreground">
                     under active follow-up
                   </p>
@@ -833,7 +654,7 @@ export default function RecallsPage() {
                     <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-green-500 rounded-full" 
-                        style={{ width: `${(metrics.under7Days / mockRecalls.length) * 100}%` }}
+                        style={{ width: `${(metrics.under7Days / 11) * 100}%` }}
                       ></div>
                     </div>
                     
@@ -844,7 +665,7 @@ export default function RecallsPage() {
                     <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-blue-500 rounded-full" 
-                        style={{ width: `${(metrics.days7to30 / mockRecalls.length) * 100}%` }}
+                        style={{ width: `${(metrics.days7to30 / 11) * 100}%` }}
                       ></div>
                     </div>
                     
@@ -855,7 +676,7 @@ export default function RecallsPage() {
                     <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-amber-500 rounded-full" 
-                        style={{ width: `${(metrics.days30to90 / mockRecalls.length) * 100}%` }}
+                        style={{ width: `${(metrics.days30to90 / 11) * 100}%` }}
                       ></div>
                     </div>
                     
@@ -866,7 +687,7 @@ export default function RecallsPage() {
                     <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
                       <div 
                         className="h-full bg-red-500 rounded-full" 
-                        style={{ width: `${(metrics.over90Days / mockRecalls.length) * 100}%` }}
+                        style={{ width: `${(metrics.over90Days / 11) * 100}%` }}
                       ></div>
                     </div>
                   </div>
@@ -928,29 +749,28 @@ export default function RecallsPage() {
         <Tabs value={selectedTab} onValueChange={setSelectedTab}>
           <TabsList className="mb-4">
             <TabsTrigger value="overdue">
-              Overdue {renderTabBadge(metrics.totalOverdue)}
+              Overdue {renderTabBadge(metrics.overdueCount)}
             </TabsTrigger>
             <TabsTrigger value="due">
-              Due Soon {renderTabBadge(metrics.totalDue)}
+              Due Soon {renderTabBadge(metrics.dueCount)}
             </TabsTrigger>
             <TabsTrigger value="scheduled">
-              Scheduled {renderTabBadge(metrics.totalScheduled)}
+              Scheduled {renderTabBadge(metrics.scheduledCount)}
             </TabsTrigger>
             <TabsTrigger value="in-progress">
-              In Progress {renderTabBadge(metrics.totalInProgress)}
+              In Progress {renderTabBadge(metrics.inProgressCount)}
             </TabsTrigger>
           </TabsList>
 
-          {/* Tab content - same for all tabs but filtered data */}
+          {/* Tab content - same structure for all tabs but filtered data */}
           <TabsContent value="overdue" className="mt-0">
-            <RecallsTable 
+            <RecallsTable
               recalls={filteredRecalls}
               selectedRecalls={selectedRecalls}
               expandedRecallId={expandedRecallId}
               handleRowSelect={handleRowSelect}
               handleSelectAll={handleSelectAll}
               toggleExpandRecall={toggleExpandRecall}
-              formatDueDate={formatDueDate}
               renderStatusBadge={renderStatusBadge}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
@@ -959,14 +779,13 @@ export default function RecallsPage() {
             />
           </TabsContent>
           <TabsContent value="due" className="mt-0">
-            <RecallsTable 
+            <RecallsTable
               recalls={filteredRecalls}
               selectedRecalls={selectedRecalls}
               expandedRecallId={expandedRecallId}
               handleRowSelect={handleRowSelect}
               handleSelectAll={handleSelectAll}
               toggleExpandRecall={toggleExpandRecall}
-              formatDueDate={formatDueDate}
               renderStatusBadge={renderStatusBadge}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
@@ -975,14 +794,13 @@ export default function RecallsPage() {
             />
           </TabsContent>
           <TabsContent value="scheduled" className="mt-0">
-            <RecallsTable 
+            <RecallsTable
               recalls={filteredRecalls}
               selectedRecalls={selectedRecalls}
               expandedRecallId={expandedRecallId}
               handleRowSelect={handleRowSelect}
               handleSelectAll={handleSelectAll}
               toggleExpandRecall={toggleExpandRecall}
-              formatDueDate={formatDueDate}
               renderStatusBadge={renderStatusBadge}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
@@ -991,14 +809,13 @@ export default function RecallsPage() {
             />
           </TabsContent>
           <TabsContent value="in-progress" className="mt-0">
-            <RecallsTable 
+            <RecallsTable
               recalls={filteredRecalls}
               selectedRecalls={selectedRecalls}
               expandedRecallId={expandedRecallId}
               handleRowSelect={handleRowSelect}
               handleSelectAll={handleSelectAll}
               toggleExpandRecall={toggleExpandRecall}
-              formatDueDate={formatDueDate}
               renderStatusBadge={renderStatusBadge}
               searchQuery={searchQuery}
               setSearchQuery={setSearchQuery}
@@ -1020,7 +837,6 @@ function RecallsTable({
   handleRowSelect,
   handleSelectAll,
   toggleExpandRecall,
-  formatDueDate,
   renderStatusBadge,
   searchQuery,
   setSearchQuery,
@@ -1033,18 +849,15 @@ function RecallsTable({
   handleRowSelect: (id: number) => void;
   handleSelectAll: () => void;
   toggleExpandRecall: (id: number, e?: React.MouseEvent) => void;
-  formatDueDate: (date: Date) => string;
   renderStatusBadge: (status: string) => React.ReactNode;
   searchQuery: string;
   setSearchQuery: (query: string) => void;
   filters: {
-    insuranceCarrier: string;
     provider: string;
     recallType: string;
     recallStatus: string;
   };
   setFilters: React.Dispatch<React.SetStateAction<{
-    insuranceCarrier: string;
     provider: string;
     recallType: string;
     recallStatus: string;
@@ -1063,7 +876,6 @@ function RecallsTable({
 
   const providers = getUniqueValues('provider');
   const recallTypes = getUniqueValues('recallType');
-  const insuranceCarriers = getUniqueValues('insuranceCarrier');
   
   // Check if table has any data
   const hasData = recalls.length > 0;
@@ -1124,25 +936,6 @@ function RecallsTable({
             {recallTypes.map((type, i) => (
               <SelectItem key={i} value={type}>
                 {type}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-
-        <Select
-          value={filters.insuranceCarrier}
-          onValueChange={(value) =>
-            setFilters((prev) => ({ ...prev, insuranceCarrier: value }))
-          }
-        >
-          <SelectTrigger className="w-full md:w-[200px]">
-            <SelectValue placeholder="Insurance" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="All Carriers">All Carriers</SelectItem>
-            {insuranceCarriers.map((carrier, i) => (
-              <SelectItem key={i} value={carrier}>
-                {carrier}
               </SelectItem>
             ))}
           </SelectContent>
@@ -1241,8 +1034,8 @@ function RecallsTable({
                           </TableCell>
                           <TableCell>{recall.recallType}</TableCell>
                           <TableCell>
-                            <span className={recall.isOverdue ? "text-red-600 font-medium" : ""}>
-                              {formatDueDate(recall.dueDate)}
+                            <span className={recall.recallStatus === "Overdue" ? "text-red-600 font-medium" : ""}>
+                              {recall.dueDate}
                             </span>
                           </TableCell>
                           <TableCell>
@@ -1250,7 +1043,7 @@ function RecallsTable({
                           </TableCell>
                           <TableCell>{recall.provider}</TableCell>
                           <TableCell>
-                            {recall.lastAttempt || "Not contacted"}
+                            {recall.lastContact || "Not contacted"}
                           </TableCell>
                           <TableCell>
                             <Button
@@ -1268,7 +1061,7 @@ function RecallsTable({
                           </TableCell>
                         </TableRow>
                         {expandedRecallId === recall.id && (
-                          <ExpandedRow recall={recall} />
+                          <ExpandedDetailRow recall={recall} />
                         )}
                       </Fragment>
                     ))}
@@ -1287,8 +1080,7 @@ function RecallsTable({
                             : "There are no recalls that match your current filter criteria."}
                         </p>
                         {(searchQuery || filters.provider !== "All Providers" || 
-                          filters.recallType !== "All Types" || 
-                          filters.insuranceCarrier !== "All Carriers") && (
+                          filters.recallType !== "All Types") && (
                           <Button
                             variant="outline"
                             size="sm"
@@ -1298,7 +1090,6 @@ function RecallsTable({
                               setFilters({
                                 provider: "All Providers",
                                 recallType: "All Types",
-                                insuranceCarrier: "All Carriers",
                                 recallStatus: "All Statuses",
                               });
                             }}
