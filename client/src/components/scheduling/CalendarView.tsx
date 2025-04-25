@@ -302,24 +302,7 @@ export default function CalendarView({
     return slots;
   }, []);
   
-  // Calculate position for exactly 1:15 PM (fixed for demo)
-  const currentTimePosition = useMemo(() => {
-    // Time header height (consider column header)
-    const headerOffset = 35;
-    
-    // For 1:15 PM
-    const hour = 13; // 1 PM
-    const minute = 15;
-    
-    // Calculate minutes from business start time (7 AM)
-    const minutesFrom7AM = (hour - BUSINESS_START_HOUR) * 60 + minute;
-    
-    // Convert to pixels: each 5 minutes = 8px
-    const pixelsFromTop = (minutesFrom7AM / 5) * 8;
-    
-    // Base position including header
-    return pixelsFromTop + headerOffset;
-  }, []);
+  // We're not using this calculation anymore - using fixed positions for exact placement
   
   // Group appointments by resource
   const appointmentsByResource = useMemo(() => {
@@ -347,7 +330,7 @@ export default function CalendarView({
         {/* Current time indicator line that spans across entire grid at exactly 1:15 PM */}
         <div 
           className="absolute left-[60px] right-0 z-20 pointer-events-none"
-          style={{ top: '253px' }} // Adjusted position to be between 10 AM and 11 AM
+          style={{ top: '458px' }} // Fixed position for 1:15 PM between 1 PM and 2 PM
         >
           <div className="h-[2px] bg-red-500 w-full"></div>
         </div>
@@ -398,7 +381,7 @@ export default function CalendarView({
             {/* Current time label shown in time column at exactly 1:15 PM */}
             <div 
               className="absolute right-0 flex justify-end items-center z-10 pointer-events-none"
-              style={{ top: '253px', transform: 'translateY(-50%)' }}
+              style={{ top: '458px', transform: 'translateY(-50%)' }}
             >
               <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-l whitespace-nowrap">
                 1:15 PM
