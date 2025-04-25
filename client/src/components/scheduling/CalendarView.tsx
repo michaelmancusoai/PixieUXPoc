@@ -360,7 +360,7 @@ export default function CalendarView({
         {/* Time grid */}
         <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
           {/* Time column with enhanced styling */}
-          <div className="border-r bg-[#F1F3F5]">
+          <div className="border-r bg-white">
             {timeSlots.map((slot, index) => (
               <div
                 key={index}
@@ -370,7 +370,7 @@ export default function CalendarView({
                 `}
                 style={{ 
                   height: '8px',
-                  backgroundColor: index % 12 === 0 ? '#E9ECF0' : '#F1F3F5',
+                  backgroundColor: 'white',
                   borderBottom: index % 12 === 0 ? '1px solid #D1D5DB' : '1px solid #E5E7EB'
                 }}
               >
@@ -382,24 +382,22 @@ export default function CalendarView({
           {/* Resource columns */}
           {resourceColumns.map((resource) => (
             <div key={resource.id} className="relative border-r">
-              {/* Time slots background with graduated shading */}
+              {/* Time slots with graduated border styling */}
               {timeSlots.map((slot, index) => {
-                // Determine background color based on time division
+                // Determine border style based on time division
                 // Hour marks (darkest), quarter-hour marks (medium), 5-minute increments (lightest)
-                let bgColor = 'transparent';
-                let borderStyle = '1px solid #E5E7EB';
+                let bgColor = 'white';
+                let borderStyle = '1px solid #F0F0F0'; // Lightest border for 5-min increments
                 
                 if (index % 12 === 0) {
                   // Hour marks (e.g., 10:00, 11:00)
-                  bgColor = '#F0F1F3';
-                  borderStyle = '1px solid #D1D5DB';
+                  borderStyle = '1px solid #D1D5DB'; // Darkest border
                 } else if (index % 3 === 0) {
                   // Quarter-hour marks (15, 30, 45 minutes)
-                  bgColor = '#F5F6F8';
-                  borderStyle = '1px solid #E2E4E8';
+                  borderStyle = '1px solid #E2E4E8'; // Medium border
                 } else {
-                  // 5-minute increments
-                  bgColor = 'transparent';
+                  // 5-minute increments - lightest border
+                  borderStyle = '1px solid #F0F0F0';
                 }
                 
                 return (
@@ -452,17 +450,17 @@ export default function CalendarView({
             </div>
           ))}
           
-          {/* Current time indicator */}
+          {/* Current time indicator - positioned within the container div */}
           <div 
-            className="absolute left-0 right-0 flex items-center z-10 pointer-events-none"
+            className="absolute left-[60px] right-0 flex items-center z-10 pointer-events-none"
             style={{ top: `${currentTimeIndicatorTop}px` }}
           >
             {/* Time label */}
-            <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-r ml-[60px] whitespace-nowrap">
+            <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-r whitespace-nowrap">
               Now: 1:15 PM
             </div>
-            {/* Red line */}
-            <div className="h-[2px] bg-red-500 flex-grow ml-1 mr-1" />
+            {/* Red line - only extends across calendar columns */}
+            <div className="h-[2px] bg-red-500 flex-grow ml-1 mr-4" />
           </div>
         </div>
       </div>
