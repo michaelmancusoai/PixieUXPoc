@@ -1,4 +1,4 @@
-import SettingsPageTemplate from "./SettingsPageTemplate";
+import SettingsPageTemplate from "@/pages/settings/SettingsPageTemplate";
 import { Cog } from "lucide-react";
 
 export default function ExternalServicesPage() {
@@ -6,7 +6,7 @@ export default function ExternalServicesPage() {
     <SettingsPageTemplate
       title="External Services"
       description="Connect with external services, labs, and referral networks"
-      icon={<Cog className="h-5 w-5 text-primary" />}
+      icon={<Cog className="h-5 w-5" />}
     />
   );
 }

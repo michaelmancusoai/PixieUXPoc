@@ -1,4 +1,4 @@
-import SettingsPageTemplate from "./SettingsPageTemplate";
+import SettingsPageTemplate from "@/pages/settings/SettingsPageTemplate";
 import { RefreshCcw } from "lucide-react";
 
 export default function AIAutomationPage() {
@@ -6,7 +6,7 @@ export default function AIAutomationPage() {
     <SettingsPageTemplate
       title="AI Automation"
       description="Configure AI tools for clinical recommendations and workflow automation"
-      icon={<RefreshCcw className="h-5 w-5 text-primary" />}
+      icon={<RefreshCcw className="h-5 w-5" />}
     />
   );
 }
