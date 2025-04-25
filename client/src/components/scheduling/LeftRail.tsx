@@ -150,18 +150,14 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                             <p className="text-muted-foreground">{patient.procedure}</p>
                           </div>
                         </div>
-                        <div className="grid grid-cols-3 divide-x">
-                          <Button size="sm" variant="ghost" className="h-7 text-xs rounded-none hover:bg-gray-50">
+                        <div className="flex divide-x">
+                          <Button size="sm" variant="ghost" className="h-7 text-xs flex-1 rounded-none hover:bg-gray-50">
                             <Phone className="h-3 w-3 mr-1" />
                             Call
                           </Button>
-                          <Button size="sm" variant="ghost" className="h-7 text-xs rounded-none hover:bg-gray-50">
+                          <Button size="sm" variant="ghost" className="h-7 text-xs flex-1 rounded-none hover:bg-gray-50">
                             <MessageCircle className="h-3 w-3 mr-1" />
                             Message
-                          </Button>
-                          <Button size="sm" variant="ghost" className="h-7 text-xs rounded-none hover:bg-gray-50 font-medium">
-                            <Plus className="h-3 w-3 mr-1" />
-                            Schedule
                           </Button>
                         </div>
                       </div>
