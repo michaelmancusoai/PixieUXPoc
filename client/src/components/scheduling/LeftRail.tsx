@@ -43,12 +43,6 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
   
   return (
     <div className="h-full overflow-y-auto space-y-4">
-      {/* Date Display */}
-      <div className="bg-primary/10 p-3 rounded-lg text-center mb-2">
-        <p className="text-sm font-medium">{format(selectedDate, 'EEEE')}</p>
-        <p className="text-2xl font-bold">{format(selectedDate, 'd')}</p>
-        <p className="text-sm">{format(selectedDate, 'MMMM yyyy')}</p>
-      </div>
       
       {/* Search Input */}
       <div className="relative">
