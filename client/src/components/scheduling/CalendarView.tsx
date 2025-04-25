@@ -302,19 +302,24 @@ export default function CalendarView({
     return slots;
   }, []);
   
-  // Calculate current time indicator position (fixed at 1:15 PM for demo)
-  const currentTimeIndicatorTop = useMemo(() => {
-    const currentHour = 13; // 1 PM
-    const currentMinute = 15; // 15 minutes
-    const startHour = BUSINESS_START_HOUR;
-    const minutesFromStart = (currentHour - startHour) * 60 + currentMinute;
-    return (minutesFromStart / 5) * 8; // Convert to pixels using our scale
-  }, []);
-
-  // Calculate layout offset for specific time marks - for positioning the 1:15 PM label
-  const calculateTimeOffset = useCallback((hour: number, minute: number) => {
-    const totalMinutes = (hour - BUSINESS_START_HOUR) * 60 + minute;
-    return (totalMinutes / 5) * 8; // 8px per 5 minutes
+  // Calculate position for exactly 1:15 PM (fixed for demo)
+  const timeMarkFor1_15PM = useMemo(() => {
+    // Time header height + any other offset (approximately 35px)
+    const headerOffset = 35;
+    
+    // For 1:15 PM
+    const hour = 13; // 1 PM
+    const minute = 15;
+    
+    // Calculate minutes from business start time (7 AM)
+    const minutesFrom7AM = (hour - BUSINESS_START_HOUR) * 60 + minute;
+    
+    // Convert to pixels: each 5 minutes = 8px
+    const pixelsFromTop = (minutesFrom7AM / 5) * 8;
+    
+    // Fine-tuned position to match exactly with the appointment at 1:15 PM
+    // Adding 2 pixels to align precisely with appointments
+    return pixelsFromTop + headerOffset + 2;
   }, []);
   
   // Group appointments by resource
@@ -342,7 +347,7 @@ export default function CalendarView({
       <div className="h-full overflow-auto relative">
         {/* Current time indicator line that spans across entire grid at exactly 1:15 PM */}
         <div className="absolute left-[60px] right-0 z-20 pointer-events-none"
-             style={{ top: `${calculateTimeOffset(13, 15) + 35}px` }}>
+             style={{ top: `${timeMarkFor1_15PM}px` }}>
           <div className="h-[2px] bg-red-500 w-full"></div>
         </div>
         {/* Resource column headers */}
@@ -392,7 +397,7 @@ export default function CalendarView({
             {/* Current time label shown in time column at exactly 1:15 PM */}
             <div 
               className="absolute right-0 flex justify-end items-center z-10 pointer-events-none"
-              style={{ top: `${calculateTimeOffset(13, 15) + 35}px`, transform: 'translateY(-50%)' }}
+              style={{ top: `${timeMarkFor1_15PM}px`, transform: 'translateY(-50%)' }}
             >
               <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-l whitespace-nowrap">
                 1:15 PM
