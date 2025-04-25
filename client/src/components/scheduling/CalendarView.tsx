@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState, useCallback, useEffect } from "react";
-import { ViewModeType, AppointmentWithDetails, AppointmentStatus } from "@/lib/scheduling-constants";
+import { ViewModeType, AppointmentStatus } from "@/lib/scheduling-constants";
 import { useQuery } from "@tanstack/react-query";
 import { format, addMinutes, isEqual, isSameDay, parseISO } from "date-fns";
 import { useVirtualizer } from "@tanstack/react-virtual";
@@ -14,7 +14,8 @@ import {
   getAppointmentPosition, 
   snapToTimeSlot,
   getAppointmentTiming,
-  getStatusBasedOnTime
+  getStatusBasedOnTime,
+  AppointmentWithDetails
 } from "@/lib/scheduling-utils";
 
 interface CalendarViewProps {
@@ -341,119 +342,114 @@ export default function CalendarView({
 
   return (
     <Card className="w-full h-full overflow-hidden border rounded-md">
-      <DndContext>
-        <div className="h-full overflow-auto">
-          {/* Resource column headers */}
-          <div className="grid" style={{ gridTemplateColumns: `80px repeat(${resourceColumns.length}, 1fr)` }}>
-            {/* Time header */}
-            <div className="p-2 border-b border-r bg-gray-50 text-center text-xs font-medium">
-              Time
+      <div className="h-full overflow-auto">
+        {/* Resource column headers */}
+        <div className="grid" style={{ gridTemplateColumns: `80px repeat(${resourceColumns.length}, 1fr)` }}>
+          {/* Time header */}
+          <div className="p-2 border-b border-r bg-gray-50 text-center text-xs font-medium">
+            Time
+          </div>
+          
+          {/* Resource headers */}
+          {resourceColumns.map(resource => (
+            <div key={resource.id} className="p-2 border-b border-r text-center">
+              <div className="font-semibold truncate">{resource.name}</div>
             </div>
-            
-            {/* Resource headers */}
-            {resourceColumns.map(resource => (
-              <div key={resource.id} className="p-2 border-b border-r text-center">
-                <div className="font-semibold truncate">{resource.name}</div>
+          ))}
+        </div>
+        
+        {/* Time grid */}
+        <div className="grid" style={{ gridTemplateColumns: `80px repeat(${resourceColumns.length}, 1fr)` }}>
+          {/* Time column */}
+          <div className="border-r">
+            {timeSlots.map((slot, index) => (
+              <div
+                key={index}
+                className={`
+                  p-1 border-b text-xs
+                  ${index % 12 === 0 ? 'font-medium' : 'text-gray-500'}
+                `}
+                style={{ height: '20px' }}
+              >
+                {index % 12 === 0 && slot.label}
               </div>
             ))}
           </div>
           
-          {/* Time grid */}
-          <div className="grid" style={{ gridTemplateColumns: `80px repeat(${resourceColumns.length}, 1fr)` }}>
-            {/* Time column */}
-            <div className="border-r">
-              {timeSlots.map((slot, index) => (
-                <div
-                  key={index}
-                  className={`
-                    p-1 border-b text-xs
-                    ${index % 12 === 0 ? 'font-medium' : 'text-gray-500'}
-                  `}
-                  style={{ height: '20px' }}
-                >
-                  {index % 12 === 0 && slot.label}
-                </div>
-              ))}
-            </div>
-            
-            {/* Resource columns */}
-            {resourceColumns.map((resource) => (
-              <div key={resource.id} className="relative border-r">
-                {/* Time slots background */}
-                {timeSlots.map((slot, index) => {
-                  // We're using a regular variable here to avoid React Hook issues when mapping
-                  const slotProps = {
-                    key: index,
-                    className: `border-b ${index % 12 === 0 ? 'bg-gray-50' : ''}`,
-                    style: { height: '20px' } as React.CSSProperties,
-                  };
-                  
-                  const dropId = `${resource.id}-${slot.time}`;
-                  // Create a drop target for each time slot
-                  const dropTimeSlot = (
+          {/* Resource columns */}
+          {resourceColumns.map((resource) => (
+            <div key={resource.id} className="relative border-r">
+              {/* Time slots background */}
+              {timeSlots.map((slot, index) => {
+                const slotProps = {
+                  key: index,
+                  className: `border-b ${index % 12 === 0 ? 'bg-gray-50' : ''}`,
+                  style: { height: '20px' } as React.CSSProperties,
+                };
+                
+                return (
+                  <div 
+                    key={index}
+                    className={slotProps.className}
+                    style={slotProps.style}
+                  >
                     <DropTimeSlot 
                       resourceId={resource.id}
                       time={slot.time}
                       isOver={dragTarget?.resourceId === resource.id && dragTarget?.time === slot.time}
                     />
-                  );
-                  
-                  return (
-                    <div {...slotProps}>
-                      {dropTimeSlot}
-                    </div>
-                  );
-                })}
+                  </div>
+                );
+              })}
+              
+              {/* Appointments for this resource */}
+              {appointmentsByResource[resource.id]?.map(appointment => {
+                // Calculate appointment position
+                const startMinutes = parseInt(appointment.startTime.split(':')[0]) * 60 + 
+                                   parseInt(appointment.startTime.split(':')[1]);
+                const startFromDayBeginning = startMinutes - (BUSINESS_START_HOUR * 60);
+                const top = (startFromDayBeginning / 5) * 20;
+                const height = (appointment.duration / 5) * 20;
                 
-                {/* Appointments for this resource */}
-                {appointmentsByResource[resource.id]?.map(appointment => {
-                  // Calculate appointment position
-                  const startMinutes = parseInt(appointment.startTime.split(':')[0]) * 60 + 
-                                     parseInt(appointment.startTime.split(':')[1]);
-                  const startFromDayBeginning = startMinutes - (BUSINESS_START_HOUR * 60);
-                  const top = (startFromDayBeginning / 5) * 20;
-                  const height = (appointment.duration / 5) * 20;
-                  
-                  // Determine appointment time status
-                  const timeStatus = appointment.status;
-                  
-                  // Add time status to appointment object
-                  const apptWithTimeStatus = {
-                    ...appointment,
-                    timeStatus
-                  };
-                  
-                  const borderColor = getStatusBorderColor(timeStatus);
-                  
-                  return (
-                    <AppointmentChip
-                      key={appointment.id}
-                      appointment={apptWithTimeStatus}
-                      style={{
-                        position: 'absolute',
-                        top: `${top}px`,
-                        left: '4px',
-                        right: '4px',
-                        height: `${height}px`,
-                        zIndex: 5,
-                        padding: '0.25rem',
-                        borderRadius: '4px',
-                        overflow: 'hidden',
-                        borderLeftWidth: '3px',
-                        borderLeftStyle: 'solid',
-                        borderLeftColor: borderColor,
-                        borderTop: 'none',
-                        borderRight: 'none',
-                        borderBottom: 'none'
-                      }}
-                    />
-                  );
-                })}
-              </div>
-            ))}
-          </div>
+                // Determine appointment time status
+                const timeStatus = appointment.status;
+                
+                // Add time status to appointment object
+                const apptWithTimeStatus = {
+                  ...appointment,
+                  timeStatus
+                };
+                
+                const borderColor = getStatusBorderColor(timeStatus);
+                
+                return (
+                  <AppointmentChip
+                    key={appointment.id}
+                    appointment={apptWithTimeStatus}
+                    style={{
+                      position: 'absolute',
+                      top: `${top}px`,
+                      left: '4px',
+                      right: '4px',
+                      height: `${height}px`,
+                      zIndex: 5,
+                      padding: '0.25rem',
+                      borderRadius: '4px',
+                      overflow: 'hidden',
+                      borderLeftWidth: '3px',
+                      borderLeftStyle: 'solid',
+                      borderLeftColor: borderColor,
+                      borderTop: 'none',
+                      borderRight: 'none',
+                      borderBottom: 'none'
+                    }}
+                  />
+                );
+              })}
+            </div>
+          ))}
         </div>
-      </DndContext>
+      </div>
     </Card>
   );
 }
