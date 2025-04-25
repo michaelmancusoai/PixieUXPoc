@@ -40,15 +40,15 @@ export default function AppHeader({
   
   return (
     <div className="bg-white border-b p-4 flex flex-col gap-4">
-      <div className="grid grid-cols-3 items-center">
-        {/* Left column */}
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          {/* Today button */}
           <Button variant="outline" size="sm" onClick={onToday} className="h-8">
             Today
           </Button>
           
-          {/* Patient counts in a visually stimulating display */}
-          <div className="flex items-center gap-2 ml-2 h-8">
+          {/* Patient counts */}
+          <div className="flex items-center gap-1.5 h-8">
             {/* Total - Dark Gray */}
             <div className="flex items-center w-16 bg-gray-100 border border-gray-300 rounded-md h-full overflow-hidden">
               <div className="flex items-center justify-center w-6 bg-gray-200 h-full mr-1 border-r border-gray-300">
@@ -83,26 +83,23 @@ export default function AppHeader({
           </div>
         </div>
         
-        {/* Center column - Date control stays in center */}
-        <div className="flex items-center justify-center gap-2">
-          <Button variant="ghost" size="icon" onClick={onPrevious}>
+        {/* Date control in center */}
+        <div className="flex items-center gap-2">
+          <Button variant="ghost" size="icon" onClick={onPrevious} className="text-gray-500 hover:text-gray-700">
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          
-          <div className="text-lg font-medium">{formattedDate}</div>
-          
-          <Button variant="ghost" size="icon" onClick={onNext}>
+          <div className="text-base font-medium text-gray-800 min-w-[220px] text-center">{formattedDate}</div>
+          <Button variant="ghost" size="icon" onClick={onNext} className="text-gray-500 hover:text-gray-700">
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>
         
-        {/* Right column - Tabs and action buttons */}
-        <div className="flex items-center justify-end gap-4">
-          {/* View mode tabs */}
-          <Tabs defaultValue={currentView} onValueChange={(value) => onViewChange(value as ViewModeType)}>
-            <TabsList>
-              <TabsTrigger value="OPERATORY">Operatory</TabsTrigger>
-              <TabsTrigger value="PROVIDER">Provider</TabsTrigger>
+        {/* View mode and actions */}
+        <div className="flex items-center gap-4">
+          <Tabs defaultValue={currentView} onValueChange={(value) => onViewChange(value as ViewModeType)} className="mr-2">
+            <TabsList className="h-8">
+              <TabsTrigger value="OPERATORY" className="text-xs px-3">Operatory</TabsTrigger>
+              <TabsTrigger value="PROVIDER" className="text-xs px-3">Provider</TabsTrigger>
             </TabsList>
           </Tabs>
           
@@ -112,14 +109,26 @@ export default function AppHeader({
               size="icon" 
               onClick={onToggleExpandView}
               title={expandedView ? "Show sidebars" : "Expand calendar"}
+              className="h-8 w-8"
             >
               {expandedView ? <Minimize className="h-4 w-4" /> : <Expand className="h-4 w-4" />}
             </Button>
-            <Button onClick={onBookAppointment} className="flex items-center gap-1">
-              <PlusCircle className="h-4 w-4" />
+            <Button onClick={onBookAppointment} className="flex items-center gap-1 h-8 text-xs" size="sm">
+              <PlusCircle className="h-3.5 w-3.5" />
               <span>Book Appointment</span>
             </Button>
           </div>
+        </div>
+      </div>
+      
+      {/* Sub-navigation for scheduling page */}
+      <div className="flex items-center">
+        <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+          <Button variant="ghost" size="sm" className="text-xs px-3 h-7 rounded-md">All</Button>
+          <Button variant="ghost" size="sm" className="text-xs px-3 h-7 rounded-md bg-white shadow-sm">Appointments</Button>
+          <Button variant="ghost" size="sm" className="text-xs px-3 h-7 rounded-md">Recalls</Button>
+          <Button variant="ghost" size="sm" className="text-xs px-3 h-7 rounded-md">Waitlist</Button>
+          <Button variant="ghost" size="sm" className="text-xs px-3 h-7 rounded-md">Quick Fill</Button>
         </div>
       </div>
     </div>
