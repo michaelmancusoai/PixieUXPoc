@@ -359,7 +359,7 @@ export default function CalendarView({
                   border-b text-xs text-right pr-2.5
                   ${index % 12 === 0 ? 'font-medium text-gray-600' : 'text-transparent'}
                 `}
-                style={{ height: '12px' }}
+                style={{ height: '5px' }}
               >
                 {index % 12 === 0 && slot.label}
               </div>
@@ -374,7 +374,7 @@ export default function CalendarView({
                 const slotProps = {
                   key: index,
                   className: `border-b ${index % 12 === 0 ? 'bg-[#F8F9FA]' : ''}`,
-                  style: { height: '12px' } as React.CSSProperties,
+                  style: { height: '5px' } as React.CSSProperties,
                 };
                 
                 return (
@@ -398,8 +398,8 @@ export default function CalendarView({
                 const startMinutes = parseInt(appointment.startTime.split(':')[0]) * 60 + 
                                    parseInt(appointment.startTime.split(':')[1]);
                 const startFromDayBeginning = startMinutes - (BUSINESS_START_HOUR * 60);
-                const top = (startFromDayBeginning / 5) * 12;
-                const height = (appointment.duration / 5) * 12;
+                const top = startFromDayBeginning;
+                const height = appointment.duration;
                 
                 // We're now passing the appointment directly to the AppointmentChip component
                 // which handles status display and styling internally
