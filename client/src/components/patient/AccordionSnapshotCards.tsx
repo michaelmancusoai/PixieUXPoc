@@ -33,7 +33,7 @@ export default function AccordionSnapshotCards() {
             <div className="bg-blue-50 rounded-lg p-3 mb-3 border border-blue-100">
               <div className="text-lg font-semibold text-primary">Tomorrow, 9:00 AM</div>
               <div className="text-sm text-gray-700">Prophylaxis (45 min)</div>
-              <div className="text-sm text-gray-700">Dr. Nguyen · Operatory 3</div>
+              <div className="text-sm text-gray-700">Dr. Picard · Operatory 3</div>
             </div>
             
             <div className="flex justify-between items-center">

@@ -29,7 +29,7 @@ const activityItems: ActivityItem[] = [
     type: "appointment",
     title: "Upcoming · Prophylaxis (45 min)",
     date: "Tomorrow, 9:00 AM",
-    user: "Operatory 3 · Dr. Nguyen",
+    user: "Operatory 3 · Dr. Picard",
     icon: <Calendar className="h-4 w-4" />,
     color: "bg-primary"
   },
@@ -48,7 +48,7 @@ const activityItems: ActivityItem[] = [
     type: "clinical",
     title: "Completed · D2740 Crown #30 ($1,180)",
     date: "Apr 13, 2025 · 10:15 AM",
-    user: "Dr. Nguyen",
+    user: "Dr. Picard",
     description: "Patient tolerated procedure well; no complications. Final adjustments made for occlusion. Patient given post-op instructions.",
     icon: <Stethoscope className="h-4 w-4" />,
     color: "bg-primary"
