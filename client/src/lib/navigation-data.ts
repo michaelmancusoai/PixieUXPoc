@@ -110,14 +110,9 @@ export const navigationData: NavSection[] = [
         icon: CalendarDays,
       },
       {
-        title: "Appointment Book View",
-        href: "/schedule/appointment-book",
-        icon: Calendar,
-      },
-      {
-        title: "Find Appointment",
-        href: "/schedule/find-appointment",
-        icon: CalendarIcon,
+        title: "Recalls",
+        href: "/schedule/recalls",
+        icon: RefreshCcw,
       },
       {
         title: "Waitlist",
@@ -125,7 +120,7 @@ export const navigationData: NavSection[] = [
         icon: Clock,
       },
       {
-        title: "Online Booking Requests",
+        title: "Online Requests",
         href: "/schedule/online-booking",
         icon: BookOpen,
       },
