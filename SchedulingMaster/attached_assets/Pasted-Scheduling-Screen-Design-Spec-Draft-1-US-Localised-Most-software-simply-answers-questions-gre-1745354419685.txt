@@ -1,0 +1,340 @@
+Scheduling Screen Design Spec – Draft 1 (US‑Localised)
+
+“Most software simply answers questions; great software prevents them from being asked.” — Rory Sutherland
+
+This document proposes the information architecture, psychology‑led interaction model, and Material‑UI component breakdown for the Scheduling module—drawing on the high‑level IA requirement to “Manage appointment calendar (Day/Week, Op/Provider views)” and related workflows. citeturn0file0
+
+0. Core Jobs‑to‑Be‑Done
+
+Persona
+
+JTBD
+
+Success KPI
+
+Front Office
+
+Fill the book efficiently while minimising gaps & churn.
+
+< 3 min to reschedule; < 5 % same‑day open time
+
+Provider
+
+See today’s pipeline and prep mentally between patients.
+
+Zero surprises; chair idle < 10 min
+
+Billing / Pre‑auth
+
+Verify benefits before patient arrives.
+
+100 % verifications complete by T‑1 day
+
+Behavioural insight: surfacing next unverified patient in the header creates a salient, finite task, combating procrastination.
+
+1. Global Layout Grid (12 cols)
+
+Zone
+
+Span
+
+Question Answered
+
+MUI Skeleton
+
+Sticky Header
+
+12
+
+When, where & which view?
+
+<AppBar position="sticky"> + <Toolbar>
+
+Left Rail – Context
+
+2
+
+What alerts or gaps need action?
+
+Vertical <Stack> of cards
+
+Main Calendar Canvas
+
+8
+
+Who/what/where throughout the day?
+
+Custom virtualised scheduler grid
+
+Right Rail – Patient Queue
+
+2
+
+Who’s next & what prep?
+
+Accordion list
+
+Grid delivered with CSS Grid: grid-template-columns: 2fr 8fr 2fr; gap: 20px;.
+
+2. Sticky Header Anatomy
+
+Element
+
+Details
+
+MUI Component
+
+Date Navigator
+
+Prev • Today • Next + DatePicker popover.
+
+<IconButton> · <DatePicker>
+
+View Switcher
+
+Day · Week · Op View · Provider View.
+
+<ToggleButtonGroup exclusive>
+
+Utilisation Meter
+
+“78 % filled” progress bar (loss aversion).
+
+<LinearProgress variant="determinate">
+
+Quick Add
+
+“Book Visit” primary button opens side drawer.
+
+<Button variant="contained" startIcon={<AddIcon/>}>
+
+Keyboard Shortcuts: ⌘/Ctrl + N (new appt); ⌘/Ctrl + ←/→ (day nav).
+
+3. Main Calendar Canvas
+
+A virtualised grid rendering only visible rows to keep 60fps.
+
+3.1 Time Axis
+
+5‑min granularity (configurable).
+
+Minor lines every 5 min, major every 30 min.
+
+3.2 Resource Columns (Op / Provider Modes)
+
+Mode
+
+Column Label
+
+Colour Logic
+
+Operatory
+
+“Op 1”, “Op 2” …
+
+Static palette aided by pastel differentiation.
+
+Provider
+
+“Dr Nguyen”, “RDH Maria”
+
+Colour seeded from provider id (consistent across sessions).
+
+3.3 Appointment Chips
+
+State
+
+Fill / Stroke
+
+Text
+
+Tooltip
+
+Scheduled
+
+Primary 60 % fill
+
+Pt LastName · CDT Code
+
+Confirm status, insurance verified
+
+Confirmed
+
+Primary 100 % fill
+
+——
+
+“Confirmed via SMS at 4:12 PM”
+
+Checked‑In
+
+Success fill
+
+——
+
+Arrival time
+
+In Chair
+
+Deep success
+
+Timer badge hh:mm
+
+Completed
+
+Grey outline
+
+——
+
+“Waiting for checkout”
+
+No‑Show
+
+Error outline (dashed)
+
+——
+
+“No response”
+
+Drag‑and‑drop across resources auto‑invokes re‑verify benefits workflow when insurer changes.
+
+4. Left Rail – Context Cards
+
+Gap Filler – Lists open slots ≥ 20 min within next 3 days (fresh‑start effect). CTA “Offer to Waitlist”.
+
+Waitlist – (<DataGrid> mini) rank‑ordered by propensity to accept (AI score).
+
+Low Stock Alert – surfaces inventory items that will hit reorder point within week (pre‑emptive cue). citeturn0file0
+
+5. Right Rail – Patient Queue & Prep
+
+Accordion (<Accordion square disableGutters>)
+
+Arrived – shows Pt avatar, reason, balance‑due badge.
+
+Pending Checkout – triggers billing tasks.
+
+Today’s Docs Needed – unsigned consents.
+
+Checkbox on patient card “Mark Prepared” reduces switch cost for assistants.
+
+6. Behavioural Nudges
+
+Challenge
+
+Nudge
+
+Implementation
+
+Late confirmations
+
+SMS copy framed as a loss: “We’ll release your 3 PM slot in 2 hrs if we don’t hear back.”
+
+Automated at T‑24h.
+
+Unfilled small gaps
+
+Gap Filler card shows countdown badge until gap expires.
+
+Real‑time timer.
+
+Overtime risk
+
+Utilisation meter turns amber at > 95 %; tooltip suggests opening hygiene overflow day.
+
+Colour shift.
+
+7. Terminology
+
+Common Term
+
+UI Label
+
+Tooltip
+
+Book
+
+“Schedule”
+
+“Create appointment”
+
+Op
+
+“Operatory”
+
+–
+
+Recall
+
+“Hygiene Visit”
+
+–
+
+Waitlist
+
+“Standby List”
+
+Explains auto‑fill rules
+
+Plain English; technical dental jargon on hover only where unavoidable.
+
+8. Visual Tokens
+
+Appointment colours derived from theme.palette.appointment[state] with accessible contrasts.
+
+Calendar background #FAFAFA; grid lines #E0E0E0 1 px.
+
+9. MUI Implementation Cheatsheet
+
+Element
+
+Component
+
+Key Props / Notes
+
+Date Picker
+
+<DatePicker> from MUI X
+
+disableFuture={false}
+
+Scheduler Grid
+
+<Box> + CSS Grid
+
+Virtualised via react-window
+
+Appointment Chip
+
+<Chip>
+
+sx={{ height: '80%', borderRadius: 1 }}
+
+Drag & Drop
+
+@dnd-kit/core
+
+Snap to 5‑min increments
+
+Utilisation Bar
+
+<LinearProgress>
+
+variant="determinate"
+
+Accordion Lists
+
+<Accordion>
+
+Lazy‑load content
+
+10. Compliance & Accessibility
+
+Colour‑blind safe palette; status encoded by icon + pattern.
+
+All drag actions available via context menu for keyboard users.
+
+PHI hidden in tooltips for privacy mode; reveal on hover with audit trail.
+
+End of Draft 1 – open for critique & iteration
+

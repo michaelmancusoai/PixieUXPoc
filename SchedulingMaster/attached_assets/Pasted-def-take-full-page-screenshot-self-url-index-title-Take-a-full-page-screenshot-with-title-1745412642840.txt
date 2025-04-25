@@ -1,0 +1,147 @@
+def take_full_page_screenshot(self, url_index, title):
+    """Take a full page screenshot with title in filename using multiple methods."""
+    try:
+        # Create a clean title for the filename
+        clean_title = self.clean_title_for_filename(title)
+        
+        # Try multiple methods to get the full height
+        # Method 1: documentElement.scrollHeight
+        height1 = self.driver.execute_script("return document.documentElement.scrollHeight")
+        
+        # Method 2: body.scrollHeight
+        height2 = self.driver.execute_script("return document.body.scrollHeight")
+        
+        # Method 3: document.body.parentNode.scrollHeight
+        height3 = self.driver.execute_script("return document.body.parentNode.scrollHeight")
+        
+        # Method 4: Maximum of all element bottom positions
+        height4 = self.driver.execute_script("""
+            return Math.max(
+                ...Array.from(document.querySelectorAll('*')).map(
+                    e => e.getBoundingClientRect().bottom
+                )
+            );
+        """)
+        
+        # Take the maximum height from all methods and add some padding
+        total_height = max(height1, height2, height3, height4) + 100
+        
+        if self.debug:
+            print(f"Page heights - Method 1: {height1}, Method 2: {height2}, Method 3: {height3}, Method 4: {height4}")
+            print(f"Using final height: {total_height}")
+        
+        # Set window size to fit the content
+        self.driver.set_window_size(1920, total_height)
+        
+        # Wait a bit for the resize to take effect
+        time.sleep(2)
+        
+        # Take the screenshot
+        screenshot_file = f"{url_index:03d}-{clean_title}.png"
+        screenshot_path = os.path.join(self.screenshots_dir, screenshot_file)
+        
+        # Try to take the screenshot
+        success = self.driver.save_screenshot(screenshot_path)
+        
+        if not success:
+            # If direct screenshot fails, try scrolling method for very long pages
+            if total_height > 15000:  # If page is extremely long
+                print(f"Page is very long, using scrolling method for screenshot")
+                self.take_scrolling_screenshot(url_index, title)
+            else:
+                print(f"Warning: Screenshot may be incomplete for {url_index}: {title}")
+        else:
+            print(f"Saved full-page screenshot: {screenshot_file}")
+        
+        # Reset window size
+        self.driver.set_window_size(1920, 1080)
+        
+        return screenshot_path
+    except Exception as e:
+        print(f"Error taking full page screenshot: {e}")
+        # Try fallback method
+        try:
+            self.take_scrolling_screenshot(url_index, title)
+        except Exception as e2:
+            print(f"Fallback screenshot also failed: {e2}")
+        return None
+
+def take_scrolling_screenshot(self, url_index, title):
+    """Take screenshots by scrolling down the page and combining them."""
+    clean_title = self.clean_title_for_filename(title)
+    
+    # Set a reasonable window height
+    window_height = 1080
+    self.driver.set_window_size(1920, window_height)
+    
+    # Get total height
+    total_height = self.driver.execute_script("return document.body.scrollHeight")
+    
+    # Create temporary screenshots directory
+    temp_dir = os.path.join(self.screenshots_dir, "temp")
+    os.makedirs(temp_dir, exist_ok=True)
+    
+    # Take screenshots while scrolling
+    screenshots = []
+    offset = 0
+    
+    while offset < total_height:
+        # Scroll to position
+        self.driver.execute_script(f"window.scrollTo(0, {offset});")
+        time.sleep(0.5)  # Wait for scroll to complete
+        
+        # Take screenshot
+        temp_file = os.path.join(temp_dir, f"temp_{offset}.png")
+        self.driver.save_screenshot(temp_file)
+        screenshots.append(temp_file)
+        
+        # Move down by window height (with some overlap)
+        offset += window_height - 150  # 150px overlap to ensure nothing is missed
+    
+    # Combine screenshots (requires PIL)
+    try:
+        from PIL import Image
+        
+        # Determine final dimensions
+        width = 1920
+        height = total_height
+        
+        # Create a new blank image
+        final_image = Image.new('RGB', (width, height))
+        
+        # Paste each screenshot at the correct position
+        current_height = 0
+        for i, screenshot in enumerate(screenshots):
+            img = Image.open(screenshot)
+            
+            # If this is not the first screenshot, position with overlap
+            if i > 0:
+                current_height += window_height - 150
+            
+            # Paste the image
+            final_image.paste(img, (0, current_height))
+            
+            # Close the image file
+            img.close()
+            
+            # Remove temp file
+            os.remove(screenshot)
+        
+        # Save the final combined image
+        final_file = f"{url_index:03d}-{clean_title}.png"
+        final_path = os.path.join(self.screenshots_dir, final_file)
+        final_image.save(final_path)
+        
+        print(f"Saved combined scrolling screenshot: {final_file}")
+        
+        # Clean up temp directory
+        os.rmdir(temp_dir)
+        
+        return final_path
+        
+    except ImportError:
+        print("PIL (Pillow) library not available for combining screenshots.")
+        # Just keep the individual screenshots
+        final_file = f"{url_index:03d}-{clean_title}_scrolled.png"
+        print(f"Saved multiple scroll screenshots in: {temp_dir}")
+        return None
