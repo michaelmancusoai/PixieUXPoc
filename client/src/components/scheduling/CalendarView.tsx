@@ -340,23 +340,28 @@ export default function CalendarView({
 
   return (
     <Card className="w-full h-full overflow-hidden border rounded-md">
-      <div className="h-full overflow-auto relative">
+      <div className="h-full overflow-auto relative" style={{ minHeight: "100%" }}>
         {/* Removing absolute positioned time indicator - using a different approach */}
         {/* Resource column headers */}
         <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
           {/* Time header */}
-          <div className="p-1 border-b border-r bg-[#F8F9FA] text-center text-xs font-medium text-gray-600">
-            Time
+          <div className="py-2 px-2 border-b border-r bg-[#F8F9FA] text-center">
+            <div className="font-medium text-sm bg-gray-100 py-2 rounded-md text-gray-700">
+              Time
+            </div>
           </div>
           
           {/* Resource headers */}
           {resourceColumns.map(resource => (
-            <div key={resource.id} className="py-1 px-2 border-b border-r text-center bg-[#F8F9FA]">
+            <div key={resource.id} className="py-2 px-2 border-b border-r text-center bg-[#F8F9FA]">
               <div 
-                className="font-semibold truncate text-xs" 
+                className="font-medium truncate text-sm" 
                 style={{ 
-                  color: resource.color || '#6B7280',
-                  borderBottom: `2px solid ${resource.color || '#E5E7EB'}`
+                  backgroundColor: resource.color ? `${resource.color}20` : 'white',
+                  borderRadius: '4px',
+                  padding: '2px 4px',
+                  color: '#333333',
+                  borderLeft: `3px solid ${resource.color || '#6B7280'}`
                 }}
               >
                 {resource.name}
@@ -366,7 +371,10 @@ export default function CalendarView({
         </div>
         
         {/* Time grid */}
-        <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
+        <div className="grid" style={{ 
+          gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)`,
+          minHeight: "1500px"  /* Ensure enough height to show all time slots */
+        }}>
           {/* Time column with enhanced styling - darker solid gray background */}
           <div className="border-r bg-gray-200 relative">
             {timeSlots.map((slot, index) => (
