@@ -92,6 +92,18 @@ const LoginPage = () => {
 
   const handlePasswordFocus = () => {
     setFocusedInput('password');
+    
+    // Kill any ongoing animations first
+    if (armLRef.current && armRRef.current) {
+      gsap.killTweensOf([armLRef.current, armRRef.current]);
+      
+      // Reset arm positions before attempting to cover eyes
+      gsap.set([armLRef.current, armRRef.current], {
+        clearProps: "all"
+      });
+    }
+    
+    // Only cover eyes if password is not visible
     coverEyes();
   };
 
@@ -108,6 +120,17 @@ const LoginPage = () => {
     setTimeout(() => {
       if (focusedInput !== 'toggle') {
         setFocusedInput(null);
+        
+        // Kill any ongoing animations first
+        if (armLRef.current && armRRef.current) {
+          gsap.killTweensOf([armLRef.current, armRRef.current]);
+          
+          // Reset arm positions before attempting to uncover eyes
+          gsap.set([armLRef.current, armRRef.current], {
+            clearProps: "all"
+          });
+        }
+        
         uncoverEyes();
       }
     }, 100);
@@ -115,6 +138,17 @@ const LoginPage = () => {
 
   const handleToggleFocus = () => {
     setFocusedInput('toggle');
+    
+    // Kill any ongoing animations first
+    if (armLRef.current && armRRef.current) {
+      gsap.killTweensOf([armLRef.current, armRRef.current]);
+      
+      // Reset arm positions before attempting to cover eyes
+      gsap.set([armLRef.current, armRRef.current], {
+        clearProps: "all"
+      });
+    }
+    
     coverEyes();
   };
 
@@ -122,6 +156,17 @@ const LoginPage = () => {
     setTimeout(() => {
       if (focusedInput !== 'password') {
         setFocusedInput(null);
+        
+        // Kill any ongoing animations first
+        if (armLRef.current && armRRef.current) {
+          gsap.killTweensOf([armLRef.current, armRRef.current]);
+          
+          // Reset arm positions before attempting to uncover eyes
+          gsap.set([armLRef.current, armRRef.current], {
+            clearProps: "all"
+          });
+        }
+        
         uncoverEyes();
       }
     }, 100);
@@ -264,64 +309,80 @@ const LoginPage = () => {
 
   const coverEyes = () => {
     if (armLRef.current && armRRef.current && bodyBGRef.current && bodyBGchangedRef.current) {
+      // First, kill any active animations on these elements
+      gsap.killTweensOf([armLRef.current, armRRef.current]);
+      
+      // Reset arm positions before starting new animation
+      gsap.set([armLRef.current, armRRef.current], {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        visibility: "visible"
+      });
+      
       // Create a timeline for coordinated animation
       const tl = gsap.timeline();
       
-      // Show arms immediately
-      tl.set([armLRef.current, armRRef.current], { visibility: "visible" })
+      // Animate left arm to cover eyes
+      tl.to(armLRef.current, {
+        x: -93,
+        y: 10,
+        rotation: 0,
+        duration: 0.45,
+        ease: "back.out(1.5)"
+      }, 0);
       
-        // Animate left arm to cover eyes
-        .to(armLRef.current, {
-          x: -93,
-          y: 10,
-          rotation: 0,
-          duration: 0.45,
-          ease: "back.out(1.5)"
-        }, 0)
-        
-        // Animate right arm to cover eyes with slight delay
-        .to(armRRef.current, {
-          x: -93,
-          y: 10,
-          rotation: 0,
-          duration: 0.45,
-          ease: "back.out(1.5)"
-        }, 0.1)
-        
-        // Swap body backgrounds
-        .set(bodyBGRef.current, { display: "none" }, 0)
-        .set(bodyBGchangedRef.current, { display: "block" }, 0);
+      // Animate right arm to cover eyes with slight delay
+      tl.to(armRRef.current, {
+        x: -93,
+        y: 10,
+        rotation: 0,
+        duration: 0.45,
+        ease: "back.out(1.5)"
+      }, 0.1);
+      
+      // Swap body backgrounds
+      tl.set(bodyBGRef.current, { display: "none" }, 0);
+      tl.set(bodyBGchangedRef.current, { display: "block" }, 0);
     }
   };
 
   const uncoverEyes = () => {
     if (armLRef.current && armRRef.current && bodyBGRef.current && bodyBGchangedRef.current) {
+      // First, kill any active animations on these elements
+      gsap.killTweensOf([armLRef.current, armRRef.current]);
+      
       // Create a timeline for coordinated animation
       const tl = gsap.timeline({
         onComplete: () => {
-          // Hide arms when animation completes
-          gsap.set([armLRef.current, armRRef.current], { visibility: "hidden" });
+          // Reset arm positions and hide them when animation completes
+          gsap.set([armLRef.current, armRRef.current], { 
+            visibility: "hidden",
+            x: 0,
+            y: 0,
+            rotation: 0
+          });
         }
       });
       
       // Swap body backgrounds immediately
-      tl.set(bodyBGRef.current, { display: "block" }, 0)
-        .set(bodyBGchangedRef.current, { display: "none" }, 0)
-        
-        // Move arms away with synchronized animation
-        .to(armLRef.current, {
-          y: 220,
-          rotation: 105,
-          duration: 0.7,
-          ease: "power2.inOut"
-        }, 0)
-        
-        .to(armRRef.current, {
-          y: 220,
-          rotation: -105,
-          duration: 0.7,
-          ease: "power2.inOut"
-        }, 0.1);
+      tl.set(bodyBGRef.current, { display: "block" }, 0);
+      tl.set(bodyBGchangedRef.current, { display: "none" }, 0);
+      
+      // Move arms away with synchronized animation
+      tl.to(armLRef.current, {
+        y: 220,
+        rotation: 105,
+        duration: 0.7,
+        ease: "power2.inOut"
+      }, 0);
+      
+      tl.to(armRRef.current, {
+        y: 220,
+        rotation: -105,
+        duration: 0.7,
+        ease: "power2.inOut"
+      }, 0.1);
     }
   };
 
