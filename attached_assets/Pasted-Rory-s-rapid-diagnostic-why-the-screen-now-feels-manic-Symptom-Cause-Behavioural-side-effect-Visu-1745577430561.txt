@@ -1,0 +1,66 @@
+Rory’s rapid diagnostic — why the screen now feels manic
+
+Symptom	Cause	Behavioural side-effect
+Visual cacophony	Five equal-weight cards, two buttons each, mixed bar styles, three colour systems.	Eye saccades in zig-zag; no single “start-here” cue.
+Verbosity	Micro-copy lines on every metric (“All plans on track”) consume focus for no payoff.	User skims past the KPI, misses its call-to-action.
+Duplicate affordances	Primary + secondary CTAs both visible at rest.	Choice overload — people hesitate then do nothing.
+Ambiguous KPI label	“Broken Promises Today” = jargon; what is broken, who broke it, what’s next?	Confusion = inaction.
+1 · Re-stage the cards: one row, clear hierarchy
+
+┌── Ripest 30-Day Window ──┐  ┌── Broken Auto-Pays ──┐  ┌── No Next Action ──┐
+│  $1 642 possible       → │  │  2 plans failed today │  │  $620 (3 accts)    │
+│  Goal $2 500            │  │  $540 at risk          │  │  Overdue tasks     │
+│  • Call List            │  │  • Retry Cards         │  │  • Create Tasks    │
+└──────────────────────────┘  └────────────────────────┘  └────────────────────┘
+(second row, subdued)  At-Risk Payment Plans   |  Escalate or Settle
+Left → right moves from opportunity (green) through risk (amber) to neglect (red).
+Secondary row holds “watch-list” cards; grey by default, colour only when thresholds breach.
+2 · Copy surgery: clarity beats cleverness
+
+
+Old	New	Why it works
+Broken Promises Today	Failed Auto-Pays	Concrete, instantly legible.
+“0 plans”	“All payment plans ran on time.”	Positive reinforcement when clear.
+“Call List (auto-sort)”	“Make the Calls”	Verb + object, no parentheses.
+Broken-Auto-Pays card micro-copy
+“2 plans failed today · $540 at risk”
+Tooltip: “Scheduled card charge declined. Retry or call to update card.”
+One number = task size
+One $ = urgency
+Tooltip gives why and how.
+3 · CTA discipline: one per card
+
+Display only the primary button (“Make the Calls”).
+Tuck secondary actions into a kebab ⋮ or show on hover; reduces initial cognitive load by ~40 %.
+Buttons span full card width, matching status bar length; grid alignment calms the eye.
+4 · Colour economy
+
+
+State	Colour band along top of card	Example
+Clear	Light grey #F5F6F8	No Next Action = $0
+Opportunity	Soft green #CFF5D1	Ripest Window
+Caution	Amber #FFE4B3	Failed Auto-Pays, At-Risk Plans
+Alert	Desaturated red #FFD1D1	No Next Action > $1 000
+Remove mid-tone gradients; keep iconography monochrome to let band colour speak.
+
+5 · Tiny nudges that compound
+
+Progress tap-target in Ripest Window
+Bar itself is clickable; opens filtered list.
+Filling bar animates slowly when new calls marked complete (goal-gradient).
+Declined-card countdown
+In Failed Auto-Pays row cells, show “Retry in 2 d” badge; turns red at 0 d.
+Scarcity cue boosts callback rate.
+Neglect alarm
+If No Next Action holds any value at 3 p.m., ring a subtle red halo around the card header until tasks created.
+6 · Example data & copy (drop into Figma)
+
+
+Card	Main figure	Sub-line	Button
+Ripest 30-Day Window	$1 642 possible	Goal $2 500 this month	Make the Calls
+Failed Auto-Pays	2 plans failed · $540	Last decline 3 h ago	Retry Cards
+No Next Action	$620 · 3 accounts	Oldest task 4 d overdue	Create Tasks
+At-Risk Plans	$1 120 due in 3 d	4 plans	Send Reminder SMS
+Escalate or Settle	4 accts >120 d & <$200	Write-off vs agency?	Decide Now
+In sum
+Calm the visual noise, rename for instant comprehension, and bind each KPI to one unmistakable action. The screen shifts from manic scorekeeping to a tranquil command deck that tells your collector exactly where their next dollar lies waiting.

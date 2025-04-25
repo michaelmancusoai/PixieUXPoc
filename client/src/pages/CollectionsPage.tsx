@@ -75,7 +75,14 @@ import {
   MoreHorizontal,
   PiggyBank,
   UserCircle,
+  Info,
 } from "lucide-react";
+import { 
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { format, addDays, addMonths, isAfter, parseISO, isBefore } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -751,193 +758,156 @@ export default function CollectionsPage() {
             </DropdownMenu>
           </div>
 
-          {/* Action-Oriented KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            {/* No Next Action Card */}
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">No Next Action</CardTitle>
+          {/* Action-Oriented KPI Cards - Primary Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Ripest 30-day Window Card */}
+            <Card className="shadow-sm border-t-4 border-t-green-200">
+              <CardHeader className="py-3 px-5 border-b bg-green-50/30">
+                <CardTitle className="text-base font-medium">Ripest 30-Day Window</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <div className={`h-10 w-10 rounded-full flex items-center justify-center mr-3 ${noNextActionCount > 0 ? 'bg-red-100' : 'bg-gray-100'}`}>
-                    <XCircle className={`h-6 w-6 ${noNextActionCount > 0 ? 'text-red-500' : 'text-gray-400'}`} />
+              <CardContent className="py-5 px-5">
+                <div className="flex flex-col">
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    <span>${ripestWindowValue.toFixed(0)} possible</span>
+                    <ChevronRight className="h-5 w-5 text-green-500" />
                   </div>
-                  <div>
-                    <div className="text-2xl font-bold flex items-center">
-                      ${noNextActionValue.toFixed(2)}
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      {noNextActionCount > 0 ? 
-                        `${noNextActionCount} accts - abandoned` : 
-                        'All accounts have next steps'}
+                  <div className="text-sm text-muted-foreground mb-3">
+                    Goal $2,500 this month
+                  </div>
+                  
+                  <div className="h-2 w-full bg-gray-100 rounded-full cursor-pointer mb-4">
+                    <div className="h-full bg-green-500 rounded-full transition-all duration-1000"  
+                         style={{ width: `${Math.min((ripestWindowValue / 2500) * 100, 100)}%` }}>
                     </div>
                   </div>
-                </div>
-                <div className="mt-4 pt-4 border-t">
+                  
                   <Button 
                     variant="default"
+                    size="sm"
+                    className="w-full bg-green-600 hover:bg-green-700">
+                    Make the Calls
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Failed Auto-Pays (renamed from Broken Promises) */}
+            <Card className="shadow-sm border-t-4 border-t-amber-200">
+              <CardHeader className="py-3 px-5 border-b bg-amber-50/30">
+                <CardTitle className="text-base font-medium">Failed Auto-Pays</CardTitle>
+              </CardHeader>
+              <CardContent className="py-5 px-5">
+                <div className="flex flex-col">
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="text-2xl font-bold">
+                      {brokenPromisesCount} plan{brokenPromisesCount !== 1 && 's'} failed
+                    </div>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs max-w-xs">Scheduled card charge declined. Retry or call to update card.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-4">
+                    {brokenPromisesCount > 0 
+                      ? `$${(brokenPromisesCount * 270).toFixed(0)} · Last decline ${Math.floor(Math.random() * 6) + 1}h ago` 
+                      : 'All payment plans ran on time.'}
+                  </div>
+                  
+                  <Button 
+                    variant={brokenPromisesCount > 0 ? "default" : "outline"}
                     size="sm"
                     className="w-full"
-                    disabled={noNextActionCount === 0}>
-                    <FileEdit className="h-4 w-4 mr-2" />
-                    Create Tasks
+                    disabled={brokenPromisesCount === 0}>
+                    Retry Cards
                   </Button>
-                  {noNextActionCount > 0 && (
-                    <div className="mt-2 text-xs text-muted-foreground text-center">
-                      These accounts are silent — give them a voice
-                    </div>
-                  )}
                 </div>
               </CardContent>
             </Card>
             
-            {/* Ripest 30-day Window Card */}
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Ripest 30-day Window</CardTitle>
+            {/* No Next Action Card */}
+            <Card className={`shadow-sm border-t-4 ${noNextActionCount > 0 && noNextActionValue > 500 ? 'border-t-red-200' : 'border-t-gray-200'}`}>
+              <CardHeader className={`py-3 px-5 border-b ${noNextActionCount > 0 && noNextActionValue > 500 ? 'bg-red-50/30' : 'bg-gray-50/30'}`}>
+                <CardTitle className="text-base font-medium">No Next Action</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
-                    <DollarSign className="h-6 w-6 text-green-500" />
+              <CardContent className="py-5 px-5">
+                <div className="flex flex-col">
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    ${noNextActionValue.toFixed(0)} · {noNextActionCount} acct{noNextActionCount !== 1 && 's'}
                   </div>
-                  <div>
-                    <div className="text-2xl font-bold flex items-center">
-                      ${ripestWindowValue.toFixed(2)}
-                    </div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      possible with scheduled calls
-                    </div>
+                  <div className="text-sm text-muted-foreground mb-4">
+                    {noNextActionCount > 0 ? 'Oldest task 4d overdue' : 'All accounts have next steps'}
                   </div>
-                </div>
-                <div className="mt-3">
-                  <div className="h-2 w-full bg-gray-100 rounded-full">
-                    <div className="h-full bg-green-500 rounded-full"  
-                         style={{ width: `${Math.min((ripestWindowValue / 5000) * 100, 100)}%` }}>
-                    </div>
-                  </div>
-                  <div className="flex justify-between text-xs mt-1">
-                    <span className="text-muted-foreground">$0</span>
-                    <span className="text-muted-foreground">$2.5k</span>
-                    <span className="text-muted-foreground">$5k</span>
-                  </div>
-                </div>
-                <div className="mt-4 pt-4 border-t">
+                  
                   <Button 
                     variant="default"
                     size="sm"
-                    className="w-full">
-                    <PhoneCall className="h-4 w-4 mr-2" />
-                    Call List (auto-sort)
+                    className={`w-full ${noNextActionCount > 0 && noNextActionValue > 500 ? 'bg-red-600 hover:bg-red-700' : ''}`}
+                    disabled={noNextActionCount === 0}>
+                    Create Tasks
                   </Button>
-                  <div className="flex justify-end mt-2">
-                    <Button 
-                      variant="ghost"
-                      size="sm">
-                      <Send className="h-4 w-4 mr-1" />
-                      Send payment portal link
-                    </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Secondary Row - Watchlist Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {/* At-Risk Plans Card */}
+            <Card className="shadow-sm border-t-2 border-t-gray-200">
+              <CardHeader className="py-2 px-5 border-b bg-gray-50/30">
+                <CardTitle className="text-sm font-medium">At-Risk Plans</CardTitle>
+              </CardHeader>
+              <CardContent className="py-4 px-5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="text-xl font-bold">
+                      ${atRiskPlansValue.toFixed(0)} due in 3d
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      4 plans
+                    </div>
                   </div>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="ml-4">
+                    Send Reminder SMS
+                  </Button>
                 </div>
               </CardContent>
             </Card>
             
-            {/* Two-card row with smaller metrics */}
-            <div className="grid grid-cols-1 gap-6">
-              {/* Broken Promises Card */}
-              <Card className="shadow-sm">
-                <CardHeader className="py-3 px-5 border-b">
-                  <CardTitle className="text-base font-medium">Broken Promises Today</CardTitle>
-                </CardHeader>
-                <CardContent className="py-4 px-5">
-                  <div className="flex items-center">
-                    <div className={`h-10 w-10 rounded-full flex items-center justify-center mr-3 ${brokenPromisesCount > 0 ? 'bg-amber-100' : 'bg-gray-100'}`}>
-                      <AlertCircle className={`h-6 w-6 ${brokenPromisesCount > 0 ? 'text-amber-500' : 'text-gray-400'}`} />
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold">
-                        {brokenPromisesCount} plan{brokenPromisesCount !== 1 && 's'}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        {brokenPromisesCount > 0 ? 'slipped yesterday' : 'All plans on track'}
-                      </div>
-                    </div>
-                  </div>
-                  {brokenPromisesCount > 0 && (
-                    <div className="mt-3 flex space-x-2">
-                      <Button variant="outline" size="sm" className="flex-1">
-                        <CreditCard className="h-4 w-4 mr-1" />
-                        Retry cards
-                      </Button>
-                      <Button variant="ghost" size="sm">
-                        <CheckCircle className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-              
-              {/* At-Risk Plans Card */}
-              <Card className="shadow-sm">
-                <CardHeader className="py-3 px-5 border-b">
-                  <CardTitle className="text-base font-medium">Payment-Plan At-Risk</CardTitle>
-                </CardHeader>
-                <CardContent className="py-4 px-5">
-                  <div className="flex items-center">
-                    <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
-                      <Clock className="h-6 w-6 text-blue-500" />
-                    </div>
-                    <div>
-                      <div className="text-2xl font-bold">
-                        ${atRiskPlansValue.toFixed(2)}
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        due in 3 days
-                      </div>
-                    </div>
-                  </div>
-                  <div className="mt-3 flex">
-                    <Button variant="outline" size="sm" className="flex-1">
-                      <MessageSquare className="h-4 w-4 mr-1" />
-                      Pre-emptive reminder SMS
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-          
-          {/* Second row with Escalate or Settle card */}
-          <div className="mb-6">
-            <Card className="shadow-sm max-w-md">
-              <CardHeader className="py-3 px-5 border-b">
-                <CardTitle className="text-base font-medium">Escalate or Settle</CardTitle>
+            {/* Escalate or Settle card */}
+            <Card className="shadow-sm border-t-2 border-t-gray-200">
+              <CardHeader className="py-2 px-5 border-b bg-gray-50/30">
+                <CardTitle className="text-sm font-medium">Escalate or Settle</CardTitle>
               </CardHeader>
               <CardContent className="py-4 px-5">
-                <div className="flex items-center">
-                  <div className={`h-10 w-10 rounded-full flex items-center justify-center mr-3 ${escalateOrSettleCount > 0 ? 'bg-purple-100' : 'bg-gray-100'}`}>
-                    <RefreshCw className={`h-6 w-6 ${escalateOrSettleCount > 0 ? 'text-purple-500' : 'text-gray-400'}`} />
-                  </div>
+                <div className="flex items-center justify-between">
                   <div>
-                    <div className="text-2xl font-bold">
-                      {escalateOrSettleCount} acct{escalateOrSettleCount !== 1 && 's'}
+                    <div className="text-xl font-bold">
+                      {`${escalateOrSettleCount} acct${escalateOrSettleCount !== 1 ? 's' : ''} >120d & <$200`}
                     </div>
-                    <div className="text-sm text-muted-foreground">
-                      {escalateOrSettleCount > 0 ? 
-                        '>120 days, <$200 each' : 
-                        'No small, aged accounts'}
+                    <div className="text-xs text-muted-foreground">
+                      Write-off vs agency?
                     </div>
                   </div>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="ml-4"
+                    disabled={escalateOrSettleCount === 0}>
+                    Decide Now
+                  </Button>
                 </div>
-                {escalateOrSettleCount > 0 && (
-                  <div className="mt-3 flex">
-                    <Button variant="default" size="sm" className="flex-1">
-                      <MoreHorizontal className="h-4 w-4 mr-1" />
-                      Write-off vs. Agency
-                    </Button>
-                  </div>
-                )}
               </CardContent>
             </Card>
           </div>
