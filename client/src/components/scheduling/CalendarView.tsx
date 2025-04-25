@@ -333,7 +333,12 @@ export default function CalendarView({
 
   return (
     <Card className="w-full h-full overflow-hidden border rounded-md">
-      <div className="h-full overflow-auto">
+      <div className="h-full overflow-auto relative">
+        {/* Current time indicator line that spans across entire grid */}
+        <div className="absolute left-[60px] right-0 z-20 pointer-events-none"
+             style={{ top: `${currentTimeIndicatorTop + 35}px` }}>
+          <div className="h-[2px] bg-red-500 w-full"></div>
+        </div>
         {/* Resource column headers */}
         <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
           {/* Time header */}
@@ -359,8 +364,8 @@ export default function CalendarView({
         
         {/* Time grid */}
         <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
-          {/* Time column with enhanced styling - solid gray background */}
-          <div className="border-r bg-gray-100 relative">
+          {/* Time column with enhanced styling - darker solid gray background */}
+          <div className="border-r bg-gray-200 relative">
             {timeSlots.map((slot, index) => (
               <div
                 key={index}
@@ -370,7 +375,7 @@ export default function CalendarView({
                 `}
                 style={{ 
                   height: '8px',
-                  backgroundColor: '#F1F3F5', // Light gray background matching the example
+                  backgroundColor: '#E2E5E9', // Darker gray background
                   borderBottom: index % 12 === 0 ? '1px solid #D1D5DB' : '1px solid #E5E7EB'
                 }}
               >
@@ -381,7 +386,7 @@ export default function CalendarView({
             {/* Current time label shown in time column */}
             <div 
               className="absolute right-0 flex justify-end items-center z-10 pointer-events-none"
-              style={{ top: `${currentTimeIndicatorTop}px` }}
+              style={{ top: `${currentTimeIndicatorTop + 35}px` }}
             >
               <div className="bg-red-500 text-white text-[10px] py-0.5 px-1 rounded-l whitespace-nowrap">
                 1:15 PM
@@ -460,11 +465,7 @@ export default function CalendarView({
             </div>
           ))}
           
-          {/* Current time indicator line that spans across all columns */}
-          <div className="col-start-2 col-span-full absolute left-0 right-0 z-20 pointer-events-none"
-               style={{ top: `${currentTimeIndicatorTop}px` }}>
-            <div className="h-[2px] bg-red-500 w-full"></div>
-          </div>
+
         </div>
       </div>
     </Card>
