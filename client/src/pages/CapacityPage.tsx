@@ -358,184 +358,157 @@ const CapacityPage: React.FC = () => {
         {/* Hero KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Chair Utilization */}
-          <Card className="relative overflow-hidden">
-            <div className={`absolute inset-x-0 top-0 h-1 ${stats.utilization >= 80 ? 'bg-green-500' : stats.utilization >= 70 ? 'bg-amber-500' : 'bg-red-500'}`}></div>
-            <CardHeader className="pb-2">
+          <Card className="shadow-sm border-t-4 border-t-blue-400 flex flex-col">
+            <CardHeader className="py-3 px-5 border-b bg-blue-50/30">
               <div className="flex justify-between">
-                <CardTitle className="text-sm font-medium flex items-center">
+                <CardTitle className="text-base font-medium flex items-center">
                   <LayoutGrid className="h-4 w-4 mr-2 text-slate-600" />
                   Chair Utilisation
                 </CardTitle>
                 {stats.utilization >= 80 && (
-                  <span className="text-xs text-green-600 font-medium flex items-center">
+                  <Badge variant="outline" className="bg-green-50 text-green-700 hover:bg-green-50">
                     On Target
-                  </span>
+                  </Badge>
                 )}
               </div>
             </CardHeader>
-            <CardContent className="pb-3">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="cursor-help" onMouseEnter={() => setHoveredKpi('utilization')} onMouseLeave={() => setHoveredKpi(null)}>
-                      <div className={`text-2xl font-bold ${getUtilizationColorClass(stats.utilization)}`}>
-                        {stats.utilization}% booked
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Booked vs possible chair-time next 2 weeks
-                      </div>
-                      
-                      <div className="mt-2 h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full ${stats.utilization >= 80 ? 'bg-green-500' : stats.utilization >= 70 ? 'bg-amber-500' : 'bg-red-500'} rounded-full`} 
-                          style={{ width: `${stats.utilization}%` }}
-                        />
-                        <div className="h-full w-full absolute top-0 left-0">
-                          <div className="h-full bg-gray-200 opacity-20 rounded-full" style={{ width: '100%' }} />
-                        </div>
-                      </div>
-                      <div className="flex justify-between text-xs mt-1">
-                        <span>Goal: 80%</span>
-                        <span>{stats.openMinutes / 60} hours available</span>
-                      </div>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-xs max-w-xs">
-                      Total chair minutes booked ÷ total available for the next 14 days
-                    </p>
-                    <Separator className="my-1" />
-                    <p className="text-xs text-muted-foreground">
-                      {stats.bookedMinutes / 60} hrs booked / {stats.totalMinutes / 60} hrs available
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+            <CardContent className="py-5 px-5 flex-1 flex flex-col">
+              <div>
+                <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                  <span className={getUtilizationColorClass(stats.utilization)}>
+                    {stats.utilization}% booked
+                  </span>
+                  <ChevronRight className="h-5 w-5 text-blue-500" />
+                </div>
+                <div className="text-sm text-muted-foreground mb-3">
+                  Booked vs possible chair-time next 2 weeks
+                </div>
+                
+                <div className="h-2 w-full bg-gray-100 rounded-full cursor-pointer mb-4">
+                  <div 
+                    className={`h-full ${stats.utilization >= 80 ? 'bg-green-500' : stats.utilization >= 70 ? 'bg-amber-500' : 'bg-red-500'} rounded-full transition-all duration-1000`} 
+                    style={{ width: `${stats.utilization}%` }}
+                  />
+                </div>
+                <div className="flex justify-between text-xs mt-1">
+                  <span>Goal: 80%</span>
+                  <span>{stats.openMinutes / 60} hours available</span>
+                </div>
+              </div>
+              
+              <div className="mt-auto">
+                <Button 
+                  variant="default"
+                  size="sm"
+                  className="w-full"
+                >
+                  View Free Slots
+                </Button>
+              </div>
             </CardContent>
-            <CardFooter className="pt-0">
-              <Button variant="default" className="w-full text-xs h-8">
-                View Free Slots
-              </Button>
-            </CardFooter>
           </Card>
           
           {/* Prime-Time Gaps */}
-          <Card className="relative overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-1 bg-amber-500"></div>
-            <CardHeader className="pb-2">
+          <Card className="shadow-sm border-t-4 border-t-amber-400 flex flex-col">
+            <CardHeader className="py-3 px-5 border-b bg-amber-50/30">
               <div className="flex justify-between">
-                <CardTitle className="text-sm font-medium flex items-center">
+                <CardTitle className="text-base font-medium flex items-center">
                   <Clock className="h-4 w-4 mr-2 text-slate-600" />
                   Prime-Time Gaps
                 </CardTitle>
-                <Badge variant="outline" className="text-xs bg-amber-50 text-amber-700 border-amber-200">
+                <Badge variant="outline" className="bg-amber-50 text-amber-700 hover:bg-amber-50">
                   4 slots left
                 </Badge>
               </div>
             </CardHeader>
-            <CardContent className="pb-3">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="cursor-help" onMouseEnter={() => setHoveredKpi('primetime')} onMouseLeave={() => setHoveredKpi(null)}>
-                      <div className="text-2xl font-bold text-amber-600">
-                        {stats.primeTimeMinutes} min open
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        Unused peak hours patients actually want
-                      </div>
-                      
-                      <div className="mt-2 space-y-1.5">
-                        <div className="flex justify-between text-xs">
-                          <span>Morning (8a-12p)</span>
-                          <span className="font-medium">{Math.round(stats.primeTimeMinutes * 0.6)} mins</span>
-                        </div>
-                        <div className="flex justify-between text-xs">
-                          <span>Afternoon (3p-5p)</span>
-                          <span className="font-medium">{Math.round(stats.primeTimeMinutes * 0.4)} mins</span>
-                        </div>
-                      </div>
-                    </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-xs max-w-xs">
-                      Unbooked minutes during prime hours (8am-12pm + 3pm-5pm) over the next 7 days
-                    </p>
-                    <Separator className="my-1" />
-                    <p className="text-xs text-muted-foreground">
-                      Patient-preferred times are 2× more likely to convert
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+            <CardContent className="py-5 px-5 flex-1 flex flex-col">
+              <div>
+                <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                  <span className="text-amber-600">
+                    {stats.primeTimeMinutes} min open
+                  </span>
+                  <ChevronRight className="h-5 w-5 text-amber-500" />
+                </div>
+                <div className="text-sm text-muted-foreground mb-3">
+                  Unused peak hours patients actually want
+                </div>
+                
+                <div className="space-y-1.5 mb-3">
+                  <div className="flex justify-between text-xs">
+                    <span>Morning (8a-12p)</span>
+                    <span className="font-medium">{Math.round(stats.primeTimeMinutes * 0.6)} mins</span>
+                  </div>
+                  <div className="flex justify-between text-xs">
+                    <span>Afternoon (3p-5p)</span>
+                    <span className="font-medium">{Math.round(stats.primeTimeMinutes * 0.4)} mins</span>
+                  </div>
+                </div>
+                <div className="text-xs text-amber-700 mb-1">
+                  Patient-preferred times are 2× more likely to convert
+                </div>
+              </div>
+              
+              <div className="mt-auto">
+                <Button 
+                  variant="default"
+                  size="sm"
+                  className="w-full"
+                >
+                  Fill With Waitlist
+                </Button>
+              </div>
             </CardContent>
-            <CardFooter className="pt-0">
-              <Button variant="default" className="w-full text-xs h-8">
-                Fill With Waitlist
-              </Button>
-            </CardFooter>
           </Card>
           
           {/* Provider Imbalance */}
-          <Card className="relative overflow-hidden">
-            <div className="absolute inset-x-0 top-0 h-1 bg-amber-500"></div>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium flex items-center">
+          <Card className="shadow-sm border-t-4 border-t-orange-400 flex flex-col">
+            <CardHeader className="py-3 px-5 border-b bg-orange-50/30">
+              <CardTitle className="text-base font-medium flex items-center">
                 <Users className="h-4 w-4 mr-2 text-slate-600" />
                 Provider Imbalance
               </CardTitle>
             </CardHeader>
-            <CardContent className="pb-3">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <div className="cursor-help" onMouseEnter={() => setHoveredKpi('imbalance')} onMouseLeave={() => setHoveredKpi(null)}>
-                      <div className="flex items-end space-x-1">
-                        <div className="text-2xl font-bold text-amber-600">{stats.providerImbalance}%</div>
-                        <div className="text-sm text-muted-foreground mb-1">variance</div>
+            <CardContent className="py-5 px-5 flex-1 flex flex-col">
+              <div>
+                <div className="flex items-end space-x-1 mb-1">
+                  <div className="text-2xl font-bold text-orange-600">{stats.providerImbalance}%</div>
+                  <div className="text-sm text-muted-foreground mb-1">variance</div>
+                </div>
+                <div className="text-sm text-muted-foreground mb-3">
+                  <span className="text-green-600 font-medium">{stats.lowProvider.name}</span> light · 
+                  <span className="text-red-600 font-medium ml-1">{stats.highProvider.name}</span> heavy
+                </div>
+                
+                <div className="space-y-2 mb-3">
+                  {providers.map(provider => (
+                    <div key={provider.id} className="flex items-center space-x-2">
+                      <div className="w-20 text-xs truncate">{provider.name}</div>
+                      <div className="w-full h-2 bg-gray-100 rounded-full">
+                        <div 
+                          className={`h-full rounded-full ${
+                            provider.utilization >= 0.85 ? "bg-red-500" : 
+                            provider.utilization >= 0.75 ? "bg-amber-500" : 
+                            "bg-green-500"
+                          }`}
+                          style={{ width: `${provider.utilization * 100}%` }}
+                        />
                       </div>
-                      <div className="text-xs text-muted-foreground mb-2">
-                        <span className="text-green-600 font-medium">{stats.lowProvider.name}</span> light · 
-                        <span className="text-red-600 font-medium ml-1">{stats.highProvider.name}</span> heavy
-                      </div>
-                      
-                      <div className="mt-1 space-y-1.5">
-                        {providers.map(provider => (
-                          <div key={provider.id} className="flex items-center space-x-2">
-                            <div className="w-20 text-xs truncate">{provider.name}</div>
-                            <div className="w-full h-2 bg-gray-100 rounded-full">
-                              <div 
-                                className={`h-full rounded-full ${
-                                  provider.utilization >= 0.85 ? "bg-red-500" : 
-                                  provider.utilization >= 0.75 ? "bg-amber-500" : 
-                                  "bg-green-500"
-                                }`}
-                                style={{ width: `${provider.utilization * 100}%` }}
-                              />
-                            </div>
-                            <div className="text-xs w-8 text-right">{Math.round(provider.utilization * 100)}%</div>
-                          </div>
-                        ))}
-                      </div>
+                      <div className="text-xs w-8 text-right">{Math.round(provider.utilization * 100)}%</div>
                     </div>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p className="text-xs max-w-xs">
-                      Standard deviation across provider schedules indicates workload imbalance
-                    </p>
-                    <Separator className="my-1" />
-                    <p className="text-xs text-muted-foreground">
-                      Move low-value procedures from {stats.highProvider.name} to {stats.lowProvider.name}'s lighter afternoons
-                    </p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="mt-auto">
+                <Button 
+                  variant="default"
+                  size="sm"
+                  className="w-full"
+                >
+                  Rebalance
+                </Button>
+              </div>
             </CardContent>
-            <CardFooter className="pt-0">
-              <Button variant="default" className="w-full text-xs h-8">
-                Rebalance
-              </Button>
-            </CardFooter>
           </Card>
         </div>
         

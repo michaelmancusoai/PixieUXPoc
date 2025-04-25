@@ -1,0 +1,77 @@
+Recalls — List View (rarely used, surgically effective)
+Turn a once-a-week slog into a 15-minute revenue harvest.
+
+0 · Purpose in one line
+
+Find, sort, and book every patient who is due or overdue for hygiene/X-ray recalls—with KPIs that reveal the money and workflow leaks, plus bulk tools to plug them.
+1 · Page anatomy
+
+
+Zone	Span	Question it answers	Key components
+Hero KPIs	full-width row	“Where should we start?”	3 primary cards
+Filter rail	sticky left	“Show only the set I can tackle now.”	Accordion filters
+Recall table	9⁄12 cols	“Who, what, when, how many pings tried?”	Virtualised grid
+Bulk Action bar	bottom dock	“Do something to the checked rows.”	Smart buttons
+2 · Hero cards (single CTA each)
+
+
+Card	Metric & copy	CTA	Colour band
+Due This Week	26 patients due in next 7 days · $7 280 prod	Fill This Week → auto-select these rows	Mint band if < 30, amber if > 30
+Overdue > 3 mo	12 patients · last seen 6-12 mo ago	Nudge Oldest	Amber
+No-Response After 3 Pings	7 patients • $1 680	Call Queue (opens dial modal)	Coral
+Zero state copy: “All current recalls booked—bravo!”
+3 · Filter rail (collapsible accordion)
+
+Window
+This Week • 2 Weeks • 30 Days • Custom
+Procedure Type
+Hygiene • BW X-ray • FMX • Perio chart
+Provider
+Hygienist selector pills
+Contact Status
+No contact • 1 ping • 2+ pings • Declined
+Insurance
+Has benefits left • Exhausted
+Sticky; collapse to 40 px strip when unused.
+
+4 · Recall table columns
+
+
+Col	Details	Behavioural note
+Patient	avatar initials + name	Click → Side drawer
+Due Date	colour pill (red if past)	Sort default ASC
+Procedure	“6-mo cleaning”, “BW X-ray”	—
+Last Visit	date + tooth icon if procedure	Quick memory cue
+Contact Attempts	“SMS, Email” icons + count	Hover tooltip timeline
+Benefits Remaining	$ if integrated, else “n/a”	Loss-aversion hook
+Status	Unscheduled • Declined • Scheduled	Colour-coded
+Action	Call • SMS • Email icons	Greyed if already used today
+Rows checkbox enabled for bulk.
+
+5 · Bulk Action bar
+
+Appears when ≥ 1 row ticked.
+
+
+Button	Smart enable rule	Sub-modal
+Send SMS	≤ 100 rows	Template picker
+Send Email	any	—
+Add to Waitlist	rows with “ASAP” tag	—
+Book Appointment	rows with open chair slots (auto lookup)	Gap matcher
+Dismiss Recall	any	Reason dropdown
+Progress toast shows “12 SMS sent · 8 delivered.”
+
+6 · Behavioural nudges
+
+Confetti tick when Overdue widget drops to 0.
+Loss text in tooltip: “Mrs Lopez’s unused benefits expire in 42 days—$184 at risk.”
+Goal-gradient bar under “Due This Week” fills as appointments booked; bar itself clickable to filter grid.
+7 · Copy library
+
+
+Scenario	Line
+Call prompt	“Morning, this is Maria from Pixie Dental—we’re saving your smile a spot this week.”
+SMS template	“Hi {first}, it’s Pixie Dental. Your 6-month cleaning is due. Tap to book: {link}”
+Declined tag tooltip	“Patient opted to wait—auto-remind in 90 days.”
+Empty grid	“Every smile is on schedule. Check back tomorrow.”
+Tone = upbeat concierge, never guilt-trippy.
