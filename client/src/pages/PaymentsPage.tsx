@@ -693,14 +693,18 @@ export default function PaymentsPage() {
           
           {/* Claims Risk Banner */}
           <div className="mb-6">
-            <Card className="shadow-sm bg-amber-50">
+            <Card className="shadow-sm border-l-4 border-l-amber-500 bg-amber-50/50">
               <CardContent className="py-4 px-5">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center">
                     <AlertCircle className="text-amber-500 h-5 w-5 mr-2" />
                     <span className="font-medium">Claims Risk: ${claimsRiskTotal} at risk ({claimsRiskCount} claims)</span>
                   </div>
-                  <Button variant="outline" size="sm" className="h-8 bg-white">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="h-8"
+                  >
                     Tap to see root causes
                   </Button>
                 </div>
@@ -708,45 +712,61 @@ export default function PaymentsPage() {
             </Card>
           </div>
           
-          {/* Secondary Payment Insights */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
+          {/* Secondary Payment Insights - 50/50 Layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            {/* Pending Verifications Card */}
+            <Card className="shadow-sm border-t-4 border-t-amber-200 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-amber-50/50">
                 <CardTitle className="text-base font-medium">Pending Verifications</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <Clock className="h-8 w-8 mr-3 text-amber-500" />
-                  <div>
-                    <div className="text-2xl font-bold">${pendingVerificationsTotal}</div>
-                    <div className="text-sm text-muted-foreground">
-                      e-checks & ACH still in limbo
-                    </div>
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    <span>${pendingVerificationsTotal} in limbo</span>
+                    <ChevronRight className="h-5 w-5 text-amber-500" />
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-4">
+                    e-checks & ACH pending verification
                   </div>
                 </div>
-                <Button variant="outline" size="sm" className="w-full mt-4 text-xs">
-                  View unsettled ACHs
-                </Button>
+                
+                <div className="mt-auto text-right">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full"
+                  >
+                    View Unsettled ACHs
+                  </Button>
+                </div>
               </CardContent>
             </Card>
             
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
+            {/* Preventable Refunds Card */}
+            <Card className="shadow-sm border-t-4 border-t-destructive/30 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-destructive/5">
                 <CardTitle className="text-base font-medium">Preventable Refunds</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <RefreshCw className="h-8 w-8 mr-3 text-red-500" />
-                  <div>
-                    <div className="text-2xl font-bold">${preventableRefundsTotal}</div>
-                    <div className="text-sm text-muted-foreground">
-                      Refunds caused by card errors / wrong amounts
-                    </div>
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    <span>${preventableRefundsTotal} this month</span>
+                    <ChevronRight className="h-5 w-5 text-destructive" />
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-4">
+                    Double-charges and wrong amount entries
                   </div>
                 </div>
-                <Button variant="outline" size="sm" className="w-full mt-4 text-xs">
-                  See root-cause list
-                </Button>
+                
+                <div className="mt-auto text-right">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full"
+                  >
+                    See Root-Cause List
+                  </Button>
+                </div>
               </CardContent>
             </Card>
           </div>
