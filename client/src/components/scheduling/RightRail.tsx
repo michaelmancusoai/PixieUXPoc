@@ -1,5 +1,6 @@
 import { format } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { MessageSquare, CheckCircle, UserCheck, ClipboardList, Clock, AlertTriangle, CreditCard, LogOut } from 'lucide-react';
@@ -68,109 +69,140 @@ export default function RightRail({ selectedDate }: RightRailProps) {
   return (
     <div className="h-full overflow-y-auto space-y-4">
       
-      {/* Upcoming Check-ins */}
-      <Card>
-        <CardHeader className="py-3">
-          <CardTitle className="text-sm font-semibold flex items-center">
-            <UserCheck className="mr-2 h-4 w-4 text-green-500" />
-            Upcoming Check-ins
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-2">
-          {upcomingCheckIns.map((patient) => (
-            <div key={patient.id} className="flex items-center justify-between p-2 border rounded-md text-xs">
-              <div className="flex items-center space-x-2">
-                <Avatar className="h-6 w-6">
-                  <AvatarFallback className="text-[10px]">
-                    {patient.name.split(' ').map(n => n[0]).join('')}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-medium flex items-center">
-                    {patient.name}
-                    {patient.isNew && (
-                      <Badge variant="outline" className="ml-1 text-[8px] py-0 px-1 h-3 bg-blue-50">New</Badge>
-                    )}
+      {/* Main Card with Accordion layout similar to LeftRail */}
+      <Card className="shadow-sm">
+        <CardContent className="p-0">
+          <Accordion type="multiple" className="w-full" defaultValue={["upcoming-checkins", "ready-checkout", "alerts"]}>
+            
+            {/* Upcoming Check-ins Section */}
+            <AccordionItem value="upcoming-checkins" className="border-b">
+              <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
+                <div className="flex items-center w-full">
+                  <div className="flex items-center">
+                    <UserCheck className="mr-2 h-4 w-4 text-green-500" />
+                    <h3 className="font-medium">Upcoming Check-ins</h3>
                   </div>
-                  <div className="text-muted-foreground text-[10px]">{patient.time}</div>
+                  <div className="ml-auto">
+                    <Badge variant="outline" className="text-xs font-medium bg-white text-gray-700 border-gray-200 rounded px-2 py-0.5">
+                      {upcomingCheckIns.length}
+                    </Badge>
+                  </div>
                 </div>
-              </div>
-              <div>
-                {patient.confirmed ? (
-                  <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700 text-[9px]">
-                    <CheckCircle className="mr-1 h-2 w-2 text-green-600" />
-                    Confirmed
-                  </Badge>
-                ) : (
-                  <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700 text-[9px]">
-                    <Clock className="mr-1 h-2 w-2 text-yellow-600" />
-                    Unconfirmed
-                  </Badge>
-                )}
-              </div>
-            </div>
-          ))}
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-3 space-y-2">
+                {upcomingCheckIns.map((patient) => (
+                  <div key={patient.id} className="flex items-center justify-between p-2 border rounded-md text-xs">
+                    <div className="flex items-center space-x-2">
+                      <Avatar className="h-6 w-6">
+                        <AvatarFallback className="text-[10px]">
+                          {patient.name.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium flex items-center">
+                          {patient.name}
+                          {patient.isNew && (
+                            <Badge variant="outline" className="ml-1 text-[8px] py-0 px-1 h-3 bg-blue-50">New</Badge>
+                          )}
+                        </div>
+                        <div className="text-muted-foreground text-[10px]">{patient.time}</div>
+                      </div>
+                    </div>
+                    <div>
+                      {patient.confirmed ? (
+                        <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700 text-[9px]">
+                          <CheckCircle className="mr-1 h-2 w-2 text-green-600" />
+                          Confirmed
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700 text-[9px]">
+                          <Clock className="mr-1 h-2 w-2 text-yellow-600" />
+                          Unconfirmed
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+            
+            {/* Ready for Checkout Section */}
+            <AccordionItem value="ready-checkout" className="border-b">
+              <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
+                <div className="flex items-center w-full">
+                  <div className="flex items-center">
+                    <LogOut className="mr-2 h-4 w-4 text-purple-500" />
+                    <h3 className="font-medium">Ready for Checkout</h3>
+                  </div>
+                  <div className="ml-auto">
+                    <Badge variant="outline" className="text-xs font-medium bg-white text-gray-700 border-gray-200 rounded px-2 py-0.5">
+                      {readyForCheckout.length}
+                    </Badge>
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-3 space-y-2">
+                {readyForCheckout.map((patient) => (
+                  <div key={patient.id} className="flex items-center justify-between p-2 border rounded-md text-xs">
+                    <div className="flex items-center space-x-2">
+                      <Avatar className="h-6 w-6">
+                        <AvatarFallback className="text-[10px]">
+                          {patient.name.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="font-medium">{patient.name}</div>
+                        <div className="text-muted-foreground text-[10px]">{patient.procedure}</div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <div className="font-medium">${patient.paymentAmount.toFixed(0)}</div>
+                      {patient.needsFollowUp ? (
+                        <Badge variant="outline" className="mt-0.5 bg-blue-50 border-blue-200 text-blue-700 text-[9px]">
+                          Follow-up
+                        </Badge>
+                      ) : (
+                        <span className="text-[10px] text-muted-foreground">{patient.time}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+            
+            {/* Alerts Section */}
+            <AccordionItem value="alerts" className="border-b">
+              <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
+                <div className="flex items-center w-full">
+                  <div className="flex items-center">
+                    <AlertTriangle className="mr-2 h-4 w-4 text-yellow-500" />
+                    <h3 className="font-medium">Appointment Alerts</h3>
+                  </div>
+                  <div className="ml-auto">
+                    <Badge variant="outline" className="text-xs font-medium bg-white text-gray-700 border-gray-200 rounded px-2 py-0.5">
+                      {appointmentAlerts.length}
+                    </Badge>
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-3 space-y-2">
+                {appointmentAlerts.map((alert) => (
+                  <div key={alert.id} className="flex items-center space-x-2 p-2 border rounded-md text-xs">
+                    {alert.type === 'warning' ? (
+                      <AlertTriangle className="h-3 w-3 text-yellow-500 flex-shrink-0" />
+                    ) : (
+                      <MessageSquare className="h-3 w-3 text-blue-500 flex-shrink-0" />
+                    )}
+                    <span className="line-clamp-1">{alert.message}</span>
+                  </div>
+                ))}
+              </AccordionContent>
+            </AccordionItem>
+            
+          </Accordion>
         </CardContent>
       </Card>
       
-      {/* Ready for Checkout */}
-      <Card>
-        <CardHeader className="py-3">
-          <CardTitle className="text-sm font-semibold flex items-center">
-            <LogOut className="mr-2 h-4 w-4 text-purple-500" />
-            Ready for Checkout
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-2">
-          {readyForCheckout.map((patient) => (
-            <div key={patient.id} className="flex items-center justify-between p-2 border rounded-md text-xs">
-              <div className="flex items-center space-x-2">
-                <Avatar className="h-6 w-6">
-                  <AvatarFallback className="text-[10px]">
-                    {patient.name.split(' ').map(n => n[0]).join('')}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-medium">{patient.name}</div>
-                  <div className="text-muted-foreground text-[10px]">{patient.procedure}</div>
-                </div>
-              </div>
-              <div className="flex flex-col items-end">
-                <div className="font-medium">${patient.paymentAmount.toFixed(0)}</div>
-                {patient.needsFollowUp ? (
-                  <Badge variant="outline" className="mt-0.5 bg-blue-50 border-blue-200 text-blue-700 text-[9px]">
-                    Follow-up
-                  </Badge>
-                ) : (
-                  <span className="text-[10px] text-muted-foreground">{patient.time}</span>
-                )}
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-      
-      {/* Alerts */}
-      <Card>
-        <CardHeader className="py-3">
-          <CardTitle className="text-sm font-semibold flex items-center">
-            <AlertTriangle className="mr-2 h-4 w-4 text-yellow-500" />
-            Appointment Alerts
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-2">
-          {appointmentAlerts.map((alert) => (
-            <div key={alert.id} className="flex items-center space-x-2 p-2 border rounded-md text-xs">
-              {alert.type === 'warning' ? (
-                <AlertTriangle className="h-3 w-3 text-yellow-500 flex-shrink-0" />
-              ) : (
-                <MessageSquare className="h-3 w-3 text-blue-500 flex-shrink-0" />
-              )}
-              <span className="line-clamp-1">{alert.message}</span>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
     </div>
   );
 }
