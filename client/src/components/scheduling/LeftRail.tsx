@@ -91,7 +91,10 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                       <div key={patient.id} className="group flex items-center bg-white hover:bg-gray-50 py-1.5 px-2 text-xs cursor-pointer">
                         <span className="flex-shrink-0 w-1.5 h-1.5 bg-red-500 rounded-full mr-1.5"></span>
                         <div className="min-w-0 flex-grow grid grid-cols-1">
-                          <p className="font-medium truncate">{patient.name}</p>
+                          <div className="flex items-center justify-between">
+                            <p className="font-medium truncate">{patient.name}</p>
+                            <p className="text-[10px] text-muted-foreground ml-2">{patient.requestedDate || "Today"}</p>
+                          </div>
                           <p className="text-muted-foreground truncate">{patient.reason}</p>
                         </div>
                         <Phone className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 ml-1.5" />
