@@ -188,7 +188,12 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                                   <p className="font-medium truncate">{patient.name}</p>
                                   <p className="text-[10px] text-muted-foreground ml-2">{patient.waitingSince}</p>
                                 </div>
+                                {/* First content line */}
                                 <p className="text-muted-foreground truncate">{patient.reason || patient.procedure}</p>
+                                {/* Optional second content line */}
+                                {patient.contact && (
+                                  <p className="text-[10px] text-muted-foreground truncate">Call: {patient.contact}</p>
+                                )}
                               </div>
                               <Phone className="h-3 w-3 text-blue-500 opacity-0 group-hover:opacity-100 ml-1.5" />
                             </div>
@@ -210,7 +215,12 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                                   <p className="font-medium truncate">{patient.name}</p>
                                   <p className="text-[10px] text-muted-foreground ml-2">{patient.waitingSince}</p>
                                 </div>
+                                {/* First content line */}
                                 <p className="text-muted-foreground truncate">{patient.procedure}</p>
+                                {/* Optional second content line */}
+                                {patient.contact && (
+                                  <p className="text-[10px] text-muted-foreground truncate">Call: {patient.contact}</p>
+                                )}
                               </div>
                               <Phone className="h-3 w-3 text-blue-500 opacity-0 group-hover:opacity-100 ml-1.5" />
                             </div>
@@ -254,7 +264,12 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                             {patient.dueDate}
                           </p>
                         </div>
+                        {/* First content line */}
                         <p className="text-muted-foreground truncate">{patient.recallType}</p>
+                        {/* Optional second content line */}
+                        {patient.lastVisit && (
+                          <p className="text-[10px] text-muted-foreground truncate">Last visit: {patient.lastVisit}</p>
+                        )}
                       </div>
                       <div className="flex space-x-1">
                         <Phone className="h-3 w-3 text-purple-500 opacity-0 group-hover:opacity-100" />
@@ -293,7 +308,10 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                         <p className="font-medium truncate">30-min opening</p>
                         <p className="text-[10px] text-muted-foreground ml-2">10:30 AM</p>
                       </div>
+                      {/* First content line */}
                       <p className="text-muted-foreground truncate">Dr. Smith • Op. 2</p>
+                      {/* Second content line with note */}
+                      <p className="text-[10px] text-muted-foreground truncate">Perfect for hygiene recall</p>
                     </div>
                     <UserPlus className="h-3 w-3 text-green-500 opacity-0 group-hover:opacity-100 ml-1.5" />
                   </div>
