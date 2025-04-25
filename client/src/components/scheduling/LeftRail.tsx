@@ -32,6 +32,16 @@ interface WaitlistPatient {
 export default function LeftRail({ selectedDate }: LeftRailProps) {
   const [searchTerm, setSearchTerm] = useState('');
   
+  // Helper function for formatting wait time
+  const formatWaitTime = (hours: number): string => {
+    if (hours < 24) {
+      return hours === 1 ? '1 hour' : `${hours} hours`;
+    } else {
+      const days = Math.floor(hours / 24);
+      return days === 1 ? '1 day' : `${days} days`;
+    }
+  };
+
   // Combined waitlist patients
   const allWaitlistPatients: WaitlistPatient[] = [
     // ASAP patients
@@ -39,7 +49,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
       id: 5, 
       name: 'Linda Lewis', 
       procedure: 'Broken tooth', 
-      waitingSince: '4 hours', 
+      waitingSince: formatWaitTime(4), 
       propensityScore: 95, 
       isAsap: true,
       reason: 'Broken tooth',
@@ -50,7 +60,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
       id: 6, 
       name: 'Richard Walker', 
       procedure: 'Severe pain', 
-      waitingSince: '2 hours', 
+      waitingSince: formatWaitTime(1), 
       propensityScore: 98,
       isAsap: true,
       reason: 'Severe pain',
@@ -59,10 +69,10 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
     },
     
     // Regular waitlist patients
-    { id: 1, name: 'Elizabeth Rodriguez', procedure: 'Crown', waitingSince: '2 days', propensityScore: 85 },
-    { id: 2, name: 'William Jackson', procedure: 'Root Canal', waitingSince: '5 days', propensityScore: 92 },
-    { id: 3, name: 'Jennifer Taylor', procedure: 'Extraction', waitingSince: '1 day', propensityScore: 76 },
-    { id: 4, name: 'James Brown', procedure: 'Filling', waitingSince: '3 days', propensityScore: 68 },
+    { id: 1, name: 'Elizabeth Rodriguez', procedure: 'Crown', waitingSince: formatWaitTime(48), propensityScore: 85 },
+    { id: 2, name: 'William Jackson', procedure: 'Root Canal', waitingSince: formatWaitTime(120), propensityScore: 92 },
+    { id: 3, name: 'Jennifer Taylor', procedure: 'Extraction', waitingSince: formatWaitTime(24), propensityScore: 76 },
+    { id: 4, name: 'James Brown', procedure: 'Filling', waitingSince: formatWaitTime(72), propensityScore: 68 },
   ];
   
   // Filter all patients based on search term
@@ -92,7 +102,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                 <div className="flex items-center w-full">
                   <div className="flex items-center">
                     <UserPlus className="mr-2 h-4 w-4 text-muted-foreground" />
-                    <h3 className="font-medium">Waitlist Patients</h3>
+                    <h3 className="font-medium">Waitlist</h3>
                   </div>
                   <div className="ml-auto">
                     <Badge variant="outline" className="text-xs font-medium bg-white text-gray-700 border-gray-200 rounded px-2 py-0.5">
@@ -129,7 +139,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                               <div className="min-w-0 flex-grow grid grid-cols-1">
                                 <div className="flex items-center justify-between">
                                   <p className="font-medium truncate">{patient.name}</p>
-                                  <p className="text-[10px] text-muted-foreground ml-2">{patient.requestedDate || "Today"}</p>
+                                  <p className="text-[10px] text-muted-foreground ml-2">{patient.waitingSince}</p>
                                 </div>
                                 <p className="text-muted-foreground truncate">{patient.reason || patient.procedure}</p>
                               </div>
