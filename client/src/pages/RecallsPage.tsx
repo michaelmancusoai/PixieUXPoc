@@ -108,12 +108,132 @@ const ExpandedRowContent: FC<{ patient: RecallPatient }> = ({ patient }) => (
   <TableRow className="bg-muted/30 border-t-0">
     <TableCell colSpan={9} className="p-4">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        {/* Patient Information Card */}
         <Card className="shadow-sm">
           <CardHeader className="py-3 px-4 border-b">
             <CardTitle className="text-sm font-medium">Patient Information</CardTitle>
           </CardHeader>
-          <CardContent className="py-3 px-4 text-sm">
-            <p>Details for {patient.patientName}</p>
+          <CardContent className="py-3 px-4 space-y-2">
+            <div className="grid grid-cols-2 gap-x-4 text-sm">
+              <div className="text-muted-foreground">Name:</div>
+              <div className="font-medium">{patient.patientName}</div>
+              
+              <div className="text-muted-foreground">Phone:</div>
+              <div>{patient.phone || 'Not provided'}</div>
+              
+              <div className="text-muted-foreground">Email:</div>
+              <div>{patient.email || 'Not provided'}</div>
+              
+              <div className="text-muted-foreground">Contact Preference:</div>
+              <div className="flex items-center gap-1">
+                {patient.contactPreferences?.map(pref => {
+                  const icon = pref === 'SMS' ? 
+                    <MessageSquare className="h-3 w-3" /> : 
+                    pref === 'Email' ? 
+                    <Mail className="h-3 w-3" /> : 
+                    <Phone className="h-3 w-3" />;
+                  
+                  return (
+                    <Badge key={pref} variant="outline" className="px-1.5 text-xs">
+                      <span className="flex items-center gap-1">
+                        {icon} {pref}
+                      </span>
+                    </Badge>
+                  );
+                })}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Recall Information Card */}
+        <Card className="shadow-sm">
+          <CardHeader className="py-3 px-4 border-b">
+            <CardTitle className="text-sm font-medium">Recall Details</CardTitle>
+          </CardHeader>
+          <CardContent className="py-3 px-4 space-y-2">
+            <div className="grid grid-cols-2 gap-x-4 text-sm">
+              <div className="text-muted-foreground">Due Date:</div>
+              <div className="font-medium">{format(parseISO(patient.dueDate), 'MMM d, yyyy')}</div>
+              
+              <div className="text-muted-foreground">Procedure:</div>
+              <div>{patient.procedureType}</div>
+              
+              <div className="text-muted-foreground">Last Visit:</div>
+              <div>{format(parseISO(patient.lastVisit), 'MMM d, yyyy')}</div>
+              
+              <div className="text-muted-foreground">Provider:</div>
+              <div>{patient.provider || 'Not assigned'}</div>
+              
+              <div className="text-muted-foreground">Benefits Remaining:</div>
+              <div>
+                {patient.benefitsRemaining !== undefined ? (
+                  <span className={patient.benefitsRemaining > 0 ? 'text-green-600' : 'text-red-500'}>
+                    ${patient.benefitsRemaining}
+                  </span>
+                ) : (
+                  'Unknown'
+                )}
+              </div>
+              
+              {patient.insuranceExpiryDate && (
+                <>
+                  <div className="text-muted-foreground">Insurance Expiry:</div>
+                  <div>{format(parseISO(patient.insuranceExpiryDate), 'MMM d, yyyy')}</div>
+                </>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Contact History Card */}
+        <Card className="shadow-sm">
+          <CardHeader className="py-3 px-4 border-b">
+            <CardTitle className="text-sm font-medium">Contact History</CardTitle>
+          </CardHeader>
+          <CardContent className="py-3 px-4">
+            {patient.contactAttempts.length > 0 ? (
+              <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2">
+                {patient.contactAttempts.sort((a, b) => 
+                  new Date(b.date).getTime() - new Date(a.date).getTime()
+                ).map((attempt, index) => (
+                  <div key={index} className="flex items-start gap-2 py-1.5 border-b border-muted text-sm last:border-0">
+                    <div className="flex-shrink-0 mt-0.5">
+                      {attempt.type === 'SMS' ? (
+                        <MessageSquare className="h-3.5 w-3.5 text-blue-500" />
+                      ) : attempt.type === 'Email' ? (
+                        <Mail className="h-3.5 w-3.5 text-green-500" />
+                      ) : (
+                        <Phone className="h-3.5 w-3.5 text-amber-500" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex justify-between">
+                        <span className="font-medium">{attempt.type}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {format(parseISO(attempt.date), 'MMM d, yyyy')}
+                        </span>
+                      </div>
+                      <div className="text-xs mt-0.5">
+                        Status: <span className={
+                          attempt.status === 'Delivered' ? 'text-green-600' : 
+                          attempt.status === 'Failed' ? 'text-red-500' : 
+                          'text-amber-500'
+                        }>{attempt.status}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-sm text-muted-foreground italic">No contact attempts yet</div>
+            )}
+            <div className="mt-4 flex justify-end">
+              <Button variant="outline" size="sm" className="h-8 text-xs">
+                <MessageSquare className="h-3 w-3 mr-1" /> 
+                Send Message
+              </Button>
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -1351,20 +1471,7 @@ export default function RecallsPage() {
                               </TableRow>
                               
                               {expandedRows.includes(recall.id) && (
-                                <TableRow className="bg-muted/30 border-t-0">
-                                  <TableCell colSpan={9} className="p-4">
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                      <Card className="shadow-sm">
-                                        <CardHeader className="py-3 px-4 border-b">
-                                          <CardTitle className="text-sm font-medium">Patient Information</CardTitle>
-                                        </CardHeader>
-                                        <CardContent className="p-4">
-                                          <p className="text-sm">Expanded details for {recall.patientName}</p>
-                                        </CardContent>
-                                      </Card>
-                                    </div>
-                                  </TableCell>
-                                </TableRow>
+                                <ExpandedRowContent patient={recall} />
                               )}
                             </React.Fragment>
                           );
