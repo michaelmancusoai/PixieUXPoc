@@ -38,6 +38,7 @@ export default function AppointmentChip({ appointment, style = {}, className = '
     const status = appointment.status?.toLowerCase() || 'scheduled';
     switch (status) {
       case 'confirmed': return 'Confirmed';
+      case 'scheduled': return 'Unconfirmed';
       case 'checked_in': return 'Checked In';
       case 'in_chair': return 'In Chair';
       case 'completed': return 'Completed';
@@ -50,8 +51,8 @@ export default function AppointmentChip({ appointment, style = {}, className = '
   const getStatusBorderColor = () => {
     const status = appointment.status?.toLowerCase() || 'scheduled';
     switch (status) {
-      case 'confirmed': 
-      case 'scheduled': return '#3b82f6'; // Blue for upcoming appointments
+      case 'confirmed': return '#3b82f6'; // Blue for confirmed
+      case 'scheduled': return '#f59e0b'; // Amber for unconfirmed
       case 'checked_in': return '#10b981'; // Green for checked in
       case 'in_chair': 
       case 'in_progress': return '#f97316'; // Orange for in process/in chair
