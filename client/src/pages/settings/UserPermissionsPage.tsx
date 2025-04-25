@@ -1,4 +1,4 @@
-import SettingsPageTemplate from "./SettingsPageTemplate";
+import SettingsPageTemplate from "@/pages/settings/SettingsPageTemplate";
 import { LockKeyhole } from "lucide-react";
 
 export default function UserPermissionsPage() {
@@ -6,7 +6,7 @@ export default function UserPermissionsPage() {
     <SettingsPageTemplate
       title="User Permissions"
       description="Set granular access controls for different user roles"
-      icon={<LockKeyhole className="h-5 w-5 text-primary" />}
+      icon={<LockKeyhole className="h-5 w-5" />}
     />
   );
 }

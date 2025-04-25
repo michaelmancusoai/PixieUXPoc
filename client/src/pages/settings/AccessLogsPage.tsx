@@ -1,4 +1,4 @@
-import SettingsPageTemplate from "./SettingsPageTemplate";
+import SettingsPageTemplate from "@/pages/settings/SettingsPageTemplate";
 import { FileBarChart } from "lucide-react";
 
 export default function AccessLogsPage() {
@@ -6,7 +6,7 @@ export default function AccessLogsPage() {
     <SettingsPageTemplate
       title="Access Logs"
       description="View system access history and security events"
-      icon={<FileBarChart className="h-5 w-5 text-primary" />}
+      icon={<FileBarChart className="h-5 w-5" />}
     />
   );
 }

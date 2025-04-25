@@ -1,4 +1,4 @@
-import SettingsPageTemplate from "./SettingsPageTemplate";
+import SettingsPageTemplate from "@/pages/settings/SettingsPageTemplate";
 import { Users } from "lucide-react";
 
 export default function TeamMembersPage() {
@@ -6,7 +6,7 @@ export default function TeamMembersPage() {
     <SettingsPageTemplate
       title="Team Members"
       description="Manage staff accounts, roles, and permissions"
-      icon={<Users className="h-5 w-5 text-primary" />}
+      icon={<Users className="h-5 w-5" />}
     />
   );
 }

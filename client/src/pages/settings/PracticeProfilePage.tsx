@@ -1,4 +1,4 @@
-import SettingsPageTemplate from "./SettingsPageTemplate";
+import SettingsPageTemplate from "@/pages/settings/SettingsPageTemplate";
 import { Building } from "lucide-react";
 
 export default function PracticeProfilePage() {
@@ -6,7 +6,7 @@ export default function PracticeProfilePage() {
     <SettingsPageTemplate
       title="Practice Profile"
       description="Manage your practice information, locations, and contact details"
-      icon={<Building className="h-5 w-5 text-primary" />}
+      icon={<Building className="h-5 w-5" />}
     />
   );
 }

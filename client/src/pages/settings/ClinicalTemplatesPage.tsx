@@ -1,4 +1,4 @@
-import SettingsPageTemplate from "./SettingsPageTemplate";
+import SettingsPageTemplate from "@/pages/settings/SettingsPageTemplate";
 import { Activity } from "lucide-react";
 
 export default function ClinicalTemplatesPage() {
@@ -6,7 +6,7 @@ export default function ClinicalTemplatesPage() {
     <SettingsPageTemplate
       title="Clinical Templates"
       description="Configure clinical notes, forms, and treatment plan templates"
-      icon={<Activity className="h-5 w-5 text-primary" />}
+      icon={<Activity className="h-5 w-5" />}
     />
   );
 }

@@ -1,4 +1,4 @@
-import SettingsPageTemplate from "./SettingsPageTemplate";
+import SettingsPageTemplate from "@/pages/settings/SettingsPageTemplate";
 import { Wallet } from "lucide-react";
 
 export default function PracticeFinancesPage() {
@@ -6,7 +6,7 @@ export default function PracticeFinancesPage() {
     <SettingsPageTemplate
       title="Practice Finances"
       description="Manage financial settings, reports, and tax information"
-      icon={<Wallet className="h-5 w-5 text-primary" />}
+      icon={<Wallet className="h-5 w-5" />}
     />
   );
 }
