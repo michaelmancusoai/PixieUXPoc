@@ -795,74 +795,23 @@ export default function StatementsPage() {
               </CardContent>
             </Card>
             
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Today's To-Do List</CardTitle>
-              </CardHeader>
-              <CardContent className="py-6 px-5">
-                <ul className="space-y-3">
-                  {unsentDraftsCount > 0 && (
-                    <li className="flex items-start">
-                      <div className="min-w-5 min-h-5 bg-red-100 rounded-full flex items-center justify-center mr-2 mt-0.5">
-                        <span className="text-xs text-red-600 font-bold">1</span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">Send {unsentDraftsCount} draft {unsentDraftsCount === 1 ? 'statement' : 'statements'}</p>
-                        <p className="text-xs text-muted-foreground">Money still sitting on your desk</p>
-                      </div>
-                    </li>
-                  )}
-                  
-                  {needFirstReminder.length > 0 && (
-                    <li className="flex items-start">
-                      <div className="min-w-5 min-h-5 bg-amber-100 rounded-full flex items-center justify-center mr-2 mt-0.5">
-                        <span className="text-xs text-amber-600 font-bold">2</span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">Send first reminders</p>
-                        <p className="text-xs text-muted-foreground">Cut payment lag in half with a quick nudge</p>
-                      </div>
-                    </li>
-                  )}
-                  
-                  {agingBalances.ninety > 0 && (
-                    <li className="flex items-start">
-                      <div className="min-w-5 min-h-5 bg-red-100 rounded-full flex items-center justify-center mr-2 mt-0.5">
-                        <span className="text-xs text-red-600 font-bold">3</span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">Call patients with 90+ day balances</p>
-                        <p className="text-xs text-muted-foreground">${agingBalances.ninety.toFixed(2)} at risk of collections</p>
-                      </div>
-                    </li>
-                  )}
-                  
-                  {paperStatementCount > 0 && (
-                    <li className="flex items-start">
-                      <div className="min-w-5 min-h-5 bg-blue-100 rounded-full flex items-center justify-center mr-2 mt-0.5">
-                        <span className="text-xs text-blue-600 font-bold">4</span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">Convert {Math.min(5, paperStatementCount)} patients to e-statements</p>
-                        <p className="text-xs text-muted-foreground">Save ${(Math.min(5, paperStatementCount) * 0.58).toFixed(2)} this week</p>
-                      </div>
-                    </li>
-                  )}
-                  
-                  {unsentDraftsCount === 0 && needFirstReminder.length === 0 && agingBalances.ninety === 0 && paperStatementCount === 0 && (
-                    <li className="flex items-start">
-                      <div className="min-w-5 min-h-5 bg-green-100 rounded-full flex items-center justify-center mr-2 mt-0.5">
-                        <CheckCircle className="h-3 w-3 text-green-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">All clear! Statements are in great shape</p>
-                        <p className="text-xs text-muted-foreground">Take a moment to celebrate your efficiency</p>
-                      </div>
-                    </li>
-                  )}
-                </ul>
-              </CardContent>
-            </Card>
+            {/* Action Queue Button */}
+            <div className="mt-4">
+              <Button 
+                variant={unsentDraftsCount > 0 || needFirstReminder.length > 0 || paperStatementCount > 0 || agingBalances.ninety > 0 ? "default" : "outline"} 
+                size="sm"
+                className="w-full"
+                disabled={unsentDraftsCount === 0 && needFirstReminder.length === 0 && paperStatementCount === 0 && agingBalances.ninety === 0}
+              >
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Today's Action Queue{' '}
+                {(unsentDraftsCount > 0 || needFirstReminder.length > 0 || paperStatementCount > 0 || agingBalances.ninety > 0) && (
+                  <Badge variant="secondary" className="ml-2">
+                    {unsentDraftsCount + needFirstReminder.length + (paperStatementCount > 0 ? 1 : 0) + (agingBalances.ninety > 0 ? 1 : 0)}
+                  </Badge>
+                )}
+              </Button>
+            </div>
           </div>
           
           {/* Add custom animation for the pulse effect */}
