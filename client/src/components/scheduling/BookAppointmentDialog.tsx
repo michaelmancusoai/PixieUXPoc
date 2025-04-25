@@ -144,12 +144,12 @@ export default function BookAppointmentDialog({
     { id: "flovarn", name: "FloVarn", category: "adult-prophy-exam" },
   ];
   
-  // Sample providers matching existing ones
+  // Updated providers with Star Trek captains
   const providers = [
-    { id: "dr-nguyen", name: "Dr. Nguyen" },
-    { id: "dr-robert", name: "Dr. Robert" },
-    { id: "dr-johnson", name: "Dr. Johnson" },
-    { id: "dr-maria", name: "Dr. Maria" },
+    { id: "dr-picard", name: "Dr. Picard" },   // TNG
+    { id: "dr-sisko", name: "Dr. Sisko" },     // DS9
+    { id: "dr-janeway", name: "Dr. Janeway" }, // VOY
+    { id: "dr-archer", name: "Dr. Archer" },   // ENT
   ];
   
   // Sample hygienists
