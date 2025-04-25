@@ -426,6 +426,52 @@ export default function CalendarView({
         completedAt: null
       },
       
+      // Add appointments with "checked_in" status
+      {
+        id: 22,
+        patientId: 22,
+        patient: { id: 22, firstName: "Rebecca", lastName: "Jones", avatarInitials: "RJ", dateOfBirth: null, insuranceProvider: "Aetna", allergies: null, balanceDue: 75 },
+        providerId: 2,
+        provider: { id: 2, name: "Dr. Robert", role: "Dentist", color: "#B39DDB" },
+        operatoryId: 2,
+        operatory: { id: 2, name: "Op 2", color: "#FFD6D6" },
+        date: selectedDate,
+        startTime: "13:30:00",
+        endTime: null,
+        duration: 30,
+        durationMinutes: null,
+        procedure: "Bitewing X-rays",
+        cdtCode: "D0274",
+        isVerified: null,
+        confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 30),
+        arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 10),
+        chairStartedAt: null,
+        completedAt: null,
+        status: "checked_in"
+      },
+      {
+        id: 23,
+        patientId: 23,
+        patient: { id: 23, firstName: "Thomas", lastName: "Clark", avatarInitials: "TC", dateOfBirth: null, insuranceProvider: "Delta Dental", allergies: null, balanceDue: 0 },
+        providerId: 3,
+        provider: { id: 3, name: "Dr. Johnson", role: "Dentist", color: "#90CAF9" },
+        operatoryId: 3,
+        operatory: { id: 3, name: "Op 3", color: "#D7CCC8" },
+        date: selectedDate,
+        startTime: "14:15:00",
+        endTime: null,
+        duration: 60,
+        durationMinutes: null,
+        procedure: "Prophylaxis - Adult",
+        cdtCode: "D1110",
+        isVerified: null,
+        confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 45),
+        arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 5),
+        chairStartedAt: null,
+        completedAt: null,
+        status: "checked_in"
+      },
+      
       // Add one more appointment with "in_chair" status
       {
         id: 21,
