@@ -79,6 +79,7 @@ export default function CalendarView({
   
   // Hard-coded sample appointments for the demo calendar
   const demoAppointments = useMemo(() => {
+    console.log("Rebuilding appointments with view mode:", viewMode);
     // Add more appointments to each provider
     return [
       // Dr. Nguyen (Provider 1) - Op 1
@@ -587,7 +588,7 @@ export default function CalendarView({
       // Only apply time-based status if no status is explicitly set
       status: apt.status || getStatusBasedOnTime(apt.startTime, apt.duration)
     }));
-  }, [selectedDate, demoResources, viewMode]);
+  }, [selectedDate, viewMode]);
   
   // Initialize the resources and update when viewMode changes
   useEffect(() => {
@@ -670,26 +671,32 @@ export default function CalendarView({
   
   // Group appointments by resource (operatory or provider based on viewMode)
   const appointmentsByResource = useMemo(() => {
+    console.log("REGROUPING APPOINTMENTS BY:", viewMode);
     const grouped: { [key: number]: AppointmentWithDetails[] } = {};
     
+    // Initialize empty arrays for each resource column
     resourceColumns.forEach(col => {
       grouped[col.id] = [];
     });
     
+    // Assign appointments to the appropriate resource group
     demoAppointments.forEach(appointment => {
-      // Important: use the appropriate ID based on view mode
+      // Use the appropriate ID based on view mode (provider or operatory)
       const resourceId = viewMode === 'PROVIDER' ? appointment.providerId : appointment.operatoryId;
       
-      // Add logging to debug the grouping
-      console.log(`Appointment ${appointment.id} for patient ${appointment.patient.firstName} ${appointment.patient.lastName} assigned to ${viewMode === 'PROVIDER' ? 'provider' : 'operatory'} ID: ${resourceId}`);
-      
+      // Add to the group if it exists
       if (resourceId !== undefined && grouped[resourceId]) {
         grouped[resourceId].push(appointment);
       }
     });
     
+    // Debug: print count of appointments in each group
+    Object.keys(grouped).forEach(key => {
+      console.log(`Group ${key} (${viewMode === 'PROVIDER' ? 'Provider' : 'Operatory'}) has ${grouped[Number(key)].length} appointments`);
+    });
+    
     return grouped;
-  }, [demoAppointments, resourceColumns, viewMode]);
+  }, [viewMode, resourceColumns, demoAppointments]);
   
   // Status handling is now in the AppointmentChip component
 
