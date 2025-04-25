@@ -16,6 +16,12 @@ interface AppHeaderProps {
   onBookAppointment: () => void;
   expandedView: boolean;
   onToggleExpandView: () => void;
+  patientCounts?: {
+    total: number;
+    upcoming: number;
+    inProgress: number;
+    completed: number;
+  };
 }
 
 export default function AppHeader({
@@ -28,7 +34,8 @@ export default function AppHeader({
   utilizationPercentage,
   onBookAppointment,
   expandedView,
-  onToggleExpandView
+  onToggleExpandView,
+  patientCounts = { total: 24, upcoming: 8, inProgress: 5, completed: 11 } // Default values for now
 }: AppHeaderProps) {
   // Format date display
   const formattedDate = format(selectedDate, 'EEEE, MMMM d, yyyy');
@@ -47,10 +54,33 @@ export default function AppHeader({
     <div className="bg-white border-b p-4 flex flex-col gap-4">
       <div className="grid grid-cols-3 items-center">
         {/* Left column */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Button variant="outline" size="sm" onClick={onToday}>
             Today
           </Button>
+          
+          {/* Patient counts in a visually stimulating display */}
+          <div className="flex items-center gap-3 ml-2">
+            <div className="flex flex-col items-center bg-blue-100 border-2 border-blue-300 rounded-md px-3 py-1 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+              <span className="text-xl font-bold text-blue-700">{patientCounts.total}</span>
+              <span className="text-xs font-medium text-blue-600">Total</span>
+            </div>
+            
+            <div className="flex flex-col items-center bg-amber-100 border-2 border-amber-300 rounded-md px-3 py-1 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+              <span className="text-xl font-bold text-amber-700">{patientCounts.upcoming}</span>
+              <span className="text-xs font-medium text-amber-600">Upcoming</span>
+            </div>
+            
+            <div className="flex flex-col items-center bg-green-100 border-2 border-green-300 rounded-md px-3 py-1 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+              <span className="text-xl font-bold text-green-700">{patientCounts.inProgress}</span>
+              <span className="text-xs font-medium text-green-600">In Progress</span>
+            </div>
+            
+            <div className="flex flex-col items-center bg-gray-100 border-2 border-gray-300 rounded-md px-3 py-1 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
+              <span className="text-xl font-bold text-gray-700">{patientCounts.completed}</span>
+              <span className="text-xs font-medium text-gray-600">Completed</span>
+            </div>
+          </div>
         </div>
         
         {/* Center column - Date control stays in center */}
