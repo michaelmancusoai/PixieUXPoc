@@ -48,7 +48,6 @@ export default function AppHeader({
       <div className="grid grid-cols-3 items-center">
         {/* Left column */}
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-bold">Scheduling</h1>
           <Button variant="outline" size="sm" onClick={onToday}>
             Today
           </Button>
