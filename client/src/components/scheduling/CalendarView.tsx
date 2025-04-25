@@ -286,23 +286,41 @@ export default function CalendarView({
     });
   }, [toast]);
 
-  // Calculate time slots (from start to end of business day)
+  // Calculate time slots with a special slot for the current time indicator at 1:15 PM
   const timeSlots = useMemo(() => {
     const slots = [];
     const startTime = BUSINESS_START_HOUR * MINS_IN_HOUR; // 7:00 AM
     const endTime = (BUSINESS_START_HOUR + HOURS_IN_DAY) * MINS_IN_HOUR; // 7:00 PM
+    const currentTimeAt1_15PM = 13 * 60 + 15; // 1:15 PM in minutes
     
     for (let i = startTime; i < endTime; i += TIME_SLOT) {
-      slots.push({
-        time: i,
-        label: getTimeFromMinutes(i)
-      });
+      // If we've reached 1:15 PM, insert our current time indicator
+      if (i <= currentTimeAt1_15PM && i + TIME_SLOT > currentTimeAt1_15PM && i !== currentTimeAt1_15PM) {
+        // Insert the normal time slot
+        slots.push({
+          time: i,
+          label: getTimeFromMinutes(i),
+          isTimeIndicator: false
+        });
+        
+        // Insert the special current time indicator slot
+        slots.push({
+          time: currentTimeAt1_15PM,
+          label: "1:15 PM",
+          isTimeIndicator: true
+        });
+      } else if (i !== currentTimeAt1_15PM) {
+        // Skip exact 1:15 pm slot since we've already added it
+        slots.push({
+          time: i,
+          label: getTimeFromMinutes(i),
+          isTimeIndicator: false
+        });
+      }
     }
     
     return slots;
   }, []);
-  
-  // We're not using this calculation anymore - using fixed positions for exact placement
   
   // Group appointments by resource
   const appointmentsByResource = useMemo(() => {
@@ -327,13 +345,7 @@ export default function CalendarView({
   return (
     <Card className="w-full h-full overflow-hidden border rounded-md">
       <div className="h-full overflow-auto relative">
-        {/* Current time indicator line that spans across entire grid at exactly 1:15 PM */}
-        <div 
-          className="absolute left-[60px] right-0 z-20 pointer-events-none"
-          style={{ top: '458px' }} // Fixed position for 1:15 PM between 1 PM and 2 PM
-        >
-          <div className="h-[2px] bg-red-500 w-full"></div>
-        </div>
+        {/* Removing absolute positioned time indicator - using a different approach */}
         {/* Resource column headers */}
         <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
           {/* Time header */}
@@ -362,31 +374,37 @@ export default function CalendarView({
           {/* Time column with enhanced styling - darker solid gray background */}
           <div className="border-r bg-gray-200 relative">
             {timeSlots.map((slot, index) => (
-              <div
-                key={index}
-                className={`
-                  border-b text-xs text-right pr-2.5
-                  ${index % 12 === 0 ? 'font-medium text-gray-700' : 'text-transparent'}
-                `}
-                style={{ 
-                  height: '8px',
-                  backgroundColor: '#E2E5E9', // Darker gray background
-                  borderBottom: index % 12 === 0 ? '1px solid #D1D5DB' : '1px solid #E5E7EB'
-                }}
-              >
-                {index % 12 === 0 && slot.label}
-              </div>
+              slot.isTimeIndicator ? (
+                // Special current time indicator at 1:15 PM
+                <div 
+                  key={index} 
+                  className="border-0 h-[2px] bg-red-500 relative"
+                >
+                  {/* Current time label for 1:15 PM */}
+                  <div className="absolute right-0 flex justify-end items-center z-10 h-full">
+                    <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-l whitespace-nowrap">
+                      {slot.label}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                // Regular time slot
+                <div
+                  key={index}
+                  className={`
+                    border-b text-xs text-right pr-2.5
+                    ${index % 12 === 0 ? 'font-medium text-gray-700' : 'text-transparent'}
+                  `}
+                  style={{ 
+                    height: '8px',
+                    backgroundColor: '#E2E5E9', // Darker gray background
+                    borderBottom: index % 12 === 0 ? '1px solid #D1D5DB' : '1px solid #E5E7EB'
+                  }}
+                >
+                  {index % 12 === 0 && slot.label}
+                </div>
+              )
             ))}
-            
-            {/* Current time label shown in time column at exactly 1:15 PM */}
-            <div 
-              className="absolute right-0 flex justify-end items-center z-10 pointer-events-none"
-              style={{ top: '458px', transform: 'translateY(-50%)' }}
-            >
-              <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-l whitespace-nowrap">
-                1:15 PM
-              </div>
-            </div>
           </div>
           
           {/* Resource columns */}
@@ -394,6 +412,19 @@ export default function CalendarView({
             <div key={resource.id} className="relative border-r">
               {/* Time slots with graduated border styling */}
               {timeSlots.map((slot, index) => {
+                // Special case for time indicator slot
+                if (slot.isTimeIndicator) {
+                  return (
+                    <div 
+                      key={index}
+                      className="h-[2px] bg-red-500 border-0"
+                    >
+                      {/* No content inside the time indicator line */}
+                    </div>
+                  );
+                }
+                
+                // Normal time slots
                 // Determine border style based on time division
                 // Hour marks (darkest), quarter-hour marks (medium), 5-minute increments (lightest)
                 let bgColor = 'white';
