@@ -135,6 +135,11 @@ button {
   body {
     @apply font-sans antialiased bg-[#F5F7FA] text-foreground;
   }
+  
+  /* Fix for all links across the application */
+  a {
+    @apply no-underline hover:no-underline text-inherit hover:text-inherit;
+  }
 
   /* Custom scrollbar styling */
   ::-webkit-scrollbar {

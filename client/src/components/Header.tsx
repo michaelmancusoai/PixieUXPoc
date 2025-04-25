@@ -217,8 +217,8 @@ export function Header() {
                 href={item.href}
                 onClick={() => handleNavClick(item.href)}
                 className={cn(
-                  "nav-link flex items-center px-5 py-2 text-gray-700 hover:bg-gray-100 border-b-2 border-transparent whitespace-nowrap transition-colors",
-                  activeNav === item.href && "active text-primary border-primary"
+                  "nav-link flex items-center px-5 py-2 text-gray-700 hover:bg-gray-100 border-b-2 border-transparent whitespace-nowrap transition-colors no-underline hover:no-underline hover:text-gray-900",
+                  activeNav === item.href && "active text-primary border-primary hover:text-primary"
                 )}
               >
                 <item.icon className="h-4 w-4 mr-2" />
@@ -237,7 +237,7 @@ export function Header() {
                 href={subItem.href}
                 onClick={() => setActiveSubNav(subItem.href)}
                 className={cn(
-                  "secondary-nav-link flex items-center px-3 py-1.5 rounded-md text-sm text-gray-700 hover:bg-gray-100 whitespace-nowrap transition-colors",
+                  "secondary-nav-link flex items-center px-3 py-1.5 rounded-md text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap transition-colors no-underline hover:no-underline",
                   activeSubNav === subItem.href && "active bg-white shadow-sm"
                 )}
               >
