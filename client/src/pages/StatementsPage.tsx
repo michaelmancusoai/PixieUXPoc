@@ -795,23 +795,6 @@ export default function StatementsPage() {
               </CardContent>
             </Card>
             
-            {/* Action Queue Button */}
-            <div className="mt-4">
-              <Button 
-                variant={unsentDraftsCount > 0 || needFirstReminder.length > 0 || paperStatementCount > 0 || agingBalances.ninety > 0 ? "default" : "outline"} 
-                size="sm"
-                className="w-full"
-                disabled={unsentDraftsCount === 0 && needFirstReminder.length === 0 && paperStatementCount === 0 && agingBalances.ninety === 0}
-              >
-                <CheckCircle className="h-4 w-4 mr-2" />
-                Today's Action Queue{' '}
-                {(unsentDraftsCount > 0 || needFirstReminder.length > 0 || paperStatementCount > 0 || agingBalances.ninety > 0) && (
-                  <Badge variant="secondary" className="ml-2">
-                    {unsentDraftsCount + needFirstReminder.length + (paperStatementCount > 0 ? 1 : 0) + (agingBalances.ninety > 0 ? 1 : 0)}
-                  </Badge>
-                )}
-              </Button>
-            </div>
           </div>
           
           {/* Add custom animation for the pulse effect */}
