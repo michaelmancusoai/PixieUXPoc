@@ -97,7 +97,14 @@ export default function AppHeader({
         
         {/* View mode and actions */}
         <div className="flex items-center gap-4">
-          <Tabs defaultValue={currentView} onValueChange={(value) => onViewChange(value as ViewModeType)} className="mr-2">
+          <Tabs 
+            value={currentView} 
+            onValueChange={(value) => {
+              console.log("View changed to:", value);
+              onViewChange(value as ViewModeType);
+            }} 
+            className="mr-2"
+          >
             <TabsList className="h-8">
               <TabsTrigger value="OPERATORY" className="text-xs px-3">Operatory</TabsTrigger>
               <TabsTrigger value="PROVIDER" className="text-xs px-3">Provider</TabsTrigger>

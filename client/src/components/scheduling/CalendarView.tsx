@@ -589,10 +589,11 @@ export default function CalendarView({
     }));
   }, [selectedDate, demoResources, viewMode]);
   
-  // Initialize the resources
+  // Initialize the resources and update when viewMode changes
   useEffect(() => {
     setResourceColumns(demoResources);
-  }, [demoResources]);
+    console.log(`View mode changed to: ${viewMode}. Resource columns updated with:`, demoResources);
+  }, [demoResources, viewMode]);
   
   // Handle DND-kit drag events
   useDndMonitor({
@@ -667,7 +668,7 @@ export default function CalendarView({
     return slots;
   }, []);
   
-  // Group appointments by resource
+  // Group appointments by resource (operatory or provider based on viewMode)
   const appointmentsByResource = useMemo(() => {
     const grouped: { [key: number]: AppointmentWithDetails[] } = {};
     
@@ -676,8 +677,13 @@ export default function CalendarView({
     });
     
     demoAppointments.forEach(appointment => {
+      // Important: use the appropriate ID based on view mode
       const resourceId = viewMode === 'PROVIDER' ? appointment.providerId : appointment.operatoryId;
-      if (resourceId && grouped[resourceId]) {
+      
+      // Add logging to debug the grouping
+      console.log(`Appointment ${appointment.id} for patient ${appointment.patient.firstName} ${appointment.patient.lastName} assigned to ${viewMode === 'PROVIDER' ? 'provider' : 'operatory'} ID: ${resourceId}`);
+      
+      if (resourceId !== undefined && grouped[resourceId]) {
         grouped[resourceId].push(appointment);
       }
     });
