@@ -13,7 +13,6 @@ import {
   Phone,
   Search,
   Stethoscope,
-  Tooth,
   UserRound,
   X,
 } from "lucide-react";
@@ -458,7 +457,13 @@ export default function RecallsPage() {
   }, [mockRecalls, windowFilter, procedureFilter, providerFilter, contactStatusFilter, insuranceFilter, searchQuery, today, oneWeekLater, twoWeeksLater, thirtyDaysLater]);
 
   // Extract unique providers for filter dropdown
-  const providers = [...new Set(mockRecalls.map(recall => recall.provider))].filter(Boolean);
+  const providersSet = new Set<string>();
+  mockRecalls.forEach(recall => {
+    if (recall.provider) {
+      providersSet.add(recall.provider);
+    }
+  });
+  const providers = Array.from(providersSet);
 
   // Handle row selection
   const handleRowSelect = (id: number) => {
@@ -689,7 +694,7 @@ export default function RecallsPage() {
           <CardHeader className="py-3 px-5 border-b bg-amber-50/30">
             <CardTitle className="text-base font-medium flex items-center">
               <Bell className="h-4 w-4 mr-2 text-slate-600" />
-              Overdue > 3 mo
+              Overdue {">"}3 mo
             </CardTitle>
           </CardHeader>
           <CardContent className="py-5 px-5 flex-1 flex flex-col">
@@ -1130,7 +1135,7 @@ export default function RecallsPage() {
                             <TableCell className="py-2">
                               <div className="flex items-center text-sm">
                                 {recall.procedureType.includes("cleaning") ? (
-                                  <Tooth className="h-3.5 w-3.5 mr-1.5 text-emerald-500" />
+                                  <Stethoscope className="h-3.5 w-3.5 mr-1.5 text-emerald-500" />
                                 ) : recall.procedureType.includes("X-ray") ? (
                                   <Stethoscope className="h-3.5 w-3.5 mr-1.5 text-violet-500" />
                                 ) : recall.procedureType.includes("FMX") ? (
@@ -1147,7 +1152,7 @@ export default function RecallsPage() {
                               </div>
                               {recall.lastProcedure && (
                                 <div className="text-xs text-muted-foreground flex items-center">
-                                  <Tooth className="h-3 w-3 mr-1" />
+                                  <Stethoscope className="h-3 w-3 mr-1" />
                                   {recall.lastProcedure}
                                 </div>
                               )}

@@ -42,6 +42,7 @@ function Router() {
       <Route path="/schedule" component={SchedulingPage} />
       <Route path="/scheduling" component={SchedulingPage} />
       <Route path="/schedule/capacity" component={CapacityPage} />
+      <Route path="/schedule/recalls" component={RecallsPage} />
       <Route path="/schedule/:subpage" component={SchedulingPage} />
       <Route path="/patients" component={PatientsPage} />
       <Route path="/patients/profile/:id" component={PatientProfilePage} />
