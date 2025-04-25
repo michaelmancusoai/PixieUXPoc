@@ -1,13 +1,19 @@
-import { useMemo, useRef, useState, useEffect } from "react";
-import { format, addMinutes, parseISO } from "date-fns";
+import { useMemo, useRef, useState, useCallback, useEffect } from "react";
+import { ViewModeType, AppointmentWithDetails, AppointmentStatus } from "@/lib/scheduling-constants";
+import { useQuery } from "@tanstack/react-query";
+import { format, addMinutes, isEqual, isSameDay, parseISO } from "date-fns";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { useDndMonitor, useDraggable, useDroppable, DndContext, DragOverlay } from "@dnd-kit/core";
 import AppointmentChip from "./AppointmentChip";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { HOURS_IN_DAY, MINS_IN_HOUR, TIME_SLOT, ViewModeType } from "@/lib/scheduling-constants";
+import { apiRequest } from "@/lib/queryClient";
+import { HOURS_IN_DAY, MINS_IN_HOUR, TIME_SLOT, BUSINESS_START_HOUR } from "@/lib/scheduling-constants";
 import { 
   getTimeFromMinutes, 
+  getAppointmentPosition, 
   snapToTimeSlot,
-  AppointmentWithDetails,
+  getAppointmentTiming,
   getStatusBasedOnTime
 } from "@/lib/scheduling-utils";
 
@@ -22,12 +28,41 @@ export default function CalendarView({
 }: CalendarViewProps) {
   const { toast } = useToast();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [slotHeight, setSlotHeight] = useState(4); // Height of a 5-minute time slot
+  const [resourceColumns, setResourceColumns] = useState<Array<{id: number, name: string}>>([]);
   const [draggingAppointment, setDraggingAppointment] = useState<AppointmentWithDetails | null>(null);
   const [dragTarget, setDragTarget] = useState<{resourceId: number, time: number} | null>(null);
+
+  // Fetch resources (operatories or providers) based on view mode
+  const { data: resources = [] } = useQuery<Array<{id: number, name: string}>>({
+    queryKey: [viewMode === 'PROVIDER' ? '/api/providers' : '/api/operatories'],
+    enabled: false, // Disable actual API call for demo
+  });
+
+  // Use hardcoded sample appointments for the demo
+  const formattedDate = format(selectedDate, 'yyyy-MM-dd');
+  
+  // Helper function to determine status based on appointment time
+  const getStatusColorsByName = useCallback((status: string) => {
+    switch(status.toLowerCase()) {
+      case 'completed':
+        return { bg: 'bg-gray-100', text: 'text-gray-800', border: 'border-gray-400' };
+      case 'in_chair':
+        return { bg: 'bg-yellow-50', text: 'text-yellow-800', border: 'border-yellow-400' };
+      case 'checked_in':
+        return { bg: 'bg-green-50', text: 'text-green-800', border: 'border-green-500' };
+      case 'confirmed':
+        return { bg: 'bg-blue-50', text: 'text-blue-800', border: 'border-blue-500' };
+      case 'scheduled':
+        return { bg: 'bg-white', text: 'text-gray-800', border: 'border-gray-300' };
+      case 'no_show':
+        return { bg: 'bg-red-50', text: 'text-red-800', border: 'border-red-500' };
+      default:
+        return { bg: 'bg-white', text: 'text-gray-800', border: 'border-gray-300' };
+    }
+  }, []);
   
   // Hardcoded resource data for demonstration
-  const resourceColumns = useMemo(() => {
+  const demoResources = useMemo(() => {
     return viewMode === 'PROVIDER' ? [
       { id: 1, name: 'Dr. Nguyen' },
       { id: 2, name: 'Dr. Robert' },
@@ -42,7 +77,7 @@ export default function CalendarView({
   }, [viewMode]);
   
   // Hard-coded sample appointments for the demo calendar
-  const appointments = useMemo(() => {
+  const demoAppointments = useMemo(() => {
     return [
       {
         id: 1,
@@ -56,9 +91,11 @@ export default function CalendarView({
         startTime: "09:00:00",
         endTime: null,
         duration: 70,
+        durationMinutes: null,
         status: "confirmed",
         procedure: "Crown - Porcelain Fused to High Noble Metal",
         cdtCode: "D2750",
+        isVerified: null,
         confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 30),
         arrivedAt: null,
         chairStartedAt: null,
@@ -76,9 +113,11 @@ export default function CalendarView({
         startTime: "10:00:00",
         endTime: null,
         duration: 90,
+        durationMinutes: null,
         status: "in_chair",
         procedure: "Core Buildup, Including any Pins",
         cdtCode: "D2950",
+        isVerified: null,
         confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 60),
         arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 45),
         chairStartedAt: new Date(new Date().getTime() - 1000 * 60 * 15),
@@ -96,9 +135,11 @@ export default function CalendarView({
         startTime: "08:30:00",
         endTime: null,
         duration: 60,
+        durationMinutes: null,
         status: "scheduled",
         procedure: "Resin-Based Composite - One Surface",
         cdtCode: "D2330",
+        isVerified: null,
         confirmedAt: null,
         arrivedAt: null,
         chairStartedAt: null,
@@ -116,9 +157,11 @@ export default function CalendarView({
         startTime: "11:00:00",
         endTime: null,
         duration: 60,
+        durationMinutes: null,
         status: "checked_in",
         procedure: "Prophylaxis - Adult",
         cdtCode: "D1110",
+        isVerified: null,
         confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 60),
         arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 10),
         chairStartedAt: null,
@@ -136,9 +179,11 @@ export default function CalendarView({
         startTime: "13:00:00",
         endTime: null,
         duration: 45,
+        durationMinutes: null,
         status: "scheduled",
         procedure: "Periodic Oral Evaluation",
         cdtCode: "D0120",
+        isVerified: null,
         confirmedAt: null,
         arrivedAt: null,
         chairStartedAt: null,
@@ -156,9 +201,11 @@ export default function CalendarView({
         startTime: "08:30:00",
         endTime: null,
         duration: 60,
+        durationMinutes: null,
         status: "scheduled",
         procedure: "Resin-Based Composite - Three Surfaces",
         cdtCode: "D2332",
+        isVerified: null,
         confirmedAt: null,
         arrivedAt: null,
         chairStartedAt: null,
@@ -176,9 +223,11 @@ export default function CalendarView({
         startTime: "15:00:00",
         endTime: null,
         duration: 60,
+        durationMinutes: null,
         status: "completed",
         procedure: "Resin-Based Composite - Four Surfaces",
         cdtCode: "D2335",
+        isVerified: null,
         confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 90),
         arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 75),
         chairStartedAt: new Date(new Date().getTime() - 1000 * 60 * 60),
@@ -190,207 +239,235 @@ export default function CalendarView({
     }));
   }, [selectedDate]);
   
-  // Generate time slots for the day (5-minute intervals)
-  const timeSlots = useMemo(() => {
-    const slots = [];
-    const startHour = 7; // 7:00 AM
-    const endHour = 19; // 7:00 PM - extending beyond business hours to show all appointments
-    
-    for (let i = startHour * MINS_IN_HOUR; i <= endHour * MINS_IN_HOUR; i += TIME_SLOT) {
-      slots.push({
-        time: i,
-        label: format(addMinutes(new Date().setHours(0, 0, 0, 0), i), 'h:mm a'),
-        isMajor: i % MINS_IN_HOUR === 0,
-        isMedium: i % 30 === 0 && !((i % MINS_IN_HOUR) === 0), // 30-minute marks
-        isMinor: i % 15 === 0 && !((i % 30) === 0) && !((i % MINS_IN_HOUR) === 0) // 15-minute marks
-      });
-    }
-    return slots;
-  }, []);
-  
-  // Calculate time slot height based on container size
+  // Initialize the resources
   useEffect(() => {
-    const calculateSlotHeight = () => {
-      if (containerRef.current) {
-        // Calculate height minus header (70px)
-        const availableHeight = containerRef.current.clientHeight - 70;
-        // Target about 12 hours visible without scrolling (144 time slots)
-        const totalSlots = 144;
-        // Divide available height by total slots
-        const calculatedHeight = Math.max(4, Math.floor(availableHeight / totalSlots)); 
-        setSlotHeight(calculatedHeight);
-      }
-    };
-    
-    calculateSlotHeight();
-    
-    // Add resize listener
-    window.addEventListener('resize', calculateSlotHeight);
-    return () => window.removeEventListener('resize', calculateSlotHeight);
-  }, []);
+    setResourceColumns(demoResources);
+  }, [demoResources]);
   
-  // Filter and group appointments
-  const appointmentsByResource = useMemo(() => {
-    const groupedAppointments: Record<string, AppointmentWithDetails[]> = {};
-    
-    // Initialize empty arrays for each resource
-    resourceColumns.forEach(resource => {
-      groupedAppointments[resource.id] = [];
-    });
-    
-    // Filter and group appointments
-    appointments.forEach(appointment => {
-      const resourceId = viewMode === 'PROVIDER' ? appointment.providerId : appointment.operatoryId;
-      if (resourceId && groupedAppointments[resourceId]) {
-        groupedAppointments[resourceId].push(appointment);
+  // Handle DND-kit drag events
+  useDndMonitor({
+    onDragStart(event) {
+      const appointment = event.active.data.current as AppointmentWithDetails;
+      if (appointment) {
+        setDraggingAppointment(appointment);
       }
-    });
-    
-    return groupedAppointments;
-  }, [appointments, resourceColumns, viewMode]);
+    },
+    onDragEnd(event) {
+      const appointment = event.active.data.current as AppointmentWithDetails;
+      const target = dragTarget;
+      
+      if (appointment && target) {
+        // In a real app, update the appointment here with an API call
+        const hours = Math.floor(target.time / 60);
+        const minutes = target.time % 60;
+        const newStartTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+        
+        toast({
+          title: "Appointment Moved",
+          description: `${appointment.patient.firstName} ${appointment.patient.lastName} moved to ${format(addMinutes(new Date().setHours(0, 0, 0, 0), target.time), 'h:mm a')}`,
+        });
+      }
+      
+      setDraggingAppointment(null);
+      setDragTarget(null);
+    },
+    onDragCancel() {
+      setDraggingAppointment(null);
+      setDragTarget(null);
+    },
+  });
   
   // Handle appointment clicks
-  const handleAppointmentClick = (appointment: AppointmentWithDetails) => {
+  const handleAppointmentClick = useCallback((appointment: AppointmentWithDetails) => {
     toast({
       title: `${appointment.patient.firstName} ${appointment.patient.lastName}`,
       description: `${appointment.procedure || 'No procedure'} (${getTimeFromMinutes(parseInt(appointment.startTime.split(':')[0]) * 60 + parseInt(appointment.startTime.split(':')[1]))})`,
     });
-  };
-  
-  // Handle drag start - when appointment is dragged
-  const handleAppointmentDragStart = (appointment: AppointmentWithDetails) => {
-    setDraggingAppointment(appointment);
-  };
-  
-  // Handle drag over a time slot
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
+  }, [toast]);
+
+  // Calculate time slots (from start to end of business day)
+  const timeSlots = useMemo(() => {
+    const slots = [];
+    const startTime = BUSINESS_START_HOUR * MINS_IN_HOUR; // 7:00 AM
+    const endTime = (BUSINESS_START_HOUR + HOURS_IN_DAY) * MINS_IN_HOUR; // 7:00 PM
     
-    if (!draggingAppointment) return;
-    
-    const target = e.target as HTMLElement;
-    const resourceId = parseInt(target.dataset.resourceId || '0');
-    const time = parseInt(target.dataset.time || '0');
-    
-    if (resourceId && time) {
-      setDragTarget({ resourceId, time });
-    }
-  };
-  
-  // Handle drop on a time slot
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    
-    if (!draggingAppointment) return;
-    
-    const target = e.target as HTMLElement;
-    const resourceId = parseInt(target.dataset.resourceId || '0');
-    const time = parseInt(target.dataset.time || '0');
-    
-    if (resourceId && time) {
-      const hours = Math.floor(time / 60);
-      const minutes = time % 60;
-      const newStartTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
-      
-      // Simulate API call to update appointment
-      toast({
-        title: "Appointment Moved",
-        description: `${draggingAppointment.patient.firstName} ${draggingAppointment.patient.lastName} moved to ${format(addMinutes(new Date().setHours(0, 0, 0, 0), time), 'h:mm a')}`,
+    for (let i = startTime; i < endTime; i += TIME_SLOT) {
+      slots.push({
+        time: i,
+        label: getTimeFromMinutes(i)
       });
-      
-      setDraggingAppointment(null);
-      setDragTarget(null);
     }
-  };
+    
+    return slots;
+  }, []);
+  
+  // Group appointments by resource
+  const appointmentsByResource = useMemo(() => {
+    const grouped: { [key: number]: AppointmentWithDetails[] } = {};
+    
+    resourceColumns.forEach(col => {
+      grouped[col.id] = [];
+    });
+    
+    demoAppointments.forEach(appointment => {
+      const resourceId = viewMode === 'PROVIDER' ? appointment.providerId : appointment.operatoryId;
+      if (resourceId && grouped[resourceId]) {
+        grouped[resourceId].push(appointment);
+      }
+    });
+    
+    return grouped;
+  }, [demoAppointments, resourceColumns, viewMode]);
+  
+  // Get status color based on status
+  const getStatusBorderColor = useCallback((status: string) => {
+    switch (status.toLowerCase()) {
+      case 'completed':
+        return '#9E9E9E';
+      case 'in_chair':
+        return '#FFA000';
+      case 'checked_in':
+        return '#4CAF50';
+      case 'confirmed':
+        return '#2196F3';
+      case 'scheduled':
+        return '#BDBDBD';
+      case 'no_show':
+        return '#F44336';
+      default:
+        return '#BDBDBD';
+    }
+  }, []);
+
+  return (
+    <Card className="w-full h-full overflow-hidden border rounded-md">
+      <DndContext>
+        <div className="h-full overflow-auto">
+          {/* Resource column headers */}
+          <div className="grid" style={{ gridTemplateColumns: `80px repeat(${resourceColumns.length}, 1fr)` }}>
+            {/* Time header */}
+            <div className="p-2 border-b border-r bg-gray-50 text-center text-xs font-medium">
+              Time
+            </div>
+            
+            {/* Resource headers */}
+            {resourceColumns.map(resource => (
+              <div key={resource.id} className="p-2 border-b border-r text-center">
+                <div className="font-semibold truncate">{resource.name}</div>
+              </div>
+            ))}
+          </div>
+          
+          {/* Time grid */}
+          <div className="grid" style={{ gridTemplateColumns: `80px repeat(${resourceColumns.length}, 1fr)` }}>
+            {/* Time column */}
+            <div className="border-r">
+              {timeSlots.map((slot, index) => (
+                <div
+                  key={index}
+                  className={`
+                    p-1 border-b text-xs
+                    ${index % 12 === 0 ? 'font-medium' : 'text-gray-500'}
+                  `}
+                  style={{ height: '20px' }}
+                >
+                  {index % 12 === 0 && slot.label}
+                </div>
+              ))}
+            </div>
+            
+            {/* Resource columns */}
+            {resourceColumns.map((resource) => (
+              <div key={resource.id} className="relative border-r">
+                {/* Time slots background */}
+                {timeSlots.map((slot, index) => {
+                  // We're using a regular variable here to avoid React Hook issues when mapping
+                  const slotProps = {
+                    key: index,
+                    className: `border-b ${index % 12 === 0 ? 'bg-gray-50' : ''}`,
+                    style: { height: '20px' } as React.CSSProperties,
+                  };
+                  
+                  const dropId = `${resource.id}-${slot.time}`;
+                  // Create a drop target for each time slot
+                  const dropTimeSlot = (
+                    <DropTimeSlot 
+                      resourceId={resource.id}
+                      time={slot.time}
+                      isOver={dragTarget?.resourceId === resource.id && dragTarget?.time === slot.time}
+                    />
+                  );
+                  
+                  return (
+                    <div {...slotProps}>
+                      {dropTimeSlot}
+                    </div>
+                  );
+                })}
+                
+                {/* Appointments for this resource */}
+                {appointmentsByResource[resource.id]?.map(appointment => {
+                  // Calculate appointment position
+                  const startMinutes = parseInt(appointment.startTime.split(':')[0]) * 60 + 
+                                     parseInt(appointment.startTime.split(':')[1]);
+                  const startFromDayBeginning = startMinutes - (BUSINESS_START_HOUR * 60);
+                  const top = (startFromDayBeginning / 5) * 20;
+                  const height = (appointment.duration / 5) * 20;
+                  
+                  // Determine appointment time status
+                  const timeStatus = appointment.status;
+                  
+                  // Add time status to appointment object
+                  const apptWithTimeStatus = {
+                    ...appointment,
+                    timeStatus
+                  };
+                  
+                  const borderColor = getStatusBorderColor(timeStatus);
+                  
+                  return (
+                    <AppointmentChip
+                      key={appointment.id}
+                      appointment={apptWithTimeStatus}
+                      style={{
+                        position: 'absolute',
+                        top: `${top}px`,
+                        left: '4px',
+                        right: '4px',
+                        height: `${height}px`,
+                        zIndex: 5,
+                        padding: '0.25rem',
+                        borderRadius: '4px',
+                        overflow: 'hidden',
+                        borderLeftWidth: '3px',
+                        borderLeftStyle: 'solid',
+                        borderLeftColor: borderColor,
+                        borderTop: 'none',
+                        borderRight: 'none',
+                        borderBottom: 'none'
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+        </div>
+      </DndContext>
+    </Card>
+  );
+}
+
+// Drop target component for time slots
+function DropTimeSlot({ resourceId, time, isOver }: { resourceId: number, time: number, isOver: boolean }) {
+  const { setNodeRef } = useDroppable({
+    id: `${resourceId}-${time}`,
+  });
   
   return (
-    <div ref={containerRef} className="h-full overflow-auto relative border rounded-md bg-white">
-      {/* Time column headers */}
-      <div className="grid" style={{ gridTemplateColumns: `70px repeat(${resourceColumns.length}, 1fr)` }}>
-        {/* Empty corner cell */}
-        <div className="h-[70px] border-b border-r bg-gray-50 sticky top-0 z-20"></div>
-        
-        {/* Resource column headers */}
-        {resourceColumns.map((resource, index) => (
-          <div 
-            key={resource.id} 
-            className="h-[70px] border-b border-r p-2 flex flex-col justify-center items-center text-center sticky top-0 bg-white z-20"
-          >
-            <div className="font-semibold text-sm">{resource.name}</div>
-            <div className="text-xs text-muted-foreground">
-              {viewMode === 'PROVIDER' ? 'Provider' : 'Operatory'} {index + 1}
-            </div>
-          </div>
-        ))}
-      </div>
-      
-      {/* Time grid */}
-      <div className="grid" style={{ gridTemplateColumns: `70px repeat(${resourceColumns.length}, 1fr)` }}>
-        {/* Time labels column */}
-        <div className="sticky left-0 bg-gray-50 z-10">
-          {timeSlots.map((slot, index) => (
-            <div 
-              key={index} 
-              className={`
-                relative border-b border-r
-                ${slot.isMajor ? 'font-semibold' : ''}
-                ${slot.isMajor ? 'bg-gray-100' : ''}
-              `}
-              style={{ height: `${slotHeight}px` }}
-            >
-              {slot.isMajor && (
-                <div className="absolute left-2 text-xs">{slot.label}</div>
-              )}
-            </div>
-          ))}
-        </div>
-        
-        {/* Resource columns with time slots */}
-        {resourceColumns.map((resource, columnIndex) => {
-          return (
-            <div key={resource.id} className="relative">
-              {/* Time slots for this resource column */}
-              {timeSlots.map((slot, slotIndex) => (
-                <div 
-                  key={slotIndex}
-                  className={`
-                    relative border-b border-r 
-                    ${slot.isMajor ? 'border-gray-300' : 'border-gray-200'}
-                    ${slot.isMajor ? 'bg-gray-50' : ''}
-                    ${slot.isMedium ? 'border-dashed' : ''}
-                    ${dragTarget?.resourceId === resource.id && dragTarget?.time === slot.time ? 'bg-blue-100' : ''}
-                    hover:bg-blue-50/50
-                  `}
-                  style={{ height: `${slotHeight}px` }}
-                  data-resource-id={resource.id}
-                  data-time={slot.time}
-                  onDragOver={handleDragOver}
-                  onDrop={handleDrop}
-                  onClick={() => {
-                    if (!draggingAppointment) {
-                      // Could handle slot click here to create new appointment
-                    }
-                  }}
-                ></div>
-              ))}
-              
-              {/* Appointments for this resource column */}
-              {(appointmentsByResource[resource.id] || []).map((appointment) => (
-                <AppointmentChip
-                  key={appointment.id}
-                  appointment={appointment}
-                  columnIndex={columnIndex}
-                  slotHeight={slotHeight}
-                  onClick={() => {
-                    handleAppointmentClick(appointment);
-                    handleAppointmentDragStart(appointment);
-                  }}
-                />
-              ))}
-            </div>
-          );
-        })}
-      </div>
-    </div>
+    <div 
+      ref={setNodeRef} 
+      className={`w-full h-full ${isOver ? 'bg-blue-100' : ''}`}
+    />
   );
 }
