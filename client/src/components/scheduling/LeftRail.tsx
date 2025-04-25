@@ -57,7 +57,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
     // ASAP patients
     { 
       id: 5, 
-      name: 'Linda Lewis', 
+      name: 'Harry Potter', 
       procedure: 'Broken tooth', 
       waitingSince: formatWaitTime(4), 
       propensityScore: 95, 
@@ -68,7 +68,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
     },
     { 
       id: 6, 
-      name: 'Richard Walker', 
+      name: 'Hermione Granger', 
       procedure: 'Severe pain', 
       waitingSince: formatWaitTime(1), 
       propensityScore: 98,
@@ -79,10 +79,10 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
     },
     
     // Regular waitlist patients
-    { id: 1, name: 'Elizabeth Rodriguez', procedure: 'Crown', waitingSince: formatWaitTime(48), propensityScore: 85 },
-    { id: 2, name: 'William Jackson', procedure: 'Root Canal', waitingSince: formatWaitTime(120), propensityScore: 92 },
-    { id: 3, name: 'Jennifer Taylor', procedure: 'Extraction', waitingSince: formatWaitTime(24), propensityScore: 76 },
-    { id: 4, name: 'James Brown', procedure: 'Filling', waitingSince: formatWaitTime(72), propensityScore: 68 },
+    { id: 1, name: 'Ron Weasley', procedure: 'Crown', waitingSince: formatWaitTime(48), propensityScore: 85 },
+    { id: 2, name: 'Draco Malfoy', procedure: 'Root Canal', waitingSince: formatWaitTime(120), propensityScore: 92 },
+    { id: 3, name: 'Luna Lovegood', procedure: 'Extraction', waitingSince: formatWaitTime(24), propensityScore: 76 },
+    { id: 4, name: 'Neville Longbottom', procedure: 'Filling', waitingSince: formatWaitTime(72), propensityScore: 68 },
   ];
   
   // Filter all patients based on search term
@@ -98,7 +98,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
   const recallPatients: RecallPatient[] = [
     { 
       id: 101, 
-      name: 'Michael Thompson', 
+      name: 'Ginny Weasley', 
       recallType: '6-month cleaning', 
       dueDate: 'Today', 
       lastVisit: '6 months ago',
@@ -107,7 +107,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
     },
     { 
       id: 102, 
-      name: 'Sarah Wilson', 
+      name: 'Albus Dumbledore', 
       recallType: 'Annual exam', 
       dueDate: 'Tomorrow', 
       lastVisit: '1 year ago',
@@ -115,7 +115,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
     },
     { 
       id: 103, 
-      name: 'David Martinez', 
+      name: 'Severus Snape', 
       recallType: '3-month perio maintenance', 
       dueDate: 'In 2 days', 
       lastVisit: '3 months ago',
@@ -123,7 +123,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
     },
     { 
       id: 104, 
-      name: 'Jessica Lee', 
+      name: 'Minerva McGonagall', 
       recallType: '6-month check-up', 
       dueDate: 'Next week', 
       lastVisit: '5 months ago',
@@ -309,7 +309,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                         <p className="text-[10px] text-muted-foreground ml-2">10:30 AM</p>
                       </div>
                       {/* First content line */}
-                      <p className="text-muted-foreground truncate">Dr. Smith • Op. 2</p>
+                      <p className="text-muted-foreground truncate">Dr. Picard • Op. 2</p>
                       {/* Second content line with note */}
                       <p className="text-[10px] text-muted-foreground truncate">Perfect for hygiene recall</p>
                     </div>
@@ -323,7 +323,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                         <p className="font-medium truncate">45-min opening</p>
                         <p className="text-[10px] text-muted-foreground ml-2">2:15 PM</p>
                       </div>
-                      <p className="text-muted-foreground truncate">Dr. Johnson • Op. 4</p>
+                      <p className="text-muted-foreground truncate">Dr. Janeway • Op. 4</p>
                     </div>
                     <UserPlus className="h-3 w-3 text-green-500 opacity-0 group-hover:opacity-100 ml-1.5" />
                   </div>
@@ -335,7 +335,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                         <p className="font-medium truncate">60-min opening</p>
                         <p className="text-[10px] text-muted-foreground ml-2">3:30 PM</p>
                       </div>
-                      <p className="text-muted-foreground truncate">Dr. Davis • Op. 1</p>
+                      <p className="text-muted-foreground truncate">Dr. Sisko • Op. 1</p>
                     </div>
                     <UserPlus className="h-3 w-3 text-green-500 opacity-0 group-hover:opacity-100 ml-1.5" />
                   </div>
