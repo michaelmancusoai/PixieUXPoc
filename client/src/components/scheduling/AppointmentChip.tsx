@@ -93,42 +93,42 @@ export default function AppointmentChip({ appointment, style = {}, className = '
       <div className="h-full p-2 flex flex-col">
         {/* Top row: Patient name and Operatory */}
         <div className="font-medium text-[13px] mb-1 flex justify-between items-baseline">
-          <span className="truncate">{appointment.patient.firstName} {appointment.patient.lastName}</span>
-          <span className="text-gray-500 text-[11px]">Op {appointment.operatory?.id || appointment.operatoryId || 3}</span>
+          <span className="truncate max-w-[70%]">{appointment.patient.firstName} {appointment.patient.lastName}</span>
+          <span className="text-gray-500 text-[11px] whitespace-nowrap">Op {appointment.operatory?.id || appointment.operatoryId || 3}</span>
         </div>
         
         {/* Middle row: Status + time in status and Duration */}
-        <div className="flex justify-between items-center mb-1">
-          <div className="flex items-center">
-            <span className="text-[11px] font-medium bg-gray-100 rounded-md px-2 py-0.5">
+        <div className="flex justify-between items-center mb-1 w-full">
+          <div className="flex items-center overflow-hidden max-w-[70%]">
+            <span className="text-[11px] font-medium bg-gray-100 rounded-md px-2 py-0.5 whitespace-nowrap">
               {getStatusDisplay()}
             </span>
             {/* Time display with clock icon for "In Chair" or "Checked In" status */}
             {(appointment.status?.toLowerCase() === 'in_chair' || 
               appointment.status?.toLowerCase() === 'checked_in') && (
-              <div className="flex items-center text-[11px] text-gray-500 ml-2">
-                <Clock className="h-3 w-3 mr-0.5" />
+              <div className="flex items-center text-[11px] text-gray-500 ml-2 whitespace-nowrap">
+                <Clock className="h-3 w-3 mr-0.5 flex-shrink-0" />
                 {getTimeDisplay()}
               </div>
             )}
           </div>
           
           {/* Duration badge */}
-          <div className="text-[11px] flex items-center">
+          <div className="text-[11px] flex items-center whitespace-nowrap flex-shrink-0">
             <Clock className="h-3 w-3 mr-0.5 text-gray-500" />
             <span className="text-gray-700">{appointment.duration}m</span>
           </div>
         </div>
         
         {/* Bottom row: Procedure type and Doctor name */}
-        <div className="flex justify-between items-center mt-auto">
-          {/* Procedure */}
-          <div className="text-[11px] text-gray-700 truncate">
+        <div className="flex justify-between items-center mt-auto w-full">
+          {/* Procedure - limited width with truncation */}
+          <div className="text-[11px] text-gray-700 truncate max-w-[60%] overflow-hidden">
             {appointment.procedure}
           </div>
           
-          {/* Doctor name */}
-          <div className="text-[11px] text-gray-700">
+          {/* Doctor name - never wraps */}
+          <div className="text-[11px] text-gray-700 whitespace-nowrap flex-shrink-0">
             {appointment.provider?.name || 'Dr. Unknown'}
           </div>
         </div>
