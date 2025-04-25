@@ -61,23 +61,23 @@ export default function AppHeader({
           
           {/* Patient counts in a visually stimulating display */}
           <div className="flex items-center gap-2 ml-2 h-9">
-            <div className="flex items-center gap-1 bg-blue-100 border border-blue-300 rounded-md px-2 py-0.5 h-full">
-              <span className="text-sm font-bold text-blue-700">{patientCounts.total}</span>
+            <div className="flex items-center justify-center w-16 bg-blue-100 border border-blue-300 rounded-md h-full">
+              <span className="text-sm font-bold text-blue-700 mr-1">{patientCounts.total}</span>
               <span className="text-xs text-blue-600">Total</span>
             </div>
             
-            <div className="flex items-center gap-1 bg-amber-100 border border-amber-300 rounded-md px-2 py-0.5 h-full">
-              <span className="text-sm font-bold text-amber-700">{patientCounts.upcoming}</span>
+            <div className="flex items-center justify-center w-16 bg-amber-100 border border-amber-300 rounded-md h-full">
+              <span className="text-sm font-bold text-amber-700 mr-1">{patientCounts.upcoming}</span>
               <span className="text-xs text-amber-600">Up</span>
             </div>
             
-            <div className="flex items-center gap-1 bg-green-100 border border-green-300 rounded-md px-2 py-0.5 h-full">
-              <span className="text-sm font-bold text-green-700">{patientCounts.inProgress}</span>
+            <div className="flex items-center justify-center w-16 bg-green-100 border border-green-300 rounded-md h-full">
+              <span className="text-sm font-bold text-green-700 mr-1">{patientCounts.inProgress}</span>
               <span className="text-xs text-green-600">In</span>
             </div>
             
-            <div className="flex items-center gap-1 bg-gray-100 border border-gray-300 rounded-md px-2 py-0.5 h-full">
-              <span className="text-sm font-bold text-gray-700">{patientCounts.completed}</span>
+            <div className="flex items-center justify-center w-16 bg-gray-100 border border-gray-300 rounded-md h-full">
+              <span className="text-sm font-bold text-gray-700 mr-1">{patientCounts.completed}</span>
               <span className="text-xs text-gray-600">Done</span>
             </div>
           </div>
