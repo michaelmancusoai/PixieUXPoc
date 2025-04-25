@@ -124,11 +124,6 @@ export const navigationData: NavSection[] = [
         href: "/schedule/waitlist",
         icon: Clock,
       },
-      {
-        title: "Online Requests",
-        href: "/schedule/online-booking",
-        icon: BookOpen,
-      },
     ],
   },
   // Patients section with patient management features
