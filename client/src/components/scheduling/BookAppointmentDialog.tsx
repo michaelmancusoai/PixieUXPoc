@@ -46,7 +46,8 @@ const formSchema = z.object({
   provider: z.string().min(1, "Provider is required"),
   hygienist: z.string().optional(),
   // Additional fields for the time filters
-  amPmFilter: z.enum(["AM", "PM"]).default("AM"),
+  amPmFilter: z.enum(["AM", "PM", "BOTH"]).default("BOTH"),
+  selectedDays: z.array(z.number()).default([1, 2, 3, 4, 5]), // Mon-Fri by default
   fromTime: z.string().optional(),
   toTime: z.string().optional(),
 });
@@ -67,11 +68,13 @@ export default function BookAppointmentDialog({
   const [activeTab, setActiveTab] = useState<"set" | "find">("set");
   const [selectedDay, setSelectedDay] = useState<number>(new Date().getDay()); // 0-6, Sunday is 0
   const [formState, setFormState] = useState<{
-    amPmFilter: "AM" | "PM",
-    showTimeSlots: boolean
+    amPmFilter: "AM" | "PM" | "BOTH",
+    showTimeSlots: boolean,
+    selectedDays: number[]
   }>({
-    amPmFilter: "AM",
-    showTimeSlots: false
+    amPmFilter: "BOTH",
+    showTimeSlots: false,
+    selectedDays: [1, 2, 3, 4, 5] // Mon-Fri by default
   });
   
   // Create form
@@ -88,9 +91,10 @@ export default function BookAppointmentDialog({
       provider: "",
       hygienist: "",
       // Add default values for new fields
-      amPmFilter: "AM",
+      amPmFilter: "BOTH",
       fromTime: "07:00",
       toTime: "19:00",
+      selectedDays: [1, 2, 3, 4, 5], // Mon-Fri by default
     },
   });
   
