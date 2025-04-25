@@ -371,10 +371,10 @@ export default function CalendarView({
           <div className="border-r bg-gray-200 relative">
             {timeSlots.map((slot, index) => (
               slot.isTimeIndicator ? (
-                // Special current time indicator at 1:15 PM
+                // Special current time indicator at 1:15 PM - just show the label, no line
                 <div 
                   key={index} 
-                  className="border-0 h-[2px] bg-red-500 relative flex items-center"
+                  className="border-0 h-[20px] bg-transparent relative flex items-center"
                 >
                   {/* Current time label for 1:15 PM */}
                   <div className="absolute right-0 flex justify-end items-center z-10 h-full">
@@ -404,12 +404,13 @@ export default function CalendarView({
           </div>
           
           {/* Resource columns */}
-          {resourceColumns.map((resource) => (
+          {resourceColumns.map((resource, resourceIndex) => (
             <div key={resource.id} className="relative border-r">
               {/* Time slots with graduated border styling */}
               {timeSlots.map((slot, index) => {
                 // Special case for time indicator slot
                 if (slot.isTimeIndicator) {
+                  // Only start showing the line from the first resource column (skip time column)
                   return (
                     <div 
                       key={index}
