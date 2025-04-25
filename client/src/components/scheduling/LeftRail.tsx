@@ -16,6 +16,23 @@ interface LeftRailProps {
   selectedDate: Date;
 }
 
+// Interface definitions
+interface WaitlistPatient {
+  id: number;
+  name: string;
+  procedure: string;
+  waitingSince: string;
+  propensityScore: number;
+}
+
+interface AsapPatient {
+  id: number;
+  name: string;
+  reason: string;
+  contact: string;
+  requestedDate: string;
+}
+
 export default function LeftRail({ selectedDate }: LeftRailProps) {
   const [searchTerm, setSearchTerm] = useState('');
   
@@ -29,8 +46,8 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
   
   // Sample ASAP list (patients who need to be seen urgently)
   const asapList = [
-    { id: 5, name: 'Linda Lewis', reason: 'Broken tooth', contact: '555-123-4567' },
-    { id: 6, name: 'Richard Walker', reason: 'Severe pain', contact: '555-987-6543' },
+    { id: 5, name: 'Linda Lewis', reason: 'Broken tooth', contact: '555-123-4567', requestedDate: 'Today 9:30 AM' },
+    { id: 6, name: 'Richard Walker', reason: 'Severe pain', contact: '555-987-6543', requestedDate: 'Today 11:45 AM' },
   ];
   
   // Filter patients based on search term

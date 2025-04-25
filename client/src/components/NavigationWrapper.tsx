@@ -19,8 +19,8 @@ export function NavigationWrapper({ children }: NavigationWrapperProps) {
       <Header />
 
       {/* Page content area */}
-      <div className="flex-1 overflow-y-auto p-3 sm:p-5 bg-[#F5F7FA]">
-        <div className="mx-auto w-full max-w-[97%] 2xl:max-w-[98%]">
+      <div className="flex-1 p-3 sm:p-5 bg-[#F5F7FA]">
+        <div className="mx-auto w-full max-w-[97%] 2xl:max-w-[98%] h-full">
           {/* Render page content */}
           {children}
         </div>
