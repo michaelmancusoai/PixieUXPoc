@@ -52,15 +52,18 @@ export default function AppHeader({
   
   return (
     <div className="bg-white border-b p-4 flex flex-col gap-4">
-      <div className="grid grid-cols-3 items-center">
-        {/* Left column */}
-        <div className="flex items-center gap-4">
+      <div className="grid grid-cols-5 items-center">
+        {/* Column 1 - Today Button */}
+        <div className="flex items-center">
           <Button variant="outline" size="sm" onClick={onToday}>
             Today
           </Button>
-          
+        </div>
+        
+        {/* Column 2 - Patient Counts */}
+        <div className="flex items-center justify-center col-span-1">
           {/* Patient counts in a visually stimulating display */}
-          <div className="flex items-center gap-2 ml-2 h-9">
+          <div className="flex items-center gap-2 h-9">
             {/* Total - Dark Gray */}
             <div className="flex items-center w-16 bg-gray-100 border border-gray-300 rounded-md h-full overflow-hidden">
               <div className="flex items-center justify-center w-6 bg-gray-200 h-full mr-1 border-r border-gray-300">
@@ -95,7 +98,7 @@ export default function AppHeader({
           </div>
         </div>
         
-        {/* Center column - Date control stays in center */}
+        {/* Column 3 - Date control stays in center */}
         <div className="flex items-center justify-center gap-2">
           <Button variant="ghost" size="icon" onClick={onPrevious}>
             <ChevronLeft className="h-4 w-4" />
@@ -108,30 +111,30 @@ export default function AppHeader({
           </Button>
         </div>
         
-        {/* Right column - Tabs and action buttons */}
-        <div className="flex items-center justify-end gap-4">
-          {/* View mode tabs */}
+        {/* Column 4 - View mode tabs */}
+        <div className="flex items-center justify-center">
           <Tabs defaultValue={currentView} onValueChange={(value) => onViewChange(value as ViewModeType)}>
             <TabsList>
               <TabsTrigger value="OPERATORY">Operatory</TabsTrigger>
               <TabsTrigger value="PROVIDER">Provider</TabsTrigger>
             </TabsList>
           </Tabs>
-          
-          <div className="flex items-center gap-2">
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={onToggleExpandView}
-              title={expandedView ? "Show sidebars" : "Expand calendar"}
-            >
-              {expandedView ? <Minimize className="h-4 w-4" /> : <Expand className="h-4 w-4" />}
-            </Button>
-            <Button onClick={onBookAppointment} className="flex items-center gap-1">
-              <PlusCircle className="h-4 w-4" />
-              <span>Book Appointment</span>
-            </Button>
-          </div>
+        </div>
+        
+        {/* Column 5 - Action buttons */}
+        <div className="flex items-center justify-end gap-2">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            onClick={onToggleExpandView}
+            title={expandedView ? "Show sidebars" : "Expand calendar"}
+          >
+            {expandedView ? <Minimize className="h-4 w-4" /> : <Expand className="h-4 w-4" />}
+          </Button>
+          <Button onClick={onBookAppointment} className="flex items-center gap-1">
+            <PlusCircle className="h-4 w-4" />
+            <span>Book Appointment</span>
+          </Button>
         </div>
       </div>
       
