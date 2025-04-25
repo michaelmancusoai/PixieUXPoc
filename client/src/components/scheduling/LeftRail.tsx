@@ -86,22 +86,15 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
                 {asapList.length > 0 ? (
-                  <div className="space-y-2">
+                  <div className="border rounded-sm overflow-hidden divide-y divide-gray-100">
                     {asapList.map(patient => (
-                      <div key={patient.id} className="flex items-center bg-white rounded-md border text-xs p-2 gap-1.5">
-                        <span className="flex-shrink-0 w-1.5 h-1.5 bg-red-500 rounded-full"></span>
-                        <div className="flex-grow min-w-0 overflow-hidden">
+                      <div key={patient.id} className="group flex items-center bg-white hover:bg-gray-50 py-1.5 px-2 text-xs cursor-pointer">
+                        <span className="flex-shrink-0 w-1.5 h-1.5 bg-red-500 rounded-full mr-1.5"></span>
+                        <div className="min-w-0 flex-grow grid grid-cols-1">
                           <p className="font-medium truncate">{patient.name}</p>
                           <p className="text-muted-foreground truncate">{patient.reason}</p>
                         </div>
-                        <div className="flex-shrink-0 flex space-x-1">
-                          <Button size="sm" variant="ghost" className="h-6 w-6 p-0 rounded-full hover:bg-gray-50">
-                            <Phone className="h-3 w-3" />
-                          </Button>
-                          <Button size="sm" variant="ghost" className="h-6 w-6 p-0 rounded-full hover:bg-gray-50">
-                            <MessageCircle className="h-3 w-3" />
-                          </Button>
-                        </div>
+                        <Phone className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 ml-1.5" />
                       </div>
                     ))}
                   </div>
@@ -130,25 +123,18 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
                 {filteredWaitlist.length > 0 ? (
-                  <div className="space-y-2">
+                  <div className="border rounded-sm overflow-hidden divide-y divide-gray-100">
                     {filteredWaitlist.map(patient => (
-                      <div key={patient.id} className="flex items-center bg-white rounded-md border text-xs p-2 gap-1.5">
-                        <span className="flex-shrink-0 w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
-                        <div className="flex-grow min-w-0 overflow-hidden">
+                      <div key={patient.id} className="group flex items-center bg-white hover:bg-gray-50 py-1.5 px-2 text-xs cursor-pointer">
+                        <span className="flex-shrink-0 w-1.5 h-1.5 bg-blue-500 rounded-full mr-1.5"></span>
+                        <div className="min-w-0 flex-grow grid grid-cols-1">
                           <div className="flex items-center justify-between">
                             <p className="font-medium truncate">{patient.name}</p>
-                            <p className="text-[10px] text-muted-foreground ml-1">{patient.waitingSince}</p>
+                            <p className="text-[10px] text-muted-foreground ml-2">{patient.waitingSince}</p>
                           </div>
                           <p className="text-muted-foreground truncate">{patient.procedure}</p>
                         </div>
-                        <div className="flex-shrink-0 flex space-x-1">
-                          <Button size="sm" variant="ghost" className="h-6 w-6 p-0 rounded-full hover:bg-gray-50">
-                            <Phone className="h-3 w-3" />
-                          </Button>
-                          <Button size="sm" variant="ghost" className="h-6 w-6 p-0 rounded-full hover:bg-gray-50">
-                            <MessageCircle className="h-3 w-3" />
-                          </Button>
-                        </div>
+                        <Phone className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 ml-1.5" />
                       </div>
                     ))}
                   </div>
@@ -179,53 +165,41 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
-                <div className="space-y-2">
-                  <div className="flex items-center bg-white rounded-md border text-xs p-2 gap-1.5">
-                    <span className="flex-shrink-0 w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                    <div className="flex-grow min-w-0 overflow-hidden">
+                <div className="border rounded-sm overflow-hidden divide-y divide-gray-100">
+                  <div className="group flex items-center bg-white hover:bg-gray-50 py-1.5 px-2 text-xs cursor-pointer">
+                    <span className="flex-shrink-0 w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
+                    <div className="min-w-0 flex-grow grid grid-cols-1">
                       <div className="flex items-center justify-between">
                         <p className="font-medium truncate">30-min opening</p>
-                        <p className="text-[10px] text-muted-foreground ml-1">10:30 AM</p>
+                        <p className="text-[10px] text-muted-foreground ml-2">10:30 AM</p>
                       </div>
                       <p className="text-muted-foreground truncate">Dr. Smith • Op. 2</p>
                     </div>
-                    <div className="flex-shrink-0">
-                      <Button size="sm" variant="ghost" className="h-6 w-6 p-0 rounded-full hover:bg-gray-50">
-                        <UserPlus className="h-3 w-3" />
-                      </Button>
-                    </div>
+                    <UserPlus className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 ml-1.5" />
                   </div>
                   
-                  <div className="flex items-center bg-white rounded-md border text-xs p-2 gap-1.5">
-                    <span className="flex-shrink-0 w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                    <div className="flex-grow min-w-0 overflow-hidden">
+                  <div className="group flex items-center bg-white hover:bg-gray-50 py-1.5 px-2 text-xs cursor-pointer">
+                    <span className="flex-shrink-0 w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
+                    <div className="min-w-0 flex-grow grid grid-cols-1">
                       <div className="flex items-center justify-between">
                         <p className="font-medium truncate">45-min opening</p>
-                        <p className="text-[10px] text-muted-foreground ml-1">2:15 PM</p>
+                        <p className="text-[10px] text-muted-foreground ml-2">2:15 PM</p>
                       </div>
                       <p className="text-muted-foreground truncate">Dr. Johnson • Op. 4</p>
                     </div>
-                    <div className="flex-shrink-0">
-                      <Button size="sm" variant="ghost" className="h-6 w-6 p-0 rounded-full hover:bg-gray-50">
-                        <UserPlus className="h-3 w-3" />
-                      </Button>
-                    </div>
+                    <UserPlus className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 ml-1.5" />
                   </div>
                   
-                  <div className="flex items-center bg-white rounded-md border text-xs p-2 gap-1.5">
-                    <span className="flex-shrink-0 w-1.5 h-1.5 bg-green-500 rounded-full"></span>
-                    <div className="flex-grow min-w-0 overflow-hidden">
+                  <div className="group flex items-center bg-white hover:bg-gray-50 py-1.5 px-2 text-xs cursor-pointer">
+                    <span className="flex-shrink-0 w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
+                    <div className="min-w-0 flex-grow grid grid-cols-1">
                       <div className="flex items-center justify-between">
                         <p className="font-medium truncate">60-min opening</p>
-                        <p className="text-[10px] text-muted-foreground ml-1">3:30 PM</p>
+                        <p className="text-[10px] text-muted-foreground ml-2">3:30 PM</p>
                       </div>
                       <p className="text-muted-foreground truncate">Dr. Davis • Op. 1</p>
                     </div>
-                    <div className="flex-shrink-0">
-                      <Button size="sm" variant="ghost" className="h-6 w-6 p-0 rounded-full hover:bg-gray-50">
-                        <UserPlus className="h-3 w-3" />
-                      </Button>
-                    </div>
+                    <UserPlus className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 ml-1.5" />
                   </div>
                 </div>
               </AccordionContent>
