@@ -1,0 +1,101 @@
+Data Gaps — Design Spec
+A calm, one-stop “master-data clinic” that keeps patient records claim-ready, outreach-ready, and clinically safe.
+
+0 · Purpose in one line
+
+Surface every missing, expired, or flawed data element—and let any team-member correct it in < 60 seconds without hunting through the full chart.
+1 · Page anatomy
+
+
+Zone	Span	Question answered	Key components
+Hero KPI trio	full-width row	“Which gaps cost us most today?”	3 actionable cards
+Gap filter rail	sticky left	“Show just the gaps I can fix now.”	Accordion of gap types
+Gap table	9⁄12 cols	“Who, what’s missing, how old, quick fix?”	Virtualised grid
+Bulk-action bar	bottom dock	“Patch many gaps at once.”	Contextual buttons
+Quick-fix drawer	slide-in right	“Edit the field or request info.”	Field edit + one-tap comms
+2 · Hero KPI cards (single CTA each)
+
+
+Card	Metric & copy	CTA	Colour band
+Claims-Blocking Gaps	8 patients risk denial · $2 340	Fix Insurance	Coral ≥5 • Amber 1-4
+Contact-Blocking Gaps	11 records bad phone/email	Send Update Link	Amber when >0
+Clinical-Safety Gaps	4 charts missing allergy/med list	Update Chart	Coral always
+Zero state copy: “Data spotless—your auditors salute you.”
+
+3 · Gap taxonomy (used in filter rail & grid)
+
+
+Category	Specific gaps surfaced	Fix action(s)
+Insurance	Missing policy # · Expired card · Missing subscriber DOB	Edit inline • Photo upload • Request portal link
+Demographics	Missing DOB · Bad phone · Bounced email	Inline edit • SMS/email self-update
+Clinical	Missing allergy list · Missing med list · Missing height/weight for GA	Add allergy/med • Mark “None”
+Consent & Docs	Unsigned HIPAA · Expired financial policy · Missing photo ID	Send e-sign link • Mark received
+Compliance	Missing privacy acknowledgment · Missing contact preference	Inline checkboxes
+Duplicate MRN	Potential duplicate chart IDs	Merge wizard
+4 · Filter rail
+
+Gap Type (multi-select chips from taxonomy)
+Severity (Claims-blocking, Safety, Contact, Minor)
+Patient Status (Has upcoming appt, No upcoming)
+Age of Gap (New <30 d, 30-90 d, 90 d+)
+Collapses to a 40 px rail; active filter count badge.
+5 · Gap table columns
+
+
+Col	Details
+Patient	Avatar, name, MRN
+Gap Type	Chip colour coded by category
+Detail	“Missing subscriber DOB”, “Phone invalid”
+Age	“42 d” (red ≥90 d)
+Next Appt	Date/“none”
+Quick Fix	Icon(s): ✎ edit • ✉ request • 📷 capture • ⇆ merge
+Status	Open • Requested • Fixed • Ignored
+Rows support multi-select.
+
+6 · Quick-fix drawer (right slide-in)
+
+Header: Patient mini card + gap badge
+Field patch: Inline editable field(s) with validation
+One-tap comms:
+
+SMS: “Hi {first}, tap to update your insurance before your visit.”
+Email: similar
+“Mark Fixed” button when value entered
+Audit trace auto-records user/time.
+7 · Bulk-action bar buttons
+
+
+Button	Smart enable rule	Modal
+Bulk SMS Update Link	rows where phone valid	Template picker
+Bulk Email Link	rows email valid	—
+Print Forms	any	PDF with barcodes
+Mark Resolved	rows with new value pre-entered	Confirm
+Progress toast: “8 links sent · 3 opened.”
+
+8 · Behavioural nudges
+
+
+Trigger	Nudge
+Claims-blocking gaps > $1 000 at 3 p.m.	Red halo on card: “Tomorrow’s claims may deny—patch now.”
+Gap fixed via drawer	Confetti tick on row, KPI recalcs (goal gradient).
+Age column reaches 90 d	Row text turns coral + subtle shake once upon load.
+9 · Copy snippets
+
+
+Context	Text
+Tooltip on Claims-blocking	“Missing or stale insurance info; claim will deny.”
+SMS update link	“Hi {first}, Pixie Dental needs a quick insurance update for your {date} visit—tap here: {link}”
+Empty grid	“Every record is complete—stewardship level: legendary.”
+Merge duplicate modal	“Seems {two names} might be the same person. Confirm to merge charts.”
+Tone = stewardship-proud, concise, helpful.
+
+10 · Designer checklist
+
+Hero cards 260 px h; same mint/amber/coral palette.
+Grid virtualised; row height 56 px.
+Gap chip colour: Insurance blue, Contact amber, Clinical coral, Consent lilac, Compliance grey.
+Drawer width 360 px; save icon top-right.
+Filter rail 240 px; hidden at narrow widths behind funnel icon.
+Accessibility: tooltips explain colour cues.
+Result
+Patients ▸ Data Gaps becomes the quiet command-centre of data hygiene: eleven gaps fixed, denial risk neutered, outreach response rates up—all before the kettle boils.
