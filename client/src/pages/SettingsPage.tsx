@@ -1,4 +1,4 @@
-import { useLocation, Link, Route, Switch } from "wouter";
+import { useLocation, Link, Route, Switch, Redirect } from "wouter";
 import { cn } from "@/lib/utils";
 import TeamMembersPage from "./settings/TeamMembersPage";
 import {
@@ -62,7 +62,7 @@ export default function SettingsPage() {
   
   // If we're at /settings, redirect to /settings/team
   if (location === "/settings") {
-    return <Link href="/settings/team"></Link>;
+    return <Redirect to="/settings/team" />;
   }
 
   return (
