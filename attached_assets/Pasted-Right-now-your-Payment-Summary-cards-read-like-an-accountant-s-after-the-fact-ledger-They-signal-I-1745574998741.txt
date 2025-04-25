@@ -1,0 +1,54 @@
+Right now your Payment Summary cards read like an accountant’s after-the-fact ledger. They signal “Interesting” but not “Act Now.” A front-office or billing coordinator needs leading indicators that point to preventable leakage—dollars about to slip away or workflow snarls that will force tomorrow’s apologetic phone calls.
+
+1 · Replace passive KPIs with behaviour-changing ones
+
+
+Replace this…	…with this KPI	Why it motivates action (Rory’s lens)	Visual hint
+Total $ Collected Today	Same-Day Collection Rate (Patient-responsibility dollars collected before patient leaves)	Creates an “honour to be kept” norm; staff hate seeing it dip below 90 %.	Progress bar that turns green ≥ 95 %
+Avg. Payment	% Auto-Payments (Card-on-File)	Reinforces the card-on-file quest; every stored card nudges this metric up.	Coin icon fills as % rises
+Success Rate (generic)	First-Attempt Success (transactions w/out retry)	Highlights terminal issues before they create phone work.	Red badge appears when < 97 %
+n/a	Pending Verifications (e-checks & ACH still in limbo)	Shows dollars “stuck in clearing”; brings latent risk into view.	Amber clock icon + $ amount
+Refunded $	Preventable Refunds (refunds caused by card errors / wrong amounts)	Anchors staff to root-cause thinking, not just dollar flow.	Tooltip links to offending transactions
+2 · Fold in leading indicators from Claims
+
+80 % of patient balance pain begins with claim rejections and partial pays. Add a slim “Claims Risk” pill above the payment grid:
+
+Claims Risk: $3 250 at risk (12 claims) → Tap to see root causes
+Clicking jumps to Claims filtered on “Action Needed.” Now the payment screen also feels like an early-warning radar.
+
+3 · Behavioural dashboard layout (wireframe in words)
+
+┌────────────────────┬────────────────────┬────────────────────┐
+│ Same-Day Collection│ Card-on-File %     │ First-Attempt Paid │
+│ 82 % [▃▃▅▆▇  ]     │ 37 % [▂▅▅▆▃ ]     │ 98.4 % [green]     │
+└────────────────────┴────────────────────┴────────────────────┘
+┌─────────────────────────────┐
+│ Claims Risk  $3,250 amber   │
+└─────────────────────────────┘
+Progress bars unlock the goal-gradient effect; colour only appears when things need applause or attention.
+
+4 · Quick-Action buttons that shorten the gap between insight and fix
+
+
+Insight card	Default CTA	Hover secondary
+Same-Day Collection < 90 %	“View unchecked-out patients”	“Send pay-link SMS”
+Card-on-File % target unmet	“Open today’s schedule” (highlights patients w/out stored card)	“Print countertop tent card”
+Pending Verifications > $0	“View unsettled ACHs”	“Email clearing report”
+Preventable Refunds>0	“See root-cause list”	“Tag to Training module”
+5 · Micro-copy swaps (small but mighty)
+
+
+Current	Rory-fied
+“Pending payments”	“$150 in limbo — chase or wait?”
+“Success rate 88 %”	“12 % failed first try – rescue before it rolls to phone calls.”
+“Refunded $76”	“$76 paid twice — let’s stop the déjà-vu.”
+6 · Tiny nudges that pay compound interest
+
+Endowed progress bar on Card-on-File: start every Monday with last week’s percentage faint-filled. Staff feel “almost there” from the get-go.
+Loss aversion toast when Same-Day dips: “Every 1 % drop costs $240 a month—shall we text pending patients?”
+Streak badge: “3 consecutive days ≥ 95 % Same-Day Collection—protect the streak!”
+Take-away for the design team
+Swap ledger metrics for leakage metrics. Ask: “Does this number prod someone to do something within the next hour?”
+Give every metric a direct button. Never make users hunt in another tab.
+Celebrate upwards motion, flag downward drift early. Green and red should earn their screen real estate.
+Focus on preventing tomorrow’s billing fires today—and your payment screen will shift from rear-view bookkeeping to a behavioural cockpit that keeps revenue (and receptionist morale) humming.

@@ -41,6 +41,8 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
+  AlertTriangle,
+  BadgeCheck,
   ChevronDown,
   XCircle,
   CreditCard,
@@ -335,6 +337,28 @@ export default function PaymentsPage() {
       
     const totalRefunded = filteredPayments.filter(p => p.status === "Refunded")
       .reduce((sum, payment) => sum + payment.amount, 0);
+    
+    // New KPIs for behavioral dashboard
+    const sameDayCollectionTotal = 1200; // This would come from real data in a production app
+    const sameDayCollectionRate = 82; // Percentage
+    
+    // Cards on file percentage
+    const cardOnFilePercentage = 37; // This would be calculated from real data
+
+    // First-attempt success rate
+    const attemptedPayments = filteredPayments.filter(p => p.status === "Completed" || p.status === "Failed").length;
+    const completedPayments = filteredPayments.filter(p => p.status === "Completed").length;
+    const firstAttemptSuccessRate = attemptedPayments > 0 ? (completedPayments / attemptedPayments) * 100 : 0;
+    
+    // Pending verifications (e-checks & ACH in limbo)
+    const pendingVerificationsTotal = 150;
+    
+    // Preventable refunds calculation - would be based on reason codes in real app
+    const preventableRefundsTotal = 76;
+    
+    // Claims risk total - would come from claims database in real app
+    const claimsRiskTotal = 3250;
+    const claimsRiskCount = 12;
       
     // Payment method breakdowns
     const creditCardPayments = filteredPayments.filter(p => p.paymentMethod === "Credit Card" && p.status === "Completed");
@@ -366,10 +390,8 @@ export default function PaymentsPage() {
     // Calculate average payment amount
     const avgPaymentAmount = total / filteredPayments.filter(p => p.status === "Completed").length || 0;
     
-    // Calculate payment success rate
-    const totalAttemptedPayments = filteredPayments.filter(p => p.status === "Completed" || p.status === "Failed").length;
-    const successfulPayments = filteredPayments.filter(p => p.status === "Completed").length;
-    const paymentSuccessRate = totalAttemptedPayments > 0 ? (successfulPayments / totalAttemptedPayments) * 100 : 0;
+    // Payment success rate was already calculated above as firstAttemptSuccessRate
+    const paymentSuccessRate = firstAttemptSuccessRate;
     
     // Phase 3 Payments processor stats
     const phase3Payments = filteredPayments.filter(p => p.paymentProcessor === "Phase 3 Payments" && p.status === "Completed");
@@ -394,7 +416,16 @@ export default function PaymentsPage() {
       avgPaymentAmount,
       paymentSuccessRate,
       phase3Total,
-      phase3Percentage
+      phase3Percentage,
+      // New action-oriented KPIs
+      sameDayCollectionTotal,
+      sameDayCollectionRate,
+      cardOnFilePercentage,
+      firstAttemptSuccessRate,
+      pendingVerificationsTotal,
+      preventableRefundsTotal,
+      claimsRiskTotal,
+      claimsRiskCount
     };
   };
 
@@ -416,7 +447,16 @@ export default function PaymentsPage() {
     avgPaymentAmount,
     paymentSuccessRate,
     phase3Total,
-    phase3Percentage
+    phase3Percentage,
+    // New action-oriented KPIs
+    sameDayCollectionTotal,
+    sameDayCollectionRate,
+    cardOnFilePercentage,
+    firstAttemptSuccessRate,
+    pendingVerificationsTotal,
+    preventableRefundsTotal,
+    claimsRiskTotal,
+    claimsRiskCount
   } = calculateMetrics();
 
   // Handle row checkbox click
@@ -544,100 +584,166 @@ export default function PaymentsPage() {
             </DropdownMenu>
           </div>
 
-          {/* Summary Cards */}
+          {/* Behavioral Dashboard Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Payment Summary</CardTitle>
+                <CardTitle className="text-base font-medium">Same-Day Collection Rate</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
                   <DollarSign className="h-8 w-8 mr-3 text-green-500" />
                   <div>
-                    <div className="text-2xl font-bold">${total.toFixed(2)}</div>
+                    <div className="text-2xl font-bold">{sameDayCollectionRate}%</div>
                     <div className="text-sm text-muted-foreground">
-                      {filteredPayments.filter(p => p.status === "Completed").length} completed payments
+                      Patient-responsibility dollars collected before patient leaves
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-4 border-t flex justify-between items-center">
-                  <div>
-                    <div className="text-sm font-medium">${avgPaymentAmount.toFixed(0)}</div>
-                    <div className="text-xs text-muted-foreground">Avg. payment</div>
+                <div className="mt-4 space-y-2">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Goal: 95%</span>
+                    <span className={`font-medium ${sameDayCollectionRate >= 95 ? "text-green-600" : "text-amber-600"}`}>
+                      ${sameDayCollectionTotal} collected
+                    </span>
                   </div>
-                  <div>
-                    <div className="text-sm font-medium">{paymentSuccessRate.toFixed(0)}%</div>
-                    <div className="text-xs text-muted-foreground">Success rate</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium text-amber-500">${totalRefunded.toFixed(0)}</div>
-                    <div className="text-xs text-muted-foreground">Refunded</div>
+                  <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full rounded-full ${sameDayCollectionRate >= 95 ? "bg-green-500" : "bg-amber-500"}`} 
+                      style={{ width: `${sameDayCollectionRate}%` }}
+                    ></div>
                   </div>
                 </div>
+                <Button variant="outline" size="sm" className="w-full mt-4 text-xs">
+                  View unchecked-out patients
+                </Button>
               </CardContent>
             </Card>
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Payment Methods</CardTitle>
+                <CardTitle className="text-base font-medium">Card-on-File Percentage</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
                   <CreditCardIcon className="h-8 w-8 mr-3 text-blue-500" />
                   <div>
-                    <div className="text-2xl font-bold">${totalPending.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">Pending payments</div>
+                    <div className="text-2xl font-bold">{cardOnFilePercentage}%</div>
+                    <div className="text-sm text-muted-foreground">
+                      Patients with card information stored
+                    </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-4 border-t grid grid-cols-3 gap-2">
-                  <div>
-                    <div className="text-sm font-medium">{creditCardPercentage.toFixed(0)}%</div>
-                    <div className="text-xs text-muted-foreground">Credit Card</div>
+                <div className="mt-4 space-y-2">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Goal: 75%</span>
+                    <span className="font-medium text-blue-600">
+                      {cardOnFilePercentage < 75 ? "Need " + (75 - cardOnFilePercentage) + "% more" : "Target met"}
+                    </span>
                   </div>
-                  <div>
-                    <div className="text-sm font-medium">{cashPercentage.toFixed(0)}%</div>
-                    <div className="text-xs text-muted-foreground">Cash</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">{checkPercentage.toFixed(0)}%</div>
-                    <div className="text-xs text-muted-foreground">Check</div>
+                  <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-blue-500 rounded-full" 
+                      style={{ width: `${cardOnFilePercentage}%` }}
+                    ></div>
                   </div>
                 </div>
+                <Button variant="outline" size="sm" className="w-full mt-4 text-xs">
+                  Open today's schedule
+                </Button>
               </CardContent>
             </Card>
             
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Payment Categories</CardTitle>
+                <CardTitle className="text-base font-medium">First-Attempt Success</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
-                  <Receipt className="h-8 w-8 mr-3 text-amber-500" />
+                  <CheckCircle className="h-8 w-8 mr-3 text-green-500" />
                   <div>
-                    <div className="text-2xl font-bold">${treatmentTotal.toFixed(2)}</div>
+                    <div className="text-2xl font-bold">{firstAttemptSuccessRate.toFixed(1)}%</div>
                     <div className="text-sm text-muted-foreground">
-                      {treatmentPercentage.toFixed(0)}% for treatments
+                      Transactions without retry needed
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-4 border-t grid grid-cols-2 gap-2">
-                  <div>
-                    <div className="text-sm font-medium">${consultationTotal.toFixed(0)}</div>
-                    <div className="text-xs text-muted-foreground">Consultations</div>
+                <div className="mt-4 space-y-2">
+                  <div className="flex justify-between items-center text-sm">
+                    <span className="text-muted-foreground">Goal: 97%</span>
+                    <span className={`font-medium ${firstAttemptSuccessRate >= 97 ? "text-green-600" : "text-red-600"}`}>
+                      {firstAttemptSuccessRate < 97 ? 
+                        `${(100 - firstAttemptSuccessRate).toFixed(1)}% failed first try` : 
+                        "Optimal performance"}
+                    </span>
                   </div>
-                  <div>
-                    <div className="text-sm font-medium">${productsTotal.toFixed(0)}</div>
-                    <div className="text-xs text-muted-foreground">Products</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">${insuranceTotal.toFixed(0)}</div>
-                    <div className="text-xs text-muted-foreground">Insurance</div>
-                  </div>
-                  <div>
-                    <div className="text-sm font-medium">${totalPending.toFixed(0)}</div>
-                    <div className="text-xs text-muted-foreground">Pending</div>
+                  <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full rounded-full ${firstAttemptSuccessRate >= 97 ? "bg-green-500" : "bg-amber-500"}`} 
+                      style={{ width: `${firstAttemptSuccessRate}%` }}
+                    ></div>
                   </div>
                 </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Claims Risk Banner */}
+          <div className="mb-6">
+            <Card className="shadow-sm bg-amber-50">
+              <CardContent className="py-4 px-5">
+                <div className="flex justify-between items-center">
+                  <div className="flex items-center">
+                    <AlertCircle className="text-amber-500 h-5 w-5 mr-2" />
+                    <span className="font-medium">Claims Risk: ${claimsRiskTotal} at risk ({claimsRiskCount} claims)</span>
+                  </div>
+                  <Button variant="outline" size="sm" className="h-8 bg-white">
+                    Tap to see root causes
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Secondary Payment Insights */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <Card className="shadow-sm">
+              <CardHeader className="py-4 px-5 border-b">
+                <CardTitle className="text-base font-medium">Pending Verifications</CardTitle>
+              </CardHeader>
+              <CardContent className="py-6 px-5">
+                <div className="flex items-center">
+                  <Clock className="h-8 w-8 mr-3 text-amber-500" />
+                  <div>
+                    <div className="text-2xl font-bold">${pendingVerificationsTotal}</div>
+                    <div className="text-sm text-muted-foreground">
+                      e-checks & ACH still in limbo
+                    </div>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="w-full mt-4 text-xs">
+                  View unsettled ACHs
+                </Button>
+              </CardContent>
+            </Card>
+            
+            <Card className="shadow-sm">
+              <CardHeader className="py-4 px-5 border-b">
+                <CardTitle className="text-base font-medium">Preventable Refunds</CardTitle>
+              </CardHeader>
+              <CardContent className="py-6 px-5">
+                <div className="flex items-center">
+                  <RefreshCw className="h-8 w-8 mr-3 text-red-500" />
+                  <div>
+                    <div className="text-2xl font-bold">${preventableRefundsTotal}</div>
+                    <div className="text-sm text-muted-foreground">
+                      Refunds caused by card errors / wrong amounts
+                    </div>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="w-full mt-4 text-xs">
+                  See root-cause list
+                </Button>
               </CardContent>
             </Card>
           </div>
@@ -691,9 +797,68 @@ export default function PaymentsPage() {
               <div className="p-6 border-b bg-blue-50/50">
                 <div className="mb-4">
                   <h3 className="text-md font-medium mb-2">Payment Insights</h3>
-                  <p className="text-sm text-muted-foreground mb-3">
-                    Payment analytics for the current period show a {paymentSuccessRate.toFixed(0)}% transaction success rate with an average payment of ${avgPaymentAmount.toFixed(2)}.
-                  </p>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
+                    <div className="bg-white p-3 rounded-md border shadow-sm">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="text-sm font-medium">Pending Verifications</h4>
+                        <Clock className="h-4 w-4 text-amber-500" />
+                      </div>
+                      <p className="text-sm text-amber-600 font-medium">${pendingVerificationsTotal} in limbo — chase or wait?</p>
+                      <Button variant="ghost" size="sm" className="text-xs mt-2 h-7 p-0 text-blue-600">
+                        Email clearing report
+                      </Button>
+                    </div>
+                    
+                    <div className="bg-white p-3 rounded-md border shadow-sm">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="text-sm font-medium">First-Attempt Success</h4>
+                        <AlertCircle className="h-4 w-4 text-red-500" />
+                      </div>
+                      <p className="text-sm text-red-600 font-medium">
+                        {firstAttemptSuccessRate < 97 ? 
+                          `${(100 - firstAttemptSuccessRate).toFixed(0)}% failed first try – rescue before it rolls to phone calls.` : 
+                          "Great success rate - all systems normal."}
+                      </p>
+                    </div>
+                    
+                    <div className="bg-white p-3 rounded-md border shadow-sm">
+                      <div className="flex items-center justify-between mb-1">
+                        <h4 className="text-sm font-medium">Preventable Refunds</h4>
+                        <RefreshCw className="h-4 w-4 text-amber-500" />
+                      </div>
+                      <p className="text-sm text-amber-600 font-medium">
+                        ${preventableRefundsTotal} paid twice — let's stop the déjà-vu.
+                      </p>
+                      <Button variant="ghost" size="sm" className="text-xs mt-2 h-7 p-0 text-blue-600">
+                        Tag to Training module
+                      </Button>
+                    </div>
+                  </div>
+                  
+                  {sameDayCollectionRate < 90 && (
+                    <div className="bg-amber-50 border border-amber-200 p-3 rounded-md mb-3">
+                      <div className="flex items-center text-amber-800">
+                        <AlertTriangle className="h-4 w-4 mr-2 text-amber-500" />
+                        <p className="text-sm font-medium">
+                          Every 1% drop in Same-Day Collection costs $240 a month—shall we text pending patients?
+                        </p>
+                        <Button variant="outline" size="sm" className="ml-auto text-xs h-7 bg-white">
+                          Send pay-link SMS
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {sameDayCollectionRate >= 95 && (
+                    <div className="bg-green-50 border border-green-200 p-3 rounded-md mb-3">
+                      <div className="flex items-center text-green-800">
+                        <BadgeCheck className="h-4 w-4 mr-2 text-green-500" />
+                        <p className="text-sm font-medium">
+                          3 consecutive days ≥ 95% Same-Day Collection—protect the streak!
+                        </p>
+                      </div>
+                    </div>
+                  )}
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                     <div className="bg-white p-4 rounded-md border shadow-sm">
                       <h4 className="text-sm font-medium mb-1">Payment Methods</h4>
