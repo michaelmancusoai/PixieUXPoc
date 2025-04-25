@@ -320,25 +320,7 @@ export default function CalendarView({
     return grouped;
   }, [demoAppointments, resourceColumns, viewMode]);
   
-  // Get status color based on status
-  const getStatusBorderColor = useCallback((status: string) => {
-    switch (status.toLowerCase()) {
-      case 'completed':
-        return '#9E9E9E'; // Gray
-      case 'in_chair':
-        return '#FF9800'; // Orange
-      case 'checked_in':
-        return '#4CAF50'; // Green
-      case 'confirmed':
-        return '#1976D2'; // Blue
-      case 'scheduled':
-        return '#90A4AE'; // Light Gray
-      case 'no_show':
-        return '#F44336'; // Red
-      default:
-        return '#90A4AE'; // Light Gray
-    }
-  }, []);
+  // Status handling is now in the AppointmentChip component
 
   return (
     <Card className="w-full h-full overflow-hidden border rounded-md">
@@ -419,19 +401,13 @@ export default function CalendarView({
                 const top = (startFromDayBeginning / 5) * 12;
                 const height = (appointment.duration / 5) * 12;
                 
-                // Determine appointment time status
-                const timeStatus = appointment.status;
-                
-                // Add time status to appointment object
-                const apptWithTimeStatus = {
-                  ...appointment,
-                  timeStatus
-                };
+                // We're now passing the appointment directly to the AppointmentChip component
+                // which handles status display and styling internally
                 
                 return (
                   <AppointmentChip
                     key={appointment.id}
-                    appointment={apptWithTimeStatus}
+                    appointment={appointment}
                     style={{
                       position: 'absolute',
                       top: `${top}px`,
