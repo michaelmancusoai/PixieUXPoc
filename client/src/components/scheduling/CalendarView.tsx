@@ -272,39 +272,46 @@ export default function CalendarView({
     });
   };
   
-  // Set up DnD monitor for drag and drop operations
-  useDndMonitor({
-    onDragStart(event) {
-      if (event.active.data.current?.appointment) {
-        setDraggingAppointment(event.active.data.current.appointment);
-      }
-    },
-    onDragEnd(event) {
+  // Handle drag over a time slot
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    
+    if (!draggingAppointment) return;
+    
+    const target = e.target as HTMLElement;
+    const resourceId = parseInt(target.dataset.resourceId || '0');
+    const time = parseInt(target.dataset.time || '0');
+    
+    if (resourceId && time) {
+      setDragTarget({ resourceId, time });
+    }
+  };
+  
+  // Handle drop on a time slot
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    
+    if (!draggingAppointment) return;
+    
+    const target = e.target as HTMLElement;
+    const resourceId = parseInt(target.dataset.resourceId || '0');
+    const time = parseInt(target.dataset.time || '0');
+    
+    if (resourceId && time) {
+      const hours = Math.floor(time / 60);
+      const minutes = time % 60;
+      const newStartTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
+      
+      // Simulate API call to update appointment
+      toast({
+        title: "Appointment Moved",
+        description: `${draggingAppointment.patient.firstName} ${draggingAppointment.patient.lastName} moved to ${format(addMinutes(new Date().setHours(0, 0, 0, 0), time), 'h:mm a')}`,
+      });
+      
       setDraggingAppointment(null);
       setDragTarget(null);
-      
-      if (!event.over) return;
-      
-      // Handle dropping appointment on a time slot
-      if (event.over.data.current?.resourceId !== undefined && event.over.data.current?.time !== undefined) {
-        const appointment = event.active.data.current?.appointment;
-        const resourceId = event.over.data.current.resourceId;
-        const time = event.over.data.current.time;
-        
-        if (appointment) {
-          const hours = Math.floor(time / 60);
-          const minutes = time % 60;
-          const newStartTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:00`;
-          
-          // Simulate API call to update appointment
-          toast({
-            title: "Appointment Moved",
-            description: `${appointment.patient.firstName} ${appointment.patient.lastName} moved to ${format(addMinutes(new Date().setHours(0, 0, 0, 0), time), 'h:mm a')}`,
-          });
-        }
-      }
-    },
-  });
+    }
+  };
   
   return (
     <div ref={containerRef} className="h-full overflow-auto relative border rounded-md bg-white">
@@ -350,25 +357,12 @@ export default function CalendarView({
         
         {/* Resource columns with time slots */}
         {resourceColumns.map((resource, columnIndex) => {
-          // Create all droppable refs for this resource column outside the render loop
-          const dropRefs = timeSlots.map((slot) => {
-            const { setNodeRef } = useDroppable({
-              id: `${resource.id}-${slot.time}`,
-              data: {
-                resourceId: resource.id,
-                time: slot.time
-              }
-            });
-            return { slot, ref: setNodeRef };
-          });
-          
           return (
             <div key={resource.id} className="relative">
               {/* Time slots for this resource column */}
-              {dropRefs.map(({ slot, ref }, slotIndex) => (
+              {timeSlots.map((slot, slotIndex) => (
                 <div 
-                  key={slotIndex} 
-                  ref={ref}
+                  key={slotIndex}
                   className={`
                     relative border-b border-r 
                     ${slot.isMajor ? 'border-gray-300' : 'border-gray-200'}
@@ -378,6 +372,10 @@ export default function CalendarView({
                     hover:bg-blue-50/50
                   `}
                   style={{ height: `${slotHeight}px` }}
+                  data-resource-id={resource.id}
+                  data-time={slot.time}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
                   onClick={() => {
                     if (!draggingAppointment) {
                       // Could handle slot click here to create new appointment

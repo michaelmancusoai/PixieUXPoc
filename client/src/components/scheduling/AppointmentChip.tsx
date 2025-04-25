@@ -1,4 +1,4 @@
-import { useDraggable } from "@dnd-kit/core";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { CountdownTimer, getAppointmentTiming, AppointmentWithDetails } from "@/lib/scheduling-utils";
 import { STATUS_COLORS } from "@/lib/scheduling-constants";
@@ -19,14 +19,17 @@ export default function AppointmentChip({
   onClick,
   resizingEnabled = false
 }: AppointmentChipProps) {
-  // Set up draggable
-  const {attributes, listeners, setNodeRef, transform} = useDraggable({
-    id: `appointment-${appointment.id}`,
-    data: {
-      appointment,
-      sourceColumn: columnIndex
-    },
-  });
+  const [isDragging, setIsDragging] = useState(false);
+  
+  // Set up native drag handlers
+  const handleDragStart = (e: React.DragEvent) => {
+    e.dataTransfer.setData('appointment', JSON.stringify(appointment));
+    setIsDragging(true);
+  };
+  
+  const handleDragEnd = () => {
+    setIsDragging(false);
+  };
 
   // Calculate position & dimension
   const startTimeStr = appointment.startTime.toString();
@@ -40,11 +43,6 @@ export default function AppointmentChip({
   // Position in grid (TIME_SLOT is 5 minutes)
   const top = Math.round((minutesFromStart / 5) * slotHeight);
   const height = Math.round((appointment.duration / 5) * slotHeight);
-  
-  const transformStyle = transform ? {
-    transform: `translate3d(${transform.x}px, ${transform.y}px, 0)`,
-    zIndex: 999,
-  } : undefined;
 
   // Get status color classes
   const status = appointment.status.toUpperCase() as keyof typeof STATUS_COLORS;
@@ -108,14 +106,17 @@ export default function AppointmentChip({
 
   return (
     <div
-      ref={setNodeRef}
+      draggable={true}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
       style={{
         position: 'absolute',
         top: `${top}px`,
         left: '4px',
         right: '4px',
         height: `${height}px`,
-        ...transformStyle
+        cursor: 'grab',
+        zIndex: isDragging ? 999 : 1
       }}
       className={cn(
         "transition-shadow hover:shadow-md",
@@ -123,8 +124,6 @@ export default function AppointmentChip({
         statusColors.text,
         statusColors.border
       )}
-      {...attributes}
-      {...listeners}
       onClick={(e) => {
         e.stopPropagation();
         onClick?.();
@@ -132,7 +131,7 @@ export default function AppointmentChip({
     >
       <Card className={cn(
         "h-full flex flex-col overflow-hidden p-2 text-xs",
-        transform ? "opacity-75" : "opacity-100",
+        isDragging ? "opacity-75" : "opacity-100",
         statusColors.bg,
         statusColors.text,
         statusColors.border,
