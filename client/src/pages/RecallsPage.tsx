@@ -1,6 +1,7 @@
-import { useState, useMemo } from "react";
+import React, { useState, useMemo, FC } from "react";
 import { format, isAfter, isBefore, parseISO, addDays, differenceInMonths } from "date-fns";
 import {
+  AlertTriangle,
   Bell,
   CalendarClock,
   Check,
@@ -101,6 +102,24 @@ interface RecallPatient {
   email?: string;
   insuranceExpiryDate?: string;
 }
+
+// Component for expanded row content
+const ExpandedRowContent: FC<{ patient: RecallPatient }> = ({ patient }) => (
+  <TableRow className="bg-muted/30 border-t-0">
+    <TableCell colSpan={9} className="p-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <Card className="shadow-sm">
+          <CardHeader className="py-3 px-4 border-b">
+            <CardTitle className="text-sm font-medium">Patient Information</CardTitle>
+          </CardHeader>
+          <CardContent className="py-3 px-4 text-sm">
+            <p>Details for {patient.patientName}</p>
+          </CardContent>
+        </Card>
+      </div>
+    </TableCell>
+  </TableRow>
+);
 
 export default function RecallsPage() {
   // State management
@@ -1108,204 +1127,248 @@ export default function RecallsPage() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {filteredRecalls.map((recall) => (
-                          <TableRow 
-                            key={recall.id}
-                            className={selectedPatients.includes(recall.id) ? "bg-primary/5" : undefined}
-                            onClick={() => handleRowSelect(recall.id)}
-                          >
-                            <TableCell className="py-2 pl-4">
-                              <Checkbox 
-                                checked={selectedPatients.includes(recall.id)} 
-                                onCheckedChange={() => handleRowSelect(recall.id)}
-                                aria-label={`Select ${recall.patientName}`}
-                                onClick={(e) => e.stopPropagation()}
-                              />
-                            </TableCell>
-                            <TableCell className="py-2">
-                              <div className="flex items-center">
-                                <div className="bg-slate-100 rounded-full w-8 h-8 flex items-center justify-center mr-2">
-                                  <UserRound className="h-4 w-4 text-slate-600" />
-                                </div>
-                                <div>
-                                  <div className="font-medium text-sm">{recall.patientName}</div>
-                                  <div className="text-xs text-muted-foreground">
-                                    {recall.provider}
+                        {filteredRecalls.map((recall) => {
+                          return (
+                            <React.Fragment key={recall.id}>
+                              <TableRow 
+                                className={selectedPatients.includes(recall.id) ? "bg-primary/5" : undefined}
+                                onClick={() => handleRowSelect(recall.id)}
+                              >
+                                <TableCell className="py-2 pl-4">
+                                  <Checkbox 
+                                    checked={selectedPatients.includes(recall.id)} 
+                                    onCheckedChange={() => handleRowSelect(recall.id)}
+                                    aria-label={`Select ${recall.patientName}`}
+                                    onClick={(e) => e.stopPropagation()}
+                                  />
+                                </TableCell>
+                                <TableCell className="py-2">
+                                  <div className="flex items-center">
+                                    <div className="bg-slate-100 rounded-full w-8 h-8 flex items-center justify-center mr-2">
+                                      <UserRound className="h-4 w-4 text-slate-600" />
+                                    </div>
+                                    <div>
+                                      <div className="font-medium text-sm">{recall.patientName}</div>
+                                      <div className="text-xs text-muted-foreground">
+                                        {recall.provider}
+                                      </div>
+                                    </div>
                                   </div>
-                                </div>
-                              </div>
-                            </TableCell>
-                            <TableCell className="py-2">
-                              <Badge 
-                                variant="outline" 
-                                className={`${
-                                  isBefore(parseISO(recall.dueDate), today) 
-                                    ? "bg-red-50 text-red-700 border-red-200" 
-                                    : "bg-slate-50"
-                                }`}
-                              >
-                                {format(parseISO(recall.dueDate), "MMM d, yyyy")}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="py-2">
-                              <div className="flex items-center text-sm">
-                                {recall.procedureType.includes("cleaning") ? (
-                                  <Stethoscope className="h-3.5 w-3.5 mr-1.5 text-emerald-500" />
-                                ) : recall.procedureType.includes("X-ray") ? (
-                                  <Stethoscope className="h-3.5 w-3.5 mr-1.5 text-violet-500" />
-                                ) : recall.procedureType.includes("FMX") ? (
-                                  <Stethoscope className="h-3.5 w-3.5 mr-1.5 text-blue-500" />
-                                ) : (
-                                  <Stethoscope className="h-3.5 w-3.5 mr-1.5 text-amber-500" />
-                                )}
-                                {recall.procedureType}
-                              </div>
-                            </TableCell>
-                            <TableCell className="py-2">
-                              <div className="text-sm">
-                                {format(parseISO(recall.lastVisit), "MMM d, yyyy")}
-                              </div>
-                              {recall.lastProcedure && (
-                                <div className="text-xs text-muted-foreground flex items-center">
-                                  <Stethoscope className="h-3 w-3 mr-1" />
-                                  {recall.lastProcedure}
-                                </div>
-                              )}
-                            </TableCell>
-                            <TableCell className="py-2">
-                              {recall.contactAttempts.length > 0 ? (
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className="flex items-center">
-                                        {/* Contact attempt icons hidden as requested */}
-                                        <Badge variant="secondary" className="ml-1 h-5 text-xs">
-                                          {recall.contactAttempts.length}
-                                        </Badge>
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <div className="space-y-1 text-xs p-1 w-48">
-                                        <h4 className="font-medium">Contact History</h4>
-                                        {recall.contactAttempts.map((attempt, idx) => (
-                                          <div key={idx} className="flex items-center justify-between">
-                                            <div className="flex items-center">
-                                              {attempt.type === "SMS" && (
-                                                <MessageSquare className="h-3 w-3 mr-1 text-blue-500" />
-                                              )}
-                                              {attempt.type === "Email" && (
-                                                <Mail className="h-3 w-3 mr-1 text-amber-500" />
-                                              )}
-                                              {attempt.type === "Call" && (
-                                                <Phone className="h-3 w-3 mr-1 text-green-500" />
-                                              )}
-                                              <span>{attempt.type}</span>
-                                            </div>
-                                            <div className="flex items-center">
-                                              <span>{format(parseISO(attempt.date), "MMM d")}</span>
-                                              {attempt.status === "Delivered" && (
-                                                <Check className="h-3 w-3 ml-1 text-green-500" />
-                                              )}
-                                              {attempt.status === "Failed" && (
-                                                <X className="h-3 w-3 ml-1 text-red-500" />
-                                              )}
-                                              {attempt.status === "No Answer" && (
-                                                <X className="h-3 w-3 ml-1 text-amber-500" />
-                                              )}
-                                              {attempt.status === "Voicemail" && (
-                                                <MessageSquare className="h-3 w-3 ml-1 text-blue-500" />
-                                              )}
-                                            </div>
+                                </TableCell>
+                                <TableCell className="py-2">
+                                  <Badge 
+                                    variant="outline" 
+                                    className={`${
+                                      isBefore(parseISO(recall.dueDate), today) 
+                                        ? "bg-red-50 text-red-700 border-red-200" 
+                                        : "bg-slate-50"
+                                    }`}
+                                  >
+                                    {format(parseISO(recall.dueDate), "MMM d, yyyy")}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="py-2">
+                                  <div className="flex items-center text-sm">
+                                    {recall.procedureType.includes("cleaning") ? (
+                                      <Stethoscope className="h-3.5 w-3.5 mr-1.5 text-emerald-500" />
+                                    ) : recall.procedureType.includes("X-ray") ? (
+                                      <Stethoscope className="h-3.5 w-3.5 mr-1.5 text-violet-500" />
+                                    ) : recall.procedureType.includes("FMX") ? (
+                                      <Stethoscope className="h-3.5 w-3.5 mr-1.5 text-blue-500" />
+                                    ) : (
+                                      <Stethoscope className="h-3.5 w-3.5 mr-1.5 text-amber-500" />
+                                    )}
+                                    {recall.procedureType}
+                                  </div>
+                                </TableCell>
+                                <TableCell className="py-2">
+                                  <div className="text-sm">
+                                    {format(parseISO(recall.lastVisit), "MMM d, yyyy")}
+                                  </div>
+                                  {recall.lastProcedure && (
+                                    <div className="text-xs text-muted-foreground flex items-center">
+                                      <Stethoscope className="h-3 w-3 mr-1" />
+                                      {recall.lastProcedure}
+                                    </div>
+                                  )}
+                                </TableCell>
+                                <TableCell className="py-2">
+                                  {recall.contactAttempts.length > 0 ? (
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <div className="flex items-center">
+                                            {/* Contact attempt icons hidden as requested */}
+                                            <Badge variant="secondary" className="ml-1 h-5 text-xs">
+                                              {recall.contactAttempts.length}
+                                            </Badge>
                                           </div>
-                                        ))}
-                                      </div>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              ) : (
-                                <Badge variant="outline" className="text-xs bg-slate-50">No contact</Badge>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <div className="space-y-1 text-xs p-1 w-48">
+                                            <h4 className="font-medium">Contact History</h4>
+                                            {recall.contactAttempts.map((attempt, idx) => (
+                                              <div key={idx} className="flex items-center justify-between">
+                                                <div className="flex items-center">
+                                                  {attempt.type === "SMS" && (
+                                                    <MessageSquare className="h-3 w-3 mr-1 text-blue-500" />
+                                                  )}
+                                                  {attempt.type === "Email" && (
+                                                    <Mail className="h-3 w-3 mr-1 text-amber-500" />
+                                                  )}
+                                                  {attempt.type === "Call" && (
+                                                    <Phone className="h-3 w-3 mr-1 text-green-500" />
+                                                  )}
+                                                  <span>{attempt.type}</span>
+                                                </div>
+                                                <div className="flex items-center">
+                                                  <span>{format(parseISO(attempt.date), "MMM d")}</span>
+                                                  {attempt.status === "Delivered" && (
+                                                    <Check className="h-3 w-3 ml-1 text-green-500" />
+                                                  )}
+                                                  {attempt.status === "Failed" && (
+                                                    <X className="h-3 w-3 ml-1 text-red-500" />
+                                                  )}
+                                                  {attempt.status === "No Answer" && (
+                                                    <X className="h-3 w-3 ml-1 text-amber-500" />
+                                                  )}
+                                                  {attempt.status === "Voicemail" && (
+                                                    <MessageSquare className="h-3 w-3 ml-1 text-blue-500" />
+                                                  )}
+                                                </div>
+                                              </div>
+                                            ))}
+                                          </div>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  ) : (
+                                    <Badge variant="outline" className="text-xs bg-slate-50">No contact</Badge>
+                                  )}
+                                </TableCell>
+                                <TableCell className="py-2">
+                                  {recall.benefitsRemaining !== undefined ? (
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <div className="font-medium">
+                                            ${recall.benefitsRemaining}
+                                          </div>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          {recall.insuranceExpiryDate && (
+                                            <div className="text-xs max-w-xs">
+                                              {recall.patientName}'s unused benefits expire in {
+                                                differenceInMonths(parseISO(recall.insuranceExpiryDate), today) * 30
+                                              } days—${recall.benefitsRemaining} at risk.
+                                            </div>
+                                          )}
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  ) : (
+                                    <span className="text-muted-foreground text-sm">n/a</span>
+                                  )}
+                                </TableCell>
+                                <TableCell className="py-2">
+                                  <Badge 
+                                    variant="outline" 
+                                    className={`
+                                      ${recall.status === 'Unscheduled' ? 'bg-amber-50 text-amber-700 border-amber-200' : ''}
+                                      ${recall.status === 'Scheduled' ? 'bg-green-50 text-green-700 border-green-200' : ''}
+                                      ${recall.status === 'Declined' ? 'bg-slate-50 text-slate-700 border-slate-200' : ''}
+                                    `}
+                                  >
+                                    {recall.status}
+                                  </Badge>
+                                </TableCell>
+                                <TableCell className="py-2">
+                                  <div className="flex space-x-1">
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Button variant="ghost" size="icon" className="h-7 w-7">
+                                            <Phone className="h-3.5 w-3.5" />
+                                          </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p className="text-xs">Call patient</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                    
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Button variant="ghost" size="icon" className="h-7 w-7">
+                                            <MessageSquare className="h-3.5 w-3.5" />
+                                          </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p className="text-xs">Send SMS</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                    
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Button variant="ghost" size="icon" className="h-7 w-7">
+                                            <Mail className="h-3.5 w-3.5" />
+                                          </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p className="text-xs">Send email</p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                    
+                                    <TooltipProvider>
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Button 
+                                            variant="outline" 
+                                            size="icon" 
+                                            className="h-7 w-7 ml-1"
+                                            onClick={(e) => toggleRowExpand(recall.id, e)}
+                                          >
+                                            {expandedRows.includes(recall.id) ? (
+                                              <ChevronDown className="h-3.5 w-3.5" />
+                                            ) : (
+                                              <ChevronRight className="h-3.5 w-3.5" />
+                                            )}
+                                          </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                          <p className="text-xs">
+                                            {expandedRows.includes(recall.id) ? "Collapse details" : "Expand details"}
+                                          </p>
+                                        </TooltipContent>
+                                      </Tooltip>
+                                    </TooltipProvider>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+                              
+                              {expandedRows.includes(recall.id) && (
+                                <TableRow className="bg-muted/30 border-t-0">
+                                  <TableCell colSpan={9} className="p-4">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                      <Card className="shadow-sm">
+                                        <CardHeader className="py-3 px-4 border-b">
+                                          <CardTitle className="text-sm font-medium">Patient Information</CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="p-4">
+                                          <p className="text-sm">Expanded details for {recall.patientName}</p>
+                                        </CardContent>
+                                      </Card>
+                                    </div>
+                                  </TableCell>
+                                </TableRow>
                               )}
-                            </TableCell>
-                            <TableCell className="py-2">
-                              {recall.benefitsRemaining !== undefined ? (
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <div className="font-medium">
-                                        ${recall.benefitsRemaining}
-                                      </div>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      {recall.insuranceExpiryDate && (
-                                        <div className="text-xs max-w-xs">
-                                          {recall.patientName}'s unused benefits expire in {
-                                            differenceInMonths(parseISO(recall.insuranceExpiryDate), today) * 30
-                                          } days—${recall.benefitsRemaining} at risk.
-                                        </div>
-                                      )}
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              ) : (
-                                <span className="text-muted-foreground text-sm">n/a</span>
-                              )}
-                            </TableCell>
-                            <TableCell className="py-2">
-                              <Badge 
-                                variant="outline" 
-                                className={`
-                                  ${recall.status === 'Unscheduled' ? 'bg-amber-50 text-amber-700 border-amber-200' : ''}
-                                  ${recall.status === 'Scheduled' ? 'bg-green-50 text-green-700 border-green-200' : ''}
-                                  ${recall.status === 'Declined' ? 'bg-slate-50 text-slate-700 border-slate-200' : ''}
-                                `}
-                              >
-                                {recall.status}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="py-2">
-                              <div className="flex space-x-1">
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button variant="ghost" size="icon" className="h-7 w-7">
-                                        <Phone className="h-3.5 w-3.5" />
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p className="text-xs">Call patient</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                                
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button variant="ghost" size="icon" className="h-7 w-7">
-                                        <MessageSquare className="h-3.5 w-3.5" />
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p className="text-xs">Send SMS</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                                
-                                <TooltipProvider>
-                                  <Tooltip>
-                                    <TooltipTrigger asChild>
-                                      <Button variant="ghost" size="icon" className="h-7 w-7">
-                                        <Mail className="h-3.5 w-3.5" />
-                                      </Button>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                      <p className="text-xs">Send email</p>
-                                    </TooltipContent>
-                                  </Tooltip>
-                                </TooltipProvider>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
+                            </React.Fragment>
+                          );
+                        })}
                       </TableBody>
                     </Table>
                   </div>
