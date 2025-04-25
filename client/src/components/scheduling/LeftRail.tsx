@@ -285,7 +285,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                 </div>
               </AccordionTrigger>
               <AccordionContent className="px-4 pb-3">
-                <div className="border rounded-sm overflow-hidden divide-y divide-gray-100">
+                <div className="border rounded-sm overflow-y-auto max-h-40 divide-y divide-gray-100">
                   <div className="group flex items-center bg-white hover:bg-gray-50 py-1.5 px-2 text-xs cursor-pointer">
                     <span className="flex-shrink-0 w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5"></span>
                     <div className="min-w-0 flex-grow grid grid-cols-1">
