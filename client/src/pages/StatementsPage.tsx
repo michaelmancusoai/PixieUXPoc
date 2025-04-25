@@ -66,7 +66,7 @@ import {
   BarChart3,
   AlertTriangle,
 } from "lucide-react";
-import { format } from "date-fns";
+import { format, differenceInDays } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { DateRange } from "react-day-picker";
@@ -295,6 +295,8 @@ export default function StatementsPage() {
     status: "All Statuses",
     deliveryMethod: "All Methods",
   });
+  
+  // Note: Action-oriented metrics are calculated in the calculateActionMetrics function below
 
   // Get filtered statements
   const getFilteredStatements = () => {
@@ -1019,36 +1021,59 @@ export default function StatementsPage() {
                     </div>
                     
                     <div className="bg-white p-4 rounded-md border shadow-sm">
-                      <h4 className="text-sm font-medium mb-1">Recommended Actions</h4>
-                      <ul className="text-xs space-y-2">
-                        <li className="flex items-start">
-                          <div className="h-5 w-5 rounded-full bg-red-100 flex items-center justify-center mr-2 mt-0.5">
-                            <AlertCircle className="h-3 w-3 text-red-500" />
-                          </div>
-                          <div>
-                            <span className="font-medium block">Send reminder to overdue accounts</span>
-                            <span className="text-muted-foreground">{filteredStatements.filter(s => s.status === "Overdue").length} accounts, ${totalOverdue.toFixed(2)} total</span>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <div className="h-5 w-5 rounded-full bg-blue-100 flex items-center justify-center mr-2 mt-0.5">
-                            <Mail className="h-3 w-3 text-blue-500" />
-                          </div>
-                          <div>
-                            <span className="font-medium block">Switch to e-statements</span>
-                            <span className="text-muted-foreground">32% of patients still use paper</span>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <div className="h-5 w-5 rounded-full bg-green-100 flex items-center justify-center mr-2 mt-0.5">
-                            <DollarSign className="h-3 w-3 text-green-500" />
-                          </div>
-                          <div>
-                            <span className="font-medium block">Offer payment options</span>
-                            <span className="text-muted-foreground">For balances over $400</span>
-                          </div>
-                        </li>
+                      <h4 className="text-sm font-medium mb-1">Quick Wins for Today</h4>
+                      <ul className="text-xs space-y-2 mt-2">
+                        {unsentDraftsCount > 0 && (
+                          <li className="flex items-start">
+                            <div className="h-4 w-4 bg-red-100 rounded-full flex items-center justify-center mr-1.5 mt-0.5 flex-shrink-0">
+                              <span className="text-[10px] text-red-600 font-bold">1</span>
+                            </div>
+                            <span><span className="font-medium">Send {unsentDraftsCount} unsent drafts</span> — ${unsentDraftsTotal.toFixed(0)} waiting for you to hit send</span>
+                          </li>
+                        )}
+                        
+                        {needFirstReminder.length > 0 && (
+                          <li className="flex items-start">
+                            <div className="h-4 w-4 bg-amber-100 rounded-full flex items-center justify-center mr-1.5 mt-0.5 flex-shrink-0">
+                              <span className="text-[10px] text-amber-600 font-bold">2</span>
+                            </div>
+                            <span><span className="font-medium">Run 14-day batch reminder</span> — gentle nudge to {needFirstReminder.length} patients</span>
+                          </li>
+                        )}
+                        
+                        {totalAgingBalance > 0 && (
+                          <li className="flex items-start">
+                            <div className="h-4 w-4 bg-orange-100 rounded-full flex items-center justify-center mr-1.5 mt-0.5 flex-shrink-0">
+                              <span className="text-[10px] text-orange-600 font-bold">3</span>
+                            </div>
+                            <span><span className="font-medium">Call top 3 high-balance patients</span> — payment plan options could save from collections</span>
+                          </li>
+                        )}
+                        
+                        {paperStatementCount > 0 && (
+                          <li className="flex items-start">
+                            <div className="h-4 w-4 bg-blue-100 rounded-full flex items-center justify-center mr-1.5 mt-0.5 flex-shrink-0">
+                              <span className="text-[10px] text-blue-600 font-bold">4</span>
+                            </div>
+                            <span><span className="font-medium">Convert {Math.min(5, paperStatementCount)} patients to e-statements</span> — saves ${(Math.min(5, paperStatementCount) * 0.58 * 12).toFixed(0)}/year</span>
+                          </li>
+                        )}
+                        
+                        {unsentDraftsCount === 0 && needFirstReminder.length === 0 && totalAgingBalance === 0 && paperStatementCount === 0 && (
+                          <li className="flex items-start">
+                            <div className="h-4 w-4 bg-green-100 rounded-full flex items-center justify-center mr-1.5 mt-0.5 flex-shrink-0">
+                              <CheckCircle className="h-2.5 w-2.5 text-green-600" />
+                            </div>
+                            <span><span className="font-medium">Congratulations!</span> — Your statement workflow is optimized</span>
+                          </li>
+                        )}
                       </ul>
+
+                      <div className="mt-4 pt-3 border-t">
+                        <p className="text-xs text-muted-foreground italic">
+                          "Paper statements cost $0.58 each; flip two more families to e-statements, save $300/year."
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
