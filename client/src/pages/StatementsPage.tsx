@@ -882,16 +882,18 @@ export default function StatementsPage() {
           </div>
           
           {/* Add custom animation for the pulse effect */}
-          <style jsx>{`
-            @keyframes pulse {
-              0% { opacity: 0.6; transform: scale(0.95); }
-              50% { opacity: 1; transform: scale(1.05); }
-              100% { opacity: 0.6; transform: scale(0.95); }
-            }
-            .pulse-animation {
-              animation: pulse 2s infinite;
-            }
-          `}</style>
+          <style dangerouslySetInnerHTML={{
+            __html: `
+              @keyframes pulse {
+                0% { opacity: 0.6; transform: scale(0.95); }
+                50% { opacity: 1; transform: scale(1.05); }
+                100% { opacity: 0.6; transform: scale(0.95); }
+              }
+              .pulse-animation {
+                animation: pulse 2s infinite;
+              }
+            `
+          }} />
 
           <Card className="shadow-sm">
             <CardHeader className="px-6 py-4 border-b">
