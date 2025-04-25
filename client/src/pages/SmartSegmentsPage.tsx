@@ -767,7 +767,7 @@ export default function SmartSegmentsPage() {
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <Select 
                   value={sortBy} 
-                  onValueChange={(value) => setSortBy(value as any)}
+                  onValueChange={(value: string) => setSortBy(value as "status" | "title" | "count" | "value")}
                 >
                   <SelectTrigger className="w-[130px] h-9">
                     <SelectValue placeholder="Sort by" />
@@ -782,7 +782,7 @@ export default function SmartSegmentsPage() {
                 
                 <Select 
                   value={filterStatus} 
-                  onValueChange={(value) => setFilterStatus(value as any)}
+                  onValueChange={(value: string) => setFilterStatus(value as "all" | "mint" | "amber" | "coral" | "grey")}
                 >
                   <SelectTrigger className="w-[130px] h-9">
                     <SelectValue placeholder="Filter" />
@@ -892,7 +892,7 @@ export default function SmartSegmentsPage() {
                       <Input 
                         placeholder="e.g., Recall Due This Week" 
                         value={formData.title}
-                        onChange={(e) => setFormData({...formData, title: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, title: e.target.value})}
                       />
                     </div>
                     
@@ -902,7 +902,7 @@ export default function SmartSegmentsPage() {
                       <Input 
                         placeholder="What defines this patient group?" 
                         value={formData.description}
-                        onChange={(e) => setFormData({...formData, description: e.target.value})}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({...formData, description: e.target.value})}
                       />
                     </div>
                     
@@ -1002,7 +1002,7 @@ export default function SmartSegmentsPage() {
                                 placeholder="Value"
                                 className="h-8 text-sm"
                                 value={filterValue}
-                                onChange={(e) => setFilterValue(e.target.value)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFilterValue(e.target.value)}
                               />
                             )}
                             
@@ -1025,7 +1025,7 @@ export default function SmartSegmentsPage() {
                       <label className="block text-sm font-medium mb-1">Default Action</label>
                       <Select 
                         value={formData.nextAction} 
-                        onValueChange={(value) => setFormData({...formData, nextAction: value})}
+                        onValueChange={(value: string) => setFormData({...formData, nextAction: value})}
                       >
                         <SelectTrigger className="w-full">
                           <SelectValue placeholder="Select action" />
@@ -1048,7 +1048,7 @@ export default function SmartSegmentsPage() {
                       </div>
                       <Switch 
                         checked={formData.pinned}
-                        onCheckedChange={(checked) => setFormData({...formData, pinned: checked})}
+                        onCheckedChange={(checked: boolean) => setFormData({...formData, pinned: checked})}
                       />
                     </div>
                     
