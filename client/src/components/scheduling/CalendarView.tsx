@@ -68,10 +68,10 @@ export default function CalendarView({
   // Hardcoded resource data for demonstration
   const demoResources = useMemo(() => {
     return viewMode === 'PROVIDER' ? [
-      { id: 1, name: 'Dr. Nguyen', color: '#FF9E80' },
-      { id: 2, name: 'Dr. Robert', color: '#B39DDB' },
-      { id: 3, name: 'Dr. Johnson', color: '#90CAF9' },
-      { id: 4, name: 'Dr. Maria', color: '#C5E1A5' }
+      { id: 1, name: 'Dr. Picard', color: '#FF9E80' },
+      { id: 2, name: 'Dr. Sisko', color: '#B39DDB' },
+      { id: 3, name: 'Dr. Janeway', color: '#90CAF9' },
+      { id: 4, name: 'Dr. Archer', color: '#C5E1A5' }
     ] : [
       { id: 1, name: 'Op 1', color: '#C2E0FF' },
       { id: 2, name: 'Op 2', color: '#FFD6D6' },
