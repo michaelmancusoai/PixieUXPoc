@@ -1,0 +1,52 @@
+Why the current Statement KPIs fall flat
+They report, they don’t prompt. “Average time to pay” is interesting once a quarter; it doesn’t tell Marie what to do at 10 a.m. on a Tuesday.
+They celebrate the middle, not the edges. The danger in a statements workflow is unsent drafts and ageing balances, yet those numbers are hidden two clicks down.
+They frame success in finance-team language (“$2 391.50 active”) instead of patient-resolution language (“5 families need nudging today”).
+1 · Swap in KPIs that create urgency (and quick wins)
+
+
+Replace this card	With this actionable KPI	Why it matters (behavioural lens)	What the widget looks like
+Current Statements – $ value	Unsent Drafts – count + dollar value	Eliminates “hidden queue” waste; front desk can clear it in minutes.	Red badge when > 0 drafts
+Statement Activity – $ overdue	Balances Ageing ≥ 30 days	Surfaces balances about to enter collections; taps loss aversion.	Horizontal stacked bar: 30, 60, 90 days
+Avg. Time to Pay	Need First Reminder – count of statements > 14 days, no follow-up	Creates a do-it-now task that halves payment lag.	Amber clock icon appears when > 0
+E-Statement adoption	e-Statement Opt-In Gap – patients who could go paperless but haven’t	Prompts a one-click email blast; future savings + faster pay.	Progress ring towards 100 %
+Avg. Statement $	High-Balance Watchlist – top three patient balances	Big numbers focus the mind; align with Pareto principle.	Mini table with “Call” CTA
+Wireframe in words
+┌────── Unsent Drafts ──────┐ ┌── Balances 30d+ ──┐ ┌── Need First Reminder ─┐
+│  4 drafts   $620          │ │ $1,430 (6 pts)    │ │ 3 stmts > 14d no ping │
+│  Tap to edit & send now   │ │ 30  60  90        │ │ “Send reminder” CTA   │
+└───────────────────────────┘ └───────────────────┘ └────────────────────────┘
+
+┌────── e-Statement Opt-In Gap ─────┐ ┌── High-Balance Watchlist ──────┐
+│  72 % adopted  ◆◆◆◇               │ │ Chen  $620  •  Call            │
+│  18 pts still on paper            │ │ Lopez $585  •  Call            │
+│  “Invite all” CTA                 │ │ Patel $540  •  Call            │
+└────────────────────────────────────┘ └─────────────────────────────────┘
+2 · Button the insight to the fix
+
+
+KPI widget	Primary CTA	Hover secondary
+Unsent Drafts	“Open Drafts Queue”	“Auto-email all drafts”
+Balances 30 days+	“Send Statement Reminders”	“Filter grid → 30 days”
+Need First Reminder	“Run 14-Day nudge”	“Schedule SMS follow-up”
+e-Statement Gap	“Invite to Paperless”	“Print opt-in forms”
+High-Balance list	Call icon on each row	“Offer payment plan”
+3 · Micro-copy swaps (make it human)
+
+
+Old text	Rory-style alternative
+“Overdue amount”	“Stuck balances (patients haven’t budged)”
+“Drafts”	“Unsent drafts — money still on your desk”
+“Avg. time to pay 12 days”	“It takes 12 days to get paid — want it in 7?”
+“Collection rate 94 %”	“6 % still missing — fetch it before month-end”
+4 · Nudges & rituals
+
+Morning red dot on “Unsent Drafts” if > 0 — staff feel compelled to zero it before coffee.
+Amber pulse on “Need First Reminder” exactly 14 days after send; disappears once the reminder batch is triggered.
+Green confetti tick (2 s) when all KPIs show “Clear” — cues end-of-day satisfaction.
+Friday footer tip: “Paper statements cost $0.58 each; flip two more families to e-statements, save $300/year.”
+Design takeaway
+Lead with preventable leakage, not historical totals.
+Attach every metric to a single, obvious next step.
+Reward zero states (all clear) so staff feel the pleasure of a tidy ledger.
+Do that, and the Statements screen stops mimicking an accounting report and starts acting like a revenue-rescue playbook.

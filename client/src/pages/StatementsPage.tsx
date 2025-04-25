@@ -41,6 +41,8 @@ import {
   CheckCircle,
   Clock,
   AlertCircle,
+  Bell,
+  ArrowRight,
   ChevronDown,
   XCircle,
   PlusCircle,
@@ -53,11 +55,16 @@ import {
   X,
   CalendarRange,
   ChevronsUpDown,
+  BadgePercent,
   FileText,
   Mail,
   Send,
   RefreshCw,
   Globe,
+  Phone,
+  Users,
+  BarChart3,
+  AlertTriangle,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -346,8 +353,9 @@ export default function StatementsPage() {
 
   const filteredStatements = getFilteredStatements();
 
-  // Calculate totals
-  const calculateTotals = () => {
+  // Calculate action-oriented metrics for behavioral KPIs
+  const calculateActionMetrics = () => {
+    // Total outstanding balance (all non-paid statements)
     const totalOutstanding = filteredStatements.reduce((sum, statement) => {
       if (statement.status !== "Paid") {
         return sum + statement.balance;
@@ -355,15 +363,90 @@ export default function StatementsPage() {
       return sum;
     }, 0);
 
-    const totalOverdue = filteredStatements.filter(s => s.status === "Overdue")
-      .reduce((sum, statement) => sum + statement.balance, 0);
-
-    const draftCount = filteredStatements.filter(s => s.status === "Draft").length;
-
-    return { totalOutstanding, totalOverdue, draftCount };
+    // Total overdue balance
+    const overdueStatements = filteredStatements.filter(s => s.status === "Overdue");
+    const totalOverdue = overdueStatements.reduce((sum, statement) => sum + statement.balance, 0);
+    
+    // Drafts that need to be sent
+    const unsentDrafts = filteredStatements.filter(s => s.status === "Draft");
+    const unsentDraftsCount = unsentDrafts.length;
+    const unsentDraftsTotal = unsentDrafts.reduce((sum, statement) => sum + statement.balance, 0);
+    
+    // Overdue balances sorted by age brackets
+    const today = new Date();
+    const agingBalances = overdueStatements.reduce(
+      (brackets, statement) => {
+        const dueDate = new Date(statement.dueDate);
+        const daysPastDue = Math.floor((today.getTime() - dueDate.getTime()) / (1000 * 60 * 60 * 24));
+        
+        if (daysPastDue >= 90) {
+          brackets.ninety += statement.balance;
+          brackets.ninetyCount++;
+        } else if (daysPastDue >= 60) {
+          brackets.sixty += statement.balance;
+          brackets.sixtyCount++;
+        } else if (daysPastDue >= 30) {
+          brackets.thirty += statement.balance;
+          brackets.thirtyCount++;
+        }
+        
+        return brackets;
+      },
+      { thirty: 0, sixty: 0, ninety: 0, thirtyCount: 0, sixtyCount: 0, ninetyCount: 0 }
+    );
+    
+    const totalAgingBalance = agingBalances.thirty + agingBalances.sixty + agingBalances.ninety;
+    const totalAgingCount = agingBalances.thirtyCount + agingBalances.sixtyCount + agingBalances.ninetyCount;
+    
+    // Statements needing first reminders (sent > 14 days ago, no reminders sent)
+    const needFirstReminder = filteredStatements.filter(s => {
+      if (s.status !== "Overdue" && s.status !== "Sent") return false;
+      if (!s.lastSentDate) return false;
+      
+      const sentDate = new Date(s.lastSentDate);
+      const daysSinceSent = Math.floor((today.getTime() - sentDate.getTime()) / (1000 * 60 * 60 * 24));
+      return daysSinceSent > 14 && (!s.remindersSent || s.remindersSent === 0);
+    });
+    
+    // E-statement adoption rate and gap
+    const totalPatients = filteredStatements.length;
+    const eStatementCount = filteredStatements.filter(s => s.isElectronic).length;
+    const eStatementRate = totalPatients > 0 ? Math.round((eStatementCount / totalPatients) * 100) : 0;
+    const paperStatementCount = totalPatients - eStatementCount;
+    
+    // High-balance watchlist (top 3 highest balances)
+    const highBalanceWatchlist = [...filteredStatements]
+      .filter(s => s.status !== "Paid")
+      .sort((a, b) => b.balance - a.balance)
+      .slice(0, 3);
+    
+    return { 
+      totalOutstanding,
+      totalOverdue,
+      unsentDrafts,
+      unsentDraftsCount,
+      unsentDraftsTotal,
+      agingBalances,
+      totalAgingBalance,
+      totalAgingCount,
+      needFirstReminder,
+      eStatementRate,
+      paperStatementCount,
+      highBalanceWatchlist
+    };
   };
 
-  const { totalOutstanding, totalOverdue, draftCount } = calculateTotals();
+  const { 
+    unsentDraftsCount,
+    unsentDraftsTotal,
+    agingBalances,
+    totalAgingBalance,
+    totalAgingCount,
+    needFirstReminder,
+    eStatementRate,
+    paperStatementCount,
+    highBalanceWatchlist
+  } = calculateActionMetrics();
 
   // Handle row checkbox click
   const handleRowSelect = (id: number) => {
@@ -480,10 +563,10 @@ export default function StatementsPage() {
                   <Download className="h-4 w-4 mr-2" />
                   Export Report
                 </DropdownMenuItem>
-                {draftCount > 0 && (
+                {unsentDraftsCount > 0 && (
                   <DropdownMenuItem className="cursor-pointer">
                     <Send className="h-4 w-4 mr-2" />
-                    Send {draftCount} Draft{draftCount > 1 ? 's' : ''}
+                    Send {unsentDraftsCount} Draft{unsentDraftsCount > 1 ? 's' : ''}
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>
