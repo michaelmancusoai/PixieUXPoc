@@ -491,9 +491,7 @@ export default function BookAppointmentDialog({
                       <div className="flex space-x-1">
                         <Button
                           type="button"
-                          className={`flex items-center justify-center w-12 h-8 ${
-                            formState.amPmFilter === "AM" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-white hover:bg-blue-100"
-                          }`}
+                          className="flex items-center justify-center w-12 h-8"
                           variant={formState.amPmFilter === "AM" ? "default" : "outline"}
                           onClick={() => {
                             form.setValue("amPmFilter", "AM");
@@ -504,9 +502,7 @@ export default function BookAppointmentDialog({
                         </Button>
                         <Button
                           type="button"
-                          className={`flex items-center justify-center w-12 h-8 ${
-                            formState.amPmFilter === "PM" ? "bg-blue-500 hover:bg-blue-600 text-white" : "bg-white hover:bg-blue-100"
-                          }`}
+                          className="flex items-center justify-center w-12 h-8"
                           variant={formState.amPmFilter === "PM" ? "default" : "outline"}
                           onClick={() => {
                             form.setValue("amPmFilter", "PM");
@@ -668,28 +664,27 @@ export default function BookAppointmentDialog({
                             )}
                             
                             {/* Late morning/noon slot - always visible */}
-                              <div
-                                className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
-                                  form.getValues("startTime") === "11:30" ? "bg-blue-50 border-l-4 border-blue-500" : ""
-                                }`}
-                                onClick={() => {
-                                  form.setValue("startTime", "11:30");
-                                  form.setValue("provider", "dr-robert");
-                                }}
-                              >
-                                <div className="font-medium mb-1 text-sm">
-                                  {form.getValues("date") 
-                                    ? format(form.getValues("date"), "EEEE, MMMM do, yyyy")
-                                    : format(new Date(), "EEEE, MMMM do, yyyy")}
-                                </div>
-                                <div className="flex items-center justify-between">
-                                  <div className="text-sm">11:30 - 12:30 PM</div>
-                                  <Badge variant={form.getValues("startTime") === "11:30" ? "default" : "outline"} className="ml-2 text-xs">
-                                    Dr. Robert {form.getValues("startTime") === "11:30" && "✓"}
-                                  </Badge>
-                                </div>
+                            <div
+                              className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
+                                form.getValues("startTime") === "11:30" ? "bg-blue-50 border-l-4 border-blue-500" : ""
+                              }`}
+                              onClick={() => {
+                                form.setValue("startTime", "11:30");
+                                form.setValue("provider", "dr-robert");
+                              }}
+                            >
+                              <div className="font-medium mb-1 text-sm">
+                                {form.getValues("date") 
+                                  ? format(form.getValues("date"), "EEEE, MMMM do, yyyy")
+                                  : format(new Date(), "EEEE, MMMM do, yyyy")}
                               </div>
-                            
+                              <div className="flex items-center justify-between">
+                                <div className="text-sm">11:30 - 12:30 PM</div>
+                                <Badge variant={form.getValues("startTime") === "11:30" ? "default" : "outline"} className="ml-2 text-xs">
+                                  Dr. Robert {form.getValues("startTime") === "11:30" && "✓"}
+                                </Badge>
+                              </div>
+                            </div>
                             {/* Afternoon slot - visible in PM filter */}
                             {(formState.amPmFilter === "PM") && (
                               <div
