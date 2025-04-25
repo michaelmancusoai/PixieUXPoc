@@ -577,214 +577,199 @@ export default function StatementsPage() {
             </DropdownMenu>
           </div>
 
-          {/* Summary Cards - Action-Oriented Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
+          {/* Action-Oriented KPI Cards - Primary Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Unsent Drafts Card */}
+            <Card className="shadow-sm border-t-4 border-t-primary/30 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-primary/5">
                 <CardTitle className="text-base font-medium">Unsent Drafts</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <FileText className="h-8 w-8 mr-3 text-red-500" />
-                  <div>
-                    <div className="text-2xl font-bold">{unsentDraftsCount} drafts</div>
-                    <div className="text-sm text-muted-foreground">
-                      ${unsentDraftsTotal.toFixed(2)} - still on your desk
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    <span>{unsentDraftsCount} statement{unsentDraftsCount !== 1 && 's'} waiting</span>
+                    <ChevronRight className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-3">
+                    ${unsentDraftsTotal.toFixed(2)} still on your desk
+                  </div>
+                  
+                  <div className="h-2 w-full bg-gray-100 rounded-full cursor-pointer mb-4">
+                    <div className="h-full bg-primary rounded-full transition-all duration-1000"
+                         style={{ width: unsentDraftsCount > 0 ? '100%' : '0%' }}>
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 pt-4 border-t">
+                
+                <div className="mt-auto">
                   <Button 
-                    variant="default" 
-                    size="sm" 
+                    variant="default"
+                    size="sm"
                     className="w-full"
                     disabled={unsentDraftsCount === 0}
                   >
-                    <Send className="h-4 w-4 mr-2" />
-                    Open Drafts Queue
-                  </Button>
-                  <div className="mt-2 text-xs text-center text-muted-foreground">
-                    {unsentDraftsCount > 0 ? 
-                      `Clear these to get money flowing - takes 5 minutes` : 
-                      `All clear! No pending drafts to send`}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Balances Aging ≥ 30 days</CardTitle>
-              </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <AlertTriangle className="h-8 w-8 mr-3 text-amber-500" />
-                  <div>
-                    <div className="text-2xl font-bold">${totalAgingBalance.toFixed(2)}</div>
-                    <div className="text-sm text-muted-foreground">
-                      {totalAgingCount} {totalAgingCount === 1 ? 'patient' : 'patients'} with stuck balances
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4 pt-2">
-                  <div className="flex space-x-1 h-3 w-full">
-                    {agingBalances.thirty > 0 && (
-                      <div 
-                        className="bg-yellow-500 rounded-l-sm" 
-                        style={{ 
-                          width: `${(agingBalances.thirty / totalAgingBalance * 100) || 0}%`, 
-                          minWidth: totalAgingBalance > 0 ? '10px' : '0'
-                        }} 
-                      />
-                    )}
-                    {agingBalances.sixty > 0 && (
-                      <div 
-                        className="bg-orange-500" 
-                        style={{ 
-                          width: `${(agingBalances.sixty / totalAgingBalance * 100) || 0}%`,
-                          minWidth: totalAgingBalance > 0 ? '10px' : '0'
-                        }} 
-                      />
-                    )}
-                    {agingBalances.ninety > 0 && (
-                      <div 
-                        className="bg-red-500 rounded-r-sm" 
-                        style={{ 
-                          width: `${(agingBalances.ninety / totalAgingBalance * 100) || 0}%`,
-                          minWidth: totalAgingBalance > 0 ? '10px' : '0'
-                        }} 
-                      />
-                    )}
-                  </div>
-                  <div className="flex text-xs justify-between mt-2">
-                    <div>
-                      <span className="font-medium">${agingBalances.thirty.toFixed(0)}</span>
-                      <span className="text-muted-foreground ml-1">30d</span>
-                    </div>
-                    <div>
-                      <span className="font-medium">${agingBalances.sixty.toFixed(0)}</span>
-                      <span className="text-muted-foreground ml-1">60d</span>
-                    </div>
-                    <div>
-                      <span className="font-medium">${agingBalances.ninety.toFixed(0)}</span>
-                      <span className="text-muted-foreground ml-1">90d+</span>
-                    </div>
-                  </div>
-                </div>
-                <div className="mt-4 pt-2 border-t">
-                  <Button 
-                    variant="default" 
-                    size="sm" 
-                    className="w-full"
-                    disabled={totalAgingBalance === 0}
-                  >
-                    <Send className="h-4 w-4 mr-2" />
-                    Send Statement Reminders
+                    Send Drafts
                   </Button>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b flex justify-between items-center">
+            {/* Need First Reminder Card */}
+            <Card className="shadow-sm border-t-4 border-t-orange-200 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-muted/50">
                 <CardTitle className="text-base font-medium">Need First Reminder</CardTitle>
-                {needFirstReminder.length > 0 && (
-                  <div className="h-5 w-5 flex items-center justify-center bg-amber-100 rounded-full pulse-animation">
-                    <Clock className="h-3 w-3 text-amber-600" />
-                  </div>
-                )}
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <Bell className="h-8 w-8 mr-3 text-amber-600" />
-                  <div>
-                    <div className="text-2xl font-bold">{needFirstReminder.length} {needFirstReminder.length === 1 ? 'statement' : 'statements'}</div>
-                    <div className="text-sm text-muted-foreground">
-                      Sent &gt; 14 days ago, no follow-up
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="text-2xl font-bold">
+                      {needFirstReminder.length} statement{needFirstReminder.length !== 1 && 's'} stalled
                     </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-4">
+                    Sent 14+ days ago, no nudge
                   </div>
                 </div>
                 
-                <div className="mt-4 pt-4 border-t">
+                <div className="mt-auto">
                   <Button 
-                    variant="default" 
-                    size="sm" 
+                    variant={needFirstReminder.length > 0 ? "default" : "outline"}
+                    size="sm"
                     className="w-full"
                     disabled={needFirstReminder.length === 0}
                   >
-                    <Send className="h-4 w-4 mr-2" />
-                    Run 14-Day Reminder
+                    Run Reminders
                   </Button>
-                  <div className="mt-2 text-xs text-center text-muted-foreground">
-                    {needFirstReminder.length > 0 ?
-                      `Send a gentle reminder to prompt payment` :
-                      `All statements are recently sent or have reminders`}
-                  </div>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">e-Statement Opt-In Gap</CardTitle>
+            {/* Balances Aging ≥ 30 days Card */}
+            <Card className="shadow-sm border-t-4 border-t-destructive/30 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-destructive/5">
+                <CardTitle className="text-base font-medium">Balances ≥ 30 Days</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <BadgePercent className="h-8 w-8 mr-3 text-blue-500" />
-                  <div>
-                    <div className="text-2xl font-bold">{eStatementRate}% adopted</div>
-                    <div className="text-sm text-muted-foreground">
-                      {paperStatementCount} {paperStatementCount === 1 ? 'patient' : 'patients'} still on paper
-                    </div>
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    ${totalAgingBalance.toFixed(0)} {totalAgingBalance === 0 ? 'stuck (nice!)' : 'stuck'}
                   </div>
+                  <div className="text-sm text-muted-foreground mb-3">
+                    {totalAgingCount} {totalAgingCount === 1 ? 'pt' : 'pts'} over 30d
+                  </div>
+                  
+                  {totalAgingBalance > 0 && (
+                    <div className="space-y-2 mb-4">
+                      <div className="flex space-x-1 h-2 w-full">
+                        {agingBalances.thirty > 0 && (
+                          <div 
+                            className="bg-primary/60 rounded-l-sm" 
+                            style={{ 
+                              width: `${(agingBalances.thirty / totalAgingBalance * 100) || 0}%`, 
+                              minWidth: totalAgingBalance > 0 ? '10px' : '0'
+                            }} 
+                          />
+                        )}
+                        {agingBalances.sixty > 0 && (
+                          <div 
+                            className="bg-orange-500" 
+                            style={{ 
+                              width: `${(agingBalances.sixty / totalAgingBalance * 100) || 0}%`,
+                              minWidth: totalAgingBalance > 0 ? '10px' : '0'
+                            }} 
+                          />
+                        )}
+                        {agingBalances.ninety > 0 && (
+                          <div 
+                            className="bg-destructive rounded-r-sm" 
+                            style={{ 
+                              width: `${(agingBalances.ninety / totalAgingBalance * 100) || 0}%`,
+                              minWidth: totalAgingBalance > 0 ? '10px' : '0'
+                            }} 
+                          />
+                        )}
+                      </div>
+                      <div className="flex text-xs justify-between">
+                        <div>
+                          <span className="font-medium">${agingBalances.thirty.toFixed(0)}</span>
+                          <span className="text-muted-foreground ml-1">30d</span>
+                        </div>
+                        <div>
+                          <span className="font-medium">${agingBalances.sixty.toFixed(0)}</span>
+                          <span className="text-muted-foreground ml-1">60d</span>
+                        </div>
+                        <div>
+                          <span className="font-medium">${agingBalances.ninety.toFixed(0)}</span>
+                          <span className="text-muted-foreground ml-1">90d+</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
-                <div className="mt-4">
-                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full"
+                    disabled={totalAgingBalance === 0}
+                  >
+                    View Aging
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* e-Statement Opt-In Gap Card */}
+            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
+                <CardTitle className="text-sm font-medium">e-Statement Gap</CardTitle>
+              </CardHeader>
+              <CardContent className="py-4 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-xl font-bold flex items-center justify-between">
+                    <span>{eStatementRate}% adopted</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground mb-3">
+                    {paperStatementCount} patient{paperStatementCount !== 1 && 's'} still on paper
+                  </div>
+                  
+                  <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
                     <div 
-                      className="bg-blue-600 h-2.5 rounded-full" 
+                      className="bg-primary h-2 rounded-full" 
                       style={{ width: `${eStatementRate}%` }}
                     ></div>
                   </div>
-                  <div className="flex justify-between mt-1 text-xs text-muted-foreground">
-                    <span>0%</span>
-                    <span>Goal: 100%</span>
-                  </div>
                 </div>
                 
-                <div className="mt-4 pt-4 border-t">
+                <div className="mt-auto">
                   <Button 
-                    variant="default" 
-                    size="sm" 
+                    variant="outline" 
+                    size="sm"
                     className="w-full"
                     disabled={paperStatementCount === 0}
                   >
-                    <Mail className="h-4 w-4 mr-2" />
-                    Invite to Paperless
+                    Invite Paperless
                   </Button>
-                  <div className="mt-2 text-xs text-center text-muted-foreground">
-                    {paperStatementCount > 0 ?
-                      `Save $0.58 per statement and get paid faster` :
-                      `Great job! All patients are using e-statements`}
-                  </div>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">High-Balance Watchlist</CardTitle>
+            {/* High-Balance Watchlist Card */}
+            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
+                <CardTitle className="text-sm font-medium">High-Balance Watchlist</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
+              <CardContent className="py-4 px-5 flex-1 flex flex-col">
                 {highBalanceWatchlist.length > 0 ? (
-                  <div className="space-y-3">
+                  <div className="space-y-2 mb-4">
                     {highBalanceWatchlist.map((statement, index) => (
                       <div key={statement.id} className="flex justify-between items-center">
                         <div>
-                          <div className="font-medium">{statement.patientName}</div>
-                          <div className="text-sm text-muted-foreground">${statement.balance.toFixed(2)}</div>
+                          <div className="text-sm font-medium">{statement.patientName}</div>
+                          <div className="text-xs text-muted-foreground">${statement.balance.toFixed(2)}</div>
                         </div>
-                        <Button size="sm" variant="outline" className="h-8">
+                        <Button size="sm" variant="outline" className="h-7 px-2">
                           <Phone className="h-3 w-3 mr-1" />
                           Call
                         </Button>
@@ -792,19 +777,18 @@ export default function StatementsPage() {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-3 text-muted-foreground">
+                  <div className="text-center py-2 text-muted-foreground text-sm mb-4">
                     No high balances to watch
                   </div>
                 )}
                 
-                <div className="mt-4 pt-4 border-t">
+                <div className="mt-auto">
                   <Button 
                     variant="outline" 
-                    size="sm" 
+                    size="sm"
                     className="w-full"
                     disabled={highBalanceWatchlist.length === 0}
                   >
-                    <Users className="h-4 w-4 mr-2" />
                     Offer Payment Plans
                   </Button>
                 </div>
