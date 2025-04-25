@@ -1,4 +1,4 @@
-import { Switch, Route } from "wouter";
+import { Switch, Route, Redirect } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -8,6 +8,7 @@ import { PixelStyles } from "@/features/dashboard/components/RetroGame";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import DashboardPage from "@/pages/DashboardPage";
+import LoginPage from "@/pages/login-page";
 import TodayPage from "@/pages/dashboard/TodayPage";
 import DailyHuddlePage from "@/pages/dashboard/DailyHuddlePage";
 import MissionControlPage from "@/pages/dashboard/MissionControlPage";
@@ -54,7 +55,9 @@ import ToothChartPage from "@/features/dental/ToothChartPageFixed";
 function Router() {
   return (
     <Switch>
-      <Route path="/" component={Home} />
+      <Route path="/" component={LoginPage} />
+      <Route path="/login" component={LoginPage} />
+      <Route path="/home" component={Home} />
       <Route path="/dashboard" component={DashboardPage} />
       <Route path="/dashboard/today" component={TodayPage} />
       <Route path="/dashboard/daily-huddle" component={DailyHuddlePage} />
