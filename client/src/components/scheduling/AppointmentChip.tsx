@@ -50,11 +50,13 @@ export default function AppointmentChip({ appointment, style = {}, className = '
   const getStatusBorderColor = () => {
     const status = appointment.status?.toLowerCase() || 'scheduled';
     switch (status) {
-      case 'confirmed': return '#3b82f6'; // Blue
-      case 'checked_in': return '#10b981'; // Green
-      case 'in_chair': return '#ef4444'; // Red
-      case 'completed': return '#6b7280'; // Gray
-      case 'no_show': return '#f59e0b'; // Amber
+      case 'confirmed': 
+      case 'scheduled': return '#3b82f6'; // Blue for upcoming appointments
+      case 'checked_in': return '#10b981'; // Green for checked in
+      case 'in_chair': 
+      case 'in_progress': return '#f97316'; // Orange for in process/in chair
+      case 'completed': return '#6b7280'; // Gray for completed
+      case 'no_show': return '#ef4444'; // Red for no-shows
       default: return '#3b82f6'; // Default blue
     }
   };
@@ -100,7 +102,14 @@ export default function AppointmentChip({ appointment, style = {}, className = '
         {/* Middle row: Status + time in status and Duration */}
         <div className="flex justify-between items-center mb-1 w-full">
           <div className="flex items-center overflow-hidden max-w-[70%]">
-            <span className="text-[11px] font-medium bg-gray-100 rounded-md px-2 py-0.5 whitespace-nowrap">
+            <span 
+              className="text-[11px] font-medium rounded-md px-2 py-0.5 whitespace-nowrap"
+              style={{ 
+                backgroundColor: `${getStatusBorderColor()}20`, // 20% opacity version of the border color 
+                color: getStatusBorderColor(),
+                borderRadius: '4px'
+              }}
+            >
               {getStatusDisplay()}
             </span>
             {/* Time display with clock icon for "In Chair" or "Checked In" status */}
