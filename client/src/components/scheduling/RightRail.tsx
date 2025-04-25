@@ -2,7 +2,7 @@ import { format } from 'date-fns';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { MessageSquare, CheckCircle, UserCheck, ClipboardList, Clock, AlertTriangle } from 'lucide-react';
+import { MessageSquare, CheckCircle, UserCheck, ClipboardList, Clock, AlertTriangle, CreditCard, LogOut } from 'lucide-react';
 import { AppointmentWithDetails } from '@/lib/scheduling-utils';
 
 interface RightRailProps {
@@ -32,6 +32,37 @@ export default function RightRail({ selectedDate }: RightRailProps) {
     { id: 1, message: 'Sarah Martinez is running 15 minutes late', type: 'warning' },
     { id: 2, message: 'Dr. Nguyen procedure is taking longer than expected', type: 'info' },
     { id: 3, message: 'Richard Walker has arrived early (30 minutes)', type: 'info' },
+  ];
+  
+  // Sample ready for checkout patients
+  const readyForCheckout = [
+    { 
+      id: 101, 
+      name: 'Robert Johnson', 
+      procedure: 'Crown prep', 
+      provider: 'Dr. Williams',
+      time: '1:45 PM', 
+      paymentAmount: 325.50, 
+      needsFollowUp: true 
+    },
+    { 
+      id: 102, 
+      name: 'Emily Davis', 
+      procedure: 'Root canal', 
+      provider: 'Dr. Martinez',
+      time: '12:30 PM', 
+      paymentAmount: 720.00, 
+      needsFollowUp: false 
+    },
+    { 
+      id: 103, 
+      name: 'Thomas Wilson', 
+      procedure: 'Cleaning', 
+      provider: 'Dr. Thompson',
+      time: '10:15 AM', 
+      paymentAmount: 145.00, 
+      needsFollowUp: true 
+    },
   ];
   
   return (
@@ -76,6 +107,64 @@ export default function RightRail({ selectedDate }: RightRailProps) {
                     Unconfirmed
                   </Badge>
                 )}
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+      
+      {/* Ready for Checkout */}
+      <Card>
+        <CardHeader className="py-3">
+          <CardTitle className="text-sm font-semibold flex items-center">
+            <LogOut className="mr-2 h-4 w-4 text-purple-500" />
+            Ready for Checkout
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="pt-0 space-y-2">
+          {readyForCheckout.map((patient) => (
+            <div key={patient.id} className="p-2 border rounded-md text-xs">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Avatar className="h-6 w-6">
+                    <AvatarFallback className="text-[10px]">
+                      {patient.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="font-medium flex items-center">
+                      {patient.name}
+                    </div>
+                    <div className="text-muted-foreground text-[10px] flex items-center">
+                      <span>{patient.procedure}</span>
+                      <span className="mx-1">•</span>
+                      <span>{patient.provider}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="font-medium text-right">${patient.paymentAmount.toFixed(2)}</div>
+                  <div className="text-[10px] text-muted-foreground">{patient.time}</div>
+                </div>
+              </div>
+              <div className="flex justify-between mt-1.5">
+                <div className="flex space-x-1">
+                  {patient.needsFollowUp && (
+                    <Badge variant="outline" className="bg-blue-50 border-blue-200 text-blue-700 text-[9px] h-5">
+                      Follow-up
+                    </Badge>
+                  )}
+                </div>
+                <div className="flex space-x-1">
+                  <Badge variant="outline" className="bg-white border-gray-200 text-gray-700 text-[9px] h-5 cursor-pointer hover:bg-gray-50">
+                    <CreditCard className="mr-1 h-2.5 w-2.5" />
+                    Payment
+                  </Badge>
+                  <Badge variant="outline" className="bg-white border-gray-200 text-gray-700 text-[9px] h-5 cursor-pointer hover:bg-gray-50">
+                    <LogOut className="mr-1 h-2.5 w-2.5" />
+                    Checkout
+                  </Badge>
+                </div>
               </div>
             </div>
           ))}
