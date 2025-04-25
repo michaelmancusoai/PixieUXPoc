@@ -286,38 +286,34 @@ export default function CalendarView({
     });
   }, [toast]);
 
-  // Calculate time slots with a special slot for the current time indicator at 1:15 PM
+  // Simplify our approach: just add a current time indicator exactly at 1:15 PM
   const timeSlots = useMemo(() => {
     const slots = [];
     const startTime = BUSINESS_START_HOUR * MINS_IN_HOUR; // 7:00 AM
     const endTime = (BUSINESS_START_HOUR + HOURS_IN_DAY) * MINS_IN_HOUR; // 7:00 PM
-    const currentTimeAt1_15PM = 13 * 60 + 15; // 1:15 PM in minutes
     
+    // Add all regular time slots
     for (let i = startTime; i < endTime; i += TIME_SLOT) {
-      // If we've reached 1:15 PM, insert our current time indicator
-      if (i <= currentTimeAt1_15PM && i + TIME_SLOT > currentTimeAt1_15PM && i !== currentTimeAt1_15PM) {
-        // Insert the normal time slot
-        slots.push({
-          time: i,
-          label: getTimeFromMinutes(i),
-          isTimeIndicator: false
-        });
-        
-        // Insert the special current time indicator slot
-        slots.push({
-          time: currentTimeAt1_15PM,
-          label: "1:15 PM",
-          isTimeIndicator: true
-        });
-      } else if (i !== currentTimeAt1_15PM) {
-        // Skip exact 1:15 pm slot since we've already added it
-        slots.push({
-          time: i,
-          label: getTimeFromMinutes(i),
-          isTimeIndicator: false
-        });
-      }
+      slots.push({
+        time: i,
+        label: getTimeFromMinutes(i),
+        isTimeIndicator: false
+      });
     }
+    
+    // Now find the index to insert our special current time indicator at 1:15 PM (795 minutes)
+    const currentTimeAt1_15PM = 13 * 60 + 15; // 1:15 PM in minutes
+    const indexBefore1_15 = Math.floor((currentTimeAt1_15PM - startTime) / TIME_SLOT);
+    
+    // Insert our special indicator at this specific position
+    slots.splice(indexBefore1_15 + 1, 0, {
+      time: currentTimeAt1_15PM,
+      label: "1:15 PM",
+      isTimeIndicator: true
+    });
+    
+    console.log('Generated timeSlots with current time indicator:', 
+      slots.filter(slot => slot.isTimeIndicator).length > 0 ? 'Indicator present' : 'NO INDICATOR');
     
     return slots;
   }, []);
@@ -378,11 +374,11 @@ export default function CalendarView({
                 // Special current time indicator at 1:15 PM
                 <div 
                   key={index} 
-                  className="border-0 h-[2px] bg-red-500 relative"
+                  className="border-0 h-[8px] bg-red-500 relative flex items-center"
                 >
                   {/* Current time label for 1:15 PM */}
                   <div className="absolute right-0 flex justify-end items-center z-10 h-full">
-                    <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-l whitespace-nowrap">
+                    <div className="bg-red-500 text-white text-xs font-bold py-1 px-2 rounded-l whitespace-nowrap">
                       {slot.label}
                     </div>
                   </div>
@@ -417,7 +413,7 @@ export default function CalendarView({
                   return (
                     <div 
                       key={index}
-                      className="h-[2px] bg-red-500 border-0"
+                      className="h-[8px] bg-red-500 border-0"
                     >
                       {/* No content inside the time indicator line */}
                     </div>
