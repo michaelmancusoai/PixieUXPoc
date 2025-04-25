@@ -1,0 +1,90 @@
+Measures (a k a Patient Metrics) — Design Spec
+A calm, owner-friendly analytics page that shows whether the practice is growing, holding, or leaking patients—and lets you jump straight to the underlying lists.
+
+0 · Purpose in one line
+
+Turn high-level patient analytics (growth, retention, production per patient) into simple tiles, trend charts, and click-through lists so leadership can spot drift and staff can act.
+1 · Page anatomy
+
+
+Zone	Span	Question answered	Components
+Hero KPI quartet	full-width row	“Are we growing, retaining, and extracting value?”	4 actionable tiles
+Trend canvas	9⁄12 cols	“How are key metrics moving over time?”	Stacked line + bar charts
+Insights side-panel	3⁄12 cols (sticky)	“Explain the blips.”	Auto-generated call-outs + CTA links
+Segment jump-off	under canvas	“See the patients behind the number.”	Buttons linking to Smart Segments
+2 · Hero KPI tiles (actionable)
+
+
+Tile	Metric & copy	CTA	Colour band
+Active Patient Base	1 486 patients seen ≤ 18 m (+1.9 % MoM)	View Directory	Mint if +ve, grey if flat, coral if –ve
+New Patients MTD	27 new (goal 40)	See Source Mix	Amber when < goal pace
+Dormant 18-36 m	102 patients (–4 vs last month)	Reactivate List	Amber >75, coral >150
+Hygiene Re-Appt Rate	87 % last 6 m (target 90 %)	Book Recalls	Mint ≥90, amber 80-89, coral <80
+Each tile shows a 90-day sparkline in the corner; entire tile is a link to deeper segment.
+
+3 · Trend canvas (main chart area)
+
+A. Patient Flow Funnel (stacked bar, last 12 m)
+Columns: New → Active → Dormant → Lost
+Hover = count + YoY %.
+Click a bar segment → opens Smart Segment with filters pre-applied.
+B. Production per Active Patient (line, 12 m)
+Grey baseline = industry average (ADA).
+Green when above, amber when below 5 %.
+C. Recall Compliance Cohort Heatmap (matrix)
+Rows = month patient was due.
+Columns = % booked within 2 w / 4 w / 8 w.
+Red squares highlight slippage cohorts.
+Canvas auto-switches to small-multiple view on screens < 1200 px.
+
+4 · Insights side-panel
+
+Dynamically surfaces anomalies:
+
+
+Insight card	Trigger	Example copy	CTA
+Spike in Lost Patients	Lost > 20 in a month	“April saw 24 patients move to Lost—largest in 9 m.”	View Lost Reasons
+Low Conversion Source	Source conv < 30 %	“Facebook ads convert 22 % vs avg 41 %.”	See Leads
+Recall Slippage	Cohort heatmap red	“June recall cohort only 54 % booked.”	Recall List
+Panel scrolls; each insight card collapses after CTA click.
+
+5 · Filter bar (top-right of canvas)
+
+Time window: 3 m • 6 m • 12 m • Custom
+Provider: All • Dentist picklist • Hygienist picklist
+Source: All • Web • Referral • PPO list • Marketing code
+Every filter change animates charts (200 ms fade).
+6 · Segment jump-off buttons
+
+Under canvas, four pill-buttons:
+
+[ New pts list ]  [ Dormant list ]  [ Recall due list ]  [ Lost reasons ]
+They deep-link into Smart Segments with pre-loaded filters.
+
+7 · Behavioural nudges
+
+
+Trigger	Nudge
+Active Base shrinks two consecutive months	Red halo on tile + toast: “Patient base slipping—reactivate 20 dormant to reverse.”
+Hygiene rate crosses 90 %	Confetti tick 1 s; KPI tile turns mint for the day.
+Lost Patients spike insight ignored 3 d	Card border pulses amber once on page load.
+8 · Copy library
+
+
+Context	Copy
+Tile tooltip	“Active = visited in last 18 m. Industry median 1 650.”
+Funnel hover	“Dormant Jul-23 cohort: 46 pts (–12 vs prior yr).”
+Recall heatmap square tooltip	“Due Aug-23, booked within 8 w: 62 %.”
+Empty state	“Need at least 60 d of data to chart trends.”
+Tone = analyst-coach: factual, motivating, no jargon.
+
+9 · Designer checklist
+
+Hero tiles 260 × 160 px; colour band uses existing mint/amber/coral palette.
+Sparkline stroke 1 px; no axes labels inside tiles.
+Trend canvas: one chart visible at a time with tab pills (Funnel | Prod/Patient | Recall Cohort).
+Use same outlined icon family (📈, 👥, 🛠).
+Side-panel width 300 px sticky; each insight card 120 px tall.
+Charts built in ApexCharts or Chart.js – muted colours, ADA-compliant contrast.
+Result
+Patients ▸ Measures becomes leadership’s 60-second pulse check: a glance at four tiles to know growth, new-patient flow, hygiene health, and dormant leakage—then a click on any tile or insight card to jump into the exact Smart Segment list that needs work. The data steward sleeps well; the owner knows where the next dollar (or patient) will appear.
