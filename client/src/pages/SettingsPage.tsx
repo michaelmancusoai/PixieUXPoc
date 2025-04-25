@@ -1,6 +1,7 @@
 import { useLocation, Link, Route, Switch, Redirect } from "wouter";
 import { cn } from "@/lib/utils";
 import TeamMembersPage from "./settings/TeamMembersPage";
+import ThemeSettingsPage from "./settings/ThemeSettingsPage";
 import {
   Settings,
   Users,
@@ -29,7 +30,7 @@ const settingsItems = [
     title: "Theme",
     href: "/settings/theme",
     icon: Palette,
-    component: () => <div className="p-6">Theme settings (coming soon)</div>,
+    component: ThemeSettingsPage,
   },
   {
     title: "Permissions",
@@ -58,11 +59,11 @@ const settingsItems = [
 ];
 
 export default function SettingsPage() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   
   // Simple redirection to the team members page
   if (location === "/settings") {
-    window.location.href = "/settings/team";
+    setLocation("/settings/team");
     return null;
   }
 
