@@ -761,12 +761,12 @@ export default function CollectionsPage() {
           {/* Action-Oriented KPI Cards - Primary Row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {/* Ripest 30-day Window Card */}
-            <Card className="shadow-sm border-t-4 border-t-primary/30">
+            <Card className="shadow-sm border-t-4 border-t-primary/30 flex flex-col">
               <CardHeader className="py-3 px-5 border-b bg-primary/5">
                 <CardTitle className="text-base font-medium">Ripest 30-Day Window</CardTitle>
               </CardHeader>
-              <CardContent className="py-5 px-5">
-                <div className="flex flex-col">
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
                   <div className="text-2xl font-bold flex items-center justify-between mb-1">
                     <span>${ripestWindowValue.toFixed(0)} possible</span>
                     <ChevronRight className="h-5 w-5 text-primary" />
@@ -780,26 +780,26 @@ export default function CollectionsPage() {
                          style={{ width: `${Math.min((ripestWindowValue / 2500) * 100, 100)}%` }}>
                     </div>
                   </div>
-                  
-                  <div className="mt-auto pt-2">
-                    <Button 
-                      variant="default"
-                      size="sm"
-                      className="w-full">
-                      Make the Calls
-                    </Button>
-                  </div>
+                </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full">
+                    Make the Calls
+                  </Button>
                 </div>
               </CardContent>
             </Card>
             
             {/* Failed Auto-Pays (renamed from Broken Promises) */}
-            <Card className="shadow-sm border-t-4 border-t-orange-200">
+            <Card className="shadow-sm border-t-4 border-t-orange-200 flex flex-col">
               <CardHeader className="py-3 px-5 border-b bg-muted/50">
                 <CardTitle className="text-base font-medium">Failed Auto-Pays</CardTitle>
               </CardHeader>
-              <CardContent className="py-5 px-5">
-                <div className="flex flex-col h-full">
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
                   <div className="flex items-center justify-between mb-1">
                     <div className="text-2xl font-bold">
                       {brokenPromisesCount} plan{brokenPromisesCount !== 1 && 's'} failed
@@ -820,43 +820,43 @@ export default function CollectionsPage() {
                       ? `$${(brokenPromisesCount * 270).toFixed(0)} · Last decline ${Math.floor(Math.random() * 6) + 1}h ago` 
                       : 'All payment plans ran on time.'}
                   </div>
-                  
-                  <div className="mt-auto pt-2">
-                    <Button 
-                      variant={brokenPromisesCount > 0 ? "default" : "outline"}
-                      size="sm"
-                      className="w-full"
-                      disabled={brokenPromisesCount === 0}>
-                      Retry Cards
-                    </Button>
-                  </div>
+                </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant={brokenPromisesCount > 0 ? "default" : "outline"}
+                    size="sm"
+                    className="w-full"
+                    disabled={brokenPromisesCount === 0}>
+                    Retry Cards
+                  </Button>
                 </div>
               </CardContent>
             </Card>
             
             {/* No Next Action Card */}
-            <Card className="shadow-sm border-t-4 border-t-destructive/30">
+            <Card className="shadow-sm border-t-4 border-t-destructive/30 flex flex-col">
               <CardHeader className="py-3 px-5 border-b bg-destructive/5">
                 <CardTitle className="text-base font-medium">No Next Action</CardTitle>
               </CardHeader>
-              <CardContent className="py-5 px-5">
-                <div className="flex flex-col h-full">
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
                   <div className="text-2xl font-bold flex items-center justify-between mb-1">
                     ${noNextActionValue.toFixed(0)} · {noNextActionCount} acct{noNextActionCount !== 1 && 's'}
                   </div>
                   <div className="text-sm text-muted-foreground mb-4">
                     {noNextActionCount > 0 ? 'Oldest task 4d overdue' : 'All accounts have next steps'}
                   </div>
-                  
-                  <div className="mt-auto pt-2">
-                    <Button 
-                      variant="default"
-                      size="sm"
-                      className="w-full"
-                      disabled={noNextActionCount === 0}>
-                      Create Tasks
-                    </Button>
-                  </div>
+                </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full"
+                    disabled={noNextActionCount === 0}>
+                    Create Tasks
+                  </Button>
                 </div>
               </CardContent>
             </Card>
