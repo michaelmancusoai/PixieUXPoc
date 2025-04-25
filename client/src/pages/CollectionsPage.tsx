@@ -494,8 +494,63 @@ export default function CollectionsPage() {
 
   const filteredAccounts = getFilteredAccounts();
 
-  // Calculate totals
-  const calculateTotals = () => {
+  // Calculate action-oriented metrics for behavioral KPIs
+  const calculateRecoveryMetrics = () => {
+    const today = new Date();
+    
+    // 1. No Next Action - accounts without any scheduled next action or with "none" as next action type
+    const noNextAction = filteredAccounts.filter(account => 
+      !account.nextAction.dueDate || account.nextAction.type === "none"
+    );
+    const noNextActionCount = noNextAction.length;
+    const noNextActionValue = noNextAction.reduce((sum, account) => sum + account.totalDue, 0);
+    
+    // 2. Ripest 30-day Window - accounts with payments due in next 30 days
+    const nextMonthDate = addDays(today, 30);
+    const ripestWindow = filteredAccounts.filter(account => {
+      if (!account.nextAction.dueDate) return false;
+      const dueDate = parseISO(account.nextAction.dueDate);
+      return isAfter(dueDate, today) && isBefore(dueDate, nextMonthDate);
+    });
+    const ripestWindowValue = ripestWindow.reduce((sum, account) => sum + account.totalDue, 0);
+    
+    // 3. Broken Promises - payment plans that slipped yesterday
+    const yesterday = addDays(today, -1);
+    const brokenPromises = filteredAccounts.filter(account => {
+      if (!account.nextAction.dueDate) return false;
+      if (account.status !== "Scheduled Payment") return false;
+      
+      const dueDate = parseISO(account.nextAction.dueDate);
+      return (
+        dueDate.getDate() === yesterday.getDate() &&
+        dueDate.getMonth() === yesterday.getMonth() &&
+        dueDate.getFullYear() === yesterday.getFullYear()
+      );
+    });
+    const brokenPromisesCount = brokenPromises.length;
+    
+    // 4. At-Risk Plans - payment plans with next installment due in 3 days
+    const threeDaysFromNow = addDays(today, 3);
+    const atRiskPlans = filteredAccounts.filter(account => {
+      if (!account.nextAction.dueDate) return false;
+      if (account.status !== "Scheduled Payment") return false;
+      
+      const dueDate = parseISO(account.nextAction.dueDate);
+      return (
+        dueDate.getDate() === threeDaysFromNow.getDate() &&
+        dueDate.getMonth() === threeDaysFromNow.getMonth() &&
+        dueDate.getFullYear() === threeDaysFromNow.getFullYear()
+      );
+    });
+    const atRiskPlansValue = atRiskPlans.reduce((sum, account) => sum + account.totalDue, 0);
+    
+    // 5. Escalate or Settle - accounts > 120 days & <$200
+    const escalateOrSettle = filteredAccounts.filter(account => 
+      account.agingBucket === "120+" && account.totalDue < 200
+    );
+    const escalateOrSettleCount = escalateOrSettle.length;
+    
+    // These are the legacy metrics we're keeping for compatibility
     const totalDue = filteredAccounts.reduce((sum, account) => sum + account.totalDue, 0);
     const overDueActions = filteredAccounts.filter(account => {
       if (!account.nextAction.dueDate) return false;
@@ -504,7 +559,6 @@ export default function CollectionsPage() {
     const todaysActions = filteredAccounts.filter(account => {
       if (!account.nextAction.dueDate) return false;
       const actionDate = parseISO(account.nextAction.dueDate);
-      const today = new Date();
       return (
         actionDate.getDate() === today.getDate() &&
         actionDate.getMonth() === today.getMonth() &&
@@ -512,10 +566,35 @@ export default function CollectionsPage() {
       );
     }).length;
 
-    return { totalDue, overDueActions, todaysActions };
+    return { 
+      totalDue, 
+      overDueActions, 
+      todaysActions,
+      noNextAction,
+      noNextActionCount,
+      noNextActionValue,
+      ripestWindow,
+      ripestWindowValue,
+      brokenPromises,
+      brokenPromisesCount,
+      atRiskPlans,
+      atRiskPlansValue,
+      escalateOrSettle,
+      escalateOrSettleCount
+    };
   };
 
-  const { totalDue, overDueActions, todaysActions } = calculateTotals();
+  const { 
+    totalDue, 
+    overDueActions, 
+    todaysActions,
+    noNextActionCount,
+    noNextActionValue,
+    ripestWindowValue,
+    brokenPromisesCount,
+    atRiskPlansValue,
+    escalateOrSettleCount
+  } = calculateRecoveryMetrics();
 
   // Handle row checkbox click
   const handleRowSelect = (id: number) => {
@@ -672,80 +751,193 @@ export default function CollectionsPage() {
             </DropdownMenu>
           </div>
 
-          {/* KPI Cards */}
+          {/* Action-Oriented KPI Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            {/* No Next Action Card */}
             <Card className="shadow-sm">
               <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Accounts in Collections</CardTitle>
+                <CardTitle className="text-base font-medium">No Next Action</CardTitle>
               </CardHeader>
               <CardContent className="py-6 px-5">
                 <div className="flex items-center">
-                  <PiggyBank className="h-8 w-8 mr-3 text-red-500" />
-                  <div>
-                    <div className="flex flex-col">
-                      <div className="text-2xl font-bold">
-                        <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200 mr-2">
-                          {mockCollectionAccounts.filter(a => a.agingBucket === "91-120" || a.agingBucket === "120+").length}
-                        </Badge>
-                        <span className="text-red-500">${totalDue.toFixed(2)}</span>
-                      </div>
-                      <div className="text-sm text-muted-foreground mt-1">
-                        Balances {'>'}  90 days
-                      </div>
-                    </div>
+                  <div className={`h-10 w-10 rounded-full flex items-center justify-center mr-3 ${noNextActionCount > 0 ? 'bg-red-100' : 'bg-gray-100'}`}>
+                    <XCircle className={`h-6 w-6 ${noNextActionCount > 0 ? 'text-red-500' : 'text-gray-400'}`} />
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Collected This Month</CardTitle>
-              </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <DollarSign className="h-8 w-8 mr-3 text-green-500" />
                   <div>
                     <div className="text-2xl font-bold flex items-center">
-                      $1,250.00
-                      <span className="text-green-500 flex items-center ml-2 text-sm">
-                        <ChevronDown className="h-4 w-4 rotate-180" />
-                        8.5%
-                      </span>
+                      ${noNextActionValue.toFixed(2)}
                     </div>
-                    <div className="text-sm text-muted-foreground">vs. last month</div>
+                    <div className="text-sm text-muted-foreground mt-1">
+                      {noNextActionCount > 0 ? 
+                        `${noNextActionCount} accts - abandoned` : 
+                        'All accounts have next steps'}
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full"
+                    disabled={noNextActionCount === 0}>
+                    <FileEdit className="h-4 w-4 mr-2" />
+                    Create Tasks
+                  </Button>
+                  {noNextActionCount > 0 && (
+                    <div className="mt-2 text-xs text-muted-foreground text-center">
+                      These accounts are silent — give them a voice
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Ripest 30-day Window Card */}
+            <Card className="shadow-sm">
+              <CardHeader className="py-4 px-5 border-b">
+                <CardTitle className="text-base font-medium">Ripest 30-day Window</CardTitle>
+              </CardHeader>
+              <CardContent className="py-6 px-5">
+                <div className="flex items-center">
+                  <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center mr-3">
+                    <DollarSign className="h-6 w-6 text-green-500" />
+                  </div>
+                  <div>
+                    <div className="text-2xl font-bold flex items-center">
+                      ${ripestWindowValue.toFixed(2)}
+                    </div>
+                    <div className="text-sm text-muted-foreground mt-1">
+                      possible with scheduled calls
+                    </div>
+                  </div>
+                </div>
+                <div className="mt-3">
+                  <div className="h-2 w-full bg-gray-100 rounded-full">
+                    <div className="h-full bg-green-500 rounded-full"  
+                         style={{ width: `${Math.min((ripestWindowValue / 5000) * 100, 100)}%` }}>
+                    </div>
+                  </div>
+                  <div className="flex justify-between text-xs mt-1">
+                    <span className="text-muted-foreground">$0</span>
+                    <span className="text-muted-foreground">$2.5k</span>
+                    <span className="text-muted-foreground">$5k</span>
+                  </div>
+                </div>
+                <div className="mt-4 pt-4 border-t">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full">
+                    <PhoneCall className="h-4 w-4 mr-2" />
+                    Call List (auto-sort)
+                  </Button>
+                  <div className="flex justify-end mt-2">
+                    <Button 
+                      variant="ghost"
+                      size="sm">
+                      <Send className="h-4 w-4 mr-1" />
+                      Send payment portal link
+                    </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Payment Plans Performance</CardTitle>
+            {/* Two-card row with smaller metrics */}
+            <div className="grid grid-cols-1 gap-6">
+              {/* Broken Promises Card */}
+              <Card className="shadow-sm">
+                <CardHeader className="py-3 px-5 border-b">
+                  <CardTitle className="text-base font-medium">Broken Promises Today</CardTitle>
+                </CardHeader>
+                <CardContent className="py-4 px-5">
+                  <div className="flex items-center">
+                    <div className={`h-10 w-10 rounded-full flex items-center justify-center mr-3 ${brokenPromisesCount > 0 ? 'bg-amber-100' : 'bg-gray-100'}`}>
+                      <AlertCircle className={`h-6 w-6 ${brokenPromisesCount > 0 ? 'text-amber-500' : 'text-gray-400'}`} />
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold">
+                        {brokenPromisesCount} plan{brokenPromisesCount !== 1 && 's'}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {brokenPromisesCount > 0 ? 'slipped yesterday' : 'All plans on track'}
+                      </div>
+                    </div>
+                  </div>
+                  {brokenPromisesCount > 0 && (
+                    <div className="mt-3 flex space-x-2">
+                      <Button variant="outline" size="sm" className="flex-1">
+                        <CreditCard className="h-4 w-4 mr-1" />
+                        Retry cards
+                      </Button>
+                      <Button variant="ghost" size="sm">
+                        <CheckCircle className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+              
+              {/* At-Risk Plans Card */}
+              <Card className="shadow-sm">
+                <CardHeader className="py-3 px-5 border-b">
+                  <CardTitle className="text-base font-medium">Payment-Plan At-Risk</CardTitle>
+                </CardHeader>
+                <CardContent className="py-4 px-5">
+                  <div className="flex items-center">
+                    <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                      <Clock className="h-6 w-6 text-blue-500" />
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold">
+                        ${atRiskPlansValue.toFixed(2)}
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        due in 3 days
+                      </div>
+                    </div>
+                  </div>
+                  <div className="mt-3 flex">
+                    <Button variant="outline" size="sm" className="flex-1">
+                      <MessageSquare className="h-4 w-4 mr-1" />
+                      Pre-emptive reminder SMS
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+          
+          {/* Second row with Escalate or Settle card */}
+          <div className="mb-6">
+            <Card className="shadow-sm max-w-md">
+              <CardHeader className="py-3 px-5 border-b">
+                <CardTitle className="text-base font-medium">Escalate or Settle</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-green-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">Adherence Rate</div>
-                    <div className="text-xl font-bold text-green-600">82%</div>
-                    <div className="text-xs text-green-600">payment plans</div>
+              <CardContent className="py-4 px-5">
+                <div className="flex items-center">
+                  <div className={`h-10 w-10 rounded-full flex items-center justify-center mr-3 ${escalateOrSettleCount > 0 ? 'bg-purple-100' : 'bg-gray-100'}`}>
+                    <RefreshCw className={`h-6 w-6 ${escalateOrSettleCount > 0 ? 'text-purple-500' : 'text-gray-400'}`} />
                   </div>
-                  <div className="bg-blue-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">Contact Success</div>
-                    <div className="text-xl font-bold text-blue-600">68%</div>
-                    <div className="text-xs text-blue-600">phone calls</div>
-                  </div>
-                  <div className="bg-amber-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">Aging Accounts</div>
-                    <div className="text-xl font-bold text-amber-600">{mockCollectionAccounts.filter(a => a.agingBucket === "120+").length}</div>
-                    <div className="text-xs text-amber-600">over 120 days</div>
-                  </div>
-                  <div className="bg-purple-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">Recovery Rate</div>
-                    <div className="text-xl font-bold text-purple-600">43%</div>
-                    <div className="text-xs text-purple-600">of total owed</div>
+                  <div>
+                    <div className="text-2xl font-bold">
+                      {escalateOrSettleCount} acct{escalateOrSettleCount !== 1 && 's'}
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {escalateOrSettleCount > 0 ? 
+                        '>120 days, <$200 each' : 
+                        'No small, aged accounts'}
+                    </div>
                   </div>
                 </div>
+                {escalateOrSettleCount > 0 && (
+                  <div className="mt-3 flex">
+                    <Button variant="default" size="sm" className="flex-1">
+                      <MoreHorizontal className="h-4 w-4 mr-1" />
+                      Write-off vs. Agency
+                    </Button>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
