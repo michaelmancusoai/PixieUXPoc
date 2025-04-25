@@ -1165,21 +1165,7 @@ export default function RecallsPage() {
                                   <Tooltip>
                                     <TooltipTrigger asChild>
                                       <div className="flex items-center">
-                                        {recall.contactAttempts.some(a => a.type === "SMS") && (
-                                          <div className="w-5 h-5 flex items-center justify-center">
-                                            <MessageSquare className="h-3.5 w-3.5 text-slate-600" />
-                                          </div>
-                                        )}
-                                        {recall.contactAttempts.some(a => a.type === "Email") && (
-                                          <div className="w-5 h-5 flex items-center justify-center">
-                                            <Mail className="h-3.5 w-3.5 text-slate-600" />
-                                          </div>
-                                        )}
-                                        {recall.contactAttempts.some(a => a.type === "Call") && (
-                                          <div className="w-5 h-5 flex items-center justify-center">
-                                            <Phone className="h-3.5 w-3.5 text-slate-600" />
-                                          </div>
-                                        )}
+                                        {/* Contact attempt icons hidden as requested */}
                                         <Badge variant="secondary" className="ml-1 h-5 text-xs">
                                           {recall.contactAttempts.length}
                                         </Badge>
