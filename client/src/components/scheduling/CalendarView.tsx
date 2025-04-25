@@ -34,7 +34,7 @@ export default function CalendarView({
   const [dragTarget, setDragTarget] = useState<{resourceId: number, time: number} | null>(null);
 
   // Fetch resources (operatories or providers) based on view mode
-  const { data: resources = [] } = useQuery<Array<{id: number, name: string}>>({
+  const { data: resources = [] } = useQuery<Array<{id: number, name: string, color?: string}>>({
     queryKey: [viewMode === 'PROVIDER' ? '/api/providers' : '/api/operatories'],
     enabled: false, // Disable actual API call for demo
   });
@@ -65,15 +65,15 @@ export default function CalendarView({
   // Hardcoded resource data for demonstration
   const demoResources = useMemo(() => {
     return viewMode === 'PROVIDER' ? [
-      { id: 1, name: 'Dr. Nguyen' },
-      { id: 2, name: 'Dr. Robert' },
-      { id: 3, name: 'Dr. Johnson' },
-      { id: 4, name: 'Dr. Maria' }
+      { id: 1, name: 'Dr. Nguyen', color: '#FF9E80' },
+      { id: 2, name: 'Dr. Robert', color: '#B39DDB' },
+      { id: 3, name: 'Dr. Johnson', color: '#90CAF9' },
+      { id: 4, name: 'Dr. Maria', color: '#C5E1A5' }
     ] : [
-      { id: 1, name: 'Op 1' },
-      { id: 2, name: 'Op 2' },
-      { id: 3, name: 'Op 3' },
-      { id: 4, name: 'Op 4' }
+      { id: 1, name: 'Op 1', color: '#C2E0FF' },
+      { id: 2, name: 'Op 2', color: '#FFD6D6' },
+      { id: 3, name: 'Op 3', color: '#D7CCC8' },
+      { id: 4, name: 'Op 4', color: '#D6EEDA' }
     ];
   }, [viewMode]);
   
