@@ -80,8 +80,6 @@ export const ProviderRole = {
 export type ProviderRoleType = keyof typeof ProviderRole;
 
 export const ViewMode = {
-  DAY: "DAY",
-  WEEK: "WEEK",
   OPERATORY: "OPERATORY",
   PROVIDER: "PROVIDER",
 } as const;

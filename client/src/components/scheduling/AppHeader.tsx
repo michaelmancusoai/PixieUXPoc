@@ -84,10 +84,8 @@ export default function AppHeader({
       <div className="flex items-center justify-between">
         <Tabs defaultValue={currentView} onValueChange={(value) => onViewChange(value as ViewModeType)}>
           <TabsList>
-            <TabsTrigger value="OPERATORY">By Operatory</TabsTrigger>
-            <TabsTrigger value="PROVIDER">By Provider</TabsTrigger>
-            <TabsTrigger value="DAY">Day</TabsTrigger>
-            <TabsTrigger value="WEEK">Week</TabsTrigger>
+            <TabsTrigger value="OPERATORY">Operatory</TabsTrigger>
+            <TabsTrigger value="PROVIDER">Provider</TabsTrigger>
           </TabsList>
         </Tabs>
         
