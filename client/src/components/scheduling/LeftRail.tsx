@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Search, Timer, UserPlus, Calendar, Clock, Plus, Phone, MessageCircle } from 'lucide-react';
+import { Search, Timer, UserPlus, Calendar, Clock, Plus, Phone, MessageCircle, Bell } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -27,6 +27,16 @@ interface WaitlistPatient {
   requestedDate?: string;
   reason?: string;
   contact?: string;
+}
+
+interface RecallPatient {
+  id: number;
+  name: string;
+  recallType: string;
+  dueDate: string;
+  lastVisit: string;
+  contact?: string;
+  isOverdue?: boolean;
 }
 
 export default function LeftRail({ selectedDate }: LeftRailProps) {
@@ -84,6 +94,43 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
       )
     : allWaitlistPatients;
     
+  // Recall patients data
+  const recallPatients: RecallPatient[] = [
+    { 
+      id: 101, 
+      name: 'Michael Thompson', 
+      recallType: '6-month cleaning', 
+      dueDate: 'Today', 
+      lastVisit: '6 months ago',
+      contact: '555-444-5678',
+      isOverdue: true
+    },
+    { 
+      id: 102, 
+      name: 'Sarah Wilson', 
+      recallType: 'Annual exam', 
+      dueDate: 'Tomorrow', 
+      lastVisit: '1 year ago',
+      contact: '555-222-3333' 
+    },
+    { 
+      id: 103, 
+      name: 'David Martinez', 
+      recallType: '3-month perio maintenance', 
+      dueDate: 'In 2 days', 
+      lastVisit: '3 months ago',
+      contact: '555-888-9999' 
+    },
+    { 
+      id: 104, 
+      name: 'Jessica Lee', 
+      recallType: '6-month check-up', 
+      dueDate: 'Next week', 
+      lastVisit: '5 months ago',
+      contact: '555-777-1111' 
+    }
+  ];
+
   // Split into ASAP and regular waitlist for display
   const asapPatients = filteredWaitlist.filter(p => p.isAsap);
   const regularWaitlist = filteredWaitlist.filter(p => !p.isAsap);
@@ -94,7 +141,7 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
       {/* Main Card with Accordion layout similar to PatientProfilePage */}
       <Card className="shadow-sm">
         <CardContent className="p-0">          
-          <Accordion type="multiple" className="w-full" defaultValue={["combined-waitlist", "quickFill"]}>
+          <Accordion type="multiple" className="w-full" defaultValue={["combined-waitlist", "recalls", "quickFill"]}>
             
             {/* Combined Waitlist Section */}
             <AccordionItem value="combined-waitlist" className="border-b">
@@ -177,6 +224,45 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
                     <p className="text-xs text-muted-foreground">No patients on waitlist</p>
                   </div>
                 )}
+              </AccordionContent>
+            </AccordionItem>
+            
+            {/* Recalls Section */}
+            <AccordionItem value="recalls" className="border-b">
+              <AccordionTrigger className="px-4 py-2 hover:bg-gray-50">
+                <div className="flex items-center w-full">
+                  <div className="flex items-center">
+                    <Bell className="mr-2 h-4 w-4 text-muted-foreground" />
+                    <h3 className="font-medium">Recalls</h3>
+                  </div>
+                  <div className="ml-auto">
+                    <Badge variant="outline" className="text-xs font-medium bg-white text-gray-700 border-gray-200 rounded px-2 py-0.5">
+                      {recallPatients.length}
+                    </Badge>
+                  </div>
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="px-4 pb-3">
+                <div className="border rounded-sm overflow-hidden divide-y divide-gray-100">
+                  {recallPatients.map(patient => (
+                    <div key={patient.id} className="group flex items-center bg-white hover:bg-gray-50 py-1.5 px-2 text-xs cursor-pointer">
+                      <span className="flex-shrink-0 w-1.5 h-1.5 bg-purple-500 rounded-full mr-1.5"></span>
+                      <div className="min-w-0 flex-grow grid grid-cols-1">
+                        <div className="flex items-center justify-between">
+                          <p className="font-medium truncate">{patient.name}</p>
+                          <p className={`text-[10px] ml-2 ${patient.isOverdue ? "text-red-500 font-medium" : "text-muted-foreground"}`}>
+                            {patient.dueDate}
+                          </p>
+                        </div>
+                        <p className="text-muted-foreground truncate">{patient.recallType}</p>
+                      </div>
+                      <div className="flex space-x-1">
+                        <Phone className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100" />
+                        <Calendar className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100" />
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </AccordionContent>
             </AccordionItem>
             
