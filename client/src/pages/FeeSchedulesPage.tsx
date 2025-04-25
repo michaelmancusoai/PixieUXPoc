@@ -50,8 +50,15 @@ import {
   ChevronRight,
   FileCog,
   Percent,
-  DollarSign
+  DollarSign,
+  Info
 } from 'lucide-react';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Interface for Fee Schedule Item
 interface FeeScheduleItem {
@@ -367,72 +374,181 @@ export default function FeeSchedulesPage() {
             </DropdownMenu>
           </div>
 
-          {/* KPI Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Plans Needing Update</CardTitle>
+          {/* Action-Oriented KPI Cards - Primary Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Under-Priced Codes Card */}
+            <Card className="shadow-sm border-t-4 border-t-destructive/30 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-destructive/5">
+                <CardTitle className="text-base font-medium">Under-Priced Codes</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <FileCog className="h-8 w-8 mr-3 text-amber-500" />
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    <span>$4,180 at risk</span>
+                    <ChevronRight className="h-5 w-5 text-destructive" />
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-3">
+                    17 CDT codes ≥ 10% under UCR
+                  </div>
+                </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full">
+                    Review Codes
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Contracts Expiring Soon Card */}
+            <Card className="shadow-sm border-t-4 border-t-amber-200 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-amber-50/50">
+                <CardTitle className="text-base font-medium">Contracts Expiring Soon</CardTitle>
+              </CardHeader>
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="text-2xl font-bold">
+                      2 PPO schedules
+                    </div>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs max-w-xs">Renegotiate now to avoid silent discounts.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-4">
+                    Expire within 60 days
+                  </div>
+                </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full">
+                    Start Re-fee
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* PPO Discount Outliers Card */}
+            <Card className="shadow-sm border-t-4 border-t-orange-200 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-muted/50">
+                <CardTitle className="text-base font-medium">PPO Discount Outliers</CardTitle>
+              </CardHeader>
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    3 code outliers
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-4">
+                    Exceed 30% PPO discount
+                  </div>
+                </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full">
+                    Offer Alt Fees
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Support Rail (secondary row) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Stale Fee Schedules Card */}
+            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
+                <CardTitle className="text-sm font-medium">Stale Fee Schedules</CardTitle>
+              </CardHeader>
+              <CardContent className="py-4 px-5 flex-1 flex flex-col">
+                <div className="flex justify-between mb-2">
                   <div>
-                    <div className="text-2xl font-bold relative">
-                      <span className="flex items-center">
-                        3
-                        <Badge variant="outline" className="ml-2 bg-amber-50 text-amber-600 border-amber-200">
-                          18+ months old
-                        </Badge>
-                      </span>
+                    <div className="text-xl font-bold mb-1">
+                      3 schedules
                     </div>
-                    <div className="text-sm text-muted-foreground mt-1">
-                      Fee schedules need review
+                    <div className="text-xs text-muted-foreground">
+                      Last updated &gt;18 months ago
                     </div>
+                  </div>
+                  <div className="flex items-center">
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                    >
+                      Mark for Annual Uplift
+                    </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">UCR Comparison</CardTitle>
+            {/* Unmapped New CDT Codes Card */}
+            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
+                <CardTitle className="text-sm font-medium">Unmapped New CDT Codes</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <Percent className="h-8 w-8 mr-3 text-blue-500" />
+              <CardContent className="py-4 px-5 flex-1 flex flex-col">
+                <div className="flex justify-between mb-2">
                   <div>
-                    <div className="text-2xl font-bold">5% below</div>
-                    <div className="text-sm text-muted-foreground">Average vs. regional UCR</div>
+                    <div className="text-xl font-bold mb-1">
+                      4 new codes
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Added in annual ADA update
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                    >
+                      Add Base Fees
+                    </Button>
                   </div>
                 </div>
               </CardContent>
             </Card>
             
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
-                <CardTitle className="text-base font-medium">Fee Schedule Analysis</CardTitle>
+            {/* Medicaid vs UCR Gap Card */}
+            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
+                <CardTitle className="text-sm font-medium">Medicaid vs UCR Gap</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-blue-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">PPO Average</div>
-                    <div className="text-xl font-bold text-blue-600">20%</div>
-                    <div className="text-xs text-blue-600">discount rate</div>
+              <CardContent className="py-4 px-5 flex-1 flex flex-col">
+                <div className="flex justify-between mb-2">
+                  <div>
+                    <div className="text-xl font-bold mb-1">
+                      43% gap
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Medicaid fees well below market
+                    </div>
                   </div>
-                  <div className="bg-green-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">Preventive</div>
-                    <div className="text-xl font-bold text-green-600">At Par</div>
-                    <div className="text-xs text-green-600">with UCR</div>
-                  </div>
-                  <div className="bg-amber-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">Diagnostic</div>
-                    <div className="text-xl font-bold text-amber-600">Mid-tier</div>
-                    <div className="text-xs text-amber-600">market position</div>
-                  </div>
-                  <div className="bg-purple-50 p-3 rounded-md">
-                    <div className="text-xs text-muted-foreground">Restorative</div>
-                    <div className="text-xl font-bold text-purple-600">5%</div>
-                    <div className="text-xs text-purple-600">below UCR</div>
+                  <div className="flex items-center">
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                    >
+                      Export Advocacy Packet
+                    </Button>
                   </div>
                 </div>
               </CardContent>

@@ -1,0 +1,47 @@
+Fee schedules are silent leaks—every under-priced code, stale PPO contract, or lopsided discount pinches profit without firing an alarm. Your current widgets hint at the problem (“5 % below UCR”) but never shout where you’re bleeding or what to fix today.
+Below is a calm, three-card “hero row” that surfaces only the dollars and CPT codes worth acting on, followed by a quieter research rail for long-term tuning.
+
+1 · Hero KPIs – turn the dashboard into a revenue pressure-gauge
+
+
+New card	What it shows	Why it matters (behavioural lens)	What the user can do
+Under-Priced Codes	$4 180 at risk   (17 codes ≥ 10 % below local UCR)	Loss aversion: staff hate knowing specific dollars are being left on the tray.	Review Codes → grid pre-filtered to those 17 CDT rows
+Contracts Expiring Soon	2 PPO schedules (renegotiate in < 60 days)	Creates a clear deadline; scarcity of time sharpens focus.	Start Re-fee → opens export for payer letter
+PPO Discount Outliers	3 codes discounted > 30 % vs UCR	Highlights the worst culprits; tackles Pareto’s 20 %.	Offer Alt Fees → suggests alternate network or fee floor
+Colour economy:
+Red band when “Under-Priced” dollars > $1 000
+Amber when contracts within 90 days
+Greyed cards when metric = 0 (“All clear—smile!”)
+Micro-copy for each hero card
+
+State	Main line	Sub-line	Tooltip
+Alert	$4 180 at risk	“17 CDT codes ≥ 10 % under UCR”	“Local UCR sourced from ZIP-level Reimb Intel ™”
+Caution	2 PPO plans	“Expire within 60 days”	“Renegotiate now to avoid silent discounts.”
+Outlier	3 code outliers	“Exceed 30 % PPO discount”	“Consider alternate fee or network tier.”
+2 · Support Rail (grey until threshold breached)
+
+
+Widget	Threshold to colourize	CTA
+Stale Fee Schedules	Any schedule > 18 mo old	“Mark for annual uplift”
+Unmapped New CDT Codes	Code list updated annually by ADA	“Add Base Fees”
+Medicaid vs UCR Gap	If > 40 % gap	“Export advocacy packet”
+These sit in a subdued second row; they wake up only when data warrants.
+
+3 · Action flow inside the grid
+
+“Show Insights” toggle → overlays a slim badge at row-level:
+Green = within ± 5 % UCR
+Amber = 10–20 % low
+Red = > 20 % low
+Bulk Adjust Wizard
+Select rows → Bulk → Apply uplift (+ 10 %, cap at 95 % UCR).
+Wizard shows projected annual revenue lift before committing (endowment effect).
+Contract Simulator
+When a payer file is open, side drawer shows Effective discount and Break-even chair-time—turns abstract percentages into minutes of lost chair value.
+4 · Behavioural nudges to keep fees fresh
+
+
+Trigger	Nudge copy
+Under-Priced Codes > $1 000	Red halo around hero card + toast: “Each week of delay costs ≈ $80.”
+Contracts at 30-day mark	Amber banner: “30-days left. Payors often need 2-weeks’ notice—start today?”
+All hero cards grey	Green tick ribbon: “Fees at peak. Review again in 90 days.”
