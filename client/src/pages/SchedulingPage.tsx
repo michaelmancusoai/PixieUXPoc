@@ -7,7 +7,6 @@ import RightRail from "@/components/scheduling/RightRail";
 import { ViewModeType } from "@/lib/scheduling-constants";
 import BookAppointmentDialog from "@/components/scheduling/BookAppointmentDialog";
 import { useToast } from "@/hooks/use-toast";
-import { DndContext } from "@dnd-kit/core";
 
 export default function SchedulingPage() {
   // Initialize with April 23, 2025 to match our sample data in the demo
@@ -62,40 +61,38 @@ export default function SchedulingPage() {
 
   return (
     <NavigationWrapper>
-      <DndContext>
-        <div className="h-[calc(100vh-64px)] flex flex-col">
-          <div className="relative">
-            <AppHeader
-              selectedDate={selectedDate}
-              onPrevious={goToPreviousDay}
-              onNext={goToNextDay}
-              onToday={goToToday}
-              onViewChange={setViewMode}
-              currentView={viewMode}
-              utilizationPercentage={utilizationPercentage}
-              onBookAppointment={handleOpenBooking}
-              expandedView={expandedView}
-              onToggleExpandView={toggleExpandedView}
-            />
-          </div>
-
-          <div className={`flex-1 grid ${expandedView ? 'grid-cols-1' : 'grid-cols-[250px_minmax(0,1fr)_250px]'} gap-4 p-4 overflow-hidden`}>
-            {!expandedView && <LeftRail selectedDate={selectedDate} />}
-            <CalendarView 
-              selectedDate={selectedDate} 
-              viewMode={viewMode} 
-            />
-            {!expandedView && <RightRail selectedDate={selectedDate} />}
-          </div>
-
-          <BookAppointmentDialog
-            open={isBookingOpen}
-            onClose={handleCloseBooking}
-            onBook={handleBookAppointment}
+      <div className="h-[calc(100vh-64px)] flex flex-col">
+        <div className="relative">
+          <AppHeader
             selectedDate={selectedDate}
+            onPrevious={goToPreviousDay}
+            onNext={goToNextDay}
+            onToday={goToToday}
+            onViewChange={setViewMode}
+            currentView={viewMode}
+            utilizationPercentage={utilizationPercentage}
+            onBookAppointment={handleOpenBooking}
+            expandedView={expandedView}
+            onToggleExpandView={toggleExpandedView}
           />
         </div>
-      </DndContext>
+
+        <div className={`flex-1 grid ${expandedView ? 'grid-cols-1' : 'grid-cols-[250px_minmax(0,1fr)_250px]'} gap-4 p-4 overflow-hidden`}>
+          {!expandedView && <LeftRail selectedDate={selectedDate} />}
+          <CalendarView 
+            selectedDate={selectedDate} 
+            viewMode={viewMode} 
+          />
+          {!expandedView && <RightRail selectedDate={selectedDate} />}
+        </div>
+
+        <BookAppointmentDialog
+          open={isBookingOpen}
+          onClose={handleCloseBooking}
+          onBook={handleBookAppointment}
+          selectedDate={selectedDate}
+        />
+      </div>
     </NavigationWrapper>
   );
 }

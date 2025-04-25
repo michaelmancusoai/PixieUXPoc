@@ -1,6 +1,5 @@
 import { useMemo, useRef, useState, useEffect } from "react";
 import { format, addMinutes, parseISO } from "date-fns";
-import { useDndMonitor, useDroppable } from "@dnd-kit/core";
 import AppointmentChip from "./AppointmentChip";
 import { Card } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
@@ -24,179 +23,172 @@ export default function CalendarView({
   const { toast } = useToast();
   const containerRef = useRef<HTMLDivElement>(null);
   const [slotHeight, setSlotHeight] = useState(4); // Height of a 5-minute time slot
-  const [resourceColumns, setResourceColumns] = useState<Array<{id: number, name: string}>>([]);
   const [draggingAppointment, setDraggingAppointment] = useState<AppointmentWithDetails | null>(null);
   const [dragTarget, setDragTarget] = useState<{resourceId: number, time: number} | null>(null);
   
   // Hardcoded resource data for demonstration
-  const resources = viewMode === 'PROVIDER' ? [
-    { id: 1, name: 'Dr. Nguyen' },
-    { id: 2, name: 'Dr. Robert' },
-    { id: 3, name: 'Dr. Johnson' },
-    { id: 4, name: 'Dr. Maria' }
-  ] : [
-    { id: 1, name: 'Op 1' },
-    { id: 2, name: 'Op 2' },
-    { id: 3, name: 'Op 3' },
-    { id: 4, name: 'Op 4' }
-  ];
+  const resourceColumns = useMemo(() => {
+    return viewMode === 'PROVIDER' ? [
+      { id: 1, name: 'Dr. Nguyen' },
+      { id: 2, name: 'Dr. Robert' },
+      { id: 3, name: 'Dr. Johnson' },
+      { id: 4, name: 'Dr. Maria' }
+    ] : [
+      { id: 1, name: 'Op 1' },
+      { id: 2, name: 'Op 2' },
+      { id: 3, name: 'Op 3' },
+      { id: 4, name: 'Op 4' }
+    ];
+  }, [viewMode]);
   
-  // Hard-coded sample appointments for the demo calendar with timestamps for status
-  const demoAppointments: AppointmentWithDetails[] = [
-    {
-      id: 1,
-      patientId: 1,
-      patient: { id: 1, firstName: "John", lastName: "Johnson", avatarInitials: "JJ", dateOfBirth: null, insuranceProvider: "Delta Dental", allergies: null, balanceDue: 0 },
-      providerId: 1,
-      provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
-      operatoryId: 1,
-      operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
-      date: selectedDate,
-      startTime: "09:00:00",
-      endTime: null,
-      duration: 70,
-      status: "confirmed",
-      procedure: "Crown - Porcelain Fused to High Noble Metal",
-      cdtCode: "D2750",
-      confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 30),
-      arrivedAt: null,
-      chairStartedAt: null,
-      completedAt: null
-    },
-    {
-      id: 2,
-      patientId: 2,
-      patient: { id: 2, firstName: "Maria", lastName: "Garcia", avatarInitials: "MG", dateOfBirth: null, insuranceProvider: "Cigna", allergies: null, balanceDue: 4500 },
-      providerId: 2,
-      provider: { id: 2, name: "Dr. Robert", role: "Dentist", color: "#B39DDB" },
-      operatoryId: 2,
-      operatory: { id: 2, name: "Op 2", color: "#FFD6D6" },
-      date: selectedDate,
-      startTime: "10:00:00",
-      endTime: null,
-      duration: 90,
-      status: "in_chair",
-      procedure: "Core Buildup, Including any Pins",
-      cdtCode: "D2950",
-      confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 60),
-      arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 45),
-      chairStartedAt: new Date(new Date().getTime() - 1000 * 60 * 15),
-      completedAt: null
-    },
-    {
-      id: 3,
-      patientId: 3,
-      patient: { id: 3, firstName: "David", lastName: "Lee", avatarInitials: "DL", dateOfBirth: null, insuranceProvider: "Aetna", allergies: null, balanceDue: 0 },
-      providerId: 4,
-      provider: { id: 4, name: "Dr. Maria", role: "Dentist", color: "#C5E1A5" },
-      operatoryId: 4,
-      operatory: { id: 4, name: "Op 4", color: "#D6EEDA" },
-      date: selectedDate,
-      startTime: "08:30:00",
-      endTime: null,
-      duration: 60,
-      status: "scheduled",
-      procedure: "Resin-Based Composite - One Surface",
-      cdtCode: "D2330",
-      confirmedAt: null,
-      arrivedAt: null,
-      chairStartedAt: null,
-      completedAt: null
-    },
-    {
-      id: 4,
-      patientId: 4,
-      patient: { id: 4, firstName: "Sarah", lastName: "Martinez", avatarInitials: "SM", dateOfBirth: null, insuranceProvider: "MetLife", allergies: null, balanceDue: 2000 },
-      providerId: 1,
-      provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
-      operatoryId: 1,
-      operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
-      date: selectedDate,
-      startTime: "11:00:00",
-      endTime: null,
-      duration: 60,
-      status: "checked_in",
-      procedure: "Prophylaxis - Adult",
-      cdtCode: "D1110",
-      confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 60),
-      arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 10),
-      chairStartedAt: null,
-      completedAt: null
-    },
-    {
-      id: 5,
-      patientId: 5,
-      patient: { id: 5, firstName: "Robert", lastName: "Wilson", avatarInitials: "RW", dateOfBirth: null, insuranceProvider: "Delta Dental", allergies: null, balanceDue: 0 },
-      providerId: 1,
-      provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
-      operatoryId: 1,
-      operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
-      date: selectedDate,
-      startTime: "13:00:00",
-      endTime: null,
-      duration: 45,
-      status: "scheduled",
-      procedure: "Periodic Oral Evaluation",
-      cdtCode: "D0120",
-      confirmedAt: null,
-      arrivedAt: null,
-      chairStartedAt: null,
-      completedAt: null
-    },
-    {
-      id: 6,
-      patientId: 6,
-      patient: { id: 6, firstName: "Jennifer", lastName: "Taylor", avatarInitials: "JT", dateOfBirth: null, insuranceProvider: "Guardian", allergies: null, balanceDue: 0 },
-      providerId: 2,
-      provider: { id: 2, name: "Dr. Robert", role: "Dentist", color: "#B39DDB" },
-      operatoryId: 2,
-      operatory: { id: 2, name: "Op 2", color: "#FFD6D6" },
-      date: selectedDate,
-      startTime: "08:30:00",
-      endTime: null,
-      duration: 60,
-      status: "scheduled",
-      procedure: "Resin-Based Composite - Three Surfaces",
-      cdtCode: "D2332",
-      confirmedAt: null,
-      arrivedAt: null,
-      chairStartedAt: null,
-      completedAt: null
-    },
-    {
-      id: 7,
-      patientId: 7,
-      patient: { id: 7, firstName: "Michael", lastName: "Brown", avatarInitials: "MB", dateOfBirth: null, insuranceProvider: "MetLife", allergies: null, balanceDue: 25000 },
-      providerId: 1,
-      provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
-      operatoryId: 1,
-      operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
-      date: selectedDate,
-      startTime: "15:00:00",
-      endTime: null,
-      duration: 60,
-      status: "completed",
-      procedure: "Resin-Based Composite - Four Surfaces",
-      cdtCode: "D2335",
-      confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 90),
-      arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 75),
-      chairStartedAt: new Date(new Date().getTime() - 1000 * 60 * 60),
-      completedAt: new Date(new Date().getTime() - 1000 * 60 * 5)
-    },
-  ];
-  
-  // Update appointment statuses based on time
-  const appointments = demoAppointments.map(apt => ({
-    ...apt,
-    status: getStatusBasedOnTime(apt.startTime),
-  }));
-  
-  // Set up resource columns when resources are loaded
-  useEffect(() => {
-    if (resources && resources.length > 0) {
-      setResourceColumns(resources);
-    }
-  }, [resources, viewMode]);
+  // Hard-coded sample appointments for the demo calendar
+  const appointments = useMemo(() => {
+    return [
+      {
+        id: 1,
+        patientId: 1,
+        patient: { id: 1, firstName: "John", lastName: "Johnson", avatarInitials: "JJ", dateOfBirth: null, insuranceProvider: "Delta Dental", allergies: null, balanceDue: 0 },
+        providerId: 1,
+        provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
+        operatoryId: 1,
+        operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
+        date: selectedDate,
+        startTime: "09:00:00",
+        endTime: null,
+        duration: 70,
+        status: "confirmed",
+        procedure: "Crown - Porcelain Fused to High Noble Metal",
+        cdtCode: "D2750",
+        confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 30),
+        arrivedAt: null,
+        chairStartedAt: null,
+        completedAt: null
+      },
+      {
+        id: 2,
+        patientId: 2,
+        patient: { id: 2, firstName: "Maria", lastName: "Garcia", avatarInitials: "MG", dateOfBirth: null, insuranceProvider: "Cigna", allergies: null, balanceDue: 4500 },
+        providerId: 2,
+        provider: { id: 2, name: "Dr. Robert", role: "Dentist", color: "#B39DDB" },
+        operatoryId: 2,
+        operatory: { id: 2, name: "Op 2", color: "#FFD6D6" },
+        date: selectedDate,
+        startTime: "10:00:00",
+        endTime: null,
+        duration: 90,
+        status: "in_chair",
+        procedure: "Core Buildup, Including any Pins",
+        cdtCode: "D2950",
+        confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 60),
+        arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 45),
+        chairStartedAt: new Date(new Date().getTime() - 1000 * 60 * 15),
+        completedAt: null
+      },
+      {
+        id: 3,
+        patientId: 3,
+        patient: { id: 3, firstName: "David", lastName: "Lee", avatarInitials: "DL", dateOfBirth: null, insuranceProvider: "Aetna", allergies: null, balanceDue: 0 },
+        providerId: 4,
+        provider: { id: 4, name: "Dr. Maria", role: "Dentist", color: "#C5E1A5" },
+        operatoryId: 4,
+        operatory: { id: 4, name: "Op 4", color: "#D6EEDA" },
+        date: selectedDate,
+        startTime: "08:30:00",
+        endTime: null,
+        duration: 60,
+        status: "scheduled",
+        procedure: "Resin-Based Composite - One Surface",
+        cdtCode: "D2330",
+        confirmedAt: null,
+        arrivedAt: null,
+        chairStartedAt: null,
+        completedAt: null
+      },
+      {
+        id: 4,
+        patientId: 4,
+        patient: { id: 4, firstName: "Sarah", lastName: "Martinez", avatarInitials: "SM", dateOfBirth: null, insuranceProvider: "MetLife", allergies: null, balanceDue: 2000 },
+        providerId: 1,
+        provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
+        operatoryId: 1,
+        operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
+        date: selectedDate,
+        startTime: "11:00:00",
+        endTime: null,
+        duration: 60,
+        status: "checked_in",
+        procedure: "Prophylaxis - Adult",
+        cdtCode: "D1110",
+        confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 60),
+        arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 10),
+        chairStartedAt: null,
+        completedAt: null
+      },
+      {
+        id: 5,
+        patientId: 5,
+        patient: { id: 5, firstName: "Robert", lastName: "Wilson", avatarInitials: "RW", dateOfBirth: null, insuranceProvider: "Delta Dental", allergies: null, balanceDue: 0 },
+        providerId: 1,
+        provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
+        operatoryId: 1,
+        operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
+        date: selectedDate,
+        startTime: "13:00:00",
+        endTime: null,
+        duration: 45,
+        status: "scheduled",
+        procedure: "Periodic Oral Evaluation",
+        cdtCode: "D0120",
+        confirmedAt: null,
+        arrivedAt: null,
+        chairStartedAt: null,
+        completedAt: null
+      },
+      {
+        id: 6,
+        patientId: 6,
+        patient: { id: 6, firstName: "Jennifer", lastName: "Taylor", avatarInitials: "JT", dateOfBirth: null, insuranceProvider: "Guardian", allergies: null, balanceDue: 0 },
+        providerId: 2,
+        provider: { id: 2, name: "Dr. Robert", role: "Dentist", color: "#B39DDB" },
+        operatoryId: 2,
+        operatory: { id: 2, name: "Op 2", color: "#FFD6D6" },
+        date: selectedDate,
+        startTime: "08:30:00",
+        endTime: null,
+        duration: 60,
+        status: "scheduled",
+        procedure: "Resin-Based Composite - Three Surfaces",
+        cdtCode: "D2332",
+        confirmedAt: null,
+        arrivedAt: null,
+        chairStartedAt: null,
+        completedAt: null
+      },
+      {
+        id: 7,
+        patientId: 7,
+        patient: { id: 7, firstName: "Michael", lastName: "Brown", avatarInitials: "MB", dateOfBirth: null, insuranceProvider: "MetLife", allergies: null, balanceDue: 25000 },
+        providerId: 1,
+        provider: { id: 1, name: "Dr. Nguyen", role: "Dentist", color: "#FF9E80" },
+        operatoryId: 1,
+        operatory: { id: 1, name: "Op 1", color: "#C2E0FF" },
+        date: selectedDate,
+        startTime: "15:00:00",
+        endTime: null,
+        duration: 60,
+        status: "completed",
+        procedure: "Resin-Based Composite - Four Surfaces",
+        cdtCode: "D2335",
+        confirmedAt: new Date(new Date().getTime() - 1000 * 60 * 90),
+        arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 75),
+        chairStartedAt: new Date(new Date().getTime() - 1000 * 60 * 60),
+        completedAt: new Date(new Date().getTime() - 1000 * 60 * 5)
+      },
+    ].map(apt => ({
+      ...apt,
+      status: getStatusBasedOnTime(apt.startTime),
+    }));
+  }, [selectedDate]);
   
   // Generate time slots for the day (5-minute intervals)
   const timeSlots = useMemo(() => {
@@ -237,24 +229,17 @@ export default function CalendarView({
     return () => window.removeEventListener('resize', calculateSlotHeight);
   }, []);
   
-  // Filter appointments for the active view mode
-  const filteredAppointments = useMemo(() => {
-    if (viewMode === 'PROVIDER') {
-      return appointments.filter(appointment => appointment.providerId !== undefined);
-    } else {
-      return appointments.filter(appointment => appointment.operatoryId !== undefined);
-    }
-  }, [appointments, viewMode]);
-  
-  // Group appointments by resource (operatory or provider)
+  // Filter and group appointments
   const appointmentsByResource = useMemo(() => {
     const groupedAppointments: Record<string, AppointmentWithDetails[]> = {};
     
-    resources.forEach(resource => {
+    // Initialize empty arrays for each resource
+    resourceColumns.forEach(resource => {
       groupedAppointments[resource.id] = [];
     });
     
-    filteredAppointments.forEach(appointment => {
+    // Filter and group appointments
+    appointments.forEach(appointment => {
       const resourceId = viewMode === 'PROVIDER' ? appointment.providerId : appointment.operatoryId;
       if (resourceId && groupedAppointments[resourceId]) {
         groupedAppointments[resourceId].push(appointment);
@@ -262,7 +247,7 @@ export default function CalendarView({
     });
     
     return groupedAppointments;
-  }, [filteredAppointments, resources, viewMode]);
+  }, [appointments, resourceColumns, viewMode]);
   
   // Handle appointment clicks
   const handleAppointmentClick = (appointment: AppointmentWithDetails) => {
@@ -270,6 +255,11 @@ export default function CalendarView({
       title: `${appointment.patient.firstName} ${appointment.patient.lastName}`,
       description: `${appointment.procedure || 'No procedure'} (${getTimeFromMinutes(parseInt(appointment.startTime.split(':')[0]) * 60 + parseInt(appointment.startTime.split(':')[1]))})`,
     });
+  };
+  
+  // Handle drag start - when appointment is dragged
+  const handleAppointmentDragStart = (appointment: AppointmentWithDetails) => {
+    setDraggingAppointment(appointment);
   };
   
   // Handle drag over a time slot
