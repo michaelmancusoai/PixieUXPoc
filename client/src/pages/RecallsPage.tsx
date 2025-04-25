@@ -24,7 +24,6 @@ import {
   X, 
   Sliders, 
   Plus,
-  ClipboardList,
   Info,
   Zap,
   User
@@ -106,9 +105,7 @@ const PatientRow = ({
   formatDueDate: (date: Date) => string;
 }) => {
   return (
-    <TableRow 
-      className={patient.isOverdue ? 'bg-red-50' : isToday(patient.dueDate) ? 'bg-amber-50' : ''}
-    >
+    <TableRow>
       <TableCell className="font-medium">{patient.name}</TableCell>
       <TableCell>{patient.recallType}</TableCell>
       <TableCell>
@@ -174,7 +171,7 @@ const PatientRow = ({
 // Expanded Details Row Component
 const ExpandedDetailsRow = ({ patient }: { patient: RecallPatient }) => {
   return (
-    <TableRow className="bg-muted/30 border-t-0">
+    <TableRow className="border-t-0">
       <TableCell colSpan={7} className="p-0">
         <div className="p-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -240,24 +237,14 @@ const ExpandedDetailsRow = ({ patient }: { patient: RecallPatient }) => {
               </div>
             </div>
             
-            {/* Notes & Quick Actions */}
+            {/* Pixie AI Notes */}
             <div className="bg-white rounded-md border p-3">
               <h4 className="text-sm font-semibold mb-2 flex items-center">
-                <ClipboardList className="h-4 w-4 mr-1 text-green-500" />
-                Notes & Quick Actions
+                <Zap className="h-4 w-4 mr-1 text-purple-500" />
+                Pixie AI Notes
               </h4>
-              <div className="text-sm mb-3">
+              <div className="text-sm">
                 <p className="text-gray-600 text-xs italic">{patient.notes}</p>
-              </div>
-              <div className="flex space-x-2 mt-2">
-                <Button size="sm" className="text-xs h-7 flex-1 gap-1">
-                  <Calendar className="h-3 w-3" /> 
-                  Schedule
-                </Button>
-                <Button size="sm" variant="outline" className="text-xs h-7 flex-1 gap-1">
-                  <Mail className="h-3 w-3" />
-                  Send Email
-                </Button>
               </div>
             </div>
           </div>
@@ -761,232 +748,247 @@ export default function RecallsPage() {
   return (
     <div className="container mx-auto p-6">
       <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Recall Management</h1>
-          <p className="text-muted-foreground mt-1">Manage and track patient recalls</p>
-        </div>
+        <h1 className="text-2xl font-bold">Recalls Management</h1>
         
-        <div className="flex items-center gap-2">
-          <Button variant="outline" className="h-9 gap-1">
-            <Sliders className="h-4 w-4" />
-            <span>Manage</span>
-          </Button>
-          <Button className="h-9 gap-1">
-            <Plus className="h-4 w-4" />
-            <span>New Recall</span>
-          </Button>
-        </div>
+        <Button variant="outline" className="h-9 gap-1">
+          <span>Quick Actions</span>
+          <ChevronDown className="h-4 w-4" />
+        </Button>
       </div>
       
       {/* Summary Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <Card className={overdueCount > 0 ? "border-red-200" : ""}>
+        <Card className="border-l-4 border-l-red-500">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium flex items-center">
-              <Bell className={`h-4 w-4 mr-2 ${overdueCount > 0 ? "text-red-500" : "text-gray-400"}`} />
-              Overdue
-            </CardTitle>
+            <CardTitle className="text-base font-medium">0-7 Days</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${overdueCount > 0 ? "text-red-600" : ""}`}>
+            <div className="text-2xl font-bold text-green-600">
               {overdueCount}
             </div>
-            <p className="text-xs text-muted-foreground">patients need attention</p>
+            <p className="text-xs text-muted-foreground">{overdueCount > 0 ? "patients overdue" : "no overdue recalls"}</p>
           </CardContent>
         </Card>
         
-        <Card className={todayCount > 0 ? "border-amber-200" : ""}>
+        <Card className="border-l-4 border-l-blue-500">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium flex items-center">
-              <Calendar className={`h-4 w-4 mr-2 ${todayCount > 0 ? "text-amber-500" : "text-gray-400"}`} />
-              Due Today
-            </CardTitle>
+            <CardTitle className="text-base font-medium">7-30 Days</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${todayCount > 0 ? "text-amber-600" : ""}`}>
+            <div className="text-2xl font-bold text-blue-600">
               {todayCount}
             </div>
-            <p className="text-xs text-muted-foreground">recalls due today</p>
+            <p className="text-xs text-muted-foreground">{Math.round(todayCount/recallPatients.length*100)}% of total</p>
           </CardContent>
         </Card>
         
-        <Card className={upcomingCount > 0 ? "border-blue-200" : ""}>
+        <Card className="border-l-4 border-l-amber-500">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium flex items-center">
-              <Calendar className={`h-4 w-4 mr-2 ${upcomingCount > 0 ? "text-blue-500" : "text-gray-400"}`} />
-              Next 30 Days
-            </CardTitle>
+            <CardTitle className="text-base font-medium">30-90 Days</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${upcomingCount > 0 ? "text-blue-600" : ""}`}>
+            <div className="text-2xl font-bold text-amber-600">
               {upcomingCount}
             </div>
-            <p className="text-xs text-muted-foreground">upcoming recalls</p>
+            <p className="text-xs text-muted-foreground">{Math.round(upcomingCount/recallPatients.length*100)}% of total</p>
           </CardContent>
         </Card>
         
-        <Card className={futureCount > 0 ? "border-purple-200" : ""}>
+        <Card className="border-l-4 border-l-red-500">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-medium flex items-center">
-              <Calendar className={`h-4 w-4 mr-2 ${futureCount > 0 ? "text-purple-500" : "text-gray-400"}`} />
-              Future
-            </CardTitle>
+            <CardTitle className="text-base font-medium">90+ Days</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className={`text-2xl font-bold ${futureCount > 0 ? "text-purple-600" : ""}`}>
+            <div className="text-2xl font-bold text-red-600">
               {futureCount}
             </div>
-            <p className="text-xs text-muted-foreground">future recalls</p>
+            <p className="text-xs text-muted-foreground">{Math.round(futureCount/recallPatients.length*100)}% of total</p>
           </CardContent>
         </Card>
       </div>
       
-      {/* Filter and Search Controls */}
-      <Card className="mb-6">
-        <CardContent className="p-4">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search patients, recall types, or providers..."
-                className="pl-10 h-10 w-full"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              {searchTerm && (
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8"
-                  onClick={() => setSearchTerm('')}
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              )}
-            </div>
-            
-            <Select value={filterValue} onValueChange={setFilterValue}>
-              <SelectTrigger className="w-[180px] h-10">
-                <SelectValue placeholder="Filter by status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Recalls</SelectItem>
-                <SelectItem value="overdue">Overdue</SelectItem>
-                <SelectItem value="today">Due Today</SelectItem>
-                <SelectItem value="upcoming">Next 30 Days</SelectItem>
-                <SelectItem value="future">Future</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="h-10 gap-1 w-[160px]">
-                  <ArrowUpDown className="h-3.5 w-3.5" />
-                  <span>{sortBy === 'dueDate' ? 'Due Date' : sortBy === 'name' ? 'Patient Name' : 'Recall Type'}</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => setSortBy('dueDate')}>
-                  Due Date
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortBy('name')}>
-                  Patient Name
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortBy('type')}>
-                  Recall Type
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+      {/* Distribution Bar */}
+      <div className="mb-6">
+        <h3 className="text-sm font-medium mb-2">Aging Distribution</h3>
+        <div className="h-3 w-full rounded-full overflow-hidden flex">
+          <div className="bg-green-500" style={{ width: `${Math.max(5, Math.round(overdueCount/recallPatients.length*100))}%` }}></div>
+          <div className="bg-blue-500" style={{ width: `${Math.max(5, Math.round(todayCount/recallPatients.length*100))}%` }}></div>
+          <div className="bg-amber-500" style={{ width: `${Math.max(5, Math.round(upcomingCount/recallPatients.length*100))}%` }}></div>
+          <div className="bg-red-500" style={{ width: `${Math.max(5, Math.round(futureCount/recallPatients.length*100))}%` }}></div>
+        </div>
+        <div className="flex justify-between mt-1 text-xs text-muted-foreground">
+          <span>0 Days</span>
+          <span>30 Days</span>
+          <span>60 Days</span>
+          <span>90+ Days</span>
+        </div>
+      </div>
+      
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xl font-semibold">Recall Patients</h2>
+        
+        <div className="flex items-center gap-2">
+          <Button variant="outline" className="h-9">
+            <span>Submit Selected</span>
+          </Button>
+          <Button variant="outline" className="h-9">
+            <span>Print Selected</span>
+          </Button>
+        </div>
+      </div>
+      
+      {/* Filter tabs */}
+      <div className="bg-gray-50 rounded-lg mb-4 p-0.5">
+        <div className="flex border-b">
+          <Button 
+            variant="ghost" 
+            className={`rounded-none h-10 ${filterValue === 'all' ? 'bg-white border-t-2 border-t-primary shadow-sm' : ''}`}
+            onClick={() => setFilterValue('all')}
+          >
+            All Recalls
+          </Button>
+          <Button 
+            variant="ghost" 
+            className={`rounded-none h-10 ${filterValue === 'overdue' ? 'bg-white border-t-2 border-t-primary shadow-sm' : ''}`}
+            onClick={() => setFilterValue('overdue')}
+          >
+            Overdue <span className="ml-1.5 text-xs bg-red-100 text-red-600 rounded-full px-1.5 py-0.5">{overdueCount}</span>
+          </Button>
+          <Button 
+            variant="ghost" 
+            className={`rounded-none h-10 ${filterValue === 'today' ? 'bg-white border-t-2 border-t-primary shadow-sm' : ''}`}
+            onClick={() => setFilterValue('today')}
+          >
+            Due Today <span className="ml-1.5 text-xs bg-blue-100 text-blue-600 rounded-full px-1.5 py-0.5">{todayCount}</span>
+          </Button>
+          <Button 
+            variant="ghost" 
+            className={`rounded-none h-10 ${filterValue === 'upcoming' ? 'bg-white border-t-2 border-t-primary shadow-sm' : ''}`}
+            onClick={() => setFilterValue('upcoming')}
+          >
+            Next 30 Days <span className="ml-1.5 text-xs bg-gray-100 text-gray-600 rounded-full px-1.5 py-0.5">{upcomingCount}</span>
+          </Button>
+        </div>
+      
+        <div className="bg-white p-3 flex gap-3">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search patient name"
+              className="pl-10 h-10 w-full"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {searchTerm && (
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="absolute right-1 top-1/2 transform -translate-y-1/2 h-8 w-8"
+                onClick={() => setSearchTerm('')}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            )}
+          </div>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="h-10 gap-1 w-[160px]">
+                <span>All Providers</span>
+                <ChevronDown className="h-3.5 w-3.5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem>All Providers</DropdownMenuItem>
+              <DropdownMenuItem>Dr. Picard</DropdownMenuItem>
+              <DropdownMenuItem>Dr. Janeway</DropdownMenuItem>
+              <DropdownMenuItem>Dr. Sisko</DropdownMenuItem>
+              <DropdownMenuItem>Dr. Archer</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" className="h-10 gap-1 w-[160px]">
+                <ArrowUpDown className="h-3.5 w-3.5" />
+                <span>{sortBy === 'dueDate' ? 'Due Date' : sortBy === 'name' ? 'Patient Name' : 'Recall Type'}</span>
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setSortBy('dueDate')}>
+                Due Date
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortBy('name')}>
+                Patient Name
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortBy('type')}>
+                Recall Type
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
+    
+      {/* Recall List */}
+      <Card className="border rounded-lg overflow-hidden">
+        <CardContent className="p-0">
+          <div className="w-full overflow-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Patient</TableHead>
+                  <TableHead>Recall Type</TableHead>
+                  <TableHead>Due Date</TableHead>
+                  <TableHead>Provider</TableHead>
+                  <TableHead>Contact Info</TableHead>
+                  <TableHead>Last Contact</TableHead>
+                  <TableHead className="w-[100px] text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredRecalls.length > 0 ? (
+                  <>
+                    {filteredRecalls.map(patient => (
+                      <PatientRow 
+                        key={`patient-${patient.id}`}
+                        patient={patient} 
+                        isExpanded={expandedRowId === patient.id}
+                        onToggleExpand={toggleExpandRow}
+                        formatDueDate={formatDueDate}
+                      />
+                    ))}
+                    
+                    {expandedRowId !== null && filteredRecalls.some(p => p.id === expandedRowId) && (
+                      <ExpandedDetailsRow patient={filteredRecalls.find(p => p.id === expandedRowId)!} />
+                    )}
+                  </>
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7} className="text-center h-32">
+                      <div className="flex flex-col items-center justify-center text-muted-foreground">
+                        <FileText className="h-8 w-8 mb-2" />
+                        <p>No recalls match your filter criteria</p>
+                        {searchTerm && (
+                          <Button 
+                            variant="link" 
+                            className="mt-2"
+                            onClick={() => {
+                              setSearchTerm("");
+                              setFilterValue("all");
+                            }}
+                          >
+                            Clear filters
+                          </Button>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>
-      
-      {/* View Tabs */}
-      <Tabs defaultValue="list" className="w-full">
-        <div className="flex justify-end mb-4">
-          <TabsList className="grid w-[240px] grid-cols-2">
-            <TabsTrigger value="list">List View</TabsTrigger>
-            <TabsTrigger value="calendar">Calendar</TabsTrigger>
-          </TabsList>
-        </div>
-        
-        {/* Recall List */}
-        <TabsContent value="list">
-          <Card>
-            <CardContent className="p-0">
-              <div className="w-full overflow-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Patient</TableHead>
-                      <TableHead>Recall Type</TableHead>
-                      <TableHead>Due Date</TableHead>
-                      <TableHead>Provider</TableHead>
-                      <TableHead>Contact Info</TableHead>
-                      <TableHead>Last Contact</TableHead>
-                      <TableHead className="w-[100px] text-right">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredRecalls.length > 0 ? (
-                      <>
-                        {filteredRecalls.map(patient => (
-                          <PatientRow 
-                            key={`patient-${patient.id}`}
-                            patient={patient} 
-                            isExpanded={expandedRowId === patient.id}
-                            onToggleExpand={toggleExpandRow}
-                            formatDueDate={formatDueDate}
-                          />
-                        ))}
-                        
-                        {expandedRowId !== null && filteredRecalls.some(p => p.id === expandedRowId) && (
-                          <ExpandedDetailsRow patient={filteredRecalls.find(p => p.id === expandedRowId)!} />
-                        )}
-                      </>
-                    ) : (
-                      <TableRow>
-                        <TableCell colSpan={7} className="text-center h-32">
-                          <div className="flex flex-col items-center justify-center text-muted-foreground">
-                            <FileText className="h-8 w-8 mb-2" />
-                            <p>No recalls match your filter criteria</p>
-                            {searchTerm && (
-                              <Button 
-                                variant="link" 
-                                className="mt-2"
-                                onClick={() => {
-                                  setSearchTerm("");
-                                  setFilterValue("all");
-                                }}
-                              >
-                                Clear filters
-                              </Button>
-                            )}
-                          </div>
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-        
-        <TabsContent value="calendar">
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex flex-col items-center justify-center h-64 text-muted-foreground">
-                <Calendar className="h-10 w-10 mb-4 text-gray-400" />
-                <h3 className="text-lg font-medium mb-2">Calendar View Coming Soon</h3>
-                <p className="text-sm text-center max-w-md">
-                  We're working on a visual calendar view to help you better manage your recall schedule. Stay tuned for updates!
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
     </div>
   );
 }
