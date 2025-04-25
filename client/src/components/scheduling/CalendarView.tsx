@@ -374,11 +374,11 @@ export default function CalendarView({
                 // Special current time indicator at 1:15 PM - just show the label, no line
                 <div 
                   key={index} 
-                  className="border-0 h-[20px] bg-transparent relative flex items-center"
+                  className="border-0 h-[24px] bg-transparent relative flex items-center"
                 >
                   {/* Current time label for 1:15 PM */}
                   <div className="absolute right-0 flex justify-end items-center z-10 h-full">
-                    <div className="bg-red-500 text-white text-[10px] py-0.5 px-1.5 rounded-l whitespace-nowrap">
+                    <div className="bg-red-500 text-white text-[10px] py-1 px-2 rounded-l whitespace-nowrap">
                       {slot.label}
                     </div>
                   </div>
@@ -414,9 +414,9 @@ export default function CalendarView({
                   return (
                     <div 
                       key={index}
-                      className="h-[2px] bg-red-500 border-0"
+                      className="h-[2px] bg-red-500 border-0 my-[11px]"
                     >
-                      {/* No content inside the time indicator line */}
+                      {/* Line positioned in the middle of the time label height */}
                     </div>
                   );
                 }
