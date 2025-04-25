@@ -45,7 +45,8 @@ export default function AppHeader({
   
   return (
     <div className="bg-white border-b p-4 flex flex-col gap-4">
-      <div className="flex justify-between items-center">
+      <div className="grid grid-cols-3 items-center">
+        {/* Left column */}
         <div className="flex items-center gap-2">
           <h1 className="text-xl font-bold">Scheduling</h1>
           <Button variant="outline" size="sm" onClick={onToday}>
@@ -53,7 +54,8 @@ export default function AppHeader({
           </Button>
         </div>
         
-        <div className="flex items-center gap-2">
+        {/* Center column - Date control stays in center */}
+        <div className="flex items-center justify-center gap-2">
           <Button variant="ghost" size="icon" onClick={onPrevious}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
@@ -65,27 +67,30 @@ export default function AppHeader({
           </Button>
         </div>
         
-        {/* Moved view mode tabs here */}
-        <Tabs defaultValue={currentView} onValueChange={(value) => onViewChange(value as ViewModeType)}>
-          <TabsList>
-            <TabsTrigger value="OPERATORY">Operatory</TabsTrigger>
-            <TabsTrigger value="PROVIDER">Provider</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        
-        <div className="flex items-center gap-2">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={onToggleExpandView}
-            title={expandedView ? "Show sidebars" : "Expand calendar"}
-          >
-            {expandedView ? <Minimize className="h-4 w-4" /> : <Expand className="h-4 w-4" />}
-          </Button>
-          <Button onClick={onBookAppointment} className="flex items-center gap-1">
-            <PlusCircle className="h-4 w-4" />
-            <span>Book Appointment</span>
-          </Button>
+        {/* Right column - Tabs and action buttons */}
+        <div className="flex items-center justify-end gap-4">
+          {/* View mode tabs */}
+          <Tabs defaultValue={currentView} onValueChange={(value) => onViewChange(value as ViewModeType)}>
+            <TabsList>
+              <TabsTrigger value="OPERATORY">Operatory</TabsTrigger>
+              <TabsTrigger value="PROVIDER">Provider</TabsTrigger>
+            </TabsList>
+          </Tabs>
+          
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={onToggleExpandView}
+              title={expandedView ? "Show sidebars" : "Expand calendar"}
+            >
+              {expandedView ? <Minimize className="h-4 w-4" /> : <Expand className="h-4 w-4" />}
+            </Button>
+            <Button onClick={onBookAppointment} className="flex items-center gap-1">
+              <PlusCircle className="h-4 w-4" />
+              <span>Book Appointment</span>
+            </Button>
+          </div>
         </div>
       </div>
       
