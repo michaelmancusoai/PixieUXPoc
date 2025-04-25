@@ -43,10 +43,10 @@ const promptVariants = [
 
 const PlanetPixiePage = () => {
   // State for our game
-  const [level, setLevel] = useState(GameLevel.LEVEL_1);
+  const [level, setLevel] = useState<GameLevel>(GameLevel.INTRO); // Start with intro screen
   const [streak, setStreak] = useState(5); // Default streak value
   const [currentVariantIndex, setCurrentVariantIndex] = useState(0);
-  const [completedCoins, setCompletedCoins] = useState(new Set([0, 1])); // 2 coins collected by default
+  const [completedCoins, setCompletedCoins] = useState<Set<number>>(new Set([])); // Start with no coins collected
 
   // Functions for game control
   const nextVariant = () => {
@@ -68,6 +68,15 @@ const PlanetPixiePage = () => {
             const newCompletedCoins = new Set(completedCoins);
             newCompletedCoins.add(index);
             setCompletedCoins(newCompletedCoins);
+            
+            // Check if all coins are collected to advance level
+            if (level === GameLevel.LEVEL_1 && newCompletedCoins.size >= 3) {
+              setTimeout(() => advanceLevel(), 500);
+            } else if (level === GameLevel.LEVEL_2 && newCompletedCoins.size >= 5) {
+              setTimeout(() => advanceLevel(), 500);
+            } else if (level === GameLevel.LEVEL_FINAL && newCompletedCoins.size >= 10) {
+              setTimeout(() => advanceLevel(), 500);
+            }
           }
         }}
       >
@@ -127,7 +136,7 @@ const PlanetPixiePage = () => {
   // Function to restart the game
   const restartGame = () => {
     setLevel(GameLevel.LEVEL_1);
-    setCompletedCoins(new Set([0, 1]));
+    setCompletedCoins(new Set<number>([0, 1]));
   };
   
   // Accept mission - move to next level
@@ -140,6 +149,32 @@ const PlanetPixiePage = () => {
     const currentVariant = promptVariants[currentVariantIndex];
     
     switch (level) {
+      case GameLevel.INTRO:
+        return (
+          <div className="py-2 font-vt323">
+            <div className="nes-container is-rounded pixelated border-blue-500 bg-blue-100 min-h-[350px] relative flex flex-col items-center justify-center">
+              <div className="bg-blue-500 text-white font-press-start text-xs text-center py-1 -mx-4 -mt-4 mb-4">PLANET PIXIE</div>
+              <i className="nes-octocat animate-pulse mb-4"></i>
+              <h1 className="text-2xl font-press-start mb-3 text-center">Daily Challenge</h1>
+              <p className="text-center mb-6 max-w-md">Collect coins by completing these small activities. Build your streak and unlock special abilities!</p>
+              
+              <div className="mt-3 inline-block bg-blue-100 px-4 py-2 rounded-lg border border-blue-500">
+                <p className="flex items-center text-blue-800">
+                  <i className="nes-icon star is-small mr-2"></i>
+                  Current Streak: {streak} days
+                </p>
+              </div>
+              
+              <button 
+                className="nes-btn is-primary font-press-start text-xs px-4 py-1 mt-6"
+                onClick={() => setLevel(GameLevel.LEVEL_1)}
+              >
+                START TODAY'S CHALLENGE
+              </button>
+            </div>
+          </div>
+        );
+      
       case GameLevel.LEVEL_1:
         return (
           <div className="py-2 font-vt323">
@@ -373,10 +408,8 @@ const PlanetPixiePage = () => {
                   <span className="text-blue-800 font-press-start text-xs">OFFICE RANK: #{level === GameLevel.LEVEL_FINAL ? "1" : "2"}</span>
                 </div>
                 
-                {/* Surrender Button - Only shown during active game levels (not in briefing, intro or victory screens) */}
-                {(level === GameLevel.LEVEL_1 || level === GameLevel.LEVEL_2 || level === GameLevel.LEVEL_FINAL) && 
-                  level !== GameLevel.VICTORY && 
-                  level !== GameLevel.BRIEFING_1 && (
+                {/* Surrender Button - Only shown during active game levels (not in intro, victory or surrendered screens) */}
+                {(level === GameLevel.LEVEL_1 || level === GameLevel.LEVEL_2 || level === GameLevel.LEVEL_FINAL) && (
                   <button 
                     onClick={surrenderGame}
                     className="nes-btn is-error is-small px-2 py-0 text-[10px] font-press-start"
