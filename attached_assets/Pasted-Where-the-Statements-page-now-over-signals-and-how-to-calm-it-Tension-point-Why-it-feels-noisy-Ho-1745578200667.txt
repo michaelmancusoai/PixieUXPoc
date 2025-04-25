@@ -1,0 +1,65 @@
+Where the Statements page now over-signals (and how to calm it)
+
+Tension point	Why it feels noisy	How to quiet it
+Six equal-weight tiles	The eye hops like a pinball—no obvious “start here.”	Give the page a hero trio (primary KPIs) on Row 1, then a slimmer “support rail” for secondary widgets.
+Mixed iconography	Bell, triangle, pie-ring, coins, phone… all competing.	Limit to one icon family and reserve badge colour for status (clear, warn, alert).
+Two CTAs per card	Each tile demands choice, triggering micro-friction.	Show one default action; reveal alternates on hover or ⋮ menu.
+Tiny to-do list duplicated	To-Do items repeat themes already shown in tiles (e.g., “Send 2 draft statements”).	Merge the list into a single “Today’s Actions” button that just filters the grid.
+1 · Restaged layout – one calm focus row
+
+┌─ Unsent Drafts ────┐  ┌─ Need First Reminder ─┐  ┌─ Balances ≥30d ───┐
+│ 2 drafts  ·  $700  │  │ 3 stmts  · 14+ days   │  │ $0 stuck          │
+│ CTA: Send Drafts   │  │ CTA: Run Reminders    │  │ CTA: View Aging    │
+└────────────────────┘  └───────────────────────┘  └────────────────────┘
+                 (secondary rail – subdued grey)
+ e-Statement Gap  |  High-Balance Watchlist  |  Escalate / Settle
+Left-to-right flow = unreleased → unnudged → unresolved
+Secondary rail stays grey until a threshold is breached.
+2 · KPI copy tuned for instant comprehension
+
+
+Card title	Main line	Sub-line	CTA
+Unsent Drafts	2 statements waiting	“$700 still on your desk”	Send Drafts
+Need First Reminder	3 statements stalled	“Sent 14 days ago, no nudge”	Run Reminders
+Balances ≥ 30 Days	$0 stuck (nice!)	“0 pts over 30 d”	View Aging (disabled)
+e-Statement Gap	70 % adopted	“3 patients still on paper”	Invite Paperless
+High-Balance Watchlist	Top 3 names + $	—	Call pill beside each
+Escalate / Settle	0 accts > 120 d & < $200	—	Decide (grey until needed)
+3 · Visual vocabulary
+
+
+Element	Colour band	When used
+Clear state	Light grey #F4F6F8	No action needed
+Attention	Amber #FFE4B3	KPI above soft threshold
+Alert	Coral #FFB4B4	KPI above hard threshold
+Success	Mint #CFF5D1	KPI hits target (e.g., $0 aging)
+One icon family (outlined 24 px).
+Progress bars share width, 4 px height.
+Remove secondary shadows; let white space breathe.
+4 · Single-action discipline
+
+Default CTA fills full card width.
+Secondary actions live in a subtle ⋮ menu revealed on hover to avoid split-second decision fatigue.
+Example:
+Send Drafts (primary)
+⋮ → “Auto-email all” | “Print bundle”
+5 · Replace the micro to-do list with a single filter button
+
+Today’s Action Queue   [ Show 3 items ]
+Click → grid filters to drafts + 14-day + paper invites.
+Why: one mental pivot instead of scanning a separate list.
+
+6 · Gentle nudges
+
+
+Situation	Nudge
+Unsent Drafts > 0 at 11 AM	Red dot on nav tab + pulse on card border
+Need First Reminder flagged	Toast after run: “Nicely nudged! Expect 40 % faster pay.”
+e-Statement adoption hits 80 %	Confetti tick (1 s) then card fades to grey
+Designer’s one-pager checklist
+Row 1 = three hero cards (equal width).
+Row 2 secondary rail uses smaller text and grey background until activated.
+Progress bars & colour bands obey the four-colour vocabulary only.
+One CTA per card at rest; others on ⋮ hover.
+Remove “Today’s To-Do List” card; replace with Action Queue filter button.
+With hierarchy, restrained colour, and “one action per tile,” the Statements dashboard shifts from energetic chatter to a clear daily agenda that lets staff glance, click, and move money—without the manic noise.
