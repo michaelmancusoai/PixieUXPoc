@@ -55,12 +55,12 @@ export default function AppHeader({
       <div className="grid grid-cols-3 items-center">
         {/* Left column */}
         <div className="flex items-center gap-4">
-          <Button variant="outline" size="sm" onClick={onToday}>
+          <Button variant="outline" size="sm" onClick={onToday} className="h-8">
             Today
           </Button>
           
           {/* Patient counts in a visually stimulating display */}
-          <div className="flex items-center gap-2 ml-2 h-9">
+          <div className="flex items-center gap-2 ml-2 h-8">
             {/* Total - Dark Gray */}
             <div className="flex items-center w-16 bg-gray-100 border border-gray-300 rounded-md h-full overflow-hidden">
               <div className="flex items-center justify-center w-6 bg-gray-200 h-full mr-1 border-r border-gray-300">
