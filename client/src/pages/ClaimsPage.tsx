@@ -62,7 +62,14 @@ import {
   Zap,
   FileCheck,
   BarChart3,
+  Info,
 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 // Types
 type Claim = {
@@ -1027,9 +1034,219 @@ export default function ClaimsPage() {
             </DropdownMenu>
           </div>
           
-          {/* Placeholder for main KPIs (removed aging distributions) */}
-          <div className="mb-6">
-            {/* Action-oriented KPI cards would go here in future updates */}
+          {/* Action-Oriented KPI Cards - Primary Row */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Unsent Claims Card */}
+            <Card className="shadow-sm border-t-4 border-t-destructive/30 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-destructive/5">
+                <CardTitle className="text-base font-medium">Unsent Claims</CardTitle>
+              </CardHeader>
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    <span>7 claims · $4,860</span>
+                    <ChevronRight className="h-5 w-5 text-destructive" />
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-3">
+                    Dollars literally waiting on your desk
+                  </div>
+                </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full">
+                    Send Claims
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Payer Rejections Card */}
+            <Card className="shadow-sm border-t-4 border-t-amber-200 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-amber-50/50">
+                <CardTitle className="text-base font-medium">Payer Rejections</CardTitle>
+              </CardHeader>
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="flex items-center justify-between mb-1">
+                    <div className="text-2xl font-bold">
+                      3 claims rejected · $1,120
+                    </div>
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Info className="h-4 w-4 text-muted-foreground cursor-help" />
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <p className="text-xs max-w-xs">Fix now to avoid 30-day rebill delay.</p>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-4">
+                    Payer said no — let's turn it into yes
+                  </div>
+                </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full">
+                    Correct & Resubmit
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Aging > 14 Days Card */}
+            <Card className="shadow-sm border-t-4 border-t-orange-200 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-muted/50">
+                <CardTitle className="text-base font-medium">Aging &gt; 14 Days</CardTitle>
+              </CardHeader>
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    $2,275 in limbo (9 claims)
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-2">
+                    No response from payer → follow-up call
+                  </div>
+                  
+                  <div className="h-2 w-full bg-gray-100 rounded-full cursor-pointer mb-4">
+                    <div className="h-full bg-gradient-to-r from-amber-300 to-red-500 rounded-full transition-all duration-1000" 
+                         style={{ width: `70%` }}>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full">
+                    Work Follow-ups
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+          
+          {/* Support Rail (secondary row) */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            {/* Missing Attachments Card */}
+            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
+                <CardTitle className="text-sm font-medium">Missing Attachments</CardTitle>
+              </CardHeader>
+              <CardContent className="py-4 px-5 flex-1 flex flex-col">
+                <div className="flex justify-between mb-2">
+                  <div>
+                    <div className="text-xl font-bold mb-1">
+                      4 claims
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      X-rays or photos requested
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                    >
+                      Attach Docs
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Underpaid Alerts Card */}
+            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
+                <CardTitle className="text-sm font-medium">Underpaid Alerts</CardTitle>
+              </CardHeader>
+              <CardContent className="py-4 px-5 flex-1 flex flex-col">
+                <div className="flex justify-between mb-2">
+                  <div>
+                    <div className="text-xl font-bold mb-1">
+                      6 EOBs
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Payment &lt; 95% of contract fee
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                    >
+                      Review EOB
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Pre-Auth Needed Soon Card */}
+            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
+                <CardTitle className="text-sm font-medium">Pre-Auth Needed Soon</CardTitle>
+              </CardHeader>
+              <CardContent className="py-4 px-5 flex-1 flex flex-col">
+                <div className="flex justify-between mb-2">
+                  <div>
+                    <div className="text-xl font-bold mb-1">
+                      2 patients
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Pre-auth expires &lt; 14 days
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                    >
+                      Generate Pre-Auth
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {/* Coordination of Benefits Card */}
+            <Card className="shadow-sm border-t-2 border-t-muted flex flex-col">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
+                <CardTitle className="text-sm font-medium">Coordination of Benefits</CardTitle>
+              </CardHeader>
+              <CardContent className="py-4 px-5 flex-1 flex flex-col">
+                <div className="flex justify-between mb-2">
+                  <div>
+                    <div className="text-xl font-bold mb-1">
+                      3 claims
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Awaiting COB documentation
+                    </div>
+                  </div>
+                  <div className="flex items-center">
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                    >
+                      Request Secondary Info
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           <Card className="shadow-sm">

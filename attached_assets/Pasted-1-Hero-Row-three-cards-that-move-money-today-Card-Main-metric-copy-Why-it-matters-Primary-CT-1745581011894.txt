@@ -1,0 +1,46 @@
+1 · Hero Row — three cards that move money today
+
+
+Card	Main metric & copy	Why it matters	Primary CTA (one action)	Colour logic
+Unsent Claims	7 claims · $4 860 still in draft	Dollars literally waiting on your desk	Send Claims → filters grid to Draft	• Red band when count > 0
+• Grey when 0
+Payer Rejections	3 claims rejected · $1 120	Fix now to avoid 30-day rebill delay	Correct & Resubmit → opens first claim	• Amber when 1-5
+• Red at 6+
+Aging > 14 Days	$2 275 in limbo (9 claims)	No response from payer → follow-up call	Work Follow-ups → auto-sorted list	• Amber bar fills to red at 30 days
+Left → right flow: Release → Repair → Recover.
+
+2 · Support Rail (grey until threshold breached)
+
+
+Widget	Breach rule	CTA
+Missing Attachments	any claim flagged “info requested”	Attach Docs
+Underpaid Alerts	payment < 95 % of contract fee	Review EOB
+Pre-Auth Needed Soon	pre-auth expires < 14 days	Generate Pre-Auth
+Coordination of Benefits	claims awaiting COB doc	Request Secondary Info
+These sit in a light-grey second row; they light up in amber/red only when active.
+
+3 · Copy cheatsheet
+
+
+Scenario	Micro-copy
+Unsent but 0	“All caught up — breathe easy.”
+Rejections present	“Payer said no — let’s turn it into yes.”
+Aging > 30 d	“Clock’s ticking: interest risk at 45 d.”
+Missing Attachments (active)	“X-rays or photos requested — attach to unfreeze.”
+Short, plain, verb-first.
+
+4 · Behavioural cues
+
+Red halo appears around Unsent Claims card at 3 p.m. if count > 0.
+Rejections card header pulses once when a new denial lands.
+Progress bar under Aging card grows daily; turns red at 30 d to trigger urgency.
+When all hero cards grey, show a mint-green tick ribbon: “Claims runway clear — revisit at 2 p.m.”
+5 · Designer checklist
+
+Hero cards equal width; one CTA button spans card.
+Use same four-colour palette already applied: Grey (clear) / Mint (success) / Amber (caution) / Coral (alert).
+Icons: outline 24 px, one per card, consistent family.
+Support-rail widgets 20 % smaller font, grey band until active.
+Tooltip on every dollar figure explains calculation (e.g., “Sum of claim charges, not allowed amounts”).
+Result
+With Unsent, Rejected, and Aging as the hero trio—and silent support widgets that wake only when thresholds breach—the Claims page now slots neatly into your calmer, single-action billing suite, telling the billing team exactly: Release these dollars, repair those denials, recover that aging bucket — today.
