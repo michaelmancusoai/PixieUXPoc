@@ -1,3 +1,9 @@
+/* Import pixel fonts for the game */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+/* Import NES.css for 8-bit styling */
+@import url('https://unpkg.com/nes.css@latest/css/nes.min.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -156,6 +162,21 @@ button {
 }
 
 @layer components {
+  /* Planet Pixie game styling */
+  .pixelated {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+  
+  .font-vt323 {
+    font-family: 'VT323', monospace;
+  }
+  
+  .font-press-start {
+    font-family: 'Press Start 2P', cursive;
+    line-height: 1.2;
+  }
+  
   /* Navigation links styling */
   .nav-link.active {
     @apply border-primary text-primary bg-primary/5;

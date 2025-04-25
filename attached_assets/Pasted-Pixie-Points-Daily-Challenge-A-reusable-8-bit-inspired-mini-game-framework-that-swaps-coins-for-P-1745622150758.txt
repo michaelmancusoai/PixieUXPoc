@@ -1,0 +1,110 @@
+Pixie Points Daily Challenge
+
+A reusable 8-bit-inspired mini-game framework that swaps “coins” for Pixie Points, nudges staff to complete high-value micro-tasks (starting with “Store a Card-on-File”), and lets them redeem points for time-saving Pixie AI-Agent jobs.
+
+0 · High-level concept
+
+Daily Splash → Intro → Play loop (max 3 minutes of UI time).
+Three levels per day – 3, 5, 10 successful task events.
+Each task yields Pixie Points (PP).
+Points bank is visible on the Today screen widget in real time.
+Staff redeem PP for queued AI-Agent jobs (e.g., “Auto-verify 5 insurances”).
+1 · Terminology
+
+
+Term	Meaning
+Pixie Points (PP)	Digital currency earned by completing micro-tasks.
+Daily Game	One 3-level quest tied to a single task type.
+Task Event	The auditable system event that increments progress (e.g., card-on-file saved).
+Adventure Splash	First screen; asks user to join quest.
+Hero Progress Bar	8-bit character moves across scene as tasks complete.
+2 · UI surfaces
+
+2.1 Today-Screen Widget
+┌─────────────────────────────┐
+│ ⭐ Pixie Points        42 PP │
+│ Today’s Quest: Card-on-File │
+│ ▄▀▄  ▒▒▒ ○○○                │  ← hero + 3 empty circles (level 1)
+└─────────────────────────────┘
+Real-time PP counter updates via websocket.
+Confetti burst every time PP increases.
+Clicking widget opens Game Modal.
+2.2 Game Modal (4 states)
+
+State	Elements
+Splash	Pixel logo, “Join today’s adventure?” Buttons → Start Quest / Maybe Later.
+Intro	Background art + short copy: “Earn 3 cards-on-file to clear Level 1. Each card = 5 PP.” Button Let’s Go.
+Play	Scene with hero progress bar, level tracker (○ filled), PP earned today, Quit Game link.
+Level Complete	Pixel fireworks, PP total, CTA “Advance to Level 2 (5 tasks)” or I Surrender.
+Victory (after 10 tasks)	Large trophy, banner “You won 50 PP!” Widget collapses to thin victory bar.
+A white-flag animation & fold-in collapse for surrender, identical to previous spec.
+
+3 · Game mechanics
+
+
+Item	Rule
+Point award	5 PP per task regardless of level (total 15 / 25 / 50 PP for L1/L2/L3).
+Hero movement	Hero moves 10 % of scene width per task.
+Background rotation	Cycle four pixel scenes (Sky, Desert, Forest, Lava) by day-of-week.
+Character rotation	Cycle four heroes (Tooth Knight, Hygienist Mage, Floss Ninja, Mirror Bot).
+Timers	No hard countdown, but widget shows “Quest resets in 9 h”.
+Daily reset	4:00 AM local – PP tally persists, progress resets, new task type may swap in.
+Streak	Completing Level 1 sets/extends a streak; break resets to 0.
+4 · Point redemption
+
+
+Threshold	Reward (AI-Agent job)
+25 PP	Auto-verify 5 insurance eligibilities overnight
+50 PP	Bulk-SMS 10 recall reminders with smart merge
+75 PP	Draft 5 treatment-plan follow-up emails
+100 PP	Generate unpaid-balance call list & scripts
+Redeem modal reachable from Today widget via “Spend Points” link.
+
+5 · Gherkin scenarios (core flow, audio-free)
+
+Feature: Pixie Points Daily Quest – Card On File
+
+Background:
+  Given Maria is logged in
+  And the Today widget shows "Card-on-File Quest"
+
+Scenario: Join adventure
+  When Maria clicks the widget
+  Then show Splash modal
+  And if she clicks "Start Quest" show Intro modal
+  And clicking "Let’s Go" shows Play scene with 3 hollow circles
+
+Scenario: Task event logs
+  Given Maria stores a patient card on file
+  When system writes event "card_on_file=true"
+  Then left-most circle fills, hero moves right, PP +5,
+       widget confetti 1 s
+
+Scenario: Level completion
+  When 3 circles filled
+  Then fireworks overlay 1.5 s
+  And modal shows prompt "Advance to Level 2 (5 tasks)?"
+  If Maria clicks "Advance", add two circles (total 5)
+  If "I Surrender", white flag then collapse to slim bar
+  Resume keeps progress intact
+
+Scenario: Victory
+  When 10 tasks logged
+  Then full-screen pixel fireworks 3 s
+  And trophy drops into widget
+  And collapsed bar reads "🏆 50 PP earned • Streak 4"
+
+Rule: PP counter updates socket push
+
+Rule: Quest resets at 4:00 AM
+6 · Copy library
+
+
+Context	Line
+Splash headline	“Ready for today’s Pixie Quest?”
+Intro body	“Goal #1: Ask 3 patients if we may store their card. Each ‘yes’ earns 5 Pixie Points.”
+Level up	“Level 1 complete — 15 PP banked!”
+Surrender collapsed	“Paused at 2/5 tasks • Resume quest?”
+Victory	“Legendary! 10 cards stored. 50 PP added to your vault.”
+Widget tooltip	“Pixie Points = fuel for AI agents. Spend wisely.”
+Tone = heroic-playful, verb-first, no jargon.
