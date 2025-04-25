@@ -140,7 +140,7 @@ export default function BookAppointmentDialog({
   
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl">
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-xl">Add Appointment</DialogTitle>
         </DialogHeader>
@@ -196,14 +196,14 @@ export default function BookAppointmentDialog({
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category <span className="text-red-500">*</span></FormLabel>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-1">
                       {procedureCategories.map((category) => (
                         <Button
                           key={category.id}
                           type="button"
                           variant={field.value === category.id ? "default" : "outline"}
                           onClick={() => field.onChange(category.id)}
-                          className="rounded-full h-8"
+                          className="rounded-full h-7 text-xs px-3"
                         >
                           {category.name}
                         </Button>
@@ -215,14 +215,14 @@ export default function BookAppointmentDialog({
               />
               
               {/* Procedure Selection */}
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid grid-cols-2 gap-4">
                 <FormField
                   control={form.control}
                   name="procedures"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Category Procedures <span className="text-red-500">*</span></FormLabel>
-                      <div className="flex flex-wrap gap-2">
+                      <FormLabel className="text-sm">Category Procedures <span className="text-red-500">*</span></FormLabel>
+                      <div className="flex flex-wrap gap-1">
                         {procedureList
                           .filter(proc => !form.getValues("category") || proc.category === form.getValues("category"))
                           .map((procedure) => {
@@ -231,7 +231,7 @@ export default function BookAppointmentDialog({
                               <Badge
                                 key={procedure.id}
                                 variant={isSelected ? "default" : "outline"}
-                                className="cursor-pointer"
+                                className="cursor-pointer text-xs h-6"
                                 onClick={() => {
                                   const currentValues = [...field.value];
                                   if (isSelected) {
@@ -253,10 +253,10 @@ export default function BookAppointmentDialog({
                 />
                 
                 <div>
-                  <FormLabel>Addtl Procedures <span className="text-red-500">*</span></FormLabel>
+                  <FormLabel className="text-sm">Addtl Procedures <span className="text-red-500">*</span></FormLabel>
                   <div className="flex items-center space-x-2">
-                    <Button type="button" variant="outline" size="icon" className="h-8 w-8 rounded-full">+</Button>
-                    <span className="text-sm text-muted-foreground">Add more procedures</span>
+                    <Button type="button" variant="outline" size="icon" className="h-7 w-7 rounded-full">+</Button>
+                    <span className="text-xs text-muted-foreground">Add more procedures</span>
                   </div>
                 </div>
               </div>
@@ -267,12 +267,12 @@ export default function BookAppointmentDialog({
                 name="comments"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Comments</FormLabel>
+                    <FormLabel className="text-sm">Comments</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Please give brief overview of patient's condition e.g. Broken tooth/severe tooth pain/ etc."
                         {...field}
-                        className="min-h-[80px]"
+                        className="min-h-[60px] text-sm"
                       />
                     </FormControl>
                     <FormMessage />
@@ -282,20 +282,20 @@ export default function BookAppointmentDialog({
             </div>
             
             {/* ASAP List */}
-            <div className="border-t pt-4">
-              <h3 className="text-base font-medium">ASAP List</h3>
+            <div className="border-t pt-3">
+              <h3 className="text-sm font-medium">ASAP List</h3>
               <FormField
                 control={form.control}
                 name="addToAsapList"
                 render={({ field }) => (
-                  <FormItem className="flex flex-row items-center space-x-2 space-y-0 mt-2">
+                  <FormItem className="flex flex-row items-center space-x-2 space-y-0 mt-1">
                     <FormControl>
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
-                    <FormLabel className="text-sm font-normal">
+                    <FormLabel className="text-xs font-normal">
                       Add Patient to ASAP List
                     </FormLabel>
                   </FormItem>
@@ -335,8 +335,8 @@ export default function BookAppointmentDialog({
               {/* Set Appointment View */}
               {activeTab === "set" && (
                 <div className="pt-4 space-y-4">
-                  <div className="flex space-x-4 items-center">
-                    <div className="w-28">
+                  <div className="flex flex-wrap gap-2 items-center">
+                    <div className="w-20">
                       <FormLabel>Show from</FormLabel>
                     </div>
                     <FormField
@@ -350,7 +350,7 @@ export default function BookAppointmentDialog({
                                 <Button
                                   variant={"outline"}
                                   className={cn(
-                                    "w-[240px] pl-3 text-left font-normal",
+                                    "w-[180px] pl-3 text-left font-normal",
                                     !field.value && "text-muted-foreground"
                                   )}
                                 >
@@ -377,14 +377,16 @@ export default function BookAppointmentDialog({
                       )}
                     />
                     
-                    <Button type="button" variant="outline" className="ml-2">Today</Button>
-                    <Button type="button" variant="outline">+3m</Button>
-                    <Button type="button" variant="outline">+6m</Button>
+                    <div className="flex space-x-1">
+                      <Button type="button" variant="outline" size="sm">Today</Button>
+                      <Button type="button" variant="outline" size="sm">+3m</Button>
+                      <Button type="button" variant="outline" size="sm">+6m</Button>
+                    </div>
                   </div>
                   
-                  <div className="border rounded-md p-4 bg-gray-100">
+                  <div className="border rounded-md p-3 bg-gray-50">
                     {/* Day Selection */}
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <label className="block text-sm mb-1">Days</label>
                       <div className="flex space-x-1">
                         {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
@@ -401,7 +403,7 @@ export default function BookAppointmentDialog({
                     </div>
                     
                     {/* AM/PM Selection */}
-                    <div className="mb-4">
+                    <div className="mb-3">
                       <label className="block text-sm mb-1">Time Slot</label>
                       <div className="flex space-x-1">
                         <div className="flex items-center justify-center w-12 h-8 rounded-md bg-blue-500 text-white">
@@ -414,11 +416,11 @@ export default function BookAppointmentDialog({
                     </div>
                     
                     {/* Time Range Selection */}
-                    <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="grid grid-cols-2 gap-3 mb-3">
                       <div>
                         <label className="block text-sm mb-1">From</label>
                         <Select defaultValue="08:00">
-                          <SelectTrigger className="bg-white">
+                          <SelectTrigger className="bg-white h-8 text-sm">
                             <SelectValue placeholder="Select time" />
                           </SelectTrigger>
                           <SelectContent>
@@ -432,7 +434,7 @@ export default function BookAppointmentDialog({
                       <div>
                         <label className="block text-sm mb-1">To</label>
                         <Select defaultValue="13:00">
-                          <SelectTrigger className="bg-white">
+                          <SelectTrigger className="bg-white h-8 text-sm">
                             <SelectValue placeholder="Select time" />
                           </SelectTrigger>
                           <SelectContent>
@@ -446,7 +448,7 @@ export default function BookAppointmentDialog({
                     </div>
                     
                     {/* Provider Selection */}
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-3">
                       <div>
                         <FormField
                           control={form.control}
@@ -462,7 +464,7 @@ export default function BookAppointmentDialog({
                                     onClick={() => field.onChange(provider.id)}
                                     variant={field.value === provider.id ? "default" : "outline"}
                                     size="sm"
-                                    className={`text-xs px-2 py-1 h-auto ${
+                                    className={`text-xs px-2 py-1 h-7 ${
                                       provider.id === "dr-sak" ? "bg-blue-100 border-blue-300" : ""
                                     }`}
                                   >
@@ -490,7 +492,7 @@ export default function BookAppointmentDialog({
                                     onClick={() => field.onChange(hygienist.id)}
                                     variant={field.value === hygienist.id ? "default" : "outline"}
                                     size="sm"
-                                    className="text-xs px-2 py-1 h-auto"
+                                    className="text-xs px-2 py-1 h-7"
                                   >
                                     {hygienist.name}
                                   </Button>
@@ -506,26 +508,26 @@ export default function BookAppointmentDialog({
                   
                   {/* Time Slots */}
                   <div>
-                    <h4 className="font-medium mb-2">Time Slots</h4>
-                    <div className="border rounded-md">
-                      <div className="flex justify-between items-center p-3 border-b">
-                        <div className="font-medium">Available Providers & Hygienists</div>
+                    <h4 className="font-medium mb-2 text-sm">Time Slots</h4>
+                    <div className="border rounded-md max-h-[180px] overflow-y-auto">
+                      <div className="flex justify-between items-center p-2 border-b bg-gray-50">
+                        <div className="font-medium text-sm">Available Providers & Hygienists</div>
                       </div>
                       
                       <div className="divide-y">
-                        <div className="p-3">
-                          <div className="font-medium mb-1">Wednesday, August 16th</div>
+                        <div className="p-2">
+                          <div className="font-medium mb-1 text-sm">Wednesday, August 16th</div>
                           <div className="flex items-center">
-                            <div className="w-40">09:00 AM - 10:00 AM</div>
-                            <Badge variant="outline" className="ml-4">Dr. Sak</Badge>
+                            <div className="w-32 text-sm">09:00 - 10:00 AM</div>
+                            <Badge variant="outline" className="ml-2 text-xs">Dr. Sak</Badge>
                           </div>
                         </div>
                         
-                        <div className="p-3">
-                          <div className="font-medium mb-1">Thursday, August 17th</div>
+                        <div className="p-2">
+                          <div className="font-medium mb-1 text-sm">Thursday, August 17th</div>
                           <div className="flex items-center">
-                            <div className="w-40">09:00 AM - 10:00 AM</div>
-                            <Badge variant="outline" className="ml-4">Dr. Sak</Badge>
+                            <div className="w-32 text-sm">09:00 - 10:00 AM</div>
+                            <Badge variant="outline" className="ml-2 text-xs">Dr. Sak</Badge>
                           </div>
                         </div>
                       </div>
