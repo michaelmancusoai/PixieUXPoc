@@ -72,7 +72,7 @@ export default function RightRail({ selectedDate }: RightRailProps) {
       <Card>
         <CardHeader className="py-3">
           <CardTitle className="text-sm font-semibold flex items-center">
-            <UserCheck className="mr-2 h-4 w-4 text-primary" />
+            <UserCheck className="mr-2 h-4 w-4 text-green-500" />
             Upcoming Check-ins
           </CardTitle>
         </CardHeader>
@@ -98,12 +98,12 @@ export default function RightRail({ selectedDate }: RightRailProps) {
               <div>
                 {patient.confirmed ? (
                   <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700 text-[9px]">
-                    <CheckCircle className="mr-1 h-2 w-2" />
+                    <CheckCircle className="mr-1 h-2 w-2 text-green-600" />
                     Confirmed
                   </Badge>
                 ) : (
                   <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700 text-[9px]">
-                    <Clock className="mr-1 h-2 w-2" />
+                    <Clock className="mr-1 h-2 w-2 text-yellow-600" />
                     Unconfirmed
                   </Badge>
                 )}
