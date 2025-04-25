@@ -776,7 +776,7 @@ export default function StatementsPage() {
                       className="h-8"
                       disabled={highBalanceWatchlist.length === 0}
                     >
-                      Payment Plans
+                      Offer Payment Plans
                     </Button>
                   </div>
                 </div>
