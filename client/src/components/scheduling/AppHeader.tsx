@@ -60,25 +60,25 @@ export default function AppHeader({
           </Button>
           
           {/* Patient counts in a visually stimulating display */}
-          <div className="flex items-center gap-3 ml-2">
-            <div className="flex flex-col items-center bg-blue-100 border-2 border-blue-300 rounded-md px-3 py-1 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
-              <span className="text-xl font-bold text-blue-700">{patientCounts.total}</span>
-              <span className="text-xs font-medium text-blue-600">Total</span>
+          <div className="flex items-center gap-2 ml-2 h-9">
+            <div className="flex items-center gap-1 bg-blue-100 border border-blue-300 rounded-md px-2 py-0.5 h-full">
+              <span className="text-sm font-bold text-blue-700">{patientCounts.total}</span>
+              <span className="text-xs text-blue-600">Total</span>
             </div>
             
-            <div className="flex flex-col items-center bg-amber-100 border-2 border-amber-300 rounded-md px-3 py-1 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
-              <span className="text-xl font-bold text-amber-700">{patientCounts.upcoming}</span>
-              <span className="text-xs font-medium text-amber-600">Upcoming</span>
+            <div className="flex items-center gap-1 bg-amber-100 border border-amber-300 rounded-md px-2 py-0.5 h-full">
+              <span className="text-sm font-bold text-amber-700">{patientCounts.upcoming}</span>
+              <span className="text-xs text-amber-600">Up</span>
             </div>
             
-            <div className="flex flex-col items-center bg-green-100 border-2 border-green-300 rounded-md px-3 py-1 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
-              <span className="text-xl font-bold text-green-700">{patientCounts.inProgress}</span>
-              <span className="text-xs font-medium text-green-600">In Progress</span>
+            <div className="flex items-center gap-1 bg-green-100 border border-green-300 rounded-md px-2 py-0.5 h-full">
+              <span className="text-sm font-bold text-green-700">{patientCounts.inProgress}</span>
+              <span className="text-xs text-green-600">In</span>
             </div>
             
-            <div className="flex flex-col items-center bg-gray-100 border-2 border-gray-300 rounded-md px-3 py-1 shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5">
-              <span className="text-xl font-bold text-gray-700">{patientCounts.completed}</span>
-              <span className="text-xs font-medium text-gray-600">Completed</span>
+            <div className="flex items-center gap-1 bg-gray-100 border border-gray-300 rounded-md px-2 py-0.5 h-full">
+              <span className="text-sm font-bold text-gray-700">{patientCounts.completed}</span>
+              <span className="text-xs text-gray-600">Done</span>
             </div>
           </div>
         </div>
