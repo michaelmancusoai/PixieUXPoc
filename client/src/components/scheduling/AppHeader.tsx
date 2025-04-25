@@ -47,28 +47,10 @@ export default function AppHeader({
     <div className="bg-white border-b p-4 flex flex-col gap-4">
       <div className="grid grid-cols-3 items-center">
         {/* Left column */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={onToday}>
             Today
           </Button>
-          
-          {/* Daily summary statistics */}
-          <div className="flex items-center gap-4 px-3 border-l pl-4">
-            <div className="flex flex-col items-center">
-              <span className="text-xs text-gray-500">Patients</span>
-              <span className="font-medium text-sm">24</span>
-            </div>
-            <div className="h-8 border-l border-gray-200 mx-1"></div>
-            <div className="flex flex-col items-center">
-              <span className="text-xs text-gray-500">Production</span>
-              <span className="font-medium text-sm">$4,850</span>
-            </div>
-            <div className="h-8 border-l border-gray-200 mx-1"></div>
-            <div className="flex flex-col items-center">
-              <span className="text-xs text-gray-500">Open</span>
-              <span className="font-medium text-sm">6</span>
-            </div>
-          </div>
         </div>
         
         {/* Center column - Date control stays in center */}
