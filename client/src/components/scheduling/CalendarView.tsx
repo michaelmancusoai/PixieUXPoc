@@ -447,7 +447,7 @@ export default function CalendarView({
         arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 10),
         chairStartedAt: null,
         completedAt: null,
-        status: "checked_in"
+        status: "checked_in" // Force checked_in status regardless of time
       },
       {
         id: 23,
@@ -469,7 +469,7 @@ export default function CalendarView({
         arrivedAt: new Date(new Date().getTime() - 1000 * 60 * 5),
         chairStartedAt: null,
         completedAt: null,
-        status: "checked_in"
+        status: "checked_in" // Force checked_in status regardless of time
       },
       
       // Add one more appointment with "in_chair" status
@@ -579,11 +579,13 @@ export default function CalendarView({
         confirmedAt: null,
         arrivedAt: null,
         chairStartedAt: null,
-        completedAt: null
+        completedAt: null,
+        status: "scheduled" // Force unconfirmed status
       }
     ].map(apt => ({
       ...apt,
-      status: getStatusBasedOnTime(apt.startTime, apt.duration)
+      // Only apply time-based status if no status is explicitly set
+      status: apt.status || getStatusBasedOnTime(apt.startTime, apt.duration)
     }));
   }, [selectedDate, demoResources, viewMode]);
   
