@@ -701,22 +701,24 @@ export default function PaymentsPage() {
                 <CardTitle className="text-sm font-medium">Pending Verifications</CardTitle>
               </CardHeader>
               <CardContent className="py-4 px-5 flex-1 flex flex-col">
-                <div>
-                  <div className="text-xl font-bold mb-1">
-                    ${pendingVerificationsTotal} in limbo
+                <div className="flex justify-between mb-2">
+                  <div>
+                    <div className="text-xl font-bold mb-1">
+                      ${pendingVerificationsTotal} in limbo
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      e-checks & ACH pending verification
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground mb-4">
-                    e-checks & ACH pending verification
+                  <div className="flex items-center">
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                    >
+                      View Unsettled ACHs
+                    </Button>
                   </div>
-                </div>
-                
-                <div className="mt-auto text-right">
-                  <Button 
-                    variant="default"
-                    size="sm"
-                  >
-                    View Unsettled ACHs
-                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -727,22 +729,24 @@ export default function PaymentsPage() {
                 <CardTitle className="text-sm font-medium">Preventable Refunds</CardTitle>
               </CardHeader>
               <CardContent className="py-4 px-5 flex-1 flex flex-col">
-                <div>
-                  <div className="text-xl font-bold mb-1">
-                    ${preventableRefundsTotal} this month
+                <div className="flex justify-between mb-2">
+                  <div>
+                    <div className="text-xl font-bold mb-1">
+                      ${preventableRefundsTotal} this month
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Double-charges and wrong amount entries
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground mb-4">
-                    Double-charges and wrong amount entries
+                  <div className="flex items-center">
+                    <Button 
+                      variant="outline"
+                      size="sm"
+                      className="h-8"
+                    >
+                      See Root-Cause List
+                    </Button>
                   </div>
-                </div>
-                
-                <div className="mt-auto text-right">
-                  <Button 
-                    variant="default"
-                    size="sm"
-                  >
-                    See Root-Cause List
-                  </Button>
                 </div>
               </CardContent>
             </Card>
