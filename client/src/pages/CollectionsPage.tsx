@@ -761,43 +761,45 @@ export default function CollectionsPage() {
           {/* Action-Oriented KPI Cards - Primary Row */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             {/* Ripest 30-day Window Card */}
-            <Card className="shadow-sm border-t-4 border-t-green-200">
-              <CardHeader className="py-3 px-5 border-b bg-green-50/30">
+            <Card className="shadow-sm border-t-4 border-t-primary/30">
+              <CardHeader className="py-3 px-5 border-b bg-primary/5">
                 <CardTitle className="text-base font-medium">Ripest 30-Day Window</CardTitle>
               </CardHeader>
               <CardContent className="py-5 px-5">
                 <div className="flex flex-col">
                   <div className="text-2xl font-bold flex items-center justify-between mb-1">
                     <span>${ripestWindowValue.toFixed(0)} possible</span>
-                    <ChevronRight className="h-5 w-5 text-green-500" />
+                    <ChevronRight className="h-5 w-5 text-primary" />
                   </div>
                   <div className="text-sm text-muted-foreground mb-3">
                     Goal $2,500 this month
                   </div>
                   
                   <div className="h-2 w-full bg-gray-100 rounded-full cursor-pointer mb-4">
-                    <div className="h-full bg-green-500 rounded-full transition-all duration-1000"  
+                    <div className="h-full bg-primary rounded-full transition-all duration-1000"  
                          style={{ width: `${Math.min((ripestWindowValue / 2500) * 100, 100)}%` }}>
                     </div>
                   </div>
                   
-                  <Button 
-                    variant="default"
-                    size="sm"
-                    className="w-full bg-green-600 hover:bg-green-700">
-                    Make the Calls
-                  </Button>
+                  <div className="mt-auto pt-2">
+                    <Button 
+                      variant="default"
+                      size="sm"
+                      className="w-full">
+                      Make the Calls
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
             
             {/* Failed Auto-Pays (renamed from Broken Promises) */}
-            <Card className="shadow-sm border-t-4 border-t-amber-200">
-              <CardHeader className="py-3 px-5 border-b bg-amber-50/30">
+            <Card className="shadow-sm border-t-4 border-t-orange-200">
+              <CardHeader className="py-3 px-5 border-b bg-muted/50">
                 <CardTitle className="text-base font-medium">Failed Auto-Pays</CardTitle>
               </CardHeader>
               <CardContent className="py-5 px-5">
-                <div className="flex flex-col">
+                <div className="flex flex-col h-full">
                   <div className="flex items-center justify-between mb-1">
                     <div className="text-2xl font-bold">
                       {brokenPromisesCount} plan{brokenPromisesCount !== 1 && 's'} failed
@@ -819,24 +821,26 @@ export default function CollectionsPage() {
                       : 'All payment plans ran on time.'}
                   </div>
                   
-                  <Button 
-                    variant={brokenPromisesCount > 0 ? "default" : "outline"}
-                    size="sm"
-                    className="w-full"
-                    disabled={brokenPromisesCount === 0}>
-                    Retry Cards
-                  </Button>
+                  <div className="mt-auto pt-2">
+                    <Button 
+                      variant={brokenPromisesCount > 0 ? "default" : "outline"}
+                      size="sm"
+                      className="w-full"
+                      disabled={brokenPromisesCount === 0}>
+                      Retry Cards
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
             
             {/* No Next Action Card */}
-            <Card className={`shadow-sm border-t-4 ${noNextActionCount > 0 && noNextActionValue > 500 ? 'border-t-red-200' : 'border-t-gray-200'}`}>
-              <CardHeader className={`py-3 px-5 border-b ${noNextActionCount > 0 && noNextActionValue > 500 ? 'bg-red-50/30' : 'bg-gray-50/30'}`}>
+            <Card className="shadow-sm border-t-4 border-t-destructive/30">
+              <CardHeader className="py-3 px-5 border-b bg-destructive/5">
                 <CardTitle className="text-base font-medium">No Next Action</CardTitle>
               </CardHeader>
               <CardContent className="py-5 px-5">
-                <div className="flex flex-col">
+                <div className="flex flex-col h-full">
                   <div className="text-2xl font-bold flex items-center justify-between mb-1">
                     ${noNextActionValue.toFixed(0)} · {noNextActionCount} acct{noNextActionCount !== 1 && 's'}
                   </div>
@@ -844,13 +848,15 @@ export default function CollectionsPage() {
                     {noNextActionCount > 0 ? 'Oldest task 4d overdue' : 'All accounts have next steps'}
                   </div>
                   
-                  <Button 
-                    variant="default"
-                    size="sm"
-                    className={`w-full ${noNextActionCount > 0 && noNextActionValue > 500 ? 'bg-red-600 hover:bg-red-700' : ''}`}
-                    disabled={noNextActionCount === 0}>
-                    Create Tasks
-                  </Button>
+                  <div className="mt-auto pt-2">
+                    <Button 
+                      variant="default"
+                      size="sm"
+                      className="w-full"
+                      disabled={noNextActionCount === 0}>
+                      Create Tasks
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -859,8 +865,8 @@ export default function CollectionsPage() {
           {/* Secondary Row - Watchlist Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
             {/* At-Risk Plans Card */}
-            <Card className="shadow-sm border-t-2 border-t-gray-200">
-              <CardHeader className="py-2 px-5 border-b bg-gray-50/30">
+            <Card className="shadow-sm border-t-2 border-t-muted">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
                 <CardTitle className="text-sm font-medium">At-Risk Plans</CardTitle>
               </CardHeader>
               <CardContent className="py-4 px-5">
@@ -885,8 +891,8 @@ export default function CollectionsPage() {
             </Card>
             
             {/* Escalate or Settle card */}
-            <Card className="shadow-sm border-t-2 border-t-gray-200">
-              <CardHeader className="py-2 px-5 border-b bg-gray-50/30">
+            <Card className="shadow-sm border-t-2 border-t-muted">
+              <CardHeader className="py-2 px-5 border-b bg-muted/20">
                 <CardTitle className="text-sm font-medium">Escalate or Settle</CardTitle>
               </CardHeader>
               <CardContent className="py-4 px-5">
