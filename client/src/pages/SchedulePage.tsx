@@ -9,7 +9,7 @@ export default function SchedulePage() {
   const [_, setLocation] = useLocation();
   
   const handleGoToScheduling = () => {
-    navigate("/scheduling");
+    setLocation("/scheduling");
   };
   
   return (
