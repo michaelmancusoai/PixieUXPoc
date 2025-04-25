@@ -89,6 +89,7 @@ import {
   RefreshCw,
   Save,
   ClipboardCheck as ClipboardList,
+  Zap,
 } from "lucide-react";
 import JSConfetti from 'js-confetti';
 
@@ -1732,80 +1733,102 @@ export default function DataGapsPage() {
                               <TableRow className="bg-muted/10 border-t-0">
                                 <TableCell colSpan={8} className="p-0">
                                   <div className="p-4">
-                                    <div className="grid grid-cols-2 gap-6">
-                                      <div>
-                                        <h4 className="text-sm font-medium mb-2 flex items-center">
-                                          <UserIcon className="h-4 w-4 mr-2 text-muted-foreground" />
-                                          Patient Details
-                                        </h4>
-                                        <div className="grid grid-cols-2 gap-3 text-sm">
+                                    <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
+                                      {/* Patient Info Card */}
+                                      <Card className="col-span-3 md:col-span-1 shadow-sm">
+                                        <CardHeader className="py-3 px-4 border-b">
+                                          <CardTitle className="text-sm font-medium flex items-center">
+                                            <UserIcon className="h-4 w-4 mr-2 text-muted-foreground" />
+                                            Patient Details
+                                          </CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="p-4 text-sm space-y-3">
                                           <div>
-                                            <span className="text-muted-foreground">DOB:</span>
-                                            <div>{patient.dob || 'Missing'}</div>
+                                            <div className="text-muted-foreground mb-1">Date of Birth</div>
+                                            <div className={!patient.dob ? "text-red-500 font-medium" : ""}>
+                                              {patient.dob || 'Missing'}
+                                            </div>
                                           </div>
                                           <div>
-                                            <span className="text-muted-foreground">Phone:</span>
+                                            <div className="text-muted-foreground mb-1">Phone</div>
                                             <div className={patient.phone === "555-555-5555" ? "text-red-500 font-medium" : ""}>
                                               {patient.phone || 'Missing'}
                                             </div>
                                           </div>
                                           <div>
-                                            <span className="text-muted-foreground">Email:</span>
+                                            <div className="text-muted-foreground mb-1">Email</div>
                                             <div className={patient.email && (patient.email.includes("invalid") || patient.email.includes("bounced")) ? "text-red-500 font-medium" : ""}>
                                               {patient.email || 'Missing'}
                                             </div>
                                           </div>
                                           <div>
-                                            <span className="text-muted-foreground">Next Appointment:</span>
+                                            <div className="text-muted-foreground mb-1">Next Appointment</div>
                                             <div>{patient.upcomingAppointment ? formatDate(patient.upcomingAppointment) : 'None'}</div>
                                           </div>
-                                        </div>
-                                        
-                                        {/* Render specific gap type details */}
-                                        {gap.category === "insurance" && patient.insuranceInfo && (
-                                          <div className="mt-4">
-                                            <h4 className="text-sm font-medium mb-2 flex items-center">
+                                        </CardContent>
+                                      </Card>
+
+                                      {/* Gap-specific Details Card */}
+                                      <Card className="col-span-3 md:col-span-2 shadow-sm">
+                                        <CardHeader className="py-3 px-4 border-b">
+                                          <CardTitle className="text-sm font-medium flex items-center">
+                                            {gap.category === "insurance" && (
                                               <FileText className="h-4 w-4 mr-2 text-muted-foreground" />
-                                              Insurance Details
-                                            </h4>
-                                            <div className="grid grid-cols-2 gap-3 text-sm">
+                                            )}
+                                            {gap.category === "clinical" && (
+                                              <AlertCircle className="h-4 w-4 mr-2 text-muted-foreground" />
+                                            )}
+                                            {gap.category === "consent" && (
+                                              <FileText className="h-4 w-4 mr-2 text-muted-foreground" />
+                                            )}
+                                            {gap.category === "compliance" && (
+                                              <ClipboardList className="h-4 w-4 mr-2 text-muted-foreground" />
+                                            )}
+                                            {gap.category === "demographics" && (
+                                              <UserIcon className="h-4 w-4 mr-2 text-muted-foreground" />
+                                            )}
+                                            {gap.category === "duplicate" && (
+                                              <Merge className="h-4 w-4 mr-2 text-muted-foreground" />
+                                            )}
+                                            {getCategoryLabel(gap.category)} Details
+                                          </CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="p-4 text-sm">
+                                          {/* Insurance Details */}
+                                          {gap.category === "insurance" && patient.insuranceInfo && (
+                                            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                                               <div>
-                                                <span className="text-muted-foreground">Provider:</span>
+                                                <div className="text-muted-foreground mb-1">Provider</div>
                                                 <div className={!patient.insuranceInfo.provider ? "text-red-500 font-medium" : ""}>
                                                   {patient.insuranceInfo.provider || 'Missing'}
                                                 </div>
                                               </div>
                                               <div>
-                                                <span className="text-muted-foreground">Policy #:</span>
+                                                <div className="text-muted-foreground mb-1">Policy Number</div>
                                                 <div className={!patient.insuranceInfo.policyNumber ? "text-red-500 font-medium" : ""}>
                                                   {patient.insuranceInfo.policyNumber || 'Missing'}
                                                 </div>
                                               </div>
                                               <div>
-                                                <span className="text-muted-foreground">Expiration:</span>
+                                                <div className="text-muted-foreground mb-1">Expiration Date</div>
                                                 <div className={patient.insuranceInfo.expirationDate && new Date(patient.insuranceInfo.expirationDate) < new Date() ? "text-red-500 font-medium" : ""}>
                                                   {patient.insuranceInfo.expirationDate ? formatDate(patient.insuranceInfo.expirationDate) : 'Missing'}
                                                 </div>
                                               </div>
                                               <div>
-                                                <span className="text-muted-foreground">Subscriber DOB:</span>
+                                                <div className="text-muted-foreground mb-1">Subscriber DOB</div>
                                                 <div className={!patient.insuranceInfo.subscriberDob ? "text-red-500 font-medium" : ""}>
                                                   {patient.insuranceInfo.subscriberDob || 'Missing'}
                                                 </div>
                                               </div>
                                             </div>
-                                          </div>
-                                        )}
-                                        
-                                        {gap.category === "clinical" && patient.clinicalInfo && (
-                                          <div className="mt-4">
-                                            <h4 className="text-sm font-medium mb-2 flex items-center">
-                                              <AlertCircle className="h-4 w-4 mr-2 text-muted-foreground" />
-                                              Clinical Details
-                                            </h4>
-                                            <div className="grid grid-cols-2 gap-3 text-sm">
+                                          )}
+                                          
+                                          {/* Clinical Details */}
+                                          {gap.category === "clinical" && patient.clinicalInfo && (
+                                            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                                               <div>
-                                                <span className="text-muted-foreground">Allergies:</span>
+                                                <div className="text-muted-foreground mb-1">Allergies</div>
                                                 <div className={(!patient.clinicalInfo.allergies || patient.clinicalInfo.allergies.length === 0) ? "text-red-500 font-medium" : ""}>
                                                   {patient.clinicalInfo.allergies && patient.clinicalInfo.allergies.length > 0 
                                                     ? patient.clinicalInfo.allergies.join(", ") 
@@ -1813,7 +1836,7 @@ export default function DataGapsPage() {
                                                 </div>
                                               </div>
                                               <div>
-                                                <span className="text-muted-foreground">Medications:</span>
+                                                <div className="text-muted-foreground mb-1">Medications</div>
                                                 <div className={(!patient.clinicalInfo.medications || patient.clinicalInfo.medications.length === 0) ? "text-red-500 font-medium" : ""}>
                                                   {patient.clinicalInfo.medications && patient.clinicalInfo.medications.length > 0 
                                                     ? patient.clinicalInfo.medications.join(", ") 
@@ -1821,103 +1844,88 @@ export default function DataGapsPage() {
                                                 </div>
                                               </div>
                                               <div>
-                                                <span className="text-muted-foreground">Height:</span>
+                                                <div className="text-muted-foreground mb-1">Height</div>
                                                 <div>{patient.clinicalInfo.height || 'Not recorded'}</div>
                                               </div>
                                               <div>
-                                                <span className="text-muted-foreground">Weight:</span>
+                                                <div className="text-muted-foreground mb-1">Weight</div>
                                                 <div>{patient.clinicalInfo.weight || 'Not recorded'}</div>
                                               </div>
                                             </div>
-                                          </div>
-                                        )}
-                                      </div>
-                                      
-                                      <div>
-                                        {gap.category === "consent" && patient.consentInfo && (
-                                          <div>
-                                            <h4 className="text-sm font-medium mb-2 flex items-center">
-                                              <FileText className="h-4 w-4 mr-2 text-muted-foreground" />
-                                              Consent Documents
-                                            </h4>
-                                            <div className="grid grid-cols-2 gap-3 text-sm">
+                                          )}
+                                          
+                                          {/* Consent Documents */}
+                                          {gap.category === "consent" && patient.consentInfo && (
+                                            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                                               <div>
-                                                <span className="text-muted-foreground">HIPAA Signed:</span>
+                                                <div className="text-muted-foreground mb-1">HIPAA Signed</div>
                                                 <div className={!patient.consentInfo.hipaaSignedAt ? "text-red-500 font-medium" : ""}>
                                                   {patient.consentInfo.hipaaSignedAt ? formatDate(patient.consentInfo.hipaaSignedAt) : 'Missing'}
                                                 </div>
                                               </div>
                                               <div>
-                                                <span className="text-muted-foreground">Financial Policy:</span>
+                                                <div className="text-muted-foreground mb-1">Financial Policy</div>
                                                 <div className={!patient.consentInfo.financialPolicySignedAt ? "text-red-500 font-medium" : ""}>
                                                   {patient.consentInfo.financialPolicySignedAt ? formatDate(patient.consentInfo.financialPolicySignedAt) : 'Missing'}
                                                 </div>
                                               </div>
                                               <div>
-                                                <span className="text-muted-foreground">Photo ID:</span>
+                                                <div className="text-muted-foreground mb-1">Photo ID</div>
                                                 <div className={!patient.consentInfo.photoIdUploaded ? "text-red-500 font-medium" : "text-green-600"}>
                                                   {patient.consentInfo.photoIdUploaded ? 'Uploaded' : 'Missing'}
                                                 </div>
                                               </div>
                                             </div>
-                                          </div>
-                                        )}
-                                        
-                                        {gap.category === "compliance" && patient.complianceInfo && (
-                                          <div className={patient.consentInfo ? "mt-4" : ""}>
-                                            <h4 className="text-sm font-medium mb-2 flex items-center">
-                                              <ClipboardList className="h-4 w-4 mr-2 text-muted-foreground" />
-                                              Compliance Information
-                                            </h4>
-                                            <div className="grid grid-cols-2 gap-3 text-sm">
+                                          )}
+                                          
+                                          {/* Compliance Information */}
+                                          {gap.category === "compliance" && patient.complianceInfo && (
+                                            <div className="grid grid-cols-2 gap-x-4 gap-y-3">
                                               <div>
-                                                <span className="text-muted-foreground">Privacy Acknowledged:</span>
+                                                <div className="text-muted-foreground mb-1">Privacy Acknowledged</div>
                                                 <div className={patient.complianceInfo.privacyAcknowledged === false ? "text-red-500 font-medium" : "text-green-600"}>
                                                   {patient.complianceInfo.privacyAcknowledged ? 'Yes' : 'No'}
                                                 </div>
                                               </div>
                                               <div>
-                                                <span className="text-muted-foreground">Contact Preference:</span>
+                                                <div className="text-muted-foreground mb-1">Contact Preference</div>
                                                 <div className={!patient.complianceInfo.contactPreference ? "text-red-500 font-medium" : ""}>
                                                   {patient.complianceInfo.contactPreference || 'Not specified'}
                                                 </div>
                                               </div>
                                             </div>
-                                          </div>
-                                        )}
-                                        
-                                        {gap.category === "duplicate" && patient.potentialDuplicateIds && (
-                                          <div>
-                                            <h4 className="text-sm font-medium mb-2 flex items-center">
-                                              <Merge className="h-4 w-4 mr-2 text-muted-foreground" />
-                                              Potential Duplicate Records
-                                            </h4>
-                                            <div className="border rounded-md p-3 bg-muted/10">
-                                              {patient.potentialDuplicateIds.map(dupId => {
-                                                const duplicatePatient = getPatientById(patients, dupId);
-                                                if (!duplicatePatient) return null;
-                                                
-                                                return (
-                                                  <div key={dupId} className="flex items-center justify-between mb-2 last:mb-0">
-                                                    <div className="flex items-center">
-                                                      <Avatar className="h-6 w-6 mr-2">
-                                                        <AvatarFallback>{getInitials(duplicatePatient.name)}</AvatarFallback>
-                                                      </Avatar>
-                                                      <div>
-                                                        <div className="text-sm font-medium">{duplicatePatient.name}</div>
-                                                        <div className="text-xs text-muted-foreground">{duplicatePatient.mrn}</div>
+                                          )}
+                                          
+                                          {/* Duplicate Records */}
+                                          {gap.category === "duplicate" && patient.potentialDuplicateIds && (
+                                            <div>
+                                              <div className="border rounded-md p-3 bg-muted/10 mb-3">
+                                                {patient.potentialDuplicateIds.map(dupId => {
+                                                  const duplicatePatient = getPatientById(patients, dupId);
+                                                  if (!duplicatePatient) return null;
+                                                  
+                                                  return (
+                                                    <div key={dupId} className="flex items-center justify-between mb-2 last:mb-0">
+                                                      <div className="flex items-center">
+                                                        <Avatar className="h-6 w-6 mr-2">
+                                                          <AvatarFallback>{getInitials(duplicatePatient.name)}</AvatarFallback>
+                                                        </Avatar>
+                                                        <div>
+                                                          <div className="text-sm font-medium">{duplicatePatient.name}</div>
+                                                          <div className="text-xs text-muted-foreground">{duplicatePatient.mrn}</div>
+                                                        </div>
+                                                      </div>
+                                                      <div className="text-sm">
+                                                        {duplicatePatient.dob ? 'DOB: ' + formatDate(duplicatePatient.dob) : ''}
                                                       </div>
                                                     </div>
-                                                    <div className="text-sm">
-                                                      {duplicatePatient.dob ? 'DOB: ' + formatDate(duplicatePatient.dob) : ''}
-                                                    </div>
-                                                  </div>
-                                                );
-                                              })}
+                                                  );
+                                                })}
+                                              </div>
                                               <Button 
                                                 variant="secondary" 
                                                 size="sm" 
-                                                className="mt-2 w-full"
+                                                className="w-full"
                                                 onClick={() => {
                                                   setCurrentGap(gap);
                                                   setCurrentPatient(patient);
@@ -1928,54 +1936,82 @@ export default function DataGapsPage() {
                                                 Merge Records
                                               </Button>
                                             </div>
-                                          </div>
-                                        )}
-                                        
-                                        {/* Action buttons section */}
-                                        <div className="mt-6">
-                                          <h4 className="text-sm font-medium mb-2">Quick Actions</h4>
-                                          <div className="flex flex-col gap-2">
+                                          )}
+                                        </CardContent>
+                                      </Card>
+                                      
+                                      {/* Quick Actions Card */}
+                                      <Card className="col-span-3 md:col-span-1 shadow-sm">
+                                        <CardHeader className="py-3 px-4 border-b">
+                                          <CardTitle className="text-sm font-medium flex items-center">
+                                            <Zap className="h-4 w-4 mr-2 text-muted-foreground" />
+                                            Quick Actions
+                                          </CardTitle>
+                                        </CardHeader>
+                                        <CardContent className="p-4 flex flex-col gap-3">
+                                          <Button 
+                                            variant="default" 
+                                            size="sm"
+                                            onClick={() => openFixDrawer(gap)}
+                                          >
+                                            <Pencil className="h-3.5 w-3.5 mr-1.5" />
+                                            Fix Gap
+                                          </Button>
+                                          
+                                          {gap.fixActions.includes("request") && patient.email && !patient.email.includes("invalid") && !patient.email.includes("bounced") && (
                                             <Button 
-                                              variant="default" 
+                                              variant="outline" 
                                               size="sm"
-                                              onClick={() => openFixDrawer(gap)}
+                                              onClick={() => {
+                                                setCurrentGap(gap);
+                                                setCurrentPatient(patient);
+                                                setIsEmailModalOpen(true);
+                                              }}
                                             >
-                                              <Pencil className="h-3.5 w-3.5 mr-1.5" />
-                                              Fix Gap
+                                              <Mail className="h-3.5 w-3.5 mr-1.5" />
+                                              Send Email Request
                                             </Button>
-                                            
-                                            {gap.fixActions.includes("request") && patient.email && !patient.email.includes("invalid") && !patient.email.includes("bounced") && (
-                                              <Button 
-                                                variant="outline" 
-                                                size="sm"
-                                                onClick={() => {
-                                                  setCurrentGap(gap);
-                                                  setCurrentPatient(patient);
-                                                  setIsEmailModalOpen(true);
-                                                }}
-                                              >
-                                                <Mail className="h-3.5 w-3.5 mr-1.5" />
-                                                Send Email Request
-                                              </Button>
-                                            )}
-                                            
-                                            {gap.fixActions.includes("request") && patient.phone && patient.phone !== "555-555-5555" && (
-                                              <Button 
-                                                variant="outline" 
-                                                size="sm"
-                                                onClick={() => {
-                                                  setCurrentGap(gap);
-                                                  setCurrentPatient(patient);
-                                                  setIsSMSModalOpen(true);
-                                                }}
-                                              >
-                                                <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
-                                                Send SMS Update Link
-                                              </Button>
-                                            )}
-                                          </div>
-                                        </div>
-                                      </div>
+                                          )}
+                                          
+                                          {gap.fixActions.includes("request") && patient.phone && patient.phone !== "555-555-5555" && (
+                                            <Button 
+                                              variant="outline" 
+                                              size="sm"
+                                              onClick={() => {
+                                                setCurrentGap(gap);
+                                                setCurrentPatient(patient);
+                                                setIsSMSModalOpen(true);
+                                              }}
+                                            >
+                                              <MessageSquare className="h-3.5 w-3.5 mr-1.5" />
+                                              Send SMS Update Link
+                                            </Button>
+                                          )}
+                                          
+                                          {gap.status === "open" && (
+                                            <Button 
+                                              variant="outline" 
+                                              size="sm"
+                                              onClick={() => {
+                                                const updatedGaps = dataGaps.map(g => {
+                                                  if (g.id === gap.id) {
+                                                    return { ...g, status: "fixed" as GapStatus };
+                                                  }
+                                                  return g;
+                                                });
+                                                setDataGaps(updatedGaps);
+                                                toast({
+                                                  title: "Gap Resolved",
+                                                  description: `${gap.detail} has been marked as fixed.`
+                                                });
+                                              }}
+                                            >
+                                              <Check className="h-3.5 w-3.5 mr-1.5" />
+                                              Mark as Fixed
+                                            </Button>
+                                          )}
+                                        </CardContent>
+                                      </Card>
                                     </div>
                                   </div>
                                 </TableCell>
