@@ -106,6 +106,7 @@ export default function RecallsPage() {
   // State management
   const [selectedTab, setSelectedTab] = useState<string>("all");
   const [selectedPatients, setSelectedPatients] = useState<number[]>([]);
+  const [expandedRows, setExpandedRows] = useState<number[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [showBulkActions, setShowBulkActions] = useState(false);
   const [windowFilter, setWindowFilter] = useState("this-week");
@@ -484,6 +485,18 @@ export default function RecallsPage() {
     } else {
       setSelectedPatients(filteredRecalls.map(recall => recall.id));
     }
+  };
+  
+  // Toggle row expansion
+  const toggleRowExpand = (id: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setExpandedRows(prev => {
+      if (prev.includes(id)) {
+        return prev.filter(rowId => rowId !== id);
+      } else {
+        return [...prev, id];
+      }
+    });
   };
   
   // Show bulk actions container when patients are selected
