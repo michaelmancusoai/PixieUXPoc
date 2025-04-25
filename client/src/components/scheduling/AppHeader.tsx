@@ -65,6 +65,14 @@ export default function AppHeader({
           </Button>
         </div>
         
+        {/* Moved view mode tabs here */}
+        <Tabs defaultValue={currentView} onValueChange={(value) => onViewChange(value as ViewModeType)}>
+          <TabsList>
+            <TabsTrigger value="OPERATORY">Operatory</TabsTrigger>
+            <TabsTrigger value="PROVIDER">Provider</TabsTrigger>
+          </TabsList>
+        </Tabs>
+        
         <div className="flex items-center gap-2">
           <Button 
             variant="ghost" 
@@ -81,14 +89,7 @@ export default function AppHeader({
         </div>
       </div>
       
-      <div className="flex items-center justify-between">
-        <Tabs defaultValue={currentView} onValueChange={(value) => onViewChange(value as ViewModeType)}>
-          <TabsList>
-            <TabsTrigger value="OPERATORY">Operatory</TabsTrigger>
-            <TabsTrigger value="PROVIDER">Provider</TabsTrigger>
-          </TabsList>
-        </Tabs>
-        
+      <div className="flex items-center justify-end">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium">Chair Utilization:</span>
           <Progress value={utilizationPercentage} className="w-32 h-2" indicatorClassName={utilizationColor} />
