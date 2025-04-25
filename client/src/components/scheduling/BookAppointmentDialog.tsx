@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -381,9 +381,42 @@ export default function BookAppointmentDialog({
                     />
                     
                     <div className="flex space-x-1">
-                      <Button type="button" variant="outline" size="sm">Today</Button>
-                      <Button type="button" variant="outline" size="sm">+3m</Button>
-                      <Button type="button" variant="outline" size="sm">+6m</Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          form.setValue("date", new Date());
+                          // Update available slots for today
+                          // In a real app, this would fetch from API
+                        }}
+                      >
+                        Today
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          const threeMonthsLater = new Date();
+                          threeMonthsLater.setMonth(threeMonthsLater.getMonth() + 3);
+                          form.setValue("date", threeMonthsLater);
+                        }}
+                      >
+                        +3m
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          const sixMonthsLater = new Date();
+                          sixMonthsLater.setMonth(sixMonthsLater.getMonth() + 6);
+                          form.setValue("date", sixMonthsLater);
+                        }}
+                      >
+                        +6m
+                      </Button>
                     </div>
                   </div>
                   
@@ -467,9 +500,7 @@ export default function BookAppointmentDialog({
                                     onClick={() => field.onChange(provider.id)}
                                     variant={field.value === provider.id ? "default" : "outline"}
                                     size="sm"
-                                    className={`text-xs px-2 py-1 h-7 ${
-                                      provider.id === "dr-sak" ? "bg-blue-100 border-blue-300" : ""
-                                    }`}
+                                    className="text-xs px-2 py-1 h-7"
                                   >
                                     {provider.name}
                                   </Button>
@@ -521,44 +552,68 @@ export default function BookAppointmentDialog({
                         {form.getValues("category") && (
                           <>
                             <div 
-                              className="p-2 hover:bg-blue-50 cursor-pointer transition-colors"
+                              className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
+                                form.getValues("startTime") === "09:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
+                              }`}
                               onClick={() => {
                                 form.setValue("startTime", "09:00");
                                 form.setValue("provider", "dr-nguyen");
                               }}
                             >
-                              <div className="font-medium mb-1 text-sm">Today, {format(new Date(), "MMMM do")}</div>
+                              <div className="font-medium mb-1 text-sm">
+                                {form.getValues("date") 
+                                  ? format(form.getValues("date"), "EEEE, MMMM do, yyyy")
+                                  : format(new Date(), "EEEE, MMMM do, yyyy")}
+                              </div>
                               <div className="flex items-center justify-between">
                                 <div className="text-sm">09:00 - 10:00 AM</div>
-                                <Badge variant="outline" className="ml-2 text-xs">Dr. Nguyen</Badge>
+                                <Badge variant={form.getValues("startTime") === "09:00" ? "default" : "outline"} className="ml-2 text-xs">
+                                  Dr. Nguyen {form.getValues("startTime") === "09:00" && "✓"}
+                                </Badge>
                               </div>
                             </div>
                             
                             <div
-                              className="p-2 hover:bg-blue-50 cursor-pointer transition-colors"
+                              className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
+                                form.getValues("startTime") === "11:30" ? "bg-blue-50 border-l-4 border-blue-500" : ""
+                              }`}
                               onClick={() => {
                                 form.setValue("startTime", "11:30");
                                 form.setValue("provider", "dr-robert");
                               }}
                             >
-                              <div className="font-medium mb-1 text-sm">Today, {format(new Date(), "MMMM do")}</div>
+                              <div className="font-medium mb-1 text-sm">
+                                {form.getValues("date") 
+                                  ? format(form.getValues("date"), "EEEE, MMMM do, yyyy")
+                                  : format(new Date(), "EEEE, MMMM do, yyyy")}
+                              </div>
                               <div className="flex items-center justify-between">
                                 <div className="text-sm">11:30 - 12:30 PM</div>
-                                <Badge variant="outline" className="ml-2 text-xs">Dr. Robert</Badge>
+                                <Badge variant={form.getValues("startTime") === "11:30" ? "default" : "outline"} className="ml-2 text-xs">
+                                  Dr. Robert {form.getValues("startTime") === "11:30" && "✓"}
+                                </Badge>
                               </div>
                             </div>
                             
                             <div
-                              className="p-2 hover:bg-blue-50 cursor-pointer transition-colors"
+                              className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
+                                form.getValues("startTime") === "14:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
+                              }`}
                               onClick={() => {
                                 form.setValue("startTime", "14:00");
                                 form.setValue("provider", "dr-johnson");
                               }}
                             >
-                              <div className="font-medium mb-1 text-sm">Tomorrow, {format(new Date(new Date().setDate(new Date().getDate() + 1)), "MMMM do")}</div>
+                              <div className="font-medium mb-1 text-sm">
+                                {form.getValues("date") 
+                                  ? format(addDays(form.getValues("date"), 1), "EEEE, MMMM do, yyyy")
+                                  : format(addDays(new Date(), 1), "EEEE, MMMM do, yyyy")}
+                              </div>
                               <div className="flex items-center justify-between">
                                 <div className="text-sm">2:00 - 3:00 PM</div>
-                                <Badge variant="outline" className="ml-2 text-xs">Dr. Johnson</Badge>
+                                <Badge variant={form.getValues("startTime") === "14:00" ? "default" : "outline"} className="ml-2 text-xs">
+                                  Dr. Johnson {form.getValues("startTime") === "14:00" && "✓"}
+                                </Badge>
                               </div>
                             </div>
                           </>
