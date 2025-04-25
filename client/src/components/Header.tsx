@@ -231,20 +231,22 @@ export function Header() {
         {/* Secondary Navigation - only show if the current section has subnav items */}
         {hasSubNav && (
           <div className="secondary-nav bg-gray-50 border-b border-neutral-border flex py-1 px-2 overflow-x-auto">
-            {currentSection.items.map((subItem) => (
-              <Link
-                key={subItem.href}
-                href={subItem.href}
-                onClick={() => setActiveSubNav(subItem.href)}
-                className={cn(
-                  "secondary-nav-link flex items-center px-3 py-1.5 rounded-md text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap transition-colors no-underline hover:no-underline",
-                  activeSubNav === subItem.href && "active bg-white shadow-sm"
-                )}
-              >
-                <subItem.icon className="h-3.5 w-3.5 mr-1.5" />
-                <span>{subItem.title}</span>
-              </Link>
-            ))}
+            {currentSection.items
+              .filter((subItem) => !subItem.contextual) // Filter out contextual items
+              .map((subItem) => (
+                <Link
+                  key={subItem.href}
+                  href={subItem.href}
+                  onClick={() => setActiveSubNav(subItem.href)}
+                  className={cn(
+                    "secondary-nav-link flex items-center px-3 py-1.5 rounded-md text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 whitespace-nowrap transition-colors no-underline hover:no-underline",
+                    activeSubNav === subItem.href && "active bg-white shadow-sm"
+                  )}
+                >
+                  <subItem.icon className="h-3.5 w-3.5 mr-1.5" />
+                  <span>{subItem.title}</span>
+                </Link>
+              ))}
           </div>
         )}
       </div>

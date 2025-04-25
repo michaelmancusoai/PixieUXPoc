@@ -3,7 +3,6 @@ import {
   ActivitySquare,
   AreaChart,
   BarChart3,
-  BookOpen,
   Building,
   Calendar,
   Calendar as CalendarIcon,
@@ -15,8 +14,13 @@ import {
   FileBarChart,
   FileEdit,
   FileText,
+  // New icons for patient subnav
+  FileWarning,
+  Inbox,
+  Layers,
   LayoutDashboard,
   LineChart,
+  List,
   LockKeyhole,
   MessageSquare,
   Package,
@@ -28,6 +32,7 @@ import {
   Trophy,
   User,
   UserCog,
+  UserPlus,
   Users,
   Wallet
 } from "lucide-react";
@@ -45,6 +50,7 @@ export interface NavItem {
   href: string;
   icon: React.ElementType;
   directPath?: string; // Additional path used for direct mapping
+  contextual?: boolean; // Indicates this is a contextual item that shouldn't show in main navigation
 }
 
 /**
@@ -127,82 +133,127 @@ export const navigationData: NavSection[] = [
     ],
   },
   // Patients section with patient management features
-  // showSubNav is false since this navigation would be contextual
   {
     title: "Patients",
     href: "/patients",
     icon: Users,
-    showSubNav: false,
+    showSubNav: true, // Enable sub-nav for the Patients section
     items: [
+      {
+        title: "Directory",
+        href: "/patients/directory",
+        icon: List,
+      },
+      {
+        title: "Inbox",
+        href: "/patients/inbox",
+        icon: Inbox,
+      },
+      {
+        title: "Smart Segments",
+        href: "/patients/segments",
+        icon: Layers,
+      },
+      {
+        title: "Prospects",
+        href: "/patients/prospects",
+        icon: UserPlus,
+      },
+      {
+        title: "Data Gaps",
+        href: "/patients/data-gaps",
+        icon: FileWarning,
+      },
+      {
+        title: "Metrics",
+        href: "/patients/metrics",
+        icon: BarChart3,
+      },
+      // Keep original items as contextual navigation when inside a patient record
+      // These will not show in the top-level navigation
       {
         title: "Patient Profile",
         href: "/patients/profile",
         icon: User,
+        contextual: true,
       },
       {
         title: "Overview",
         href: "/patients/overview",
         icon: Activity,
+        contextual: true,
       },
       {
         title: "Chart",
         href: "/patients/chart",
         icon: FileText,
+        contextual: true,
       },
       {
         title: "Treatment Plans",
         href: "/patients/treatment-plans",
         icon: Clipboard,
+        contextual: true,
       },
       {
         title: "Clinical Notes",
         href: "/patients/clinical-notes",
         icon: FileEdit,
+        contextual: true,
       },
       {
         title: "Imaging",
         href: "/patients/imaging",
         icon: FileBarChart,
+        contextual: true,
       },
       {
         title: "Lab Cases",
         href: "/patients/lab-cases",
         icon: Package,
+        contextual: true,
       },
       {
         title: "Billing",
         href: "/patients/billing",
         icon: Receipt,
+        contextual: true,
       },
       {
         title: "Ledger",
         href: "/patients/ledger",
         icon: Wallet,
+        contextual: true,
       },
       {
         title: "Claims",
         href: "/patients/claims",
         icon: FileText,
+        contextual: true,
       },
       {
         title: "Profile",
         href: "/patients/basic-profile",
         icon: UserCog,
+        contextual: true,
       },
       {
         title: "Profile & Details",
         href: "/patients/profile-details",
         icon: UserCog,
+        contextual: true,
       },
       {
         title: "Forms & Documents",
         href: "/patients/forms-documents",
         icon: FileText,
+        contextual: true,
       },
       {
         title: "Communications",
         href: "/patients/communications",
         icon: MessageSquare,
+        contextual: true,
       },
     ],
   },
