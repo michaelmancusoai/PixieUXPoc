@@ -64,7 +64,7 @@ export function timeStringToMinutes(timeString: string): number {
 export function getTimeFromMinutes(minutes: number): string {
   const hours = Math.floor(minutes / MINS_IN_HOUR);
   const mins = minutes % MINS_IN_HOUR;
-  return format(new Date().setHours(hours, mins), 'h:mm a');
+  return format(new Date().setHours(hours, mins), 'h a');
 }
 
 // Calculate appointment position in the calendar grid

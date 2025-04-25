@@ -346,13 +346,13 @@ export default function CalendarView({
         {/* Resource column headers */}
         <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
           {/* Time header */}
-          <div className="p-1 border-b border-r bg-gray-50 text-center text-xs font-medium text-gray-600">
+          <div className="p-1 border-b border-r bg-[#F8F9FA] text-center text-xs font-medium text-gray-600">
             Time
           </div>
           
           {/* Resource headers */}
           {resourceColumns.map(resource => (
-            <div key={resource.id} className="py-1 px-2 border-b border-r text-center bg-gray-50">
+            <div key={resource.id} className="py-1 px-2 border-b border-r text-center bg-[#F8F9FA]">
               <div 
                 className="font-semibold truncate text-xs" 
                 style={{ 
@@ -369,15 +369,15 @@ export default function CalendarView({
         {/* Time grid */}
         <div className="grid" style={{ gridTemplateColumns: `60px repeat(${resourceColumns.length}, 1fr)` }}>
           {/* Time column */}
-          <div className="border-r bg-gray-50">
+          <div className="border-r bg-[#F8F9FA]">
             {timeSlots.map((slot, index) => (
               <div
                 key={index}
                 className={`
-                  p-1 border-b text-xs text-right pr-2
-                  ${index % 12 === 0 ? 'font-medium text-gray-700' : 'text-gray-500'}
+                  border-b text-xs text-right pr-2.5
+                  ${index % 12 === 0 ? 'font-medium text-gray-600' : 'text-transparent'}
                 `}
-                style={{ height: '10px' }}
+                style={{ height: '12px' }}
               >
                 {index % 12 === 0 && slot.label}
               </div>
@@ -391,8 +391,8 @@ export default function CalendarView({
               {timeSlots.map((slot, index) => {
                 const slotProps = {
                   key: index,
-                  className: `border-b ${index % 12 === 0 ? 'bg-gray-50' : ''}`,
-                  style: { height: '10px' } as React.CSSProperties,
+                  className: `border-b ${index % 12 === 0 ? 'bg-[#F8F9FA]' : ''}`,
+                  style: { height: '12px' } as React.CSSProperties,
                 };
                 
                 return (
@@ -416,8 +416,8 @@ export default function CalendarView({
                 const startMinutes = parseInt(appointment.startTime.split(':')[0]) * 60 + 
                                    parseInt(appointment.startTime.split(':')[1]);
                 const startFromDayBeginning = startMinutes - (BUSINESS_START_HOUR * 60);
-                const top = (startFromDayBeginning / 5) * 10;
-                const height = (appointment.duration / 5) * 10;
+                const top = (startFromDayBeginning / 5) * 12;
+                const height = (appointment.duration / 5) * 12;
                 
                 // Determine appointment time status
                 const timeStatus = appointment.status;
@@ -441,12 +441,13 @@ export default function CalendarView({
                       right: '4px',
                       height: `${height}px`,
                       zIndex: 5,
-                      padding: '0.25rem',
-                      borderRadius: '4px',
+                      padding: '2px 4px',
+                      borderRadius: '2px',
                       overflow: 'hidden',
-                      border: '1px solid #e5e7eb',
+                      border: '1px solid #e2e8f0',
                       borderLeft: `3px solid ${borderColor}`,
-                      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)'
+                      backgroundColor: '#fff',
+                      boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.03)'
                     }}
                   />
                 );
