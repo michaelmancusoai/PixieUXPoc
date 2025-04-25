@@ -17,6 +17,7 @@ import {
   X,
 } from "lucide-react";
 import JSConfetti from "js-confetti";
+import { NavigationWrapper } from "@/components/NavigationWrapper";
 
 // UI Components
 import { Button } from "@/components/ui/button";
@@ -638,11 +639,12 @@ export default function RecallsPage() {
   };
 
   return (
-    <div className="container mx-auto py-6 max-w-[1400px]">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight mb-1">Recalls</h1>
-        <p className="text-muted-foreground">Manage patient hygiene and X-ray recalls</p>
-      </div>
+    <NavigationWrapper>
+      <div className="container mx-auto py-6 max-w-[1400px]">
+        <div className="mb-6">
+          <h1 className="text-2xl font-bold tracking-tight mb-1">Recalls</h1>
+          <p className="text-muted-foreground">Manage patient hygiene and X-ray recalls</p>
+        </div>
       
       {/* Hero KPI Cards Row */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
@@ -1428,6 +1430,7 @@ export default function RecallsPage() {
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </NavigationWrapper>
   );
 }
