@@ -691,26 +691,7 @@ export default function PaymentsPage() {
             </Card>
           </div>
           
-          {/* Claims Risk Banner */}
-          <div className="mb-6">
-            <Card className="shadow-sm border-l-4 border-l-amber-500 bg-amber-50/50">
-              <CardContent className="py-4 px-5">
-                <div className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <AlertCircle className="text-amber-500 h-5 w-5 mr-2" />
-                    <span className="font-medium">Claims Risk: ${claimsRiskTotal} at risk ({claimsRiskCount} claims)</span>
-                  </div>
-                  <Button 
-                    variant="default"
-                    size="sm"
-                    className="h-8"
-                  >
-                    Tap to see root causes
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+
           
           {/* Secondary Payment Insights - 50/50 Layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
