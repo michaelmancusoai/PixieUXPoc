@@ -45,6 +45,10 @@ const formSchema = z.object({
   startTime: z.string().min(1, "Start time is required"),
   provider: z.string().min(1, "Provider is required"),
   hygienist: z.string().optional(),
+  // Additional fields for the time filters
+  amPmFilter: z.enum(["AM", "PM"]).default("AM"),
+  fromTime: z.string().optional(),
+  toTime: z.string().optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -75,16 +79,20 @@ export default function BookAppointmentDialog({
       startTime: "",
       provider: "",
       hygienist: "",
+      // Add default values for new fields
+      amPmFilter: "AM",
+      fromTime: "07:00",
+      toTime: "19:00",
     },
   });
   
-  // Generate sample time slots for the demo
+  // Generate sample time slots for the demo from 7am to 7pm
   const generateTimeSlots = () => {
     const slots = [];
-    for (let hour = 8; hour <= 17; hour++) {
+    for (let hour = 7; hour <= 19; hour++) {
       for (let minute = 0; minute < 60; minute += 15) {
         const period = hour >= 12 ? "PM" : "AM";
-        const displayHour = hour > 12 ? hour - 12 : hour;
+        const displayHour = hour > 12 ? hour - 12 : (hour === 0 ? 12 : hour);
         const displayMinute = minute === 0 ? "00" : minute;
         const label = `${displayHour}:${displayMinute} ${period}`;
         const value = `${hour.toString().padStart(2, "0")}:${displayMinute}`;
@@ -95,6 +103,9 @@ export default function BookAppointmentDialog({
   };
   
   const timeSlots = generateTimeSlots();
+  
+  // Current day of week (0-6, Sunday is 0)
+  const currentDayOfWeek = new Date().getDay();
   
   // Sample procedure categories
   const procedureCategories = [
@@ -425,61 +436,142 @@ export default function BookAppointmentDialog({
                     <div className="mb-3">
                       <label className="block text-sm mb-1">Days</label>
                       <div className="flex space-x-1">
-                        {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => (
-                          <div
-                            key={i}
-                            className={`flex items-center justify-center w-8 h-8 rounded-md ${
-                              i === 3 ? "bg-blue-500 text-white" : "bg-white"
-                            }`}
-                          >
-                            {day}
-                          </div>
-                        ))}
+                        {["S", "M", "T", "W", "T", "F", "S"].map((day, i) => {
+                          // Get date of this weekday
+                          const date = new Date();
+                          const diff = i - date.getDay();
+                          if (diff > 0) {
+                            date.setDate(date.getDate() + diff);
+                          } else if (diff < 0) {
+                            date.setDate(date.getDate() + diff + 7);
+                          }
+                          
+                          return (
+                            <div
+                              key={i}
+                              className={`flex items-center justify-center w-8 h-8 rounded-md cursor-pointer ${
+                                i === currentDayOfWeek ? "bg-blue-500 text-white" : "bg-white hover:bg-blue-100"
+                              }`}
+                              onClick={() => {
+                                const selectedDate = new Date();
+                                const diff = i - selectedDate.getDay();
+                                if (diff > 0) {
+                                  selectedDate.setDate(selectedDate.getDate() + diff);
+                                } else if (diff < 0) {
+                                  selectedDate.setDate(selectedDate.getDate() + diff + 7);
+                                }
+                                form.setValue("date", selectedDate);
+                              }}
+                            >
+                              {day}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                     
                     {/* AM/PM Selection */}
                     <div className="mb-3">
                       <label className="block text-sm mb-1">Time Slot</label>
-                      <div className="flex space-x-1">
-                        <div className="flex items-center justify-center w-12 h-8 rounded-md bg-blue-500 text-white">
-                          AM
-                        </div>
-                        <div className="flex items-center justify-center w-12 h-8 rounded-md bg-white">
-                          PM
-                        </div>
-                      </div>
+                      <FormField
+                        control={form.control}
+                        name="amPmFilter"
+                        render={({ field }) => (
+                          <FormItem>
+                            <div className="flex space-x-1">
+                              <div 
+                                className={`flex items-center justify-center w-12 h-8 rounded-md cursor-pointer ${
+                                  field.value === "AM" ? "bg-blue-500 text-white" : "bg-white hover:bg-blue-100"
+                                }`}
+                                onClick={() => field.onChange("AM")}
+                              >
+                                AM
+                              </div>
+                              <div 
+                                className={`flex items-center justify-center w-12 h-8 rounded-md cursor-pointer ${
+                                  field.value === "PM" ? "bg-blue-500 text-white" : "bg-white hover:bg-blue-100"
+                                }`}
+                                onClick={() => field.onChange("PM")}
+                              >
+                                PM
+                              </div>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
                     </div>
                     
                     {/* Time Range Selection */}
                     <div className="grid grid-cols-2 gap-3 mb-3">
                       <div>
                         <label className="block text-sm mb-1">From</label>
-                        <Select defaultValue="08:00">
-                          <SelectTrigger className="bg-white h-8 text-sm">
-                            <SelectValue placeholder="Select time" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="08:00">8:00 AM</SelectItem>
-                            <SelectItem value="09:00">9:00 AM</SelectItem>
-                            <SelectItem value="10:00">10:00 AM</SelectItem>
-                            <SelectItem value="11:00">11:00 AM</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <FormField
+                          control={form.control}
+                          name="fromTime"
+                          render={({ field }) => (
+                            <FormItem>
+                              <Select
+                                value={field.value}
+                                onValueChange={field.onChange}
+                                defaultValue="07:00"
+                              >
+                                <SelectTrigger className="bg-white h-8 text-sm">
+                                  <SelectValue placeholder="Select time" />
+                                </SelectTrigger>
+                                <SelectContent className="max-h-[200px]">
+                                  {timeSlots
+                                    .filter(slot => {
+                                      const hour = parseInt(slot.value.split(':')[0]);
+                                      const isPM = hour >= 12;
+                                      return form.watch("amPmFilter") === "PM" ? isPM : !isPM;
+                                    })
+                                    .slice(0, 20)
+                                    .map(slot => (
+                                      <SelectItem key={slot.value} value={slot.value}>
+                                        {slot.label}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       </div>
                       <div>
                         <label className="block text-sm mb-1">To</label>
-                        <Select defaultValue="13:00">
-                          <SelectTrigger className="bg-white h-8 text-sm">
-                            <SelectValue placeholder="Select time" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="12:00">12:00 PM</SelectItem>
-                            <SelectItem value="13:00">1:00 PM</SelectItem>
-                            <SelectItem value="14:00">2:00 PM</SelectItem>
-                            <SelectItem value="15:00">3:00 PM</SelectItem>
-                          </SelectContent>
-                        </Select>
+                        <FormField
+                          control={form.control}
+                          name="toTime"
+                          render={({ field }) => (
+                            <FormItem>
+                              <Select
+                                value={field.value}
+                                onValueChange={field.onChange}
+                                defaultValue="19:00"
+                              >
+                                <SelectTrigger className="bg-white h-8 text-sm">
+                                  <SelectValue placeholder="Select time" />
+                                </SelectTrigger>
+                                <SelectContent className="max-h-[200px]">
+                                  {timeSlots
+                                    .filter(slot => {
+                                      const fromHour = parseInt(form.watch("fromTime")?.split(':')[0] || "7");
+                                      const hour = parseInt(slot.value.split(':')[0]);
+                                      return hour > fromHour;
+                                    })
+                                    .slice(0, 20)
+                                    .map(slot => (
+                                      <SelectItem key={slot.value} value={slot.value}>
+                                        {slot.label}
+                                      </SelectItem>
+                                    ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
                       </div>
                     </div>
                     
@@ -549,30 +641,34 @@ export default function BookAppointmentDialog({
                       </div>
                       
                       <div className="divide-y">
-                        {form.getValues("category") && (
+                        {form.getValues("category") ? (
                           <>
-                            <div 
-                              className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
-                                form.getValues("startTime") === "09:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
-                              }`}
-                              onClick={() => {
-                                form.setValue("startTime", "09:00");
-                                form.setValue("provider", "dr-nguyen");
-                              }}
-                            >
-                              <div className="font-medium mb-1 text-sm">
-                                {form.getValues("date") 
-                                  ? format(form.getValues("date"), "EEEE, MMMM do, yyyy")
-                                  : format(new Date(), "EEEE, MMMM do, yyyy")}
+                            {/* Morning slot - visible in AM or if no filter */}
+                            {(form.watch("amPmFilter") === "AM" || form.watch("amPmFilter") === undefined) && (
+                              <div 
+                                className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
+                                  form.getValues("startTime") === "09:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
+                                }`}
+                                onClick={() => {
+                                  form.setValue("startTime", "09:00");
+                                  form.setValue("provider", "dr-nguyen");
+                                }}
+                              >
+                                <div className="font-medium mb-1 text-sm">
+                                  {form.getValues("date") 
+                                    ? format(form.getValues("date"), "EEEE, MMMM do, yyyy")
+                                    : format(new Date(), "EEEE, MMMM do, yyyy")}
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <div className="text-sm">09:00 - 10:00 AM</div>
+                                  <Badge variant={form.getValues("startTime") === "09:00" ? "default" : "outline"} className="ml-2 text-xs">
+                                    Dr. Nguyen {form.getValues("startTime") === "09:00" && "✓"}
+                                  </Badge>
+                                </div>
                               </div>
-                              <div className="flex items-center justify-between">
-                                <div className="text-sm">09:00 - 10:00 AM</div>
-                                <Badge variant={form.getValues("startTime") === "09:00" ? "default" : "outline"} className="ml-2 text-xs">
-                                  Dr. Nguyen {form.getValues("startTime") === "09:00" && "✓"}
-                                </Badge>
-                              </div>
-                            </div>
+                            )}
                             
+                            {/* Late morning/noon slot - visible in either AM or PM depending on preference */}
                             <div
                               className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
                                 form.getValues("startTime") === "11:30" ? "bg-blue-50 border-l-4 border-blue-500" : ""
@@ -595,31 +691,57 @@ export default function BookAppointmentDialog({
                               </div>
                             </div>
                             
-                            <div
-                              className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
-                                form.getValues("startTime") === "14:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
-                              }`}
-                              onClick={() => {
-                                form.setValue("startTime", "14:00");
-                                form.setValue("provider", "dr-johnson");
-                              }}
-                            >
-                              <div className="font-medium mb-1 text-sm">
-                                {form.getValues("date") 
-                                  ? format(addDays(form.getValues("date"), 1), "EEEE, MMMM do, yyyy")
-                                  : format(addDays(new Date(), 1), "EEEE, MMMM do, yyyy")}
+                            {/* Afternoon slot - visible in PM or if no filter */}
+                            {(form.watch("amPmFilter") === "PM" || form.watch("amPmFilter") === undefined) && (
+                              <div
+                                className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
+                                  form.getValues("startTime") === "14:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
+                                }`}
+                                onClick={() => {
+                                  form.setValue("startTime", "14:00");
+                                  form.setValue("provider", "dr-johnson");
+                                }}
+                              >
+                                <div className="font-medium mb-1 text-sm">
+                                  {form.getValues("date") 
+                                    ? format(form.getValues("date"), "EEEE, MMMM do, yyyy")
+                                    : format(new Date(), "EEEE, MMMM do, yyyy")}
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <div className="text-sm">2:00 - 3:00 PM</div>
+                                  <Badge variant={form.getValues("startTime") === "14:00" ? "default" : "outline"} className="ml-2 text-xs">
+                                    Dr. Johnson {form.getValues("startTime") === "14:00" && "✓"}
+                                  </Badge>
+                                </div>
                               </div>
-                              <div className="flex items-center justify-between">
-                                <div className="text-sm">2:00 - 3:00 PM</div>
-                                <Badge variant={form.getValues("startTime") === "14:00" ? "default" : "outline"} className="ml-2 text-xs">
-                                  Dr. Johnson {form.getValues("startTime") === "14:00" && "✓"}
-                                </Badge>
+                            )}
+                            
+                            {/* Evening slot - visible in PM */}
+                            {form.watch("amPmFilter") === "PM" && (
+                              <div
+                                className={`p-2 hover:bg-blue-50 cursor-pointer transition-colors ${
+                                  form.getValues("startTime") === "17:00" ? "bg-blue-50 border-l-4 border-blue-500" : ""
+                                }`}
+                                onClick={() => {
+                                  form.setValue("startTime", "17:00");
+                                  form.setValue("provider", "dr-maria");
+                                }}
+                              >
+                                <div className="font-medium mb-1 text-sm">
+                                  {form.getValues("date") 
+                                    ? format(form.getValues("date"), "EEEE, MMMM do, yyyy")
+                                    : format(new Date(), "EEEE, MMMM do, yyyy")}
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <div className="text-sm">5:00 - 6:00 PM</div>
+                                  <Badge variant={form.getValues("startTime") === "17:00" ? "default" : "outline"} className="ml-2 text-xs">
+                                    Dr. Maria {form.getValues("startTime") === "17:00" && "✓"}
+                                  </Badge>
+                                </div>
                               </div>
-                            </div>
+                            )}
                           </>
-                        )}
-                        
-                        {!form.getValues("category") && (
+                        ) : (
                           <div className="p-4 text-center text-sm text-muted-foreground">
                             Select a procedure category to see available slots
                           </div>
