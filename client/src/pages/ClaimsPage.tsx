@@ -1027,108 +1027,9 @@ export default function ClaimsPage() {
             </DropdownMenu>
           </div>
           
-          {/* Summary Cards */}
+          {/* Placeholder for main KPIs (removed aging distributions) */}
           <div className="mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {/* 0-30 Days Card */}
-              <Card className="shadow-sm">
-                <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">0-30 Days</CardTitle>
-                  <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                </CardHeader>
-                <CardContent className="py-3 px-4">
-                  <div className="text-2xl font-bold text-green-600">
-                    ${agingBuckets.under30.toLocaleString('en-US', { maximumFractionDigits: 0 })}
-                  </div>
-                  <div className="text-xs text-green-700 mt-1">
-                    {agingBuckets.under30 > 0 ? ((agingBuckets.under30 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
-                  </div>
-                </CardContent>
-              </Card>
-              
-              {/* 30-60 Days Card */}
-              <Card className="shadow-sm">
-                <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">30-60 Days</CardTitle>
-                  <div className="h-3 w-3 rounded-full bg-blue-500"></div>
-                </CardHeader>
-                <CardContent className="py-3 px-4">
-                  <div className="text-2xl font-bold text-blue-600">
-                    ${agingBuckets.days30to60.toLocaleString('en-US', { maximumFractionDigits: 0 })}
-                  </div>
-                  <div className="text-xs text-blue-700 mt-1">
-                    {agingBuckets.days30to60 > 0 ? ((agingBuckets.days30to60 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
-                  </div>
-                </CardContent>
-              </Card>
-              
-              {/* 60-90 Days Card */}
-              <Card className="shadow-sm">
-                <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">60-90 Days</CardTitle>
-                  <div className="h-3 w-3 rounded-full bg-amber-500"></div>
-                </CardHeader>
-                <CardContent className="py-3 px-4">
-                  <div className="text-2xl font-bold text-amber-600">
-                    ${agingBuckets.days60to90.toLocaleString('en-US', { maximumFractionDigits: 0 })}
-                  </div>
-                  <div className="text-xs text-amber-700 mt-1">
-                    {agingBuckets.days60to90 > 0 ? ((agingBuckets.days60to90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
-                  </div>
-                </CardContent>
-              </Card>
-              
-              {/* 90+ Days Card */}
-              <Card className="shadow-sm">
-                <CardHeader className="py-3 px-4 flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">90+ Days</CardTitle>
-                  <div className="h-3 w-3 rounded-full bg-red-500"></div>
-                </CardHeader>
-                <CardContent className="py-3 px-4">
-                  <div className="text-2xl font-bold text-red-600">
-                    ${agingBuckets.over90.toLocaleString('en-US', { maximumFractionDigits: 0 })}
-                  </div>
-                  <div className="text-xs text-red-700 mt-1">
-                    {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-            
-            {/* Distribution visualization */}
-            <Card className="shadow-sm mt-4">
-              <CardHeader className="py-3 px-4 border-b">
-                <CardTitle className="text-sm font-medium">Aging Distribution</CardTitle>
-              </CardHeader>
-              <CardContent className="py-4 px-4">
-                <div className="flex h-4 rounded-full overflow-hidden bg-gray-100">
-                  {/* Calculate percentages */}
-                  {(() => {
-                    const total = agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90;
-                    const under30Pct = (agingBuckets.under30 / total) * 100;
-                    const days30to60Pct = (agingBuckets.days30to60 / total) * 100;
-                    const days60to90Pct = (agingBuckets.days60to90 / total) * 100;
-                    const over90Pct = (agingBuckets.over90 / total) * 100;
-                    
-                    return (
-                      <>
-                        <div className="bg-green-500 h-full" style={{ width: `${under30Pct}%` }}></div>
-                        <div className="bg-blue-500 h-full" style={{ width: `${days30to60Pct}%` }}></div>
-                        <div className="bg-amber-500 h-full" style={{ width: `${days60to90Pct}%` }}></div>
-                        <div className="bg-red-500 h-full" style={{ width: `${over90Pct}%` }}></div>
-                      </>
-                    );
-                  })()}
-                </div>
-                
-                <div className="flex justify-between text-xs text-muted-foreground mt-2">
-                  <div>0 Days</div>
-                  <div>30 Days</div>
-                  <div>60 Days</div>
-                  <div>90+ Days</div>
-                </div>
-              </CardContent>
-            </Card>
+            {/* Action-oriented KPI cards would go here in future updates */}
           </div>
 
           <Card className="shadow-sm">
@@ -1251,6 +1152,98 @@ export default function ClaimsPage() {
                           </div>
                         </div>
                         
+                        {/* Aging Distribution - Moved from main view to insights panel */}
+                        <div className="mb-6">
+                          <h4 className="text-sm font-medium mb-3">Claims Aging Breakdown</h4>
+                          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+                            {/* 0-30 Days Card */}
+                            <div className="bg-white p-3 rounded-lg border shadow-sm">
+                              <div className="flex items-center justify-between mb-1">
+                                <div className="text-xs font-medium">0-30 Days</div>
+                                <div className="h-3 w-3 rounded-full bg-green-500"></div>
+                              </div>
+                              <div className="text-xl font-bold text-green-600">
+                                ${agingBuckets.under30.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                              </div>
+                              <div className="text-xs text-green-700 mt-1">
+                                {agingBuckets.under30 > 0 ? ((agingBuckets.under30 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                              </div>
+                            </div>
+                            
+                            {/* 30-60 Days Card */}
+                            <div className="bg-white p-3 rounded-lg border shadow-sm">
+                              <div className="flex items-center justify-between mb-1">
+                                <div className="text-xs font-medium">30-60 Days</div>
+                                <div className="h-3 w-3 rounded-full bg-blue-500"></div>
+                              </div>
+                              <div className="text-xl font-bold text-blue-600">
+                                ${agingBuckets.days30to60.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                              </div>
+                              <div className="text-xs text-blue-700 mt-1">
+                                {agingBuckets.days30to60 > 0 ? ((agingBuckets.days30to60 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                              </div>
+                            </div>
+                            
+                            {/* 60-90 Days Card */}
+                            <div className="bg-white p-3 rounded-lg border shadow-sm">
+                              <div className="flex items-center justify-between mb-1">
+                                <div className="text-xs font-medium">60-90 Days</div>
+                                <div className="h-3 w-3 rounded-full bg-amber-500"></div>
+                              </div>
+                              <div className="text-xl font-bold text-amber-600">
+                                ${agingBuckets.days60to90.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                              </div>
+                              <div className="text-xs text-amber-700 mt-1">
+                                {agingBuckets.days60to90 > 0 ? ((agingBuckets.days60to90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                              </div>
+                            </div>
+                            
+                            {/* 90+ Days Card */}
+                            <div className="bg-white p-3 rounded-lg border shadow-sm">
+                              <div className="flex items-center justify-between mb-1">
+                                <div className="text-xs font-medium">90+ Days</div>
+                                <div className="h-3 w-3 rounded-full bg-red-500"></div>
+                              </div>
+                              <div className="text-xl font-bold text-red-600">
+                                ${agingBuckets.over90.toLocaleString('en-US', { maximumFractionDigits: 0 })}
+                              </div>
+                              <div className="text-xs text-red-700 mt-1">
+                                {agingBuckets.over90 > 0 ? ((agingBuckets.over90 / (agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90)) * 100).toFixed(0) : 0}% of total
+                              </div>
+                            </div>
+                          </div>
+                          
+                          {/* Distribution visualization */}
+                          <div className="bg-white p-4 rounded-lg border shadow-sm">
+                            <div className="text-xs font-medium mb-3">Aging Distribution</div>
+                            <div className="flex h-4 rounded-full overflow-hidden bg-gray-100">
+                              {/* Calculate percentages */}
+                              {(() => {
+                                const total = agingBuckets.under30 + agingBuckets.days30to60 + agingBuckets.days60to90 + agingBuckets.over90;
+                                const under30Pct = (agingBuckets.under30 / total) * 100;
+                                const days30to60Pct = (agingBuckets.days30to60 / total) * 100;
+                                const days60to90Pct = (agingBuckets.days60to90 / total) * 100;
+                                const over90Pct = (agingBuckets.over90 / total) * 100;
+                                
+                                return (
+                                  <>
+                                    <div className="bg-green-500 h-full" style={{ width: `${under30Pct}%` }}></div>
+                                    <div className="bg-blue-500 h-full" style={{ width: `${days30to60Pct}%` }}></div>
+                                    <div className="bg-amber-500 h-full" style={{ width: `${days60to90Pct}%` }}></div>
+                                    <div className="bg-red-500 h-full" style={{ width: `${over90Pct}%` }}></div>
+                                  </>
+                                );
+                              })()}
+                            </div>
+                            
+                            <div className="flex justify-between text-xs text-muted-foreground mt-2">
+                              <div>0 Days</div>
+                              <div>30 Days</div>
+                              <div>60 Days</div>
+                              <div>90+ Days</div>
+                            </div>
+                          </div>
+                        </div>
 
                       </div>
                     </div>
