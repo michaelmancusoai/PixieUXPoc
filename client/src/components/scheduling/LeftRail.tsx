@@ -65,8 +65,8 @@ export default function LeftRail({ selectedDate }: LeftRailProps) {
       <Card className="shadow-sm">
         <CardHeader className="px-4 py-3 border-b">
           <CardTitle className="text-lg font-medium flex items-center justify-between">
-            <span>Schedule Management</span>
-            <span className="text-sm text-muted-foreground font-normal">{format(selectedDate, 'EEEE, MMMM d')}</span>
+            <span>Today's Schedule</span>
+            <span className="text-sm text-muted-foreground font-normal">Manage Patients</span>
           </CardTitle>
         </CardHeader>
         

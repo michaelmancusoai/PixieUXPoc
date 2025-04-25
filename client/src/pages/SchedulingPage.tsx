@@ -78,13 +78,15 @@ export default function SchedulingPage() {
             />
           </div>
 
-          <div className={`flex-1 grid ${expandedView ? 'grid-cols-1' : 'grid-cols-[250px_minmax(0,1fr)_250px]'} gap-4 p-4 overflow-hidden`}>
-            {!expandedView && <LeftRail selectedDate={selectedDate} />}
-            <CalendarView 
-              selectedDate={selectedDate} 
-              viewMode={viewMode} 
-            />
-            {!expandedView && <RightRail selectedDate={selectedDate} />}
+          <div className={`flex-1 grid ${expandedView ? 'grid-cols-1' : 'grid-cols-[250px_minmax(0,1fr)_250px]'} gap-4 p-4 h-full overflow-hidden`}>
+            {!expandedView && <div className="h-full"><LeftRail selectedDate={selectedDate} /></div>}
+            <div className="h-full">
+              <CalendarView 
+                selectedDate={selectedDate} 
+                viewMode={viewMode} 
+              />
+            </div>
+            {!expandedView && <div className="h-full"><RightRail selectedDate={selectedDate} /></div>}
           </div>
 
           <BookAppointmentDialog
