@@ -563,10 +563,6 @@ export default function WaitlistPage() {
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-2xl font-bold">Waitlist & Online Requests</h1>
           <div className="flex gap-2">
-            <Button variant="outline" size="sm" className="h-9">
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Refresh
-            </Button>
             <Button size="sm" className="h-9">
               <PlusCircle className="h-4 w-4 mr-2" />
               Add to Waitlist
@@ -577,21 +573,39 @@ export default function WaitlistPage() {
         {/* Hero KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           {/* ASAP High Value Card */}
-          <Card className="border-t-4 border-mint-500">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">ASAP, High Value</CardTitle>
+          <Card className="shadow-sm border-t-4 border-t-mint-400 flex flex-col">
+            <CardHeader className="py-3 px-5 border-b bg-mint-50/30">
+              <CardTitle className="text-base font-medium flex items-center">
+                <Clock className="h-4 w-4 mr-2 text-slate-600" />
+                ASAP, High Value
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-2xl font-bold">${stats.highValueASAPTotal}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {stats.highValueASAPCount} patients (Prod &gt; $250, want next 48h)
-                  </p>
+            <CardContent className="py-5 px-5 flex-1 flex flex-col">
+              <div>
+                <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                  <span className="text-emerald-600">
+                    ${stats.highValueASAPTotal}
+                  </span>
+                  <ChevronRight className="h-5 w-5 text-emerald-500" />
                 </div>
+                <div className="text-sm text-muted-foreground mb-3">
+                  {stats.highValueASAPCount} patients (Prod &gt; $250, want next 48h)
+                </div>
+                
+                {stats.highValueASAPCount > 0 && (
+                  <div className="h-2 w-full bg-gray-100 rounded-full cursor-pointer mb-4">
+                    <div className="h-full bg-emerald-500 rounded-full transition-all duration-1000"
+                      style={{ width: `${(stats.highValueASAPCount / 10) * 100}%` }}>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              <div className="mt-auto">
                 <Button 
-                  variant={stats.highValueASAPCount > 0 ? "default" : "outline"} 
+                  variant="default"
                   size="sm"
+                  className="w-full"
                   disabled={stats.highValueASAPCount === 0}
                   onClick={() => {
                     // Auto select high value ASAP patients
@@ -608,24 +622,52 @@ export default function WaitlistPage() {
           </Card>
           
           {/* Web Requests Card */}
-          <Card className={`border-t-4 ${stats.oldestWebRequest >= 2 ? "border-amber-500" : "border-gray-300"}`}>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Web Requests Unanswered</CardTitle>
+          <Card className="shadow-sm border-t-4 border-t-amber-400 flex flex-col">
+            <CardHeader className="py-3 px-5 border-b bg-amber-50/30">
+              <CardTitle className="text-base font-medium flex items-center">
+                <MessageSquare className="h-4 w-4 mr-2 text-slate-600" />
+                Web Requests Unanswered
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-2xl font-bold">{stats.unansweredWebRequestsCount} requests</p>
-                  <p className="text-sm text-muted-foreground">
-                    {stats.unansweredWebRequestsCount > 0 ? 
-                      `(oldest ${stats.oldestWebRequest}h)` : 
-                      "All requests handled"
-                    }
-                  </p>
+            <CardContent className="py-5 px-5 flex-1 flex flex-col">
+              <div>
+                <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                  <span className="text-amber-600">
+                    {stats.unansweredWebRequestsCount} requests
+                  </span>
+                  <ChevronRight className="h-5 w-5 text-amber-500" />
                 </div>
+                <div className="text-sm text-muted-foreground mb-3">
+                  {stats.unansweredWebRequestsCount > 0 ? 
+                    `Oldest request: ${stats.oldestWebRequest}h ago` : 
+                    "All requests handled"
+                  }
+                </div>
+                
+                {stats.unansweredWebRequestsCount > 0 && (
+                  <div className="flex items-center space-x-1 mb-1">
+                    <div className="h-2 w-2 rounded-full bg-amber-500"></div>
+                    <div className="h-2 w-2 rounded-full bg-amber-500"></div>
+                    <div className="h-2 w-2 rounded-full bg-amber-500"></div>
+                    <div className="text-xs text-amber-600 ml-2">
+                      {stats.oldestWebRequest >= 3 ? "Response time critical" : "Respond within 4h for 78% conversion"}
+                    </div>
+                  </div>
+                )}
+                
+                {stats.unansweredWebRequestsCount === 0 && (
+                  <div className="flex items-center text-green-600 mb-2 text-sm">
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    <span>All caught up!</span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="mt-auto">
                 <Button 
-                  variant={stats.unansweredWebRequestsCount > 0 ? "default" : "outline"} 
-                  size="sm" 
+                  variant="default"
+                  size="sm"
+                  className="w-full"
                   disabled={stats.unansweredWebRequestsCount === 0}
                 >
                   Respond Now
@@ -635,17 +677,49 @@ export default function WaitlistPage() {
           </Card>
           
           {/* Schedule Gaps Card */}
-          <Card className="border-t-4 border-coral-500">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Schedule Gap &gt; 30 min Today</CardTitle>
+          <Card className="shadow-sm border-t-4 border-t-coral-400 flex flex-col">
+            <CardHeader className="py-3 px-5 border-b bg-coral-50/30">
+              <CardTitle className="text-base font-medium flex items-center">
+                <Calendar className="h-4 w-4 mr-2 text-slate-600" />
+                Schedule Gap &gt; 30 min Today
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <div className="flex justify-between items-center">
-                <div>
-                  <p className="text-2xl font-bold">{stats.schedulingGapsCount} gaps</p>
-                  <p className="text-sm text-muted-foreground">{stats.schedulingGapsMinutes} min</p>
+            <CardContent className="py-5 px-5 flex-1 flex flex-col">
+              <div>
+                <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                  <span className="text-coral-600">
+                    {stats.schedulingGapsCount} gaps
+                  </span>
+                  <ChevronRight className="h-5 w-5 text-coral-500" />
                 </div>
-                <Button variant="default" size="sm">
+                <div className="text-sm text-muted-foreground mb-3">
+                  {stats.schedulingGapsMinutes} min of potential production time
+                </div>
+                
+                {stats.schedulingGapsCount > 0 && (
+                  <div className="flex items-center justify-between text-xs text-coral-600 mb-2">
+                    <span>Available:</span>
+                    <span className="font-medium">10:30 AM (45 min)</span>
+                    <span>·</span>
+                    <span className="font-medium">2:15 PM (25 min)</span>
+                  </div>
+                )}
+                
+                {stats.schedulingGapsCount === 0 && (
+                  <div className="flex items-center text-green-600 mb-2 text-sm">
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    <span>Schedule optimized!</span>
+                  </div>
+                )}
+              </div>
+              
+              <div className="mt-auto">
+                <Button 
+                  variant="default"
+                  size="sm"
+                  className="w-full"
+                  disabled={stats.schedulingGapsCount === 0}
+                >
                   Match Patients
                 </Button>
               </div>
