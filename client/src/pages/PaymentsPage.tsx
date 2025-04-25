@@ -584,105 +584,108 @@ export default function PaymentsPage() {
             </DropdownMenu>
           </div>
 
-          {/* Behavioral Dashboard Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
+          {/* Primary Row - Action-Oriented KPIs */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            {/* Same-Day Collection Rate Card */}
+            <Card className="shadow-sm border-t-4 border-t-primary/30 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-primary/5">
                 <CardTitle className="text-base font-medium">Same-Day Collection Rate</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <DollarSign className="h-8 w-8 mr-3 text-green-500" />
-                  <div>
-                    <div className="text-2xl font-bold">{sameDayCollectionRate}%</div>
-                    <div className="text-sm text-muted-foreground">
-                      Patient-responsibility dollars collected before patient leaves
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    <span>{sameDayCollectionRate}% collected</span>
+                    <ChevronRight className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-3">
+                    ${sameDayCollectionTotal} patient-responsibility
+                  </div>
+                  
+                  <div className="h-2 w-full bg-gray-100 rounded-full cursor-pointer mb-4">
+                    <div className="h-full bg-primary rounded-full transition-all duration-1000"
+                         style={{ width: `${sameDayCollectionRate}%` }}>
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 space-y-2">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Goal: 95%</span>
-                    <span className={`font-medium ${sameDayCollectionRate >= 95 ? "text-green-600" : "text-amber-600"}`}>
-                      ${sameDayCollectionTotal} collected
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full ${sameDayCollectionRate >= 95 ? "bg-green-500" : "bg-amber-500"}`} 
-                      style={{ width: `${sameDayCollectionRate}%` }}
-                    ></div>
-                  </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full"
+                  >
+                    View Unchecked-Out Patients
+                  </Button>
                 </div>
-                <Button variant="outline" size="sm" className="w-full mt-4 text-xs">
-                  View unchecked-out patients
-                </Button>
               </CardContent>
             </Card>
             
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
+            {/* Card-on-File Percentage Card */}
+            <Card className="shadow-sm border-t-4 border-t-blue-200 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-blue-50/50">
                 <CardTitle className="text-base font-medium">Card-on-File Percentage</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <CreditCardIcon className="h-8 w-8 mr-3 text-blue-500" />
-                  <div>
-                    <div className="text-2xl font-bold">{cardOnFilePercentage}%</div>
-                    <div className="text-sm text-muted-foreground">
-                      Patients with card information stored
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    <span>{cardOnFilePercentage}% coverage</span>
+                    <ChevronRight className="h-5 w-5 text-blue-500" />
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-3">
+                    {cardOnFilePercentage < 75 ? `Need ${75 - cardOnFilePercentage}% more to reach goal` : "Target met"}
+                  </div>
+                  
+                  <div className="h-2 w-full bg-gray-100 rounded-full cursor-pointer mb-4">
+                    <div className="h-full bg-blue-500 rounded-full transition-all duration-1000"
+                         style={{ width: `${cardOnFilePercentage}%` }}>
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 space-y-2">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Goal: 75%</span>
-                    <span className="font-medium text-blue-600">
-                      {cardOnFilePercentage < 75 ? "Need " + (75 - cardOnFilePercentage) + "% more" : "Target met"}
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-                    <div 
-                      className="h-full bg-blue-500 rounded-full" 
-                      style={{ width: `${cardOnFilePercentage}%` }}
-                    ></div>
-                  </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full"
+                  >
+                    Run Card Collection Campaign
+                  </Button>
                 </div>
-                <Button variant="outline" size="sm" className="w-full mt-4 text-xs">
-                  Open today's schedule
-                </Button>
               </CardContent>
             </Card>
             
-            <Card className="shadow-sm">
-              <CardHeader className="py-4 px-5 border-b">
+            {/* First-Attempt Success Card */}
+            <Card className="shadow-sm border-t-4 border-t-green-200 flex flex-col">
+              <CardHeader className="py-3 px-5 border-b bg-green-50/50">
                 <CardTitle className="text-base font-medium">First-Attempt Success</CardTitle>
               </CardHeader>
-              <CardContent className="py-6 px-5">
-                <div className="flex items-center">
-                  <CheckCircle className="h-8 w-8 mr-3 text-green-500" />
-                  <div>
-                    <div className="text-2xl font-bold">{firstAttemptSuccessRate.toFixed(1)}%</div>
-                    <div className="text-sm text-muted-foreground">
-                      Transactions without retry needed
+              <CardContent className="py-5 px-5 flex-1 flex flex-col">
+                <div>
+                  <div className="text-2xl font-bold flex items-center justify-between mb-1">
+                    <span>{firstAttemptSuccessRate.toFixed(1)}% successful</span>
+                    <ChevronRight className="h-5 w-5 text-green-500" />
+                  </div>
+                  <div className="text-sm text-muted-foreground mb-3">
+                    {firstAttemptSuccessRate < 97 ? 
+                      `${(100 - firstAttemptSuccessRate).toFixed(1)}% failed first try` : 
+                      "Optimal authorization performance"}
+                  </div>
+                  
+                  <div className="h-2 w-full bg-gray-100 rounded-full cursor-pointer mb-4">
+                    <div className="h-full bg-green-500 rounded-full transition-all duration-1000"
+                         style={{ width: `${firstAttemptSuccessRate}%` }}>
                     </div>
                   </div>
                 </div>
-                <div className="mt-4 space-y-2">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-muted-foreground">Goal: 97%</span>
-                    <span className={`font-medium ${firstAttemptSuccessRate >= 97 ? "text-green-600" : "text-red-600"}`}>
-                      {firstAttemptSuccessRate < 97 ? 
-                        `${(100 - firstAttemptSuccessRate).toFixed(1)}% failed first try` : 
-                        "Optimal performance"}
-                    </span>
-                  </div>
-                  <div className="h-2 w-full bg-gray-200 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full rounded-full ${firstAttemptSuccessRate >= 97 ? "bg-green-500" : "bg-amber-500"}`} 
-                      style={{ width: `${firstAttemptSuccessRate}%` }}
-                    ></div>
-                  </div>
+                
+                <div className="mt-auto">
+                  <Button 
+                    variant="default"
+                    size="sm"
+                    className="w-full"
+                  >
+                    Update Expired Cards
+                  </Button>
                 </div>
               </CardContent>
             </Card>
