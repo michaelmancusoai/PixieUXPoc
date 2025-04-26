@@ -280,7 +280,7 @@ export const messagesRelations = relations(messages, ({ one }) => ({
 export const activityLog = pgTable("activity_log", {
   id: serial("id").primaryKey(),
   patientId: integer("patient_id").references(() => patients.id),
-  userId: integer("user_id").references(() => users.id),
+  userId: varchar("user_id").references(() => users.id),
   actionType: text("action_type").notNull(),
   description: text("description").notNull(),
   metadata: json("metadata"),
