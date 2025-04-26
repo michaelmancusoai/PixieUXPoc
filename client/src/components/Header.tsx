@@ -16,7 +16,6 @@ import { useNavigation } from "@/hooks/useNavigation";
 import { useEffect, useRef, useState } from "react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import logoImage from "@assets/Screenshot_2025-04-24_at_6.58.45_PM-removebg-preview.png";
-import { AuthButtons } from "@/components/AuthButtons";
 
 /**
  * Combined Header Component
@@ -179,10 +178,33 @@ export function Header() {
               </Button>
             </Link>
 
-            {/* Auth Buttons */}
-            <div className="ml-2">
-              <AuthButtons />
-            </div>
+            {/* User Profile Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="ml-2 rounded-full text-white hover:bg-primary-dark/30 hover:text-white h-8 w-8 p-0"
+                  aria-label="User menu"
+                >
+                  <Avatar className="h-8 w-8 border-2 border-white">
+                    <AvatarImage
+                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                      alt="User"
+                    />
+                    <AvatarFallback>JD</AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Logout</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </header>
 

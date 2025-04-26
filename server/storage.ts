@@ -16,22 +16,11 @@ import {
 import { db } from "./db";
 import { eq, and, desc, asc, sql, like } from "drizzle-orm";
 
-// Define the type for upsertUser method
-export type UpsertUser = {
-  id: number;
-  username: string;
-  email?: string;
-  firstName?: string;
-  lastName?: string;
-  role?: string;
-};
-
 export interface IStorage {
   // User methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  upsertUser(user: UpsertUser): Promise<User>;
   
   // Patient methods
   getPatient(id: number): Promise<Patient | undefined>;
@@ -78,7 +67,7 @@ export interface IStorage {
   createClaim(claim: InsertClaim): Promise<Claim>;
   
   // Activity methods
-  logActivity(patientId: number | null, userId: string | null, actionType: string, description: string, metadata?: any): Promise<void>;
+  logActivity(patientId: number | null, userId: number | null, actionType: string, description: string, metadata?: any): Promise<void>;
   getPatientActivityLog(patientId: number): Promise<any[]>;
 }
 
@@ -96,21 +85,6 @@ export class DatabaseStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const [user] = await db.insert(users).values(insertUser).returning();
-    return user;
-  }
-  
-  async upsertUser(userData: UpsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values(userData)
-      .onConflictDoUpdate({
-        target: users.id,
-        set: {
-          ...userData,
-          updatedAt: new Date(),
-        },
-      })
-      .returning();
     return user;
   }
   
@@ -279,7 +253,7 @@ export class DatabaseStorage implements IStorage {
   // Activity Log methods
   async logActivity(
     patientId: number | null,
-    userId: string | null,
+    userId: number | null,
     actionType: string,
     description: string,
     metadata: any = {}
