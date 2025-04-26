@@ -1,6 +1,8 @@
 /* Import pixel fonts for the game */
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+/* Import font for login page */
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700');
 /* Import NES.css for 8-bit styling */
 @import url('https://unpkg.com/nes.css@latest/css/nes.min.css');
 
