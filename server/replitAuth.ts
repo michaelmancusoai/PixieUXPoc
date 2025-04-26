@@ -63,7 +63,6 @@ async function upsertUser(
     email: claims["email"],
     firstName: claims["first_name"],
     lastName: claims["last_name"],
-    bio: claims["bio"],
     profileImageUrl: claims["profile_image_url"],
   });
 }

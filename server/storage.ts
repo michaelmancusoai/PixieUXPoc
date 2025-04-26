@@ -18,18 +18,17 @@ import { eq, and, desc, asc, sql, like } from "drizzle-orm";
 
 // Define the type for upsertUser method
 export type UpsertUser = {
-  id: string;
+  id: number;
   username: string;
   email?: string;
   firstName?: string;
   lastName?: string;
-  bio?: string;
-  profileImageUrl?: string;
+  role?: string;
 };
 
 export interface IStorage {
   // User methods
-  getUser(id: string): Promise<User | undefined>;
+  getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   upsertUser(user: UpsertUser): Promise<User>;
@@ -85,7 +84,7 @@ export interface IStorage {
 
 export class DatabaseStorage implements IStorage {
   // User methods
-  async getUser(id: string): Promise<User | undefined> {
+  async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
   }

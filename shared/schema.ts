@@ -16,15 +16,13 @@ export const sessions = pgTable(
 
 // Basic user authentication
 export const users = pgTable("users", {
-  id: varchar("id").primaryKey().notNull(), // Replit Auth user id is a string
+  id: integer("id").primaryKey().notNull(),
   username: text("username").notNull().unique(),
   role: text("role").default("staff").notNull(),
   email: text("email"),
   firstName: text("first_name"),
   lastName: text("last_name"),
-  bio: text("bio"),
-  profileImageUrl: text("profile_image_url"),
-  password: text("password"), // Keeping this for backward compatibility
+  password: text("password"), // Keeping this for backward compatibility 
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
@@ -280,7 +278,7 @@ export const messagesRelations = relations(messages, ({ one }) => ({
 export const activityLog = pgTable("activity_log", {
   id: serial("id").primaryKey(),
   patientId: integer("patient_id").references(() => patients.id),
-  userId: varchar("user_id").references(() => users.id),
+  userId: integer("user_id").references(() => users.id),
   actionType: text("action_type").notNull(),
   description: text("description").notNull(),
   metadata: json("metadata"),
