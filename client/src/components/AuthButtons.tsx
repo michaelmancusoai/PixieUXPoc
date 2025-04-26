@@ -22,18 +22,22 @@ export function AuthButtons() {
   }
 
   if (isAuthenticated && user) {
+    const userInitial = user.username ? user.username[0]?.toUpperCase() : '?';
+    
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="flex items-center gap-2">
-            <Avatar className="h-8 w-8">
+          <Button variant="ghost" className="flex items-center gap-2 text-white">
+            <Avatar className="h-8 w-8 border-2 border-white">
               {user.profileImageUrl ? (
-                <AvatarImage src={user.profileImageUrl} alt={user.username} />
+                <AvatarImage src={user.profileImageUrl} alt={user.username || 'User'} />
               ) : (
-                <AvatarFallback>{user.username[0]?.toUpperCase()}</AvatarFallback>
+                <AvatarFallback>{userInitial}</AvatarFallback>
               )}
             </Avatar>
-            <span className="hidden md:inline">{user.username}</span>
+            {user.username && (
+              <span className="hidden md:inline">{user.username}</span>
+            )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { PixelStyles } from "@/features/dashboard/components/RetroGame";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import DashboardPage from "@/pages/DashboardPage";
@@ -55,60 +56,109 @@ function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
-      <Route path="/dashboard" component={DashboardPage} />
-      <Route path="/dashboard/today" component={TodayPage} />
-      <Route path="/dashboard/daily-huddle" component={DailyHuddlePage} />
-      <Route path="/dashboard/mission-control" component={MissionControlPage} />
-      <Route path="/dashboard/leaderboard" component={LeaderboardPage} />
-      <Route path="/dashboard/planet-pixie" component={PlanetPixiePage} />
-      <Route path="/schedule" component={SchedulingPage} />
-      <Route path="/scheduling" component={SchedulingPage} />
-      <Route path="/schedule/capacity" component={CapacityPage} />
-      <Route path="/schedule/recalls" component={RecallsPage} />
-      <Route path="/schedule/waitlist" component={WaitlistPage} />
-      <Route path="/schedule/:subpage" component={SchedulingPage} />
-      <Route path="/patients" component={PatientsPage} />
-      <Route path="/patients/profile/:id" component={PatientProfilePage} />
-      <Route path="/patients/segments" component={SmartSegmentsPage} />
-      <Route path="/patients/prospects" component={ProspectsPage} />
-      <Route path="/patients/data-gaps" component={DataGapsPage} />
-      <Route path="/patients/metrics" component={PatientMetricsPage} />
-      <Route path="/patients/:subpage" component={PatientsPage} />
-      <Route path="/billing" component={BillingPage} />
-      <Route path="/billing/claims" component={ClaimsPage} />
-      <Route path="/claims" component={ClaimsPage} />
-      <Route path="/billing/payments" component={PaymentsPage} />
-      <Route path="/payments" component={PaymentsPage} />
-      <Route path="/billing/statements" component={StatementsPage} />
-      <Route path="/statements" component={StatementsPage} />
-      <Route path="/billing/collections" component={CollectionsPage} />
-      <Route path="/collections" component={CollectionsPage} />
-      <Route path="/billing/fee-schedules" component={FeeSchedulesPage} />
-      <Route path="/fee-schedules" component={FeeSchedulesPage} />
-      <Route path="/billing/:subpage" component={BillingPage} />
-      <Route path="/reports" component={ReportsPage} />
-      <Route path="/reports/:subpage" component={ReportsPage} />
-      <Route path="/settings" component={SettingsPage} />
-      <Route path="/settings/theme" component={ThemeSettingsPage} />
-      <Route path="/settings/practice-profile" component={PracticeProfilePage} />
-      <Route path="/settings/scheduling" component={SchedulingSettingsPage} />
-      <Route path="/settings/communications" component={CommunicationsSettingsPage} />
-      <Route path="/settings/practice-finances" component={PracticeFinancesPage} />
-      <Route path="/settings/team-members" component={TeamMembersPage} />
-      <Route path="/settings/security" component={SecuritySettingsPage} />
-      <Route path="/settings/access-logs" component={AccessLogsPage} />
-      <Route path="/settings/user-permissions" component={UserPermissionsPage} />
-      <Route path="/settings/clinical-templates" component={ClinicalTemplatesPage} />
-      <Route path="/settings/inventory" component={InventorySettingsPage} />
-      <Route path="/settings/ai-automation" component={AIAutomationPage} />
-      <Route path="/settings/billing-payments" component={BillingPaymentsPage} />
-      <Route path="/settings/fee-schedules-settings" component={FeeSchedulesSettingsPage} />
-      <Route path="/settings/subscription" component={SubscriptionPage} />
-      <Route path="/settings/external-services" component={ExternalServicesPage} />
-      <Route path="/settings/api-settings" component={APISettingsPage} />
-      <Route path="/settings/referral-management" component={ReferralManagementPage} />
-      <Route path="/settings/:subpage" component={SettingsPage} />
-      <Route path="/patients/chart/:id" component={ToothChartPage} />
+      
+      {/* Protected Dashboard Routes */}
+      <Route path="/dashboard">
+        {() => (
+          <ProtectedRoute>
+            <Route path="/dashboard" component={DashboardPage} />
+            <Route path="/dashboard/today" component={TodayPage} />
+            <Route path="/dashboard/daily-huddle" component={DailyHuddlePage} />
+            <Route path="/dashboard/mission-control" component={MissionControlPage} />
+            <Route path="/dashboard/leaderboard" component={LeaderboardPage} />
+            <Route path="/dashboard/planet-pixie" component={PlanetPixiePage} />
+          </ProtectedRoute>
+        )}
+      </Route>
+      
+      {/* Protected Scheduling Routes */}
+      <Route path="/schedule">
+        {() => (
+          <ProtectedRoute>
+            <Route path="/schedule" component={SchedulingPage} />
+            <Route path="/scheduling" component={SchedulingPage} />
+            <Route path="/schedule/capacity" component={CapacityPage} />
+            <Route path="/schedule/recalls" component={RecallsPage} />
+            <Route path="/schedule/waitlist" component={WaitlistPage} />
+            <Route path="/schedule/:subpage" component={SchedulingPage} />
+          </ProtectedRoute>
+        )}
+      </Route>
+      
+      {/* Protected Patient Routes */}
+      <Route path="/patients">
+        {() => (
+          <ProtectedRoute>
+            <Route path="/patients" component={PatientsPage} />
+            <Route path="/patients/profile/:id" component={PatientProfilePage} />
+            <Route path="/patients/segments" component={SmartSegmentsPage} />
+            <Route path="/patients/prospects" component={ProspectsPage} />
+            <Route path="/patients/data-gaps" component={DataGapsPage} />
+            <Route path="/patients/metrics" component={PatientMetricsPage} />
+            <Route path="/patients/:subpage" component={PatientsPage} />
+            <Route path="/patients/chart/:id" component={ToothChartPage} />
+          </ProtectedRoute>
+        )}
+      </Route>
+      
+      {/* Protected Billing Routes */}
+      <Route path="/billing">
+        {() => (
+          <ProtectedRoute>
+            <Route path="/billing" component={BillingPage} />
+            <Route path="/billing/claims" component={ClaimsPage} />
+            <Route path="/claims" component={ClaimsPage} />
+            <Route path="/billing/payments" component={PaymentsPage} />
+            <Route path="/payments" component={PaymentsPage} />
+            <Route path="/billing/statements" component={StatementsPage} />
+            <Route path="/statements" component={StatementsPage} />
+            <Route path="/billing/collections" component={CollectionsPage} />
+            <Route path="/collections" component={CollectionsPage} />
+            <Route path="/billing/fee-schedules" component={FeeSchedulesPage} />
+            <Route path="/fee-schedules" component={FeeSchedulesPage} />
+            <Route path="/billing/:subpage" component={BillingPage} />
+          </ProtectedRoute>
+        )}
+      </Route>
+      
+      {/* Protected Reports Routes */}
+      <Route path="/reports">
+        {() => (
+          <ProtectedRoute>
+            <Route path="/reports" component={ReportsPage} />
+            <Route path="/reports/:subpage" component={ReportsPage} />
+          </ProtectedRoute>
+        )}
+      </Route>
+      
+      {/* Protected Settings Routes */}
+      <Route path="/settings">
+        {() => (
+          <ProtectedRoute>
+            <Route path="/settings" component={SettingsPage} />
+            <Route path="/settings/theme" component={ThemeSettingsPage} />
+            <Route path="/settings/practice-profile" component={PracticeProfilePage} />
+            <Route path="/settings/scheduling" component={SchedulingSettingsPage} />
+            <Route path="/settings/communications" component={CommunicationsSettingsPage} />
+            <Route path="/settings/practice-finances" component={PracticeFinancesPage} />
+            <Route path="/settings/team-members" component={TeamMembersPage} />
+            <Route path="/settings/security" component={SecuritySettingsPage} />
+            <Route path="/settings/access-logs" component={AccessLogsPage} />
+            <Route path="/settings/user-permissions" component={UserPermissionsPage} />
+            <Route path="/settings/clinical-templates" component={ClinicalTemplatesPage} />
+            <Route path="/settings/inventory" component={InventorySettingsPage} />
+            <Route path="/settings/ai-automation" component={AIAutomationPage} />
+            <Route path="/settings/billing-payments" component={BillingPaymentsPage} />
+            <Route path="/settings/fee-schedules-settings" component={FeeSchedulesSettingsPage} />
+            <Route path="/settings/subscription" component={SubscriptionPage} />
+            <Route path="/settings/external-services" component={ExternalServicesPage} />
+            <Route path="/settings/api-settings" component={APISettingsPage} />
+            <Route path="/settings/referral-management" component={ReferralManagementPage} />
+            <Route path="/settings/:subpage" component={SettingsPage} />
+          </ProtectedRoute>
+        )}
+      </Route>
+      
       <Route component={NotFound} />
     </Switch>
   );
